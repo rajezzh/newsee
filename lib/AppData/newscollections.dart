@@ -1,4 +1,4 @@
-import 'package:newsee/Model/News.dart';
+import 'package:newsee/Model/news_modal.dart';
 
 List<News> news_collections = [
   News(
