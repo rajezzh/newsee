@@ -1,5 +1,6 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:newsee/widgets/news.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -69,6 +70,11 @@ class BigCard extends StatelessWidget {
     var style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
+    //return wordPair(theme, style);
+    return NewsCard();
+  }
+
+  Widget wordPair(dynamic theme, TextStyle style) {
     return Center(
       child: Column(
         children: [
