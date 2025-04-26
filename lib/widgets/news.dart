@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsee/AppData/newscollections.dart';
+import 'package:newsee/Model/News.dart';
 
 /* 
 
@@ -9,15 +10,20 @@ user can edit by adding a tags and mark as favourite
 
  */
 class NewsCard extends StatefulWidget {
+  List<News> news;
+
+  NewsCard({required this.news});
+
   @override
-  _NewsState createState() => _NewsState();
+  _NewsState createState() => _NewsState(news: news);
 }
 
 class _NewsState extends State<StatefulWidget> {
   /* 
     the actual implementatio of the News widget 
    */
-  var newsList = news_collections;
+  List<News> news;
+  _NewsState({required this.news});
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -28,7 +34,7 @@ class _NewsState extends State<StatefulWidget> {
 
   List<Widget> renderNewsCard() {
     List<Widget> widgets = [];
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < news.length; i++) {
       widgets.add(
         Column(
           children: [
