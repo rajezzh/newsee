@@ -79,6 +79,21 @@ class BigCard extends StatelessWidget {
               child: Text(pair.asLowerCase, style: style),
             ),
           ),
+          Container(
+            // constraints: BoxConstraints.expand(width: 100, height: 100),
+            alignment: Alignment.center,
+            padding: EdgeInsets.all(0.8),
+            margin: EdgeInsets.all(2),
+            child: Text(
+              """This is a Sample Container,
+              This is a Sample Container,This is a Sample Container,
+              This is a Sample Container,This is a Sample Container""",
+              style: Theme.of(
+                context,
+              ).textTheme.headlineMedium!.copyWith(color: Colors.blue),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );
