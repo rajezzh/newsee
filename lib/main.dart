@@ -1,11 +1,12 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:newsee/AppData/newscollections.dart';
+import 'package:newsee/widgets/counter.dart';
 import 'package:newsee/widgets/news.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Counter());
 }
 
 class MyApp extends StatelessWidget {

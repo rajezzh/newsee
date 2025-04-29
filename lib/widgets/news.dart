@@ -18,6 +18,10 @@ class NewsCard extends StatefulWidget {
   _NewsState createState() => _NewsState();
 }
 
+/*
+ @NOTE - you can access data fields form the widget propert of StatefulWidget 
+         only if you pass State<T> as State<NewsCard> 
+ */
 class _NewsState extends State<NewsCard> {
   /* 
     the actual implementatio of the News widget 
