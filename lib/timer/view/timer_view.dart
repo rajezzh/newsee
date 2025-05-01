@@ -46,24 +46,34 @@ class Actions extends StatelessWidget {
           children: [
             ...switch (state) {
               TimerInitial() => [
-                FloatingActionButton(
-                  child: const Icon(Icons.play_arrow),
-                  onPressed:
-                      () => context.read<TimerBloc>().add(
-                        TimerStarted(duration: state.duration),
-                      ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: FloatingActionButton(
+                    child: const Icon(Icons.play_arrow),
+                    onPressed:
+                        () => context.read<TimerBloc>().add(
+                          TimerStarted(duration: state.duration),
+                        ),
+                  ),
                 ),
               ],
               TimerRunInprogress() => [
-                FloatingActionButton(
-                  child: const Icon(Icons.pause),
-                  onPressed:
-                      () => context.read<TimerBloc>().add(const TimerPaused()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: FloatingActionButton(
+                    child: const Icon(Icons.pause),
+                    onPressed:
+                        () =>
+                            context.read<TimerBloc>().add(const TimerPaused()),
+                  ),
                 ),
-                FloatingActionButton(
-                  child: const Icon(Icons.replay),
-                  onPressed:
-                      () => context.read<TimerBloc>().add(const TimerReset()),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: FloatingActionButton(
+                    child: const Icon(Icons.replay),
+                    onPressed:
+                        () => context.read<TimerBloc>().add(const TimerReset()),
+                  ),
                 ),
               ],
               TimerRunPause() => [
