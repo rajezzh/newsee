@@ -1,6 +1,7 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:newsee/AppData/newscollections.dart';
+import 'package:newsee/AppSamples/ToolBarWidget/toolbar.dart';
 import 'package:newsee/app.dart';
 import 'package:newsee/widgets/counter.dart';
 import 'package:newsee/widgets/news.dart';
@@ -9,7 +10,8 @@ import 'package:provider/provider.dart';
 void main() {
   // runApp(MyApp()) // Default MyApp()
   // runApp(Counter()); // load CounterApp
-  runApp(App());
+  //runApp(App());
+  runApp(ToolBarSample());
 }
 
 class MyApp extends StatelessWidget {
