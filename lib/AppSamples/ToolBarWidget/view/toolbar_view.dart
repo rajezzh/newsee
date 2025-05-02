@@ -8,7 +8,7 @@ class ToolbarView extends StatelessWidget {
       appBar:
           Globalconfig.isInitialRoute
               ? null
-              : AppBar(title: Text('Toolbar Sample')),
+              : AppBar(title: Text('Toolbar Sample'), actions: <Widget>[]),
       drawer:
           Globalconfig.isInitialRoute ? null : NavigationDrawer(children: []),
       body: Center(
