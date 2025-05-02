@@ -26,6 +26,7 @@ class LoginpageView extends StatelessWidget {
                 ),
                 validationMessages: {
                   ValidationMessage.required: (error) => 'UserName is Required',
+                  ValidationMessage.contains: (error) => error as String,
                 },
               ),
               SizedBox(height: 10.0),

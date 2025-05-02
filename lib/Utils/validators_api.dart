@@ -6,7 +6,7 @@ Map<String, dynamic>? checkForRestrictedSpecialChars(
 ) {
   String val = control.value as String;
   if (val.contains(AppConstants.PATTERN_SPECIALCHAR)) {
-    return {'error': 'Restricted Special Characters Not Allowed'};
+    return {'contains': 'Restricted Special Characters Not Allowed'};
   } else {
     return null;
   }
