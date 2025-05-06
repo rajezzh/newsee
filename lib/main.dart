@@ -85,7 +85,7 @@ class BigCard extends StatelessWidget {
     return NewsCard(news: news_collections.sublist(0, 7));
   }
 
-  Widget wordPair(dynamic theme, TextStyle style) {
+  Widget wordPair(dynamic theme, TextStyle style, BuildContext context) {
     return Center(
       child: Column(
         children: [
