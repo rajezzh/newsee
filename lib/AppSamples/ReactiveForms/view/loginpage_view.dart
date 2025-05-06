@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -46,7 +47,7 @@ class LoginpageView extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (loginFormgroup.valid) {
-                    print(loginFormgroup.rawValue);
+                    context.goNamed('home');
                   } else {
                     print(loginFormgroup.errors);
                     print('Form is invalid: ${loginFormgroup.rawValue}');
