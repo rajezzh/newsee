@@ -38,6 +38,10 @@ class LoginpageView extends StatelessWidget {
                   border: OutlineInputBorder(),
                 ),
                 obscureText: true,
+                validationMessages: {
+                  ValidationMessage.required: (error) => 'Password is Required',
+                  ValidationMessage.contains: (error) => error as String,
+                },
               ),
               SizedBox(height: 10),
               ElevatedButton(
