@@ -7,7 +7,7 @@ import 'package:newsee/pages/not_found_error.page.dart';
 
 final routes = GoRouter(
   initialLocation: '/login',
-
+  
   routes: <RouteBase>[
     GoRoute(
       path: AppRouteConstants.LOGIN_PAGE['path']!,
