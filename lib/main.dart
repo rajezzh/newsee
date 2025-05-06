@@ -1,9 +1,21 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
+import 'package:newsee/AppData/newscollections.dart';
+import 'package:newsee/AppSamples/ReactiveForms/forms.dart';
+import 'package:newsee/AppSamples/RouterApp/routerapp.dart';
+import 'package:newsee/AppSamples/ToolBarWidget/toolbar.dart';
+import 'package:newsee/app.dart';
+import 'package:newsee/widgets/counter.dart';
+import 'package:newsee/widgets/news.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  // runApp(MyApp()) // Default MyApp()
+  // runApp(Counter()); // load CounterApp
+  // runApp(App()); // timerApp
+  // runApp(ToolBarSample()); // Toolbar App
+  //runApp(LoginApp()); // Login Form App
+  runApp(RouterApp()); // GoRouter Sample App
 }
 
 class MyApp extends StatelessWidget {
@@ -69,6 +81,11 @@ class BigCard extends StatelessWidget {
     var style = theme.textTheme.displayMedium!.copyWith(
       color: theme.colorScheme.onPrimary,
     );
+    //return wordPair(theme, style);
+    return NewsCard(news: news_collections.sublist(0, 7));
+  }
+
+  Widget wordPair(dynamic theme, TextStyle style) {
     return Center(
       child: Column(
         children: [
