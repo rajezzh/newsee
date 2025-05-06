@@ -15,13 +15,13 @@ class ToolbarView extends StatelessWidget {
             Globalconfig.isInitialRoute
                 ? null
                 : AppBar(
-                  leading: IconButton(
-                    onPressed: () {
-                      print('');
-                    },
-                    icon: Icon(Icons.menu),
-                    color: Colors.white,
-                  ),
+                  // leading: IconButton(
+                  //   onPressed: () {
+                  //     print('');
+                  //   },
+                  //   icon: Icon(Icons.menu),
+                  //   color: Colors.white,
+                  // ),
                   title: Text(
                     'New Lead',
                     style: TextStyle(color: Colors.white),
