@@ -36,94 +36,173 @@ class LoginpageView extends StatelessWidget {
         builder: (context, state) {
           final isLoading = state.loginStatus == LoginStatus.fetch;
 
-          return ReactiveForm(
-            formGroup: loginFormgroup,
-            child: Center(
-              child: Container(
-                width: 300,
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ReactiveTextField(
-                      formControlName: 'username',
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
-                      ),
-                      validationMessages: {
-                        ValidationMessage.required:
-                            (error) => 'UserName is Required',
-                        ValidationMessage.contains: (error) => error as String,
-                      },
-                    ),
-                    SizedBox(height: 10.0),
-                    ReactiveTextField(
-                      formControlName: 'password',
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
-                      ),
-                      obscureText: true,
-                      validationMessages: {
-                        ValidationMessage.required:
-                            (error) => 'Password is Required',
-                        ValidationMessage.contains: (error) => error as String,
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Colors.blue,
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                      ),
-                      onPressed:
-                          isLoading
-                              ? null
-                              : () {
-                                if (loginFormgroup.valid) {
-                                  context.read<LoginBloc>().add(
-                                    LoginFetch(
-                                      loginRequest: LoginRequest(
-                                        username:
-                                            loginFormgroup.value['username']
-                                                as String,
-                                        password:
-                                            loginFormgroup.value['password']
-                                                as String,
-                                      ),
-                                    ),
-                                  );
-                                  print(state.toString());
+          return Container(
+            padding: const EdgeInsets.only(top: 20),
+            height: double.infinity,
+            width: double.infinity,
+            color: Colors.teal,
 
-                                  //context.goNamed('home');
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please fill in all required fields',
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                      child:
-                          isLoading
-                              ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2.0,
-                                ),
-                              )
-                              : const Text("Login"),
+            //       decoration: BoxDecoration(
+            //         gradient: LinearGradient(
+            //     colors: [
+            //       const Color.fromARGB(235, 2, 34, 66),
+            //       Color.fromARGB(211, 36, 12, 171),
+            //     ],
+            //   ),
+            // ),
+            child: ReactiveForm(
+              formGroup: loginFormgroup,
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      'Welcome!! ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ],
-                ),
+                  ),
+
+                  SizedBox(height: 40.0),
+
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        top: 50,
+                        left: 20,
+                        right: 20,
+                      ),
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(35),
+                          topRight: Radius.circular(35),
+                          // bottomLeft: Radius.circular(50),
+                          // bottomRight: Radius.circular(55),
+                        ),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+
+                        children: <Widget>[
+                          ReactiveTextField(
+                            formControlName: 'username',
+                            autofocus: true,
+                            decoration: InputDecoration(
+                              labelText: 'Username',
+                              prefixIcon: Icon(Icons.person),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            validationMessages: {
+                              ValidationMessage.required:
+                                  (error) => 'UserName is Required',
+                              ValidationMessage.contains:
+                                  (error) => error as String,
+                            },
+                          ),
+                          SizedBox(height: 40.0),
+                          ReactiveTextField(
+                            formControlName: 'password',
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: Icon(Icons.lock),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            obscureText: true,
+                            validationMessages: {
+                              ValidationMessage.required:
+                                  (error) => 'Password is Required',
+                              ValidationMessage.contains:
+                                  (error) => error as String,
+                            },
+                          ),
+                          SizedBox(height: 40),
+                          Container(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: const ButtonStyle(
+                                backgroundColor: WidgetStatePropertyAll<Color>(
+                                  Colors.teal,
+                                ),
+                                foregroundColor: WidgetStatePropertyAll(
+                                  Colors.white,
+                                ),
+                              ),
+                              onPressed:
+                                  isLoading
+                                      ? null
+                                      : () {
+                                        if (loginFormgroup.valid) {
+                                          context.read<LoginBloc>().add(
+                                            LoginFetch(
+                                              loginRequest: LoginRequest(
+                                                username:
+                                                    loginFormgroup
+                                                            .value['username']
+                                                        as String,
+                                                password:
+                                                    loginFormgroup
+                                                            .value['password']
+                                                        as String,
+                                              ),
+                                            ),
+                                          );
+                                          print(state.toString());
+
+                                          //context.goNamed('home');
+                                        } else {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Please fill in all required fields',
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                              child:
+                                  isLoading
+                                      ? const SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2.0,
+                                        ),
+                                      )
+                                      : const Text("Login"),
+                            ),
+                          ),
+
+                          // SizedBox(height: 150),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 250),
+                            child: Center(
+                              child: Text(
+                                'Powerd by LENDperfect',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           );
