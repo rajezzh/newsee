@@ -51,6 +51,7 @@ dependencies:
   share_plus: ^10.1.0
   equatable: ^2.0.5 # efficent revuild algorithm
   json_annotation: any
+  camera: ^0.11.1
 
 dev_dependencies:
   flutter_test:
