@@ -6,6 +6,8 @@ import 'package:newsee/AppSamples/ReactiveForms/view/loginpage_view.dart';
 import 'package:newsee/AppSamples/ToolBarWidget/view/toolbar_view.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
+import 'package:newsee/pages/home_page.dart';
+import 'package:newsee/pages/newlead_page.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
 
 final routes = GoRouter(
@@ -29,7 +31,12 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.HOME_PAGE['path']!,
       name: AppRouteConstants.HOME_PAGE['name'],
-      builder: (context, state) => ToolbarView(),
+      builder: (context, state) => HomePage(),
+    ),
+    GoRoute(
+      path: AppRouteConstants.NEWLEAD_PAGE['path']!,
+      name: AppRouteConstants.NEWLEAD_PAGE['name'],
+      builder: (context, state) => NewLeadPage(),
     ),
   ],
   redirect: (context, state) {

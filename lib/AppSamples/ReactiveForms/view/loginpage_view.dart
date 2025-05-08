@@ -36,93 +36,108 @@ class LoginpageView extends StatelessWidget {
         builder: (context, state) {
           final isLoading = state.loginStatus == LoginStatus.fetch;
 
-          return ReactiveForm(
-            formGroup: loginFormgroup,
-            child: Center(
-              child: Container(
-                width: 300,
-                padding: const EdgeInsets.all(10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ReactiveTextField(
-                      formControlName: 'username',
-                      autofocus: true,
-                      decoration: InputDecoration(
-                        labelText: 'Username',
-                        border: OutlineInputBorder(),
-                      ),
-                      validationMessages: {
-                        ValidationMessage.required:
-                            (error) => 'UserName is Required',
-                        ValidationMessage.contains: (error) => error as String,
-                      },
-                    ),
-                    SizedBox(height: 10.0),
-                    ReactiveTextField(
-                      formControlName: 'password',
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(),
-                      ),
-                      obscureText: true,
-                      validationMessages: {
-                        ValidationMessage.required:
-                            (error) => 'Password is Required',
-                        ValidationMessage.contains: (error) => error as String,
-                      },
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Colors.blue,
+          return Container(
+            padding: const EdgeInsets.only(top: 20),
+            height: double.infinity,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  const Color.fromARGB(235, 2, 34, 66),
+                  const Color.fromARGB(211, 36, 12, 171),
+                ],
+              ),
+            ),
+            child: ReactiveForm(
+              formGroup: loginFormgroup,
+              child: Center(
+                child: Container(
+                  width: 300,
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ReactiveTextField(
+                        formControlName: 'username',
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(),
                         ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        validationMessages: {
+                          ValidationMessage.required:
+                              (error) => 'UserName is Required',
+                          ValidationMessage.contains:
+                              (error) => error as String,
+                        },
                       ),
-                      onPressed:
-                          isLoading
-                              ? null
-                              : () {
-                                if (loginFormgroup.valid) {
-                                  context.read<LoginBloc>().add(
-                                    LoginFetch(
-                                      loginRequest: LoginRequest(
-                                        username:
-                                            loginFormgroup.value['username']
-                                                as String,
-                                        password:
-                                            loginFormgroup.value['password']
-                                                as String,
+                      SizedBox(height: 10.0),
+                      ReactiveTextField(
+                        formControlName: 'password',
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(),
+                        ),
+                        obscureText: true,
+                        validationMessages: {
+                          ValidationMessage.required:
+                              (error) => 'Password is Required',
+                          ValidationMessage.contains:
+                              (error) => error as String,
+                        },
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton(
+                        style: const ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll<Color>(
+                            Colors.blue,
+                          ),
+                          foregroundColor: WidgetStatePropertyAll(Colors.white),
+                        ),
+                        onPressed:
+                            isLoading
+                                ? null
+                                : () {
+                                  if (loginFormgroup.valid) {
+                                    context.read<LoginBloc>().add(
+                                      LoginFetch(
+                                        loginRequest: LoginRequest(
+                                          username:
+                                              loginFormgroup.value['username']
+                                                  as String,
+                                          password:
+                                              loginFormgroup.value['password']
+                                                  as String,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                  print(state.toString());
+                                    );
+                                    print(state.toString());
 
-                                  //context.goNamed('home');
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                        'Please fill in all required fields',
+                                    //context.goNamed('home');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Please fill in all required fields',
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }
-                              },
-                      child:
-                          isLoading
-                              ? const SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2.0,
-                                ),
-                              )
-                              : const Text("Login"),
-                    ),
-                  ],
+                                    );
+                                  }
+                                },
+                        child:
+                            isLoading
+                                ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.0,
+                                  ),
+                                )
+                                : const Text("Login"),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

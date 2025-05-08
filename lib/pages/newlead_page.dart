@@ -6,7 +6,7 @@ import 'package:newsee/pages/personal_details_page.dart';
 import 'package:newsee/pages/sourcing_page.dart';
 import 'package:newsee/widgets/side_navigation.dart';
 
-class ToolbarView extends StatelessWidget {
+class NewLeadPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
