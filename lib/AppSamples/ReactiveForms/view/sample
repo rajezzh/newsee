@@ -257,4 +257,3 @@ class LoginpageView extends StatelessWidget {
   }
 }
 
-
