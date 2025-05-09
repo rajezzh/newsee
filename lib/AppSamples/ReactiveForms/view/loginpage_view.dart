@@ -202,7 +202,7 @@ class LoginpageView extends StatelessWidget {
                                               );
                                               print(state.toString());
                 
-                                              context.goNamed('home');
+                                              context.goNamed('otp');
                                             } else {
                                               ScaffoldMessenger.of(
                                                 context,

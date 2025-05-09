@@ -6,6 +6,7 @@ import 'package:newsee/AppSamples/ReactiveForms/view/loginpage_view.dart';
 import 'package:newsee/AppSamples/ToolBarWidget/view/toolbar_view.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
+import 'package:newsee/otp/send-otp-ui.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
 
 final routes = GoRouter(
@@ -31,6 +32,16 @@ final routes = GoRouter(
       name: AppRouteConstants.HOME_PAGE['name'],
       builder: (context, state) => ToolbarView(),
     ),
+    GoRoute(
+      path: AppRouteConstants.OTP_PAGE['path']!,
+      name: AppRouteConstants.OTP_PAGE['name'],
+      builder: (context, state) => OTPPAGE(),  
+    
+    )
+
+
+
+
   ],
   redirect: (context, state) {
     print(state.fullPath);
@@ -42,3 +53,5 @@ final routes = GoRouter(
   },
   errorBuilder: (context, state) => NotFoundErrorPage(),
 );
+
+
