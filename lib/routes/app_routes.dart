@@ -23,7 +23,7 @@ final routes = GoRouter(
                   (_) => LoginBloc(
                     loginRequest: LoginRequest(username: '', password: ''),
                   ),
-              child: const LoginpageView(),
+              child:  LoginpageView(),
             ),
           ),
     ),

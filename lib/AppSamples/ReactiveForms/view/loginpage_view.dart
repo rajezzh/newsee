@@ -1,264 +1,231 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
-import 'package:newsee/Model/login_request.dart';
-import 'package:newsee/blocs/login/login_bloc.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginpageView extends StatelessWidget {
-  const LoginpageView({super.key});
-
   @override
   Widget build(BuildContext context) {
-    final loginFormgroup = AppConfig().loginFormgroup;
-    final ValueNotifier<bool> _passwordVisibleNotifier = ValueNotifier<bool>(false);
-
-    return BlocListener<LoginBloc, LoginState>(
-      listener: (context, state) {
-        switch (state.loginStatus) {
-          case LoginStatus.success:
-            print('LoginStatus.success...');
-            context.goNamed('home');
-            break;
-          case LoginStatus.fetch:
-          case LoginStatus.init:
-            print('LoginStatus.init...');
-            break;
-          case LoginStatus.error:
-            print('LoginStatus.error...');
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Login failed: Invalid credentials')),
-            );
-            break;
-        }
-      },
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
-          final isLoading = state.loginStatus == LoginStatus.fetch;
-
-          return Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: SingleChildScrollView(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color.fromARGB(235, 2, 34, 66),
-                      Color.fromARGB(211, 36, 12, 171),
-                    ],
-                  ),
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          title: Row(
+            children: [
+              Center(
+                child: Image.asset(
+                  'assets/logo1.jpg',
+                  width: 200,
                 ),
-                child: Column(
+              ),
+            ],
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 150,  
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/logo.jpg'),
-                          fit: BoxFit.contain,
-                          alignment: Alignment.topCenter,
-                        ),
-                      ),
+                    Text(
+                      "Hello,\nGayathri",
+                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                     ),
-
-                    ReactiveForm(
-                      formGroup: loginFormgroup,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 15),
-                          ),
-                          SizedBox(height: 10),
-                          Container(
-                            padding: const EdgeInsets.only(
-                              top: 20,
-                              left: 20,
-                              right: 20,
-                            ),
-                            width: MediaQuery.of(context).size.width,
-                            // height: MediaQuery.of(context).size.height,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(35),
-                              ),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 30),
-                                    child: Text(
-                                      'Login Account',
-                                      style: TextStyle(fontSize: 30),
-                                    ),
-                                  ),
-                                ),
-                                ReactiveTextField(
-                                  formControlName: 'username',
-                                  autofocus: true,
-                                  decoration: InputDecoration(
-                                    labelText: 'Username',
-                                    suffixIcon: Icon(Icons.person),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  validationMessages: {
-                                    ValidationMessage.required:
-                                        (error) => 'Username is required',
-                                         ValidationMessage.contains:
-                                    (error) => error as String,
-                                  },
-                                ),
-                                SizedBox(height: 30.0),
-
-                                 ValueListenableBuilder<bool>(
-                              valueListenable: _passwordVisibleNotifier,
-                              builder: (context, passwordVisible, child) {
-                                return ReactiveTextField(
-                                  formControlName: 'password',
-                                  obscureText: !passwordVisible,
-                                  decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    suffixIcon: IconButton(
-                                      icon: Icon(passwordVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off),
-                                      onPressed: () {
-
-                                        _passwordVisibleNotifier.value =
-                                            !passwordVisible;
-                                      },
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  validationMessages: {
-                                    ValidationMessage.required:
-                                        (error) => 'Password is Required',
-                                    ValidationMessage.contains:
-                                        (error) => error as String,
-                                  },
-                                );
-                              },
-                            ),
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        child: Text('Forgot Password?'),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: TextButton(
-                                        onPressed: () {},
-                                        child: Text('Verification Code'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 10),
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text('Register Account'),
-                                  ),
-                                ),
-                                SizedBox(height: 20),
-                                Container(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    style: const ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStatePropertyAll<Color>(
-                                        Color.fromARGB(255, 16, 9, 123),
-                                      ),
-                                      foregroundColor: MaterialStatePropertyAll(
-                                        Colors.white,
-                                      ),
-                                    ),
-                                    onPressed: isLoading
-                                        ? null
-                                        : () {
-                                            if (loginFormgroup.valid) {
-                                              context.read<LoginBloc>().add(
-                                                LoginFetch(
-                                                  loginRequest: LoginRequest(
-                                                    username: loginFormgroup
-                                                        .value['username']
-                                                        as String,
-                                                    password: loginFormgroup
-                                                        .value['password']
-                                                        as String,
-                                                  ),
-                                                ),
-                                              );
-                                              print(state.toString());
-                                              context.goNamed('otp');
-                                            } else {
-                                              ScaffoldMessenger.of(
-                                                context,
-                                              ).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(
-                                                    'Please fill in all required fields',
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          },
-                                    child: isLoading
-                                        ? const SizedBox(
-                                            width: 24,
-                                            height: 24,
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
-                                              strokeWidth: 2.0,
-                                            ),
-                                          )
-                                        : const Text("Login"),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 20),
-                                  child: Center(
-                                    child: Text(
-                                      'Powered by LENDperfect',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    Icon(
+                      Icons.notifications_none,
+                      size: 30,
+                      color: Colors.deepPurpleAccent,
                     ),
                   ],
                 ),
               ),
+              // SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 10,right: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Cust ID ***1249",
+                      style: TextStyle(fontSize: 15, color: Colors.black),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: Icon(Icons.visibility_off),
+                      label: Text("View balance"),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(0),
+                      topRight: Radius.circular(0),
+                    ),
+                    gradient: LinearGradient(
+                      colors: [const Color.fromARGB(255, 241, 236, 241), Colors.white],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 20),
+                      Icon(Icons.fingerprint, size: 60, color: const Color.fromARGB(255, 43, 17, 149)),
+                      Text(
+                        "Login with Fingerprint",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Frequently used features & special offers at your fingertips",
+                        textAlign: TextAlign.center,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                          
+                
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.currency_rupee),
+                                      iconSize: 40,
+                                      color: Colors.amber,
+                                    ),
+                                    Text(
+                                      'Currency',
+                                      style: TextStyle(color: Colors.amber, fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.local_offer),
+                                      iconSize: 40,
+                                      color: Colors.blue,
+                                    ),
+                                    Text(
+                                      'Send Money',
+                                      style: TextStyle(
+                                        color: Colors.black, 
+                                        fontSize: 14
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.shopping_bag),
+                                      iconSize: 40,
+                                      color: Colors.pink,
+                                    ),
+                                    Text(
+                                      'pay Bills',
+                                      style: TextStyle
+                                      (
+                                        color: Colors.black,
+                                        fontSize: 14
+                                        ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+
+                                ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 30),
+
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.login),
+                    label: Text("Login with Account",    
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16
+                    ),              
+                    
+                    ),
+                    style: ButtonStyle(
+                     minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
+                     backgroundColor: MaterialStateProperty.all(const Color.fromARGB(255, 72, 33, 243)), 
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+             TextButton(onPressed: () {}, child: Text("Or, login with mPIN")),
+              TextButton(onPressed: () {}, child: Text("Forgot mPIN?")),
+              ],
+            
             ),
-          );
-        },
+              SizedBox(height: 50),
+
+                Row(
+                  mainAxisAlignment:MainAxisAlignment.spaceBetween,
+              children: [
+              IconButton(onPressed: (){}, 
+              icon: Icon(Icons.medical_information),
+         
+              ),
+              Text(
+                'Maintenance',
+              ),
+                IconButton(onPressed: (){}, 
+              icon: Icon(Icons.medical_information),
+         
+              ),
+              Text(
+                'Reach Us',
+              ),
+                IconButton(onPressed: (){}, 
+              icon: Icon(Icons.medical_information),
+         
+              ),
+              Text(
+                'More',
+              ),
+              
+             
+              ],
+            
+            )
+              
+             
+            ],
+          ),
+
+          
+        ),
+
+      
       ),
     );
   }
