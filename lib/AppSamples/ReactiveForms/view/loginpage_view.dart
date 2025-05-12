@@ -114,6 +114,8 @@ class LoginpageView extends StatelessWidget {
                                   validationMessages: {
                                     ValidationMessage.required:
                                         (error) => 'Username is required',
+                                         ValidationMessage.contains:
+                                    (error) => error as String,
                                   },
                                 ),
                                 SizedBox(height: 30.0),
@@ -177,7 +179,7 @@ class LoginpageView extends StatelessWidget {
                                     child: Text('Register Account'),
                                   ),
                                 ),
-                                SizedBox(height: 1),
+                                SizedBox(height: 20),
                                 Container(
                                   width: double.infinity,
                                   child: ElevatedButton(
@@ -226,7 +228,7 @@ class LoginpageView extends StatelessWidget {
                                             height: 24,
                                             child: CircularProgressIndicator(
                                               color: Colors.white,
-                                              strokeWidth: 5.0,
+                                              strokeWidth: 2.0,
                                             ),
                                           )
                                         : const Text("Login"),

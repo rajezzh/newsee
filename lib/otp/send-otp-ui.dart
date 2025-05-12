@@ -1,64 +1,31 @@
 import 'package:flutter/material.dart';
 
 class OTPPAGE extends StatelessWidget {
-  const OTPPAGE({super.key});
 
+
+void _sendOTP(BuildContext ctx){
+  ScaffoldMessenger.of(ctx).showSnackBar(
+    
+    SnackBar(content:Text('OTP Sent Successfuly')),
+  );
+  Future.delayed(Duration(seconds: 1), ()=> Navigator.pushNamed(ctx,'/otp'));
+
+
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      appBar: AppBar(
-        title: Center(
-          child: Text('Login Otp',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+      appBar: AppBar(title: Text("Send OTP")),
+      body: Center(
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            minimumSize: Size(150, 40), 
           ),
-          ),
-          
-        ),
-        
-        backgroundColor: Colors.indigo,
-      
-        actions: [
-
-          IconButton(onPressed: (){}, icon: Icon(Icons.close),
-          color: const Color.fromARGB(255, 10, 8, 8),
-          ),
-          // IconButton(onPressed: (){}, icon: Icon(Icons.arrow_back),
-          // color: const Color.fromARGB(255, 10, 8, 8)),
-          
-        ],
-
-     
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Center(child: Image.asset('images/log.png', width: 200, height: 100)), 
-              SizedBox(height: 20),
-             Align(
-              alignment:Alignment.center,
-              child: Text('Username - GLRO',
-              style: TextStyle(
-                fontSize: 20,
-                color: const Color.fromARGB(255, 27, 109, 59),
-                fontWeight: FontWeight.bold
-
-              ),
-              
-              ),
-             ),
-
-            //  SizedBox(height: 90),
-
-              Center(child: Image.asset('images/otp.jpg', width: 200, height: 500)), 
-              SizedBox(height: 20),
-
-
-            
-          ],
+          onPressed: () => _sendOTP(context),
+          icon: Icon(Icons.send),
+          label: Text("Send OTP"),
         ),
       ),
     );
