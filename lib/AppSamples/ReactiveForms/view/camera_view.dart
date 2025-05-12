@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/blocs/camera/camera_bloc.dart';
 import 'package:newsee/blocs/camera/camera_event.dart';
 import 'package:newsee/blocs/camera/camera_state.dart';
@@ -13,7 +14,12 @@ class CameraView extends StatelessWidget {
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
   
-    return BlocBuilder<CameraBloc, CameraState>(
+    return BlocConsumer<CameraBloc, CameraState>(
+      listener: (context, state)  {
+        if (state is CameraConfirmData) {
+          context.pop(state.bytes);
+        }
+      },
       builder: (context, state) {
         if (state is CameraIntialize) {
           return const Center(child: CircularProgressIndicator());
@@ -25,12 +31,77 @@ class CameraView extends StatelessWidget {
                 child: CameraPreview(state.controller)
               ),
               Positioned(
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.camera),
-                  onPressed: () => {context.read<CameraBloc>().add(CameraCapture())},
-                  label: Text("Take Picture"))
+                top: (screenheight * 0.8),
+                width: screenwidth,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Center(
+                          child: Ink(
+                            decoration: ShapeDecoration(
+                              color: Colors.lightBlue,
+                              shape: CircleBorder()
+                            ),
+                            child:  IconButton(
+                              icon: const Icon(Icons.camera),
+                              onPressed: () => {context.read<CameraBloc>().add(CameraCapture())},
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Center(
+                          child: Ink(
+                            decoration: ShapeDecoration(
+                              color: Colors.lightBlue,
+                              shape: CircleBorder()
+                            ),
+                            child:  IconButton(
+                              icon: Icon((state.controller.description.lensDirection == CameraLensDirection.front) ? Icons.camera_front : Icons.camera_rear),
+                              onPressed: () => {context.read<CameraBloc>().add(CameraLensChange())},
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: Center(
+                          child: Ink(
+                            decoration: ShapeDecoration(
+                              color: Colors.lightBlue,
+                              shape: CircleBorder()
+                            ),
+                            child:  IconButton(
+                              icon: Icon((state.controller.value.flashMode == FlashMode.torch) ? Icons.flash_on : Icons.flash_off),
+                              onPressed: () => {context.read<CameraBloc>().add(FlashModeChange())},
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  
+                )
+
+                
               )
-              
             ],
           );
         }
