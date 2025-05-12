@@ -12,6 +12,7 @@ class LoginpageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginFormgroup = AppConfig().loginFormgroup;
+    final ValueNotifier<bool> _passwordVisibleNotifier = ValueNotifier<bool>(false);
 
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
@@ -37,12 +38,11 @@ class LoginpageView extends StatelessWidget {
           final isLoading = state.loginStatus == LoginStatus.fetch;
 
           return Scaffold(
-            resizeToAvoidBottomInset: true, 
-            body: SingleChildScrollView( 
+            resizeToAvoidBottomInset: true,
+            body: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.only(top: 20),
-               
-                // width: double.infinity,
+                width: MediaQuery.of(context).size.width,
+                padding: const EdgeInsets.only(top: 10),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -50,158 +50,163 @@ class LoginpageView extends StatelessWidget {
                       Color.fromARGB(211, 36, 12, 171),
                     ],
                   ),
-                  
-                  // image: DecorationImage(image: 
-                  // AssetImage('images/log.png'),
-                  // fit: BoxFit.cover,
-                  
-                  // alignment: Alignment.topCenter,
-                  
-                  
-                  // )
                 ),
-
-              
-                child: ReactiveForm(
-                  formGroup: loginFormgroup,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      
-                      const Padding(
-                        padding: EdgeInsets.only(left: 15),
+                child: Column(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 150,  
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/logo.jpg'),
+                          fit: BoxFit.contain,
+                          alignment: Alignment.topCenter,
+                        ),
                       ),
-                      SizedBox(height: 120), 
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 50,
-                          left: 20,
-                          right: 20,
-                        ),
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(35),
+                    ),
+
+                    ReactiveForm(
+                      formGroup: loginFormgroup,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 15),
                           ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                              Align(
-                              alignment: Alignment.topLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 60),
-                              child: Text('Login Account',
-                              // textAlign: TextAlign.start,
-                              style: TextStyle(
-                                fontSize: 30
-                                
+                          SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.only(
+                              top: 20,
+                              left: 20,
+                              right: 20,
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            // height: MediaQuery.of(context).size.height,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(35),
                               ),
-                              
-                              ),
-                            )
-                
-                
                             ),
-                            ReactiveTextField(
-                              formControlName: 'username',
-                              autofocus: true,
-                              decoration: InputDecoration(
-                                labelText: 'Username',
-                                suffixIcon: Icon(Icons.person),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              validationMessages: {
-                                ValidationMessage.required:
-                                    (error) => 'UserName is Required',
-                                ValidationMessage.contains:
-                                    (error) => error as String,
-                              },
-                            ),
-                            SizedBox(height: 40.0),
-                            ReactiveTextField(
-                              formControlName: 'password',
-                              decoration: InputDecoration(
-                                labelText: 'Password',
-                                suffixIcon: Icon(Icons.lock),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              obscureText: true,
-                              validationMessages: {
-                                ValidationMessage.required:
-                                    (error) => 'Password is Required',
-                                ValidationMessage.contains:
-                                    (error) => error as String,
-                              },
-                            ),
-                              Row(
-                              mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                              children: [
-                               Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('Forgot Password?'),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('Verification Code'),
-                    ),
-                  ),
-                                
-                              ],
-                            ),
-                            SizedBox(height: 30),
-                            Align(
-                              alignment: Alignment.center,
-                            child:TextButton(onPressed: (){}, 
-                            
-                            child: Text('Register Account'))
-                
-                
-                            ),
-                           
-                            SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                style: const ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll<Color>(
-                                    Color.fromARGB(255, 16, 9, 123),
-                                  ),
-                                  foregroundColor: MaterialStatePropertyAll(
-                                    Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 30),
+                                    child: Text(
+                                      'Login Account',
+                                      style: TextStyle(fontSize: 30),
+                                    ),
                                   ),
                                 ),
-                                onPressed:
-                                    isLoading
+                                ReactiveTextField(
+                                  formControlName: 'username',
+                                  autofocus: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Username',
+                                    suffixIcon: Icon(Icons.person),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  validationMessages: {
+                                    ValidationMessage.required:
+                                        (error) => 'Username is required',
+                                  },
+                                ),
+                                SizedBox(height: 30.0),
+
+                                 ValueListenableBuilder<bool>(
+                              valueListenable: _passwordVisibleNotifier,
+                              builder: (context, passwordVisible, child) {
+                                return ReactiveTextField(
+                                  formControlName: 'password',
+                                  obscureText: !passwordVisible,
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                      onPressed: () {
+
+                                        _passwordVisibleNotifier.value =
+                                            !passwordVisible;
+                                      },
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  validationMessages: {
+                                    ValidationMessage.required:
+                                        (error) => 'Password is Required',
+                                    ValidationMessage.contains:
+                                        (error) => error as String,
+                                  },
+                                );
+                              },
+                            ),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: TextButton(
+                                        onPressed: () {},
+                                        child: Text('Forgot Password?'),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.bottomRight,
+                                      child: TextButton(
+                                        onPressed: () {},
+                                        child: Text('Verification Code'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 10),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: TextButton(
+                                    onPressed: () {},
+                                    child: Text('Register Account'),
+                                  ),
+                                ),
+                                SizedBox(height: 1),
+                                Container(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    style: const ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStatePropertyAll<Color>(
+                                        Color.fromARGB(255, 16, 9, 123),
+                                      ),
+                                      foregroundColor: MaterialStatePropertyAll(
+                                        Colors.white,
+                                      ),
+                                    ),
+                                    onPressed: isLoading
                                         ? null
                                         : () {
                                             if (loginFormgroup.valid) {
                                               context.read<LoginBloc>().add(
                                                 LoginFetch(
                                                   loginRequest: LoginRequest(
-                                                    username:
-                                                        loginFormgroup
-                                                            .value['username']
+                                                    username: loginFormgroup
+                                                        .value['username']
                                                         as String,
-                                                    password:
-                                                        loginFormgroup
-                                                            .value['password']
+                                                    password: loginFormgroup
+                                                        .value['password']
                                                         as String,
                                                   ),
                                                 ),
                                               );
                                               print(state.toString());
-                
                                               context.goNamed('otp');
                                             } else {
                                               ScaffoldMessenger.of(
@@ -215,38 +220,38 @@ class LoginpageView extends StatelessWidget {
                                               );
                                             }
                                           },
-                                child: isLoading
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.white,
-                                          strokeWidth: 2.0,
-                                        ),
-                                      )
-                                    : const Text("Login"),
-                              ),
-                              
-                            ),
-                          
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: Center(
-                                child: Text(
-                                  'Powered by LENDperfect',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 15,
+                                    child: isLoading
+                                        ? const SizedBox(
+                                            width: 24,
+                                            height: 24,
+                                            child: CircularProgressIndicator(
+                                              color: Colors.white,
+                                              strokeWidth: 5.0,
+                                            ),
+                                          )
+                                        : const Text("Login"),
                                   ),
                                 ),
-                              ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20),
+                                  child: Center(
+                                    child: Text(
+                                      'Powered by LENDperfect',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -256,5 +261,4 @@ class LoginpageView extends StatelessWidget {
     );
   }
 }
-
 
