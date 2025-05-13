@@ -23,7 +23,7 @@ final routes = GoRouter(
                   (_) => LoginBloc(
                     loginRequest: LoginRequest(username: '', password: ''),
                   ),
-              child:  LoginpageView(),
+              child: LoginpageView(),
             ),
           ),
     ),
@@ -35,13 +35,8 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.OTP_PAGE['path']!,
       name: AppRouteConstants.OTP_PAGE['name'],
-      builder: (context, state) => OTPPAGE(),  
-    
-    )
-
-
-
-
+      builder: (context, state) => OTPPAGE(),
+    ),
   ],
   redirect: (context, state) {
     print(state.fullPath);
@@ -53,5 +48,3 @@ final routes = GoRouter(
   },
   errorBuilder: (context, state) => NotFoundErrorPage(),
 );
-
-
