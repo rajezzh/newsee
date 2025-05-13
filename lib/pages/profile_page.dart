@@ -1,7 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:newsee/Utils/geolocator.dart';
+import 'package:biometric_signature/biometric_signature.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -12,6 +15,7 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends State<ProfilePage> {
   Uint8List? profilebytes;
+  Position? geoPosition;
   @override 
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
@@ -38,18 +42,55 @@ class ProfilePageState extends State<ProfilePage> {
                   child: const Icon(Icons.person, size: 50),
                 ),
             ),
-            SizedBox(
-              height: (screenheight * 0.1)
+            Listener(
+              child: geoPosition != null ? Container(
+                padding: EdgeInsets.fromLTRB(screenwidth * 0.1, 5, screenwidth * 0.1, 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Colors.amber
+                      ),
+                      child: Row(
+                        children: [
+                          Text("lat: "),
+                          Text((geoPosition?.latitude).toString(), style: TextStyle(backgroundColor: Colors.white))
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: Colors.amber
+                      ),
+                      child: Row(
+                        children: [
+                          Text("long: "),
+                          Text((geoPosition?.longitude).toString(), style: TextStyle(backgroundColor: Colors.white))
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                
+              ) : const SizedBox.shrink()
             ),
             SizedBox(
               height: (screenheight * 0.2),
               child: Center(
                 child: ElevatedButton(
                   onPressed: () async {
+                    final curposition = await getLocation(context);
+                    print("curposition: $curposition");
                     final getprofileData =  await context.pushNamed<Uint8List>("camera");
                     if (getprofileData != null) {
                       setState(() {
                         profilebytes = getprofileData;
+                        geoPosition = curposition;
                       });
                     }
                     print("getprofileData $getprofileData");

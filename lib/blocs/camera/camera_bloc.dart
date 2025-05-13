@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/blocs/camera/camera_event.dart';
@@ -94,8 +93,8 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   void confirmimage(event, emit) async {
      if (controller != null && controller!.value.isInitialized) {
       final imagestate = await controller!.takePicture();
-      imageBytes = await imagestate.readAsBytes();
-      emit(CameraConfirmData(imageBytes!));
+      // imageBytes = await imagestate.readAsBytes();
+      emit(CameraConfirmData(imagestate));
     } else {
       print("Camera Capture Not Working");
     }

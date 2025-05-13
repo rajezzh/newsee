@@ -22,7 +22,9 @@ class CameraCaptureData extends CameraState {
 }
 
 class CameraConfirmData extends CameraState {
-  final Uint8List bytes;
-  CameraConfirmData(this.bytes);
+  // final Uint8List bytes;
+  // CameraConfirmData(this.bytes);
+  final XFile xfiledata;
+  CameraConfirmData(this.xfiledata);
 }
 

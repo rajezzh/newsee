@@ -36,7 +36,9 @@ class ToolbarView extends StatelessWidget {
                           ),
                           child:  IconButton(
                             icon: const Icon(Icons.person),
-                            onPressed: () => {context.goNamed('profile')}, 
+                            onPressed: () => {
+                              context.goNamed('profile')
+                            }, 
                             color: Colors.white,
                           ),
                         ),

@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:newsee/blocs/camera/camera_bloc.dart';
 import 'package:newsee/blocs/camera/camera_event.dart';
 import 'package:newsee/blocs/camera/camera_state.dart';
@@ -13,13 +14,44 @@ class CameraView extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
     double screenheight = MediaQuery.of(context).size.height;
+
+    final intwidth = (screenwidth * 0.5).round();
+    final intheight = (screenheight * 0.5).round();
   
     return BlocConsumer<CameraBloc, CameraState>(
-      listener: (context, state)  {
+      listener: (context, state)  async {
         if (state is CameraConfirmData) {
-          context.pop(state.bytes);
-        }
-      },
+          final cropdata = await ImageCropper().cropImage(
+              sourcePath: state.xfiledata.path,
+              uiSettings: [
+                AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: Colors.deepOrange,
+                  toolbarWidgetColor: const Color.fromRGBO(255, 255, 255, 1),
+                  initAspectRatio: CropAspectRatioPreset.square,
+                  lockAspectRatio: false,
+                  aspectRatioPresets: [
+                    CropAspectRatioPreset.original,
+                    CropAspectRatioPreset.square,
+                    CropAspectRatioPreset.ratio4x3,
+                    CropAspectRatioPresetCustom(),
+                  ],
+                ),
+                WebUiSettings(
+                  context: context,
+                  presentStyle: WebPresentStyle.dialog,
+                  size: CropperSize(
+                    width: intwidth,
+                    height: intheight,
+                  ),
+                ),
+              ]
+          );
+          final imageBytes = await cropdata?.readAsBytes();
+          print("cropdata-imageBytes $imageBytes");
+          context.pop(imageBytes);
+          }
+        },
       builder: (context, state) {
         if (state is CameraIntialize) {
           return const Center(child: CircularProgressIndicator());
@@ -140,8 +172,16 @@ class CameraView extends StatelessWidget {
             ],
           );
         }
-        return const Center(child: Text("Initializing..."));
+        return const Center(child: CircularProgressIndicator());
       }
     );
   }
+}
+
+class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
+  @override
+  (int, int)? get data => (2, 3);
+
+  @override
+  String get name => '2x3 (customized)';
 }
