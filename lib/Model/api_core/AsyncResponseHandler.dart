@@ -36,4 +36,8 @@ class AsyncResponseHandler<L, R> {
 
   R get right =>
       this._right != null ? _right : throw StateError("called right on Left");
+
+  bool isLeft() => _left != null;
+
+  bool isRight() => _right != null;
 }

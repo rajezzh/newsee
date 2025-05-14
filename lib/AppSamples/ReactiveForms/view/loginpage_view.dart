@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
+import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginpageView extends StatelessWidget {
@@ -13,17 +14,59 @@ class LoginpageView extends StatelessWidget {
   Widget build(BuildContext context) {
     final loginFormgroup = AppConfig().loginFormgroup;
 
-    return BlocListener<LoginBloc, LoginState>(
+    // fakeLogin(AuthState state) {
+    //   if (loginFormgroup.valid) {
+    //     context.read<LoginBloc>().add(
+    //       LoginFetch(
+    //         loginRequest: LoginRequest(
+    //           username: loginFormgroup.value['username'] as String,
+    //           password: loginFormgroup.value['password'] as String,
+    //         ),
+    //       ),
+    //     );
+    //     print(state.toString());
+
+    //     //context.goNamed('home');
+    //   } else {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       const SnackBar(content: Text('Please fill in all required fields')),
+    //     );
+    //   }
+    // }
+
+    login(AuthState state) {
+      if (loginFormgroup.valid) {
+        context.read<AuthBloc>().add(
+          LoginWithAccount(
+            loginRequest: LoginRequest(
+              username: loginFormgroup.value['username'] as String,
+              password: loginFormgroup.value['password'] as String,
+            ),
+          ),
+        );
+        print(state.toString());
+
+        //context.goNamed('home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fill in all required fields')),
+        );
+      }
+    }
+
+    return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        switch (state.loginStatus) {
-          case LoginStatus.success:
+        switch (state.authStatus) {
+          case AuthStatus.success:
             print('LoginStatus.success...');
             context.goNamed('home');
-          case LoginStatus.fetch:
-          case LoginStatus.init:
+          case AuthStatus.loading:
+            print('LoginStatus.loading...');
+
+          case AuthStatus.init:
             print('LoginStatus.init...');
 
-          case LoginStatus.error:
+          case AuthStatus.failure:
             print('LoginStatus.error...');
 
             ScaffoldMessenger.of(context).showSnackBar(
@@ -32,10 +75,10 @@ class LoginpageView extends StatelessWidget {
         }
         ;
       },
-      child: BlocBuilder<LoginBloc, LoginState>(
+      child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          final isLoading = state.loginStatus == LoginStatus.fetch;
-
+          final isLoading = state.authStatus == AuthStatus.loading;
+          print('state.authStatus => ${state.authStatus}');
           return Container(
             padding: const EdgeInsets.only(top: 20),
             height: double.infinity,
@@ -98,31 +141,8 @@ class LoginpageView extends StatelessWidget {
                             isLoading
                                 ? null
                                 : () {
-                                  if (loginFormgroup.valid) {
-                                    context.read<LoginBloc>().add(
-                                      LoginFetch(
-                                        loginRequest: LoginRequest(
-                                          username:
-                                              loginFormgroup.value['username']
-                                                  as String,
-                                          password:
-                                              loginFormgroup.value['password']
-                                                  as String,
-                                        ),
-                                      ),
-                                    );
-                                    print(state.toString());
-
-                                    //context.goNamed('home');
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Please fill in all required fields',
-                                        ),
-                                      ),
-                                    );
-                                  }
+                                  //fakeLogin(state);
+                                  login(state);
                                 },
                         child:
                             isLoading
