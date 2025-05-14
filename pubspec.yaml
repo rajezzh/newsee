@@ -50,8 +50,7 @@ dependencies:
   socket_io_client: ^3.0.0
   share_plus: ^10.1.0
   equatable: ^2.0.5 # efficent revuild algorithm
-  json_annotation: any
-  intl: ^0.19.0
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
