@@ -1,0 +1,71 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class MyCupertinoSheetExample extends StatelessWidget {
+  void _showActionSheet(BuildContext context) {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: Text('Choose an Option'),
+        message: Text('Select one of the following actions'),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              print("Option 1 Selected");
+            },
+            child: Text('Option 1'),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+              print("Option 2 Selected");
+            },
+            child: Text('Option 2'),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          isDefaultAction: true,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Cancel'),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Cupertino Action Sheet Example')),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(children: [Icon(Icons.badge), Text('smart')]),
+              Column(children: [Icon(Icons.badge), Text('smart')]),
+              Column(children: [Icon(Icons.badge), Text('smart')]),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Column(children: [Icon(Icons.badge), Text('smart')]),
+              Column(children: [Icon(Icons.badge), Text('smart')]),
+              Column(children: [Icon(Icons.badge), Text('smart')]),
+            ],
+          ),
+          SizedBox(height: 40),
+          ElevatedButton(
+            onPressed: () => _showActionSheet(context),
+            child: Text('Show Action Sheet'),
+          ),
+        ],
+      ),
+    );
+  }
+}

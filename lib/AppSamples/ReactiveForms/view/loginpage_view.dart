@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'action.dart';
 import 'forgetpassword.dart';
+import 'maintain.dart';
+import 'reachus.dart';
+import 'more.dart';
 
 class LoginpageView extends StatelessWidget {
-
   void fingerPrintScanner() {
     print('clicked finger print');
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class LoginpageView extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 80),
+                SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.all(0),
                   child: Container(
@@ -75,7 +74,7 @@ class LoginpageView extends StatelessWidget {
                           },
                           icon: Icon(Icons.fingerprint),
                           iconSize: 60,
-                          color: const Color.fromARGB(255, 43, 17, 149),
+                          color: const Color.fromARGB(255, 3, 9, 110),
                         ),
 
                         Text(
@@ -101,12 +100,12 @@ class LoginpageView extends StatelessWidget {
                                 children: [
                                   IconButton(
                                     onPressed: () {},
-                                    icon: Icon(Icons.currency_rupee),
+                                    icon: Icon(Icons.calculate_rounded),
                                     iconSize: 40,
                                     color: Colors.amber,
                                   ),
                                   Text(
-                                    'Currency',
+                                    'Emi Calculator',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 14,
@@ -164,7 +163,7 @@ class LoginpageView extends StatelessWidget {
                   child: Center(
                     child: ElevatedButton.icon(
                       onPressed: () {},
-                      icon: Icon(Icons.login),
+                      icon: Icon(Icons.login, color: Colors.white),
                       label: Text(
                         "Login with Account",
                         style: TextStyle(
@@ -178,7 +177,7 @@ class LoginpageView extends StatelessWidget {
                           Size(double.infinity, 50),
                         ),
                         backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 72, 33, 243),
+                          const Color.fromARGB(246, 4, 13, 95),
                         ),
                       ),
                     ),
@@ -191,22 +190,22 @@ class LoginpageView extends StatelessWidget {
                       onPressed: () {},
                       child: Text("Or, login with mPIN"),
                     ),
-                    TextButton(onPressed: () 
-                    {
-                         forgetActionSheet(
-                            context, 
-                            "Reset mPIN for \n Customer ID *****8977",
-                            "Let's first Verify it's you ,before you reset the mPIN. \n it'll be super quick and easy.",
-                             (Icons.lock),
-                            "Cancel",
-                            "Continue"
-                            );
-
-                    },
-                     child: Text("Forgot mPIN?")),
+                    TextButton(
+                      onPressed: () {
+                        forgetActionSheet(
+                          context,
+                          "Reset mPIN for \n Customer ID *****8977",
+                          "Let's first Verify it's you ,before you reset the mPIN. \n it'll be super quick and easy.",
+                          (Icons.lock),
+                          "Cancel",
+                          "Continue",
+                        );
+                      },
+                      child: Text("Forgot mPIN?"),
+                    ),
                   ],
                 ),
-                SizedBox(height: 110),
+                SizedBox(height: 150),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -216,14 +215,17 @@ class LoginpageView extends StatelessWidget {
                         TextButton.icon(
                           onPressed: () {
                             maintenanceActionSheet(
-                            context, 
-                            "Comming Soon....",
-                            "We are Working to improve Your experence with our new mobile app.",
-                             Icons.person,
-                            "okay"
+                              context,
+                              "Comming Soon....",
+                              "We are Working to improve Your experence with our new mobile app.",
+                              Icons.person,
+                              "okay",
                             );
                           },
-                          icon: Icon(Icons.medical_information),
+                          icon: Icon(
+                            Icons.medical_information,
+                            color: const Color.fromARGB(246, 4, 13, 95),
+                          ),
                           label: Text(
                             'Maintenance',
                             style: TextStyle(color: Colors.black),
@@ -235,15 +237,21 @@ class LoginpageView extends StatelessWidget {
                       children: [
                         TextButton.icon(
                           onPressed: () {
-                            maintenanceActionSheet(
-                             context, 
-                            "Comming Soon....",
-                            "We are Working to improve Your experence with our new mobile app.",
-                             Icons.receipt_sharp,
-                            "okay"
+                            reachUsActionSheet(
+                              context,
+                              "Reach Us...",
+                              "Whatsapp",
+                              "ContactUs",
+                              "BranchLocator",
+                              Icons.phone,
+                              Icons.contact_emergency,
+                              Icons.location_pin,
                             );
                           },
-                          icon: Icon(Icons.gif),
+                          icon: Icon(
+                            Icons.movie_creation_rounded,
+                            color: const Color.fromARGB(246, 4, 13, 95),
+                          ),
                           label: Text(
                             'Reach Us',
                             style: TextStyle(color: Colors.black),
@@ -255,16 +263,18 @@ class LoginpageView extends StatelessWidget {
                       children: [
                         TextButton.icon(
                           onPressed: () {
-                            maintenanceActionSheet(
-                             context, 
-                            "Comming Soon....",
-                            "We are Working to improve Your experence with our new mobile app.",
-                             Icons.more,
-                            "okay"
+                            moreActionSheet(
+                              context,
+                              "Comming Soon....",
+                              "We are Working to improve Your experence with our new mobile app.",
+                              Icons.more,
+                              "okay",
                             );
-
                           },
-                          icon: Icon(Icons.more),
+                          icon: Icon(
+                            Icons.more,
+                            color: const Color.fromARGB(246, 4, 13, 95),
+                          ),
                           label: Text(
                             'More',
                             style: TextStyle(color: Colors.black),
