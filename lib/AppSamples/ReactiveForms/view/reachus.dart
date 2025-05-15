@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'contactUs.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 void reachUsActionSheet(
   BuildContext context,
@@ -9,7 +11,6 @@ void reachUsActionSheet(
   String heading1,
   String heading2,
   String heading3,
-  IconData icon1,
   IconData icon2,
   IconData icon3,
 ) {
@@ -52,11 +53,15 @@ void reachUsActionSheet(
                   },
                   child: Column(
                     children: [
-                      Icon(
-                        icon1,
-                        color: const Color.fromARGB(255, 32, 219, 35),
-                        size: 30,
+                      SvgPicture.asset(
+                        'assets/whatsapp.svg',
+                        height: 40,width: 40,
                       ),
+                      // Icon(
+                      //   icon1,
+                      //   color: const Color.fromARGB(255, 32, 219, 35),
+                      //   size: 30,
+                      // ),
                       SizedBox(height: 20),
                       Text(
                         heading1,
@@ -73,7 +78,7 @@ void reachUsActionSheet(
                       "Contact US",
                       "1888762666",
                       "1903833773",
-                      Icons.phone,
+                      Icons.contact_emergency,
                     );
                   },
                   child: Column(
@@ -81,7 +86,7 @@ void reachUsActionSheet(
                       Icon(
                         icon2,
                         color: const Color.fromARGB(255, 231, 9, 9),
-                        size: 30,
+                        size: 35,
                       ),
                       SizedBox(height: 20),
                       Text(
@@ -99,7 +104,7 @@ void reachUsActionSheet(
                       Icon(
                         icon3,
                         color: const Color.fromARGB(255, 3, 9, 110),
-                        size: 30,
+                        size: 35,
                       ),
                       SizedBox(height: 20),
                       Text(

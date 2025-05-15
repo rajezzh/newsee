@@ -24,87 +24,91 @@ void moreActionSheet(
                 ),
               ),
 
-              Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [Icon(Icons.person_3 , color: const Color.fromARGB(255, 198, 27, 27), size: 30,), Text('Retail Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+              SingleChildScrollView(
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.badge_sharp, color: const Color.fromARGB(255, 198, 27, 27), size: 30,), Text('Retail Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color.fromARGB(130, 158, 158, 158,), width: 2.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [Icon(Icons.agriculture, color: const Color.fromARGB(252, 198, 27, 27),size: 30,), 
-                          Text('Agree Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(130, 158, 158, 158,), width: 2.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.agriculture, color: const Color.fromARGB(252, 198, 27, 27),size: 30,), 
+                            Text('Agree Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [Icon(Icons.business, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('MSME Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.business, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('MSME Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 40),
-              Container(
-                
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [Icon(Icons.home_filled, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('Home Loan', style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+              SizedBox(height: 20),
+              SingleChildScrollView(
+                child: Container(
+                  
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.home_filled, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('Home Loan', style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [Icon(Icons.car_rental_rounded, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('Vehicle Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.car_rental_rounded, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('Vehicle Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                          ),
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: [Icon(Icons.grade_outlined, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('Gold Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Column(
+                            children: [Icon(Icons.card_giftcard, color: const Color.fromARGB(255, 198, 27, 27),size: 30,), Text('Gold Loan',style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.normal,),)],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
 
@@ -136,7 +140,7 @@ void moreActionSheet(
                           padding: const EdgeInsets.only(left: 12),
                           child: Text('Manage e-Mandates',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black,
                             fontWeight: FontWeight.normal
                           ),
@@ -147,7 +151,7 @@ void moreActionSheet(
                         ),
 
                       Padding(
-                        padding: const EdgeInsets.only(right: 50),
+                        padding: const EdgeInsets.only(right: 20),
                         child: Icon(Icons.arrow_forward_ios_outlined,
                                              
                           color: const Color.fromARGB(198, 7, 61, 105),
@@ -181,7 +185,7 @@ void moreActionSheet(
                         ),
 
                       Padding(
-                        padding: const EdgeInsets.only(right: 50),
+                        padding: const EdgeInsets.only(right: 20),
                         child: Icon(Icons.arrow_forward_ios_outlined,
                                              
                           color: const Color.fromARGB(198, 7, 61, 105),

@@ -41,6 +41,8 @@ class LoginpageWithAC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginFormgroup = AppConfig().loginFormgroup;
+    final ValueNotifier<bool> _passwordVisibleNotifier = ValueNotifier<bool>(false);
+
 
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
@@ -117,23 +119,38 @@ class LoginpageWithAC extends StatelessWidget {
                             },
                           ),
                           SizedBox(height: 10.0),
-                          ReactiveTextField(
-                            formControlName: 'password',
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              suffixIcon: Icon(Icons.remove_red_eye_sharp),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)
-                              ),
+                          
+                         ValueListenableBuilder<bool>(
+                              valueListenable: _passwordVisibleNotifier,
+                              builder: (context, passwordVisible, child) {
+                                return ReactiveTextField(
+                                  formControlName: 'password',
+                                  obscureText: !passwordVisible,
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    suffixIcon: IconButton(
+                                      icon: Icon(passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off),
+                                      onPressed: () {
+
+                                        _passwordVisibleNotifier.value =
+                                            !passwordVisible;
+                                      },
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  validationMessages: {
+                                    ValidationMessage.required:
+                                        (error) => 'Password is Required',
+                                    ValidationMessage.contains:
+                                        (error) => error as String,
+                                  },
+                                );
+                              },
                             ),
-                            obscureText: true,
-                            validationMessages: {
-                              ValidationMessage.required:
-                                  (error) => 'Password is Required',
-                              ValidationMessage.contains:
-                                  (error) => error as String,
-                            },
-                          ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             style: const ButtonStyle(
