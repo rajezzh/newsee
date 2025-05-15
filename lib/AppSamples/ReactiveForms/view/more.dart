@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 
 void moreActionSheet(
   BuildContext context,
-  String title,
-  String message,
-  IconData icon,
-  String action1,
+  String action,
 ) {
   showCupertinoModalPopup<void>(
     context: context,
@@ -220,7 +217,7 @@ void moreActionSheet(
                     padding: EdgeInsets.symmetric(vertical: 12),
                    color: const Color.fromARGB(255, 3, 9, 110),
                     child: Text(
-                      action1,
+                      action,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white),
                     ),

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
 import 'forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';
@@ -162,7 +165,12 @@ class LoginpageView extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   child: Center(
                     child: ElevatedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                      loginActionSheet(
+                        context,
+                       );
+                      //  Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginBlocProvide()),);
+                      },
                       icon: Icon(Icons.login, color: Colors.white),
                       label: Text(
                         "Login with Account",
@@ -187,7 +195,9 @@ class LoginpageView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                       
+                      },
                       child: Text("Or, login with mPIN"),
                     ),
                     TextButton(
@@ -265,11 +275,9 @@ class LoginpageView extends StatelessWidget {
                           onPressed: () {
                             moreActionSheet(
                               context,
-                              "Comming Soon....",
-                              "We are Working to improve Your experence with our new mobile app.",
-                              Icons.more,
-                              "okay",
+                            'Okay'
                             );
+
                           },
                           icon: Icon(
                             Icons.more,

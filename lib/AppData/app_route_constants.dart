@@ -4,4 +4,5 @@ class AppRouteConstants {
   static const RouteProps LOGIN_PAGE = {'name': 'login', 'path': '/login'};
   static const RouteProps HOME_PAGE = {'name': 'home', 'path': '/home'};
   static const RouteProps OTP_PAGE = {'name': 'otp', 'path': '/otp'};
+  static const RouteProps LOGIN_ACC_PAGE = {'name': 'loginacc', 'path': '/loginacc'};
 }

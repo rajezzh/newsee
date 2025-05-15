@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_route_constants.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/loginpage_view.dart';
 import 'package:newsee/AppSamples/ToolBarWidget/view/toolbar_view.dart';
 import 'package:newsee/Model/login_request.dart';
@@ -17,15 +18,17 @@ final routes = GoRouter(
       path: AppRouteConstants.LOGIN_PAGE['path']!,
       name: AppRouteConstants.LOGIN_PAGE['name'],
       builder:
-          (context, state) => Scaffold(
-            body: BlocProvider(
-              create:
-                  (_) => LoginBloc(
-                    loginRequest: LoginRequest(username: '', password: ''),
-                  ),
-              child: LoginpageView(),
-            ),
-          ),
+          (context, state) => 
+            // Scaffold(
+            // body: BlocProvider(
+            //   create:
+            //       (_) => LoginBloc(
+            //         loginRequest: LoginRequest(username: '', password: ''),
+            //       ),
+            //   child: 
+              LoginpageView(),
+    //         ),
+    //       ),
     ),
     GoRoute(
       path: AppRouteConstants.HOME_PAGE['path']!,
@@ -36,6 +39,11 @@ final routes = GoRouter(
       path: AppRouteConstants.OTP_PAGE['path']!,
       name: AppRouteConstants.OTP_PAGE['name'],
       builder: (context, state) => OTPPAGE(),
+    ),
+    GoRoute(
+      path: AppRouteConstants.LOGIN_ACC_PAGE['path']!,
+      name: AppRouteConstants.LOGIN_ACC_PAGE['name'],
+      builder: (context, state) => LoginpageWithAC(),
     ),
   ],
   redirect: (context, state) {
