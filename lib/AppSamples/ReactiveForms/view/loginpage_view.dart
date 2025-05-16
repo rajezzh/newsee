@@ -3,11 +3,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
 import 'package:newsee/Model/login_request.dart';
+import 'package:newsee/Utils/local_biometric.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class LoginpageView extends StatelessWidget {
   const LoginpageView({super.key});
+
+  void loginwithbiometric(BuildContext context) async{
+    try {
+      final biostatus = await biometricAuthentication();
+      if (biostatus.status == false) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(biostatus.message)),
+          );
+        }
+      } else {
+        if (context.mounted) {
+          context.goNamed('home');
+        }
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +55,7 @@ class LoginpageView extends StatelessWidget {
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           final isLoading = state.loginStatus == LoginStatus.fetch;
-
+          final isHidden = state.isPasswordHidden;
           return ReactiveForm(
             formGroup: loginFormgroup,
             child: Center(
@@ -62,10 +82,15 @@ class LoginpageView extends StatelessWidget {
                     ReactiveTextField(
                       formControlName: 'password',
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {context.read<LoginBloc>().add(LoginSecurePassword());}, 
+                          icon: Icon(isHidden? Icons.visibility_off : Icons.visibility)
+                        ),
                         labelText: 'Password',
                         border: OutlineInputBorder(),
+
                       ),
-                      obscureText: true,
+                      obscureText: isHidden,
                       validationMessages: {
                         ValidationMessage.required:
                             (error) => 'Password is Required',
@@ -80,6 +105,8 @@ class LoginpageView extends StatelessWidget {
                         ),
                         foregroundColor: WidgetStatePropertyAll(Colors.white),
                       ),
+                      // onPressed: () {loginwithbiometric(context);},
+                      // child: Text("Login"),
                       onPressed:
                           isLoading
                               ? null

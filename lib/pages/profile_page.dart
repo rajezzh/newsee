@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/Model/image_capture_dialog.dart';
 import 'package:newsee/Utils/geolocator.dart';
-import 'package:biometric_signature/biometric_signature.dart';
+import 'package:newsee/Utils/pdf_viewer.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -16,6 +18,53 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   Uint8List? profilebytes;
   Position? geoPosition;
+
+
+  /* 
+  @author         :   ganeshkumar.b   12/05/2025
+  @description    :   this function navigate camera page and return the data
+  @props          :   BuildContext
+  return value    :   it retun the bytes(Unit8List) data
+  */
+  Future<Uint8List?> onCameraTap(BuildContext context) async {
+    final curposition = await getLocation(context);
+    setState(() {
+      geoPosition = curposition;
+    });
+    print("curposition: $curposition");
+    final getprofileData =  await context.pushNamed<Uint8List>("camera");
+    return getprofileData!;
+  }
+
+  /* 
+  @author         :   ganeshkumar.b   12/05/2025
+  @description    :   this function call image picker plugin and access gallery and return the image data
+  @props          :   BuildContext
+  return value    :   it retun the bytes(Unit8List) data
+  */
+  Future<Uint8List?> onGalleryTap(BuildContext context) async {
+    final galleyImageBytes = await pickimagefromgallery(context);
+    return galleyImageBytes!;
+  }
+
+  // onFileTap(BuildContext context) async{
+  //   final fileBytes  = await filePicker();
+  //   print("fileBytes: $fileBytes");
+  //   if (fileBytes != null) {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => PDFViewerFromBytes(
+  //           filedata: fileBytes!),
+  //       ),
+  //     );
+  //   }
+  // }
+
+    cancel(BuildContext context) {
+      return "cancel string";
+    }
+
   @override 
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
@@ -43,7 +92,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
             ),
             Listener(
-              child: geoPosition != null ? Container(
+              child: (geoPosition != null && profilebytes != null) ? Container(
                 padding: EdgeInsets.fromLTRB(screenwidth * 0.1, 5, screenwidth * 0.1, 5),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,22 +133,38 @@ class ProfilePageState extends State<ProfilePage> {
               child: Center(
                 child: ElevatedButton(
                   onPressed: () async {
-                    final curposition = await getLocation(context);
-                    print("curposition: $curposition");
-                    final getprofileData =  await context.pushNamed<Uint8List>("camera");
-                    if (getprofileData != null) {
-                      setState(() {
-                        profilebytes = getprofileData;
-                        geoPosition = curposition;
-                      });
+                    final List<FilePickingOptionList> actions = [
+                      FilePickingOptionList(title: "CAMERA", icon: Icons.linked_camera),
+                      FilePickingOptionList(title: "GALLERY", icon: Icons.satellite_rounded),
+                      // FilePickingOptionList(title: "FILE", icon: Icons.file_open), 
+                      FilePickingOptionList(title: "CANCEL", icon: Icons.cancel)
+                    ];
+                    final result = await showMediaPickerActionSheet(
+                      context: context,
+                      actions: actions
+                    );
+                    if (result != null && context.mounted) {
+                      if (result == "CAMERA") {
+                        final getimage = await onCameraTap(context);
+                        if (getimage != null) {
+                          setState(() {
+                            profilebytes = getimage;
+                          });
+                        }
+                      } else if (result == "GALLERY") {
+                        final getimage = await onGalleryTap(context);
+                        if (getimage != null) {
+                          setState(() {
+                            profilebytes = getimage;
+                          });
+                        }
+                      }
                     }
-                    print("getprofileData $getprofileData");
                   }, 
                   child: Text("Captrue Image")
                 ),
               ),
             )
-            
           ],
         ),
       ),

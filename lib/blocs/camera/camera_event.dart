@@ -6,7 +6,7 @@ class CameraLensChange extends CameraEvent {}
 
 class FlashModeChange extends CameraEvent {}
 
-class CameraCapture extends CameraEvent {}
+class CaptureImage extends CameraEvent {}
 
 class CameraReCapture extends CameraEvent {}
 
