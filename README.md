@@ -14,3 +14,10 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## New Lead Feature
+
+## Branch Name : new-lead-func
+
+this branch contains UI and features with regards to New Lead - Detalis capturing
+which includes forms for sourcing details , personal details , address details , loan details form design
