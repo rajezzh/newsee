@@ -41,12 +41,11 @@ class LoginpageWithAC extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final loginFormgroup = AppConfig().loginFormgroup;
-    final ValueNotifier<bool> _passwordVisibleNotifier = ValueNotifier<bool>(false);
 
 
     return BlocListener<LoginBloc, LoginState>(
       listener: (context, state) {
-        switch (state.loginStatus) {
+        switch (state.loginStatus) {              
           case LoginStatus.success:
             print('LoginStatus.success...');
             context.goNamed('home');
@@ -66,7 +65,8 @@ class LoginpageWithAC extends StatelessWidget {
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, state) {
           final isLoading = state.loginStatus == LoginStatus.fetch;
-
+          final isPasswordHidden = state.isPasswordHidden;
+          print('in build function isPasswordHidden=> ${state.isPasswordHidden}');
           return Container(
             // padding: const EdgeInsets.only(top: 20),
             // height: double.infinity,
@@ -119,23 +119,18 @@ class LoginpageWithAC extends StatelessWidget {
                             },
                           ),
                           SizedBox(height: 10.0),
-                          
-                         ValueListenableBuilder<bool>(
-                              valueListenable: _passwordVisibleNotifier,
-                              builder: (context, passwordVisible, child) {
-                                return ReactiveTextField(
+
+                                ReactiveTextField(
                                   formControlName: 'password',
-                                  obscureText: !passwordVisible,
+                                  obscureText: isPasswordHidden,
                                   decoration: InputDecoration(
                                     labelText: 'Password',
                                     suffixIcon: IconButton(
-                                      icon: Icon(passwordVisible
+                                      icon: Icon( isPasswordHidden
                                           ? Icons.visibility
                                           : Icons.visibility_off),
                                       onPressed: () {
-
-                                        _passwordVisibleNotifier.value =
-                                            !passwordVisible;
+                                        context.read<LoginBloc>().add(LoginPasswordSecure());
                                       },
                                     ),
                                     border: OutlineInputBorder(
@@ -148,9 +143,7 @@ class LoginpageWithAC extends StatelessWidget {
                                     ValidationMessage.contains:
                                         (error) => error as String,
                                   },
-                                );
-                              },
-                            ),
+                                ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             style: const ButtonStyle(

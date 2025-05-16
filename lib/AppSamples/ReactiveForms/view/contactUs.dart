@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+
+// declare the contact pharam
+
 void contact(
   BuildContext context,
   String title,
@@ -8,6 +11,10 @@ void contact(
   String number2,
   IconData icon,
 ) {
+  
+
+  // popup the bottom sheet
+
   showCupertinoModalPopup<void>(
     context: context,
     builder:
@@ -29,7 +36,9 @@ void contact(
             Column(
               children: [
                 CupertinoActionSheetAction(
-                  onPressed: () {},
+                  onPressed: () {
+                    print(number1);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
