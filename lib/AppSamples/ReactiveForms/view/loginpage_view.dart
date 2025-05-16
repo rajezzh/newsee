@@ -70,7 +70,7 @@ class LoginpageView extends StatelessWidget {
             print('LoginStatus.error...');
 
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Login failed: Invalid credentials')),
+              SnackBar(content: Text(state.errorMessage ?? 'Login Failed...')),
             );
         }
         ;

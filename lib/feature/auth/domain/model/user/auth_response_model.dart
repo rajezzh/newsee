@@ -1,3 +1,11 @@
+/* 
+@author     : karthick.d  14/05/2025
+@desc       : Data class for Login Rest API response json serialization
+              json serialization fromJSON and deserialization toJson
+              will be delegated to auth_respose_model.g.dart 
+              which is a generated file by running 
+              dart run build_runner run command
+ */
 import 'package:json_annotation/json_annotation.dart';
 
 part 'auth_response_model.g.dart';

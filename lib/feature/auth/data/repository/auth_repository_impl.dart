@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
 import 'package:newsee/Model/api_core/auth_failure.dart';
@@ -39,14 +41,30 @@ class AuthRepositoryImpl implements AuthRepository {
       print('auth request payload => $payload');
       var response = await authRemoteDatasource.loginWithUserAccount(payload);
 
-      print('Auth Response => $response');
-      print(
-        'AsyncResponseHandler.right => ${AsyncResponseHandler.right(response).right}',
-      );
-      return AsyncResponseHandler.right(response);
+      // process api response if it's success
+      if (response.data['Success']) {
+        var authResponse = AuthResponseModel.fromJson(
+          response.data['responseData'],
+        );
+        print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
+        return AsyncResponseHandler.right(authResponse);
+      } else {
+        // api response success : false , process error message
+        var errorMessage = response.data['ErrorMessage'];
+        print('on Error request.data["ErrorMessage"] => $errorMessage');
+        return AsyncResponseHandler.left(AuthFailure(message: errorMessage));
+      }
     } on DioException catch (e) {
+      // exception handler for server down
+      if (e.error is SocketException) {
+        return AsyncResponseHandler.left(
+          AuthFailure(
+            message: "Could not reach Server , Please try again in sometimes.",
+          ),
+        );
+      }
       return AsyncResponseHandler.left(
-        AuthFailure(message: e.response?.data['error']),
+        AuthFailure(message: "Exception Occured"),
       );
     } on Exception catch (e) {
       return AsyncResponseHandler.left(

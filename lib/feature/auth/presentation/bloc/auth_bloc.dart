@@ -1,3 +1,10 @@
+/* 
+@author     : karthick.d 14/05/2025
+@desc       : bloc class that encapsullates business logic components 
+              listen to events on() and emits new state
+@param      : AuthEvent and AuthState
+
+ */
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
@@ -21,9 +28,7 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AsyncResponseHandler response = await authRepository.loginWithAccount(
       event.loginRequest,
     );
-    print('AuthBloc => ${response.right}');
-    print('AuthBloc => ${response.isRight()}');
-
+    // check if response i success and contains valid data , success status is emitted
     if (response.isRight()) {
       emit(
         state.copyWith(
@@ -32,6 +37,7 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     } else {
+      print('auth failure response.left ');
       emit(
         state.copyWith(
           status: AuthStatus.failure,
