@@ -20,6 +20,7 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc({required this.authRepository}) : super(AuthState.init()) {
     on<LoginWithAccount>(onLoginWithAccount);
+    on<PasswordSecure>(securePassword);
   }
 
   Future onLoginWithAccount(LoginWithAccount event, Emitter emit) async {
@@ -45,5 +46,13 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
         ),
       );
     }
+  }
+
+  Future<void> securePassword(
+    PasswordSecure event,
+    Emitter<AuthState> emit,
+  ) async {
+    print('securePassword event handler .... => $event');
+    emit(state.copyWith(isPasswordShown: !state.isPasswordHidden));
   }
 }

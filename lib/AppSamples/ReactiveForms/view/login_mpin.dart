@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 
 void mpin(
   BuildContext context,
-  
+  String title,
+  String number1,
+  String number2,
+  IconData icon,
 ) {
   showCupertinoModalPopup<void>(
     context: context,

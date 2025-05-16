@@ -33,7 +33,7 @@ final routes = GoRouter(
           (context, state) => Scaffold(
             body: BlocProvider(
               create: (_) => AuthBloc(authRepository: AuthRepository),
-              child: const LoginpageView(),
+              child: LoginpageView(),
             ),
           ),
     ),

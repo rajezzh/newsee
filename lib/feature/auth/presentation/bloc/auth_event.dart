@@ -8,3 +8,5 @@ final class LoginWithAccount extends AuthEvent {
 
   LoginWithAccount({required this.loginRequest});
 }
+
+final class PasswordSecure extends AuthEvent {}
