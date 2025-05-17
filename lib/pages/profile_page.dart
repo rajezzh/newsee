@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/image_capture_dialog.dart';
@@ -27,7 +28,8 @@ class ProfilePageState extends State<ProfilePage> {
   return value    :   it retun the bytes(Unit8List) data
   */
   Future<Uint8List?> onCameraTap(BuildContext context) async {
-    final curposition = await getLocation(context);
+    // final curposition = await getLocation(context);
+    final curposition = await GetIt.I<MediaHandler>().getLocation(context);
     setState(() {
       geoPosition = curposition;
     });
@@ -43,23 +45,24 @@ class ProfilePageState extends State<ProfilePage> {
   return value    :   it retun the bytes(Unit8List) data
   */
   Future<Uint8List?> onGalleryTap(BuildContext context) async {
-    final galleyImageBytes = await pickimagefromgallery(context);
+    // final galleyImageBytes = await pickimagefromgallery(context);
+    final galleyImageBytes = await GetIt.I<MediaHandler>().pickimagefromgallery(context);
     return galleyImageBytes!;
   }
 
-  // onFileTap(BuildContext context) async{
-  //   final fileBytes  = await filePicker();
-  //   print("fileBytes: $fileBytes");
-  //   if (fileBytes != null) {
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => PDFViewerFromBytes(
-  //           filedata: fileBytes!),
-  //       ),
-  //     );
-  //   }
-  // }
+  onFileTap(BuildContext context) async{
+    final fileBytes = await GetIt.I<MediaHandler>().filePicker();
+    print("fileBytes: $fileBytes");
+    if (fileBytes != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PDFViewerFromBytes(
+            filedata: fileBytes),
+        ),
+      );
+    }
+  }
 
     cancel(BuildContext context) {
       return "cancel string";
@@ -136,7 +139,7 @@ class ProfilePageState extends State<ProfilePage> {
                     final List<FilePickingOptionList> actions = [
                       FilePickingOptionList(title: "CAMERA", icon: Icons.linked_camera),
                       FilePickingOptionList(title: "GALLERY", icon: Icons.satellite_rounded),
-                      // FilePickingOptionList(title: "FILE", icon: Icons.file_open), 
+                      FilePickingOptionList(title: "FILE", icon: Icons.file_open), 
                       FilePickingOptionList(title: "CANCEL", icon: Icons.cancel)
                     ];
                     final result = await showMediaPickerActionSheet(
@@ -158,6 +161,8 @@ class ProfilePageState extends State<ProfilePage> {
                             profilebytes = getimage;
                           });
                         }
+                      } else if (result == "FILE") {
+                        await onFileTap(context);
                       }
                     }
                   }, 
