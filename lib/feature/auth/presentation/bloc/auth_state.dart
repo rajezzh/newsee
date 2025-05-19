@@ -16,13 +16,14 @@ class AuthState extends Equatable {
   final AuthStatus authStatus;
   final String? errorMessage;
   final AuthResponseModel? authResponseModel;
-
+  final bool isPasswordHidden;
   // private constructor for instance initialisation
 
   AuthState._({
     required this.authStatus,
     this.authResponseModel,
     this.errorMessage,
+    this.isPasswordHidden = true,
   });
 
   factory AuthState.init() => AuthState._(authStatus: AuthStatus.init);
@@ -33,14 +34,21 @@ class AuthState extends Equatable {
     AuthStatus? status,
     AuthResponseModel? authResponseModel,
     String? errorMessage,
+    bool? isPasswordShown,
   }) {
     return AuthState._(
       authStatus: status ?? authStatus,
       authResponseModel: authResponseModel ?? this.authResponseModel,
       errorMessage: errorMessage ?? this.errorMessage,
+      isPasswordHidden: isPasswordShown ?? this.isPasswordHidden,
     );
   }
 
   @override
-  List<Object?> get props => [authStatus, authResponseModel, errorMessage];
+  List<Object?> get props => [
+    authStatus,
+    authResponseModel,
+    errorMessage,
+    isPasswordHidden,
+  ];
 }
