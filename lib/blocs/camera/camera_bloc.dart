@@ -114,9 +114,9 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   }
 
   //To clean the camera Controller
-  @override
-  Future<void> close() {
-    controller?.dispose();
-    return super.close();
-  }
+  // @override
+  // Future<void> close() {
+  //   controller?.dispose();
+  //   return super.close();
+  // }
 }

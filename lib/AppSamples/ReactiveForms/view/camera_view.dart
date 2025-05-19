@@ -20,8 +20,7 @@ class CameraView extends StatelessWidget {
     return BlocConsumer<CameraBloc, CameraState>(
       listener: (context, state)  async {
         if (state is CameraConfirmData) {
-          // final cropdata = await cropper(context, state.xfiledata.path);
-          final cropdata = await GetIt.I<MediaHandler>().cropper(context, state.xfiledata.path);
+          final cropdata = await cropper(context, state.xfiledata.path);
           final imageBytes = cropdata;
           if (context.mounted) {
             context.pop(imageBytes);

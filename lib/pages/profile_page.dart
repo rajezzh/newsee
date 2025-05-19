@@ -28,8 +28,7 @@ class ProfilePageState extends State<ProfilePage> {
   return value    :   it retun the bytes(Unit8List) data
   */
   Future<Uint8List?> onCameraTap(BuildContext context) async {
-    // final curposition = await getLocation(context);
-    final curposition = await GetIt.I<MediaHandler>().getLocation(context);
+    final curposition = await getLocation(context);
     setState(() {
       geoPosition = curposition;
     });
@@ -45,13 +44,13 @@ class ProfilePageState extends State<ProfilePage> {
   return value    :   it retun the bytes(Unit8List) data
   */
   Future<Uint8List?> onGalleryTap(BuildContext context) async {
-    // final galleyImageBytes = await pickimagefromgallery(context);
-    final galleyImageBytes = await GetIt.I<MediaHandler>().pickimagefromgallery(context);
+    final galleyImageBytes = await pickimagefromgallery(context);
     return galleyImageBytes!;
   }
 
   onFileTap(BuildContext context) async{
-    final fileBytes = await GetIt.I<MediaHandler>().filePicker();
+    // final fileBytes = await GetIt.I<MediaHandler>().filePicker();
+    final fileBytes = await filePicker();
     print("fileBytes: $fileBytes");
     if (fileBytes != null) {
       Navigator.push(

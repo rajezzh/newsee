@@ -13,7 +13,6 @@ import 'package:image_cropper/image_cropper.dart';
 @props          :   BuildContext
 @return data     :   Current Cooridnate like latitude and longitude value returned
  */
-class MediaHandler {
 
   Future<Position> getLocation(BuildContext context) async{
     try {
@@ -148,7 +147,7 @@ class MediaHandler {
       return null;
     }
   }
-}
+
 
 class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
     @override
