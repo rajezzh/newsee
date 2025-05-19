@@ -4,7 +4,7 @@ import 'contactUs.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
+//Define the function take mulitiple pharameter and also take context 
 void reachUsActionSheet(
   BuildContext context,
   String title,
@@ -14,6 +14,7 @@ void reachUsActionSheet(
   IconData icon2,
   IconData icon3,
 ) {
+  //popup the action sheet 
   showCupertinoModalPopup<void>(
     context: context,
     builder:
@@ -30,14 +31,13 @@ void reachUsActionSheet(
               textAlign: TextAlign.start,
             ),
           ),
-
+          
+             //List of action sheets...
           actions: [
-            //whatsapp
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
+            //List of  First Whatsapp                
                 CupertinoActionSheetAction(
-                  onPressed: () async {
+                  onPressed: ()
+                  async {
                     //  whasapp();
                     final phoneNumber = "919940362579";
                     final Uri _url = Uri.parse(
@@ -50,8 +50,13 @@ void reachUsActionSheet(
                     } else {
                       await launchUrl(_url);
                     }
+                    Navigator.pop(context);
                   },
-                  child: Column(
+                  //set icon svg for whatsapp 
+
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
                         'assets/whatsapp.svg',
@@ -62,61 +67,74 @@ void reachUsActionSheet(
                       //   color: const Color.fromARGB(255, 32, 219, 35),
                       //   size: 30,
                       // ),
-                      SizedBox(height: 20),
-                      Text(
-                        heading1,
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      SizedBox(width: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          heading1,
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                //assign the pharam
 
+             // List of Second contact 
                 CupertinoActionSheetAction(
                   onPressed: () {
-                    contact(
-                      context,
+                    Navigator.pop(context);
+                      contact(
+                        context,
                       "Contact US",
                       "1888762666",
                       "1903833773",
                       Icons.phone,
+                    
                     );
                   },
-                  child: Column(
+                  child: Row(
                     children: [
                       Icon(
                         icon2,
                         color: const Color.fromARGB(255, 231, 9, 9),
                         size: 35,
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        heading2,
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      SizedBox(width: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          heading2,
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                        ),
                       ),
                     ],
                   ),
                 ),
                 //location
                 CupertinoActionSheetAction(
-                  onPressed: () {},
-                  child: Column(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Row(
                     children: [
                       Icon(
                         icon3,
                         color: const Color.fromARGB(255, 3, 9, 110),
                         size: 35,
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        heading3,
-                        style: TextStyle(color: Colors.black, fontSize: 20),
+                      SizedBox(width: 20),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          heading3,
+                          style: TextStyle(color: Colors.black, fontSize: 20),
+                        ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              
+            
           ],
         ),
   );

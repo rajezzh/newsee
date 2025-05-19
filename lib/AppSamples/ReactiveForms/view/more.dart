@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+//Define the function take context pharameters
 void moreActionSheet(
   BuildContext context,
   String action,
 ) {
+  //popup the action sheet 
   showCupertinoModalPopup<void>(
     context: context,
     builder:
         (BuildContext context) => CupertinoActionSheet(
+          //title the action sheet 
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -23,12 +26,15 @@ void moreActionSheet(
                   ),
                 ),
               ),
+              //First Row of Loan options
 
-              SingleChildScrollView(
+              SingleChildScrollView( 
                 child: Container(
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      //Retail Loan
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
@@ -40,6 +46,7 @@ void moreActionSheet(
                           ),
                         ),
                       ),
+                      //Agree Loan
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(130, 158, 158, 158,), width: 2.0),
@@ -52,6 +59,7 @@ void moreActionSheet(
                           ),
                         ),
                       ),
+                      //MSME Loan
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
@@ -68,12 +76,15 @@ void moreActionSheet(
                 ),
               ),
               SizedBox(height: 20),
+          // Second row of loan options
+              
               SingleChildScrollView(
                 child: Container(
                   
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      //home Loan
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
@@ -85,6 +96,7 @@ void moreActionSheet(
                           ),
                         ),
                       ),
+                      //vehicle Loan
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
@@ -96,6 +108,7 @@ void moreActionSheet(
                           ),
                         ),
                       ),
+                      //Gold Loan
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(color: const Color.fromARGB(130, 158, 158, 158), width: 2.0),
@@ -113,11 +126,14 @@ void moreActionSheet(
               ),
 
               SizedBox(height: 20),
+              //Section for other Services
 
               Container(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                 //Header of Other services
+
                     Padding(
                       padding: const EdgeInsets.only(top: 20,bottom: 40,right: 20),
                       child: Text("OTHER SERVICES",
@@ -135,6 +151,8 @@ void moreActionSheet(
                       children: [
                         Row(
                           children: [
+                        // Manage e-Mandates row
+
                              Icon(Icons.currency_rupee_rounded),
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
@@ -170,6 +188,7 @@ void moreActionSheet(
                         Row(
                           children: [
                              Icon(Icons.person_add_alt),
+                             //Update employer Details
                         Padding(
                           padding: const EdgeInsets.only(left: 12),
                           child: Text('Update Employer Details',
@@ -206,10 +225,12 @@ void moreActionSheet(
               )
             ],
           ),
+          //main action button of the action buttom
 
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
               onPressed: () {
+                //close the bottom sheet
                 Navigator.pop(context);
               },
               child: Padding(
