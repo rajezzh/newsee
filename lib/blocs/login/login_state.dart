@@ -23,7 +23,6 @@ final class LoginState extends Equatable {
   final LoginResponse loginResponse;
   final LoginStatus loginStatus;
   final bool isPasswordHidden;
-
   LoginState({
     this.loginStatus = LoginStatus.init,
     required this.loginResponse,
@@ -39,16 +38,16 @@ final class LoginState extends Equatable {
 
   */
 
-  LoginState copyWith({LoginStatus? status, LoginResponse? response, bool? isPasswordHidden}) {
+  LoginState copyWith({LoginStatus? status, LoginResponse? response , bool? isPasswordShown}) {
     return LoginState(
-      loginStatus: status ?? loginStatus,
-      loginResponse: response ?? loginResponse,
-      isPasswordHidden: isPasswordHidden ?? this.isPasswordHidden
+      loginStatus: status ?? this.loginStatus,
+      loginResponse: response ?? this.loginResponse,
+      isPasswordHidden : isPasswordShown ?? this.isPasswordHidden
     );
   }
 
   @override
-  List<Object?> get props => [loginResponse, loginStatus, isPasswordHidden];
+  List<Object?> get props => [loginResponse, loginStatus ,isPasswordHidden ];
 
   @override
   String toString() {

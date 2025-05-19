@@ -31,14 +31,14 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
       ) {
     // action event handler for LoginInit
     on<LoginFetch>(fetchLogin);
-    on<LoginSecurePassword>(passwrodVisibilityChange);
+    on<LoginPasswordSecure>(securePassword);
   }
 
   Future<void> fetchLogin(LoginFetch event, Emitter<LoginState> emit) async {
     emit(
       state.copyWith(
-        status: LoginStatus.fetch,
-        response: LoginResponse(
+        status :LoginStatus.fetch,
+        response : LoginResponse(
           username: null,
           userId: null,
           userOrgCode: null,
@@ -51,13 +51,15 @@ final class LoginBloc extends Bloc<LoginEvent, LoginState> {
     );
 
     if (response.loginStatus == LoginStatus.success) {
-      emit(state.copyWith(status: LoginStatus.success, response: response.loginResponse));
+      emit(state.copyWith(status : LoginStatus.success, response : response.loginResponse));
     } else {
-      emit(state.copyWith(status: LoginStatus.error, response: response.loginResponse));
+      emit(state.copyWith(status : LoginStatus.error, response:  response.loginResponse));
     }
   }
 
-  Future<void> passwrodVisibilityChange(LoginSecurePassword event, Emitter<LoginState> emit) async {
-    emit(state.copyWith(isPasswordHidden: !state.isPasswordHidden));
+
+  Future<void>  securePassword(LoginPasswordSecure event , Emitter<LoginState> emit) async{
+      print('securePassword event handler .... => $event');
+      emit(state.copyWith( isPasswordShown:!state.isPasswordHidden));
   }
 }

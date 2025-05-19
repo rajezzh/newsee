@@ -5,11 +5,9 @@ import 'package:newsee/pages/address_page.dart';
 import 'package:newsee/pages/loan_details_page.dart';
 import 'package:newsee/pages/personal_details_page.dart';
 import 'package:newsee/pages/sourcing_page.dart';
-import 'package:newsee/timer/view/timer_view.dart';
 import 'package:newsee/widgets/side_navigation.dart';
 
-class ToolbarView extends StatelessWidget {
-
+class NewLeadPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
@@ -20,6 +18,13 @@ class ToolbarView extends StatelessWidget {
             Globalconfig.isInitialRoute
                 ? null
                 : AppBar(
+                  // leading: IconButton(
+                  //   onPressed: () {
+                  //     print('');
+                  //   },
+                  //   icon: Icon(Icons.menu),
+                  //   color: Colors.white,
+                  // ),
                   actionsPadding: EdgeInsets.fromLTRB(0, 0, (screenwidth * 0.1), 0),
                   actions: 
                   <Widget>[
@@ -46,30 +51,10 @@ class ToolbarView extends StatelessWidget {
                       ),
                     )
                   ],
-                  // leading: IconButton(
-                  //   onPressed: () {
-                  //     print('');
-                  //   },
-                  //   icon: Icon(Icons.person),
-                  //   color: Colors.white,
-                  // ),
-                  leading: IconButton(
-                    onPressed: () {
-                      print(Scaffold()!.drawer);
-                      // if (ScaffoldState().isDrawerOpen) {
-                      //   ScaffoldState().closeDrawer();
-                      // } else {
-                      //   ScaffoldState().openDrawer();
-                      // }
-                    },
-                    icon: Icon(Icons.menu),
-                    color: Colors.white,
-                  ),
                   title: Text(
                     'New Lead',
                     style: TextStyle(color: Colors.white),
                   ),
-                  
                   flexibleSpace: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -116,7 +101,6 @@ class ToolbarView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // actions: <Widget>[],
                 ),
         drawer: Globalconfig.isInitialRoute ? null : Sidenavigationbar(),
         body: TabBarView(
