@@ -1,9 +1,17 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/globalconfig.dart';
-import 'package:newsee/pages/address_page.dart';
+import 'package:newsee/feature/saveprofilepicture/profilepicturebloc/saveprofilepicture_bloc.dart';
+import 'package:newsee/pages/check_page.dart';
+import 'package:newsee/pages/documents_page.dart';
 import 'package:newsee/pages/loan_details_page.dart';
+import 'package:newsee/pages/income_details_page.dart';
+import 'package:newsee/pages/kyc_page.dart';
 import 'package:newsee/pages/personal_details_page.dart';
+import 'package:newsee/pages/profileicon.dart';
 import 'package:newsee/pages/sourcing_page.dart';
 import 'package:newsee/widgets/side_navigation.dart';
 
@@ -12,7 +20,7 @@ class NewLeadPage extends StatelessWidget {
   Widget build(BuildContext context) {
     double screenwidth = MediaQuery.of(context).size.width;
     return DefaultTabController(
-      length: 4,
+      length: 7,
       child: Scaffold(
         appBar:
             Globalconfig.isInitialRoute
@@ -28,40 +36,15 @@ class NewLeadPage extends StatelessWidget {
                   actionsPadding: EdgeInsets.fromLTRB(0, 0, (screenwidth * 0.1), 0),
                   actions: 
                   <Widget>[
-                    Container(
-                      height: 40,
-                      width: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10)
-                      ),
-                      child: Center(
-                        child: Ink(
-                          decoration: ShapeDecoration(
-                            color: Colors.lightBlue,
-                            shape: CircleBorder()
-                          ),
-                          child:  IconButton(
-                            icon: const Icon(Icons.person),
-                            onPressed: () => {
-                              context.goNamed('profile')
-                            }, 
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    )
+                    ProfileIcon()
                   ],
                   title: Text(
-                    'New Lead',
+                    'Lead Details',
                     style: TextStyle(color: Colors.white),
                   ),
                   flexibleSpace: Container(
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.red, Colors.blue],
-                        begin: Alignment.bottomRight,
-                        end: Alignment.topLeft,
-                      ),
+                      color: Colors.teal
                     ),
                   ),
                   bottom: TabBar(
@@ -70,34 +53,24 @@ class NewLeadPage extends StatelessWidget {
                     tabs: <Widget>[
                       Tab(
                         icon: Icon(Icons.file_copy, color: Colors.white),
-                        child: Text(
-                          'Sourcing',
-                          style: TextStyle(color: Colors.white),
-                        ),
                       ),
                       Tab(
                         icon: Icon(Icons.face, color: Colors.white),
-                        child: Text(
-                          'Personal',
-                          style: TextStyle(color: Colors.white),
-                        ),
                       ),
                       Tab(
-                        icon: Icon(Icons.home, color: Colors.white),
-                        child: Text(
-                          'Address',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        icon: Icon(Icons.badge, color: Colors.white),
                       ),
                       Tab(
-                        icon: Icon(
-                          Icons.currency_rupee_sharp,
-                          color: Colors.white,
-                        ),
-                        child: Text(
-                          'Loan',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        icon: Icon(Icons.wallet, color: Colors.white),
+                      ),
+                      Tab(
+                        icon: Icon(Icons.currency_rupee, color: Colors.white),
+                      ),
+                      Tab(
+                        icon: Icon(Icons.description, color: Colors.white),
+                      ),
+                      Tab(
+                        icon: Icon(Icons.done_all, color: Colors.white),
                       ),
                     ],
                   ),
@@ -105,13 +78,17 @@ class NewLeadPage extends StatelessWidget {
         drawer: Globalconfig.isInitialRoute ? null : Sidenavigationbar(),
         body: TabBarView(
           children: [
-            SourcingPage(title: 'Sourcing'),
-            PersonalDetailsPage(title: 'Personal'),
-            AddressPage(title: 'Address'),
-            LoanDetailsPage(title: 'LoanDetails'),
+            SourcingPage('Sourcing', title: 'Sourcing'),
+            PersonalDetailsPage('Personal', title: 'Personal'),
+            KycPage('KYC', title: 'kyc'),
+            IncomeDetailsPage('Income', title: 'Income'),
+            LoanDetailsPage('Loan', title: 'loan'),
+            DocumentsPage('Document', title: 'documents'),
+            CheckPage('Check',title: 'check'),
           ],
         ),
       ),
     );
   }
 }
+

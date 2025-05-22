@@ -1,8 +1,9 @@
-import 'dart:typed_data';
-
 import 'package:camera/camera.dart';
+import 'package:newsee/blocs/camera/camera_repository.dart';
 
 class CameraState {}
+
+
 
 class CameraIntialize extends CameraState {}
 
@@ -17,8 +18,10 @@ class CameraFailure extends CameraState {
 }
 
 class CameraCaptureData extends CameraState {
-  final Uint8List imagedata;
-  CameraCaptureData(this.imagedata);
+  // final Uint8List imagedata;
+  // CameraCaptureData(this.imagedata);
+  final CameraCaptureResponse captureresponse;
+  CameraCaptureData(this.captureresponse);
 }
 
 class CameraConfirmData extends CameraState {

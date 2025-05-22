@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/blocs/camera/camera_event.dart';
+import 'package:newsee/blocs/camera/camera_repository.dart';
 import 'package:newsee/blocs/camera/camera_state.dart';
 
 /* 
@@ -90,7 +91,9 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       if (controller?.value.flashMode == FlashMode.torch) {
         await controller?.setFlashMode(FlashMode.off);
       }
-      emit(CameraCaptureData(imageBytes!));
+      final CameraCaptureResponse cameraresponse = 
+        CameraCaptureResponse(xfile: imagestate, imageData: imageBytes!);
+      emit(CameraCaptureData(cameraresponse));
     } else {
       print("Camera Capture Not Working");
     }
@@ -103,13 +106,19 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   }
 
   // It performs Reintiate the camera to capture new image
-  Future<void> confirmimage(event, emit) async {
-     if (controller != null && controller!.value.isInitialized) {
-      final imagestate = await controller!.takePicture();
-      // imageBytes = await imagestate.readAsBytes();
+  Future<void> confirmimage(CameraExit event, Emitter emit) async {
+    // if (controller != null && controller!.value.isInitialized) {
+    //   final imagestate = await controller!.takePicture();
+    //   // imageBytes = await imagestate.readAsBytes();
+    //   emit(CameraConfirmData(imagestate));
+    // } else {
+    //   print("Camera Capture Not Working");
+    // }
+    try {
+      final imagestate = event.filePath;
       emit(CameraConfirmData(imagestate));
-    } else {
-      print("Camera Capture Not Working");
+    } catch (error) {
+      emit(CameraFailure(error.toString()));
     }
   }
 

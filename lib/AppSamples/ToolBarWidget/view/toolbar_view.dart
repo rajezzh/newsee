@@ -121,10 +121,10 @@ class ToolbarView extends StatelessWidget {
         drawer: Globalconfig.isInitialRoute ? null : Sidenavigationbar(),
         body: TabBarView(
           children: [
-            SourcingPage(title: 'Sourcing'),
-            PersonalDetailsPage(title: 'Personal'),
-            AddressPage(title: 'Address'),
-            LoanDetailsPage(title: 'LoanDetails'),
+            // SourcingPage(title: 'Sourcing'),
+            // PersonalDetailsPage(title: 'Personal'),
+            // AddressPage(title: 'Address'),
+            // LoanDetailsPage(title: 'LoanDetails'),
           ],
         ),
       ),

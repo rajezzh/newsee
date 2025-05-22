@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -57,13 +59,9 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.PROFILE_PAGE['path']!,
       name: AppRouteConstants.PROFILE_PAGE['name'],
-      builder: (context, state) => ProfilePage(),
+      builder: (context, state) => 
+        ProfilePage()
     ),
-    // GoRoute(
-    //   path: AppRouteConstants.CAMERA_PAGE['path']!,
-    //   name: AppRouteConstants.CAMERA_PAGE['name'],
-    //   builder: (context, state) => Camera(),
-    // ),
     GoRoute(
       path: AppRouteConstants.CAMERA_PAGE['path']!,
       name: AppRouteConstants.CAMERA_PAGE['name'],
