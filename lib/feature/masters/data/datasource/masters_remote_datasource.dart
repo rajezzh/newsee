@@ -1,10 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 
-class AuthRemoteDatasource {
+class MastersRemoteDatasource {
   final Dio dio;
 
-  AuthRemoteDatasource({required this.dio});
+  MastersRemoteDatasource({required this.dio});
 
   /*
   @author     : karthick.d 14/05/2025
@@ -14,10 +15,14 @@ class AuthRemoteDatasource {
   @param      : http request payload
   @return     : Future<Response> Response - > HttpResponse
    */
-  loginWithUserAccount(Map<String, dynamic> payload) async {
+  downloadMaster(MasterRequest payload) async {
     Response response = await dio.post(
-      'MobileService/LoginService',
-      data: {'Login': payload, 'token': ApiConfig.AUTH_TOKEN},
+      ApiConfig.MASTERS_API_ENDPOINT,
+      data: {
+        "Setup": {
+          "MobSetupMasterMain": {"Setupmastval": payload.toJson()},
+        },
+      },
     );
     return response;
   }
