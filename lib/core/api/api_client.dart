@@ -6,11 +6,12 @@ class ApiClient {
   Dio getDio() {
     Dio dio = Dio();
     dio.options.baseUrl = ApiConfig.BASE_URL;
-    dio.options.headers = {
-      'token': ApiConfig.AUTH_TOKEN,
-      'deviceId': ApiConfig.DEVICE_ID,
-      'userid': '4321',
-    };
+
+    // dio.options.headers = {
+    //   'token': ApiConfig.AUTH_TOKEN,
+    //   'deviceId': ApiConfig.DEVICE_ID,
+    //   'userid': '4321',
+    // };
     dio.interceptors.add(
       PrettyDioLogger(
         responseHeader: true,

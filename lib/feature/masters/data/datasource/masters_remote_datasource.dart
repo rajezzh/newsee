@@ -26,6 +26,12 @@ class MastersRemoteDatasource {
     );
     return response;
   }
+
+  downloadMasterOffline() async {
+    dio.options.baseUrl = 'http://jsonplaceholder.typicode.com/';
+    Response response = await dio.get('posts');
+    return response;
+  }
 }
 
 /* we need a class with method that connect to local json data source when offline */
