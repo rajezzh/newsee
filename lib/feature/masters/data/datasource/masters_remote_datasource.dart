@@ -27,3 +27,5 @@ class MastersRemoteDatasource {
     return response;
   }
 }
+
+/* we need a class with method that connect to local json data source when offline */
