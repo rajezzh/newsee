@@ -4,37 +4,45 @@ import 'package:newsee/Model/api_core/auth_failure.dart';
 import 'package:newsee/Model/api_core/failure.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
+import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
+import 'package:sqflite/sqlite_api.dart';
 
 class MasterRepoImpl extends MasterRepo {
   @override
   Future<AsyncResponseHandler<Failure, MasterResponse>> downloadMaster({
     required MasterRequest request,
   }) async {
-    // Response response = await MastersRemoteDatasource(
-    //   dio: ApiClient().getDio(),
-    // ).downloadMaster(request);
     try {
-      Response response =
-          await MastersRemoteDatasource(
-            dio: ApiClient().getDio(),
-          ).downloadMasterOffline();
+      // Response response =
+      //     await MastersRemoteDatasource(
+      //       dio: ApiClient().getDio(),
+      //     ).downloadMasterOffline();
 
-      parseResponse(response);
+      Response response = await MastersRemoteDatasource(
+        dio: ApiClient().getDio(),
+      ).downloadMaster(request);
 
       final setupmaster = response.data['Setupmaster'];
-      if (setupmaster && setupmaster['Listofvalues']) {
-        var listofvalues = setupmaster['Listofvalues'];
-        print(listofvalues);
-        Lov lovResponse = Lov.fromJson(response.data['responseData']);
-        List<Lov> lovList = [lovResponse];
+      if (setupmaster != null && setupmaster['Listofvalues'] != null) {
+        List<dynamic> listofvalues = setupmaster['Listofvalues'];
 
-        print('Lov.fromJson() => ${lovResponse.toString()}');
+        List<Lov> lovList = parseResponse(listofvalues);
+        Database db = await DBConfig().database;
+        Iterator<Lov> it = lovList.iterator;
+        LovCrudRepo lovCrudRepo = LovCrudRepo(db);
+        while (it.moveNext()) {
+          lovCrudRepo.createTask(it.current);
+        }
+
+        List<Lov> lovs = await lovCrudRepo.getAllTasks();
+        print('lovCrudRepo.getAllTasks() => ${lovs.length}');
         return AsyncResponseHandler.right(MasterResponse(master: lovList));
       } else {
         // api response success : false , process error message
@@ -55,10 +63,12 @@ class MasterRepoImpl extends MasterRepo {
     }
   }
 
-  parseResponse(Response response) {
-    final List posts = response.data;
-    List<Post> _posts = posts.map((e) => Post.fromMap(e)).toList();
-    print(_posts[0].title);
-    // now posts is a List contains Map<String,dynamic>
+  // now lov is a List contains Map<String,dynamic>
+
+  List<Lov> parseResponse(List<dynamic> values) {
+    final List resp = values;
+    List<Lov> lovList = resp.map((e) => Lov.fromMap(e)).toList();
+    print(lovList[0].Header);
+    return lovList;
   }
 }

@@ -20,7 +20,7 @@ class MastersRemoteDatasource {
       ApiConfig.MASTERS_API_ENDPOINT,
       data: {
         "Setup": {
-          "MobSetupMasterMain": {"Setupmastval": payload.toJson()},
+          "MobSetupMasterMain": {"Setupmastval": payload.toMap()},
         },
       },
     );
