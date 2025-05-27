@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
@@ -57,7 +58,8 @@ class MastersPage extends StatelessWidget {
                                   request: MasterRequest(
                                     setupVersion: '4',
                                     setupmodule: 'AGRI',
-                                    setupTypeOfMaster: 'Listofvalues',
+                                    setupTypeOfMaster:
+                                        ApiConstants.master_key_lov,
                                   ),
                                 ),
                               );

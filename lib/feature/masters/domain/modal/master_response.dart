@@ -1,4 +1,7 @@
+import 'package:newsee/feature/masters/domain/modal/master_types.dart';
+
 class MasterResponse<T> {
   final List<T> master;
-  MasterResponse({required this.master});
+  final MasterTypes masterType;
+  MasterResponse({required this.master, required this.masterType});
 }
