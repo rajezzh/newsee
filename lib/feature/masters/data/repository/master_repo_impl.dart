@@ -8,13 +8,16 @@ import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
+import 'package:newsee/feature/masters/data/repository/product_parser_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
+import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
+import 'package:newsee/feature/masters/domain/repository/products_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class MasterRepoImpl extends MasterRepo {
@@ -51,10 +54,10 @@ class MasterRepoImpl extends MasterRepo {
             }
 
             List<Lov> lovs = await lovCrudRepo.getAll();
-            print('lovCrudRepo.getAllTasks() => ${lovs.length}');
+            print('lovCrudRepo.getAll() => ${lovs.length}');
             masterResponse = MasterResponse(
               master: lovList,
-              masterType: masterTypes,
+              masterType: MasterTypes.products,
             );
           } else {
             // api response success : false , process error message
@@ -63,9 +66,34 @@ class MasterRepoImpl extends MasterRepo {
             failure = AuthFailure(message: errorMessage);
           }
 
-        // case ApiConstants.master_key_products:
-        //   masterTypes = MasterTypes.products;
+        case ApiConstants.master_key_products:
+          masterTypes = MasterTypes.products;
+          Response response = await MastersRemoteDatasource(
+            dio: ApiClient().getDio(),
+          ).downloadMaster(request);
 
+          List<Product> productsList = ProductParserImpl().parseResponse(
+            response,
+          );
+          if (productsList.isNotEmpty) {
+            // insert products in to products table
+            Iterator<Product> it = productsList.iterator;
+            ProductsCrudRepo productsCrudRepo = ProductsCrudRepo(db);
+            while (it.moveNext()) {
+              productsCrudRepo.save(it.current);
+            }
+            print('Products saved in db successfully... ');
+            List<Product> p = await productsCrudRepo.getAll();
+            print('productCrudRepo.getAll() => ${p.length}');
+            masterResponse = MasterResponse(
+              master: productsList,
+              masterType: MasterTypes.productschema,
+            );
+          } else {
+            var errorMessage = response.data['errorDesc'];
+            print('on Error request.data["ErrorMessage"] => $errorMessage');
+            failure = AuthFailure(message: errorMessage);
+          }
         // case ApiConstants.master_key_productschema:
         //   masterTypes = MasterTypes.productschema;
 

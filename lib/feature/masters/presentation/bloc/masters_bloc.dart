@@ -4,6 +4,7 @@ import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
 import 'package:newsee/Model/api_core/failure.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
+import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 
 part './masters_event.dart';
@@ -24,7 +25,10 @@ class MastersBloc extends Bloc<MastersEvent, MastersState> {
     if (responseHandler.isRight()) {
       emit(
         state.copyWith(
-          status: MasterdownloadStatus.success,
+          status:
+              responseHandler.right.masterType == MasterTypes.productschema
+                  ? MasterdownloadStatus.success
+                  : MasterdownloadStatus.loading,
           masterResponse: responseHandler.right,
         ),
       );
