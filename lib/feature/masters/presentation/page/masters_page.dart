@@ -56,7 +56,6 @@ class MastersPage extends StatelessWidget {
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
               final bool isLoading = state.status == MasterdownloadStatus.loading;
-
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
