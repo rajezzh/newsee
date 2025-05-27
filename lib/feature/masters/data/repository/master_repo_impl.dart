@@ -38,10 +38,10 @@ class MasterRepoImpl extends MasterRepo {
         Iterator<Lov> it = lovList.iterator;
         LovCrudRepo lovCrudRepo = LovCrudRepo(db);
         while (it.moveNext()) {
-          lovCrudRepo.createTask(it.current);
+          lovCrudRepo.save(it.current);
         }
 
-        List<Lov> lovs = await lovCrudRepo.getAllTasks();
+        List<Lov> lovs = await lovCrudRepo.getAll();
         print('lovCrudRepo.getAllTasks() => ${lovs.length}');
         return AsyncResponseHandler.right(MasterResponse(master: lovList));
       } else {
