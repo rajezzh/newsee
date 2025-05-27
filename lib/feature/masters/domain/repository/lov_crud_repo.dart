@@ -10,7 +10,7 @@ class LovCrudRepo extends SimpleCrudRepo<Lov> {
   LovCrudRepo(this._db);
 
   @override
-  Future<int> createTask(Lov o) async {
+  Future<int> save(Lov o) async {
     return _db.transaction((txn) async {
       return await txn.insert(
         TableKeysLov.tableName,
@@ -21,19 +21,19 @@ class LovCrudRepo extends SimpleCrudRepo<Lov> {
   }
 
   @override
-  Future<int> deleteTask(Lov o) {
+  Future<int> delete(Lov o) {
     // TODO: implement deleteTask
     throw UnimplementedError();
   }
 
   @override
-  Future<int> updateTask(Lov o) {
+  Future<int> update(Lov o) {
     // TODO: implement updateTask
     throw UnimplementedError();
   }
 
   @override
-  Future<List<Lov>> getAllTasks() async {
+  Future<List<Lov>> getAll() async {
     final List<Map<String, dynamic>> data = await _db.query(
       TableKeysLov.tableName,
       orderBy: "id DESC",

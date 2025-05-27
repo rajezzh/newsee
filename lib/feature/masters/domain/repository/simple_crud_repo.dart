@@ -1,6 +1,6 @@
 abstract class SimpleCrudRepo<T> {
-  Future<List<T>> getAllTasks();
-  Future<int> createTask(T o);
-  Future<int> updateTask(T o);
-  Future<int> deleteTask(T o);
+  Future<List<T>> getAll();
+  Future<int> save(T o);
+  Future<int> update(T o);
+  Future<int> delete(T o);
 }
