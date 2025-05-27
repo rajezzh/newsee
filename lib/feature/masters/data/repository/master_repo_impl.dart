@@ -34,6 +34,9 @@ class MasterRepoImpl extends MasterRepo {
         List<dynamic> listofvalues = setupmaster['Listofvalues'];
 
         List<Lov> lovList = parseResponse(listofvalues);
+
+        /* Listofvalue master downloaded and saved in table */
+
         Database db = await DBConfig().database;
         Iterator<Lov> it = lovList.iterator;
         LovCrudRepo lovCrudRepo = LovCrudRepo(db);

@@ -49,6 +49,9 @@ class MastersPage extends StatelessWidget {
                         isLoading
                             ? null
                             : () {
+                              // on successfull completion of one type of master
+                              // have to sequentially call next master
+
                               context.read<MastersBloc>().add(
                                 MasterFetch(
                                   request: MasterRequest(
