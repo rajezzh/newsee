@@ -10,11 +10,20 @@ import 'package:flutter/material.dart';
 class TableKeysProductSchema {
   TableKeysProductSchema._();
 
-  static const String tableName = 'lov';
+  static const String tableName = 'productschema';
   static const String idColumn = 'id';
-  static const String header = 'Header';
-  static const String optValue = 'optvalue';
-  static const String optDesc = 'optDesc';
-  static const String optCode = 'optCode';
+  static const String optionValue = 'optionValue';
+  static const String optionDesc = 'optionDesc';
+  static const String optionId = 'optionId';
   static const String version = 'version';
+
+  static const String createTableQuery = '''
+                    CREATE TABLE IF NOT EXISTS $tableName(
+            $idColumn INTEGER PRIMARY KEY AUTOINCREMENT,
+            $optionValue TEXT,
+            $optionDesc TEXT,
+            $optionId TEXT,
+            $version TEXT
+)
+  ''';
 }

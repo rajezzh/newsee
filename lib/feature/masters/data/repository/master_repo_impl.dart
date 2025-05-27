@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
 import 'package:newsee/Model/api_core/auth_failure.dart';
 import 'package:newsee/Model/api_core/failure.dart';
@@ -9,9 +9,11 @@ import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
+import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
+import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
@@ -22,35 +24,63 @@ class MasterRepoImpl extends MasterRepo {
   Future<AsyncResponseHandler<Failure, MasterResponse>> downloadMaster({
     required MasterRequest request,
   }) async {
+    /* initializing types required for AsyncResponseHandler Object */
+
+    MasterTypes masterTypes = MasterTypes.lov;
+    Database db = await DBConfig().database;
+    MasterResponse masterResponse = MasterResponse(
+      master: [],
+      masterType: masterTypes,
+    );
+    AuthFailure failure = AuthFailure(message: "");
+
     try {
-      // Response response =
-      //     await MastersRemoteDatasource(
-      //       dio: ApiClient().getDio(),
-      //     ).downloadMasterOffline();
+      switch (request.setupTypeOfMaster) {
+        case ApiConstants.master_key_lov:
+          /* Lov Master fetch from API and Save in respective table */
+          masterTypes = MasterTypes.lov;
+          Response response = await MastersRemoteDatasource(
+            dio: ApiClient().getDio(),
+          ).downloadMaster(request);
+          List<Lov> lovList = LovParserImpl().parseResponse(response);
+          if (lovList.isNotEmpty) {
+            /* Listofvalue master downloaded and saved in table */
 
-      Response response = await MastersRemoteDatasource(
-        dio: ApiClient().getDio(),
-      ).downloadMaster(request);
-      
-      final setupmaster = response.data['Setupmaster'];
-      if (setupmaster != null && setupmaster['Listofvalues'] != null) {
-        List<dynamic> listofvalues = setupmaster['Listofvalues'];
-        List<Lov> lovList = parseResponse(listofvalues);
-        Database db = await DBConfig().database;
-        Iterator<Lov> it = lovList.iterator;
-        LovCrudRepo lovCrudRepo = LovCrudRepo(db);
-        while (it.moveNext()) {
-          lovCrudRepo.save(it.current);
-        }
+            Iterator<Lov> it = lovList.iterator;
+            LovCrudRepo lovCrudRepo = LovCrudRepo(db);
+            while (it.moveNext()) {
+              lovCrudRepo.save(it.current);
+            }
 
-        List<Lov> lovs = await lovCrudRepo.getAll();
-        print('lovCrudRepo.getAllTasks() => ${lovs.length}');
-        return AsyncResponseHandler.right(MasterResponse(master: lovList));
+            List<Lov> lovs = await lovCrudRepo.getAll();
+            print('lovCrudRepo.getAllTasks() => ${lovs.length}');
+            masterResponse = MasterResponse(
+              master: lovList,
+              masterType: masterTypes,
+            );
+          } else {
+            // api response success : false , process error message
+            var errorMessage = response.data['errorDesc'];
+            print('on Error request.data["ErrorMessage"] => $errorMessage');
+            failure = AuthFailure(message: errorMessage);
+          }
+
+        // case ApiConstants.master_key_products:
+        //   masterTypes = MasterTypes.products;
+
+        // case ApiConstants.master_key_productschema:
+        //   masterTypes = MasterTypes.productschema;
+
+        // default:
+        //   break;
+      }
+
+      // returning AsyncResponseHandler...
+
+      if (masterResponse.master.isNotEmpty) {
+        return AsyncResponseHandler.right(masterResponse);
       } else {
-        // api response success : false , process error message
-        var errorMessage = response.data['errorDesc'];
-        print('on Error request.data["ErrorMessage"] => $errorMessage');
-        return AsyncResponseHandler.left(AuthFailure(message: errorMessage));
+        return AsyncResponseHandler.left(failure);
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionError) {
@@ -66,11 +96,4 @@ class MasterRepoImpl extends MasterRepo {
   }
 
   // now lov is a List contains Map<String,dynamic>
-
-  List<Lov> parseResponse(List<dynamic> values) {
-    final List resp = values;
-    List<Lov> lovList = resp.map((e) => Lov.fromMap(e)).toList();
-    print(lovList[0].Header);
-    return lovList;
-  }
 }

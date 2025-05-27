@@ -41,3 +41,12 @@ class InterestMaster{
 class ProductMaster{
 
 }
+
+Designing Master Download Feature:
+
+all the master's should be downloaded one by one sequentially and the UI progress bar
+updated with the progress
+
+create table during the initialization of the db
+
+create table function can be encapsulated
