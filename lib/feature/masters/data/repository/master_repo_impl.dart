@@ -10,13 +10,16 @@ import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
+import 'package:newsee/feature/masters/data/repository/productschema_parser_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
+import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
+import 'package:newsee/feature/masters/domain/repository/product_schema_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class MasterRepoImpl extends MasterRepo {
@@ -64,15 +67,31 @@ class MasterRepoImpl extends MasterRepo {
             print('on Error request.data["ErrorMessage"] => $errorMessage');
             failure = AuthFailure(message: errorMessage);
           }
+        
+        case ApiConstants.master_key_productschema:
+          masterTypes = MasterTypes.productschema;
+          Response response = await MastersRemoteDatasource(
+            dio: ApiClient().getDio(),
+          ).downloadMaster(request);
+          List<ProductSchemaValues> productSchemaList = ProductschemaParserImpl().parseResponse(response);
+          if(productSchemaList.isNotEmpty) {
+            Iterator<ProductSchemaValues> it = productSchemaList.iterator;
+            ProductSchemaCrudRepo productSchemaCrudRepo = ProductSchemaCrudRepo(db);
+            while (it.moveNext()) {
+              productSchemaCrudRepo.save(it.current);
+            }
 
-        // case ApiConstants.master_key_products:
-        //   masterTypes = MasterTypes.products;
-
-        // case ApiConstants.master_key_productschema:
-        //   masterTypes = MasterTypes.productschema;
-
-        // default:
-        //   break;
+            List<ProductSchemaValues> productschemalov = await productSchemaCrudRepo.getAll();
+            print('productschemalov.getAllTasks() => ${productschemalov.length}');
+            masterResponse = MasterResponse(
+              master: productSchemaList,
+              masterType: MasterTypes.productschema,
+            );
+          } else {
+            var errorMessage = response.data['errorDesc'];
+            print('on Error request.data["ErrorMessage"] => $errorMessage');
+            failure = AuthFailure(message: errorMessage);
+          }
       }
 
       // returning AsyncResponseHandler...
