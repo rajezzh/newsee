@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 /* 
 @author     : karthick.d 23/05/2025
 @desc       : data class for LovMasters Model 
@@ -16,13 +18,25 @@ class Lov {
   final String Header;
   final String optvalue;
   final String optDesc;
-  Lov({required this.Header, required this.optvalue, required this.optDesc});
+  final String optCode;
+  Lov({
+    required this.Header,
+    required this.optvalue,
+    required this.optDesc,
+    required this.optCode,
+  });
 
-  Lov copyWith({String? Header, String? optvalue, String? optDesc}) {
+  Lov copyWith({
+    String? Header,
+    String? optvalue,
+    String? optDesc,
+    String? optCode,
+  }) {
     return Lov(
       Header: Header ?? this.Header,
       optvalue: optvalue ?? this.optvalue,
       optDesc: optDesc ?? this.optDesc,
+      optCode: optCode ?? this.optCode,
     );
   }
 
@@ -31,6 +45,7 @@ class Lov {
       'Header': Header,
       'optvalue': optvalue,
       'optDesc': optDesc,
+      'optCode': optCode,
     };
   }
 
@@ -39,6 +54,7 @@ class Lov {
       Header: map['Header'] as String,
       optvalue: map['optvalue'] as String,
       optDesc: map['optDesc'] as String,
+      optCode: map['optCode'] as String,
     );
   }
 
@@ -47,8 +63,9 @@ class Lov {
   factory Lov.fromJson(Map<String, dynamic> json) => _$LovFromJson(json);
 
   @override
-  String toString() =>
-      'Lov(Header: $Header, optvalue: $optvalue, optDesc: $optDesc)';
+  String toString() {
+    return 'Lov(Header: $Header, optvalue: $optvalue, optDesc: $optDesc, optCode: $optCode)';
+  }
 
   @override
   bool operator ==(covariant Lov other) {
@@ -56,9 +73,15 @@ class Lov {
 
     return other.Header == Header &&
         other.optvalue == optvalue &&
-        other.optDesc == optDesc;
+        other.optDesc == optDesc &&
+        other.optCode == optCode;
   }
 
   @override
-  int get hashCode => Header.hashCode ^ optvalue.hashCode ^ optDesc.hashCode;
+  int get hashCode {
+    return Header.hashCode ^
+        optvalue.hashCode ^
+        optDesc.hashCode ^
+        optCode.hashCode;
+  }
 }

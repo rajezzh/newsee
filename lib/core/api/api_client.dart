@@ -6,6 +6,7 @@ class ApiClient {
   Dio getDio() {
     Dio dio = Dio();
     dio.options.baseUrl = ApiConfig.BASE_URL;
+
     dio.options.headers = {
       'token': ApiConfig.AUTH_TOKEN,
       'deviceId': ApiConfig.DEVICE_ID,

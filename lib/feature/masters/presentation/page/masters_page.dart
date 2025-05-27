@@ -50,7 +50,7 @@ class MastersPage extends StatelessWidget {
                 );
 
               case MasterdownloadStatus.refetch:
-                print('LoginStatus.loading...');
+                print('MasterStatus.refetching...');
             }
           },
           child: BlocBuilder<MastersBloc, MastersState>(

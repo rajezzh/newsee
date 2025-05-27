@@ -16,16 +16,23 @@ class MastersRemoteDatasource {
   @return     : Future<Response> Response - > HttpResponse
    */
   downloadMaster(MasterRequest payload) async {
+   
     Response response = await dio.post(
       ApiConfig.MASTERS_API_ENDPOINT,
       data: {
         "Setup": {
-          "MobSetupMasterMain": {"Setupmastval": payload.toJson()},
+          "MobSetupMasterMain": {"Setupmastval": payload.toMap()},
         },
       },
     );
     return response;
-  } 
+  }
+
+  downloadMasterOffline() async {
+    dio.options.baseUrl = 'http://jsonplaceholder.typicode.com/';
+    Response response = await dio.get('posts');
+    return response;
+  }
 }
 
 /* we need a class with method that connect to local json data source when offline */

@@ -40,7 +40,6 @@ class ProfilePageState extends State<ProfilePage> {
     if (getprofileData != null) {
       return getprofileData;
     } else {
-      print("poda punnaku");
       return null;
     }
     
