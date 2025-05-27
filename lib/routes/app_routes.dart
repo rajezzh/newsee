@@ -20,6 +20,11 @@ import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart'
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
+import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
+import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
+import 'package:newsee/feature/masters/presentation/page/masters_page.dart';
+import 'package:newsee/feature/savelead/presentation/bloc/savelead_sourcing_bloc.dart';
 import 'package:newsee/pages/home_page.dart';
 import 'package:newsee/pages/newlead_page.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
@@ -32,8 +37,10 @@ final AuthRepository = AuthRepositoryImpl(
   authRemoteDatasource: _authRemoteDatasource,
 );
 final routes = GoRouter(
-  initialLocation: '/login',
-  
+  // initial location changed to test masters feature , to see login page
+  // modify the initialLocation
+  initialLocation: AppRouteConstants.MASTERS_PAGE['path'],
+
   routes: <RouteBase>[
     GoRoute(
       path: AppRouteConstants.LOGIN_PAGE['path']!,
@@ -57,6 +64,11 @@ final routes = GoRouter(
       builder: (context, state) => NewLeadPage(),
     ),
     GoRoute(
+      path: AppRouteConstants.MASTERS_PAGE['path']!,
+      name: AppRouteConstants.MASTERS_PAGE['name'],
+      builder: (context, state) => MastersPage(),
+    ),
+    GoRoute(
       path: AppRouteConstants.PROFILE_PAGE['path']!,
       name: AppRouteConstants.PROFILE_PAGE['name'],
       builder: (context, state) => 
@@ -78,7 +90,7 @@ final routes = GoRouter(
   redirect: (context, state) {
     print(state.fullPath);
     if (state.fullPath == '/') {
-      return '/login';
+      return AppRouteConstants.MASTERS_PAGE['path'];
     } else {
       return null;
     }

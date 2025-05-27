@@ -7,7 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/image_capture_dialog.dart';
-import 'package:newsee/Utils/geolocator.dart';
+import 'package:newsee/Utils/media_service.dart';
 import 'package:newsee/Utils/pdf_viewer.dart';
 import 'package:newsee/feature/saveprofilepicture/profilepicturebloc/saveprofilepicture_bloc.dart';
 
@@ -22,6 +22,8 @@ class ProfilePageState extends State<ProfilePage> {
   Uint8List? profilebytes;
   Position? geoPosition;
 
+  final getit = GetIt.instance<MediaService>();
+
   /* 
   @author         :   ganeshkumar.b   12/05/2025
   @description    :   this function navigate camera page and return the data
@@ -29,13 +31,12 @@ class ProfilePageState extends State<ProfilePage> {
   return value    :   it retun the bytes(Unit8List) data
   */
   Future<Uint8List?> onCameraTap(BuildContext context) async {
-    final curposition = await getLocation(context);
+    final curposition = await getit.getLocation(context);
     setState(() {
       geoPosition = curposition;
     });
     print("curposition: $curposition");
     final getprofileData =  await context.pushNamed<Uint8List>("camera");
-    // final getprofileData =  GoRouter.of(context).goNamed<Uint8List?>('/camera');
     if (getprofileData != null) {
       return getprofileData;
     } else {
@@ -52,13 +53,14 @@ class ProfilePageState extends State<ProfilePage> {
   return value    :   it retun the bytes(Unit8List) data
   */
   Future<Uint8List?> onGalleryTap(BuildContext context) async {
-    final galleyImageBytes = await pickimagefromgallery(context);
+    // final galleyImageBytes = await pickimagefromgallery(context);
+    final galleyImageBytes = await getit.pickimagefromgallery(context);
     return galleyImageBytes!;
   }
 
   onFileTap(BuildContext context) async{
-    // final fileBytes = await GetIt.I<MediaHandler>().filePicker();
-    final fileBytes = await filePicker();
+    // final fileBytes = await filePicker();
+    final fileBytes = await getit.filePicker();
     print("fileBytes: $fileBytes");
     if (fileBytes != null) {
       Navigator.push(

@@ -7,6 +7,7 @@ import 'package:newsee/Model/loader.dart';
 import 'package:image_cropper/image_cropper.dart';
 
 
+class MediaService {
 /* 
 @author         :   ganeshkumar.b    14/05/2025
 @description    :   getLocation function use GeoLocator Plugin to capture current coordinates
@@ -147,7 +148,7 @@ import 'package:image_cropper/image_cropper.dart';
       return null;
     }
   }
-
+}
 
 class CropAspectRatioPresetCustom implements CropAspectRatioPresetData {
     @override

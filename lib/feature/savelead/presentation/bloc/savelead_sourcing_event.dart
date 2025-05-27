@@ -14,3 +14,15 @@ encapsulate functionalites for
 
  */
 
+part of 'savelead_sourcing_bloc.dart';
+
+sealed class SaveLeadSourcingEvent {}
+
+/* 
+
+@desc     :  define the initial Sourcingdetails object 
+             set the LeadStatus to init 
+
+ */
+
+final class SaveleadSourcingSave extends SaveLeadSourcingEvent {}

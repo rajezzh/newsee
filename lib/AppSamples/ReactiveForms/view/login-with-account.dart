@@ -72,6 +72,7 @@ class LoginpageWithAC extends StatelessWidget {
             context.goNamed('home');
           case AuthStatus.loading:
             print('LoginStatus.loading...');
+            context.goNamed('home');
 
           case AuthStatus.init:
             print('LoginStatus.init...');
@@ -79,7 +80,7 @@ class LoginpageWithAC extends StatelessWidget {
           case AuthStatus.failure:
             context.goNamed('home');
             print('LoginStatus.error...');
-
+            context.goNamed('home');
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.errorMessage ?? 'Login Failed...')),
             );

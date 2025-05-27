@@ -2,8 +2,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:newsee/Utils/geolocator.dart';
+import 'package:newsee/Utils/media_service.dart';
 import 'package:newsee/blocs/camera/camera_bloc.dart';
 import 'package:newsee/blocs/camera/camera_event.dart';
 import 'package:newsee/blocs/camera/camera_state.dart';
@@ -17,7 +18,8 @@ class CameraView extends StatelessWidget {
     return BlocConsumer<CameraBloc, CameraState>(
       listener: (context, state)  async {
         if (state is CameraConfirmData) {
-          final cropdata = await cropper(context, state.xfiledata.path);
+          // final cropdata = await cropper(context, state.xfiledata.path);
+          final cropdata = await GetIt.instance<MediaService>().cropper(context, state.xfiledata.path);
           final imageBytes = cropdata;
           if (context.mounted) {
             context.pop(imageBytes);
