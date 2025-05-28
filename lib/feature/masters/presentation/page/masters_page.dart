@@ -111,6 +111,8 @@ class MastersPage extends StatelessWidget {
                               ? SizedBox(
                                 width: 200,
                                 child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('Dowloading ${currentMaster.name}'),
                                     SizedBox(width: 8),

@@ -51,6 +51,21 @@ create table during the initialization of the db
 
 create table function can be encapsulated
 
+## version based master update
+
+step 1. store masterdetail object in table
+table name - masterversion colums : id , mastername , version
+
+step 2 - once master successfully downloaded , insert masterversion record for that
+master
+
+step 3 - when all masters are downloaded , and user logging in again
+check the masterdetails from login api response against masterversion table data
+if there is no deviation then no master update
+otherwise update the master only which has deviation
+
+-------- END ------------
+
 
 # Version Based Master Update Refetch Logic
 
