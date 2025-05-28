@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
-import 'package:newsee/Model/api_core/auth_failure.dart';
-import 'package:newsee/Model/api_core/failure.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:newsee/feature/auth/domain/model/user/auth_response_model.dart';
