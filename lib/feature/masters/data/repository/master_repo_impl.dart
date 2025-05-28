@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
-import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
-import 'package:newsee/Model/api_core/auth_failure.dart';
-import 'package:newsee/Model/api_core/failure.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
@@ -13,10 +13,12 @@ import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
+import 'package:newsee/feature/masters/domain/repository/masterversion_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/products_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
@@ -55,6 +57,15 @@ class MasterRepoImpl extends MasterRepo {
 
             List<Lov> lovs = await lovCrudRepo.getAll();
             print('lovCrudRepo.getAll() => ${lovs.length}');
+
+            await MasterversionCrudRepo().insert(MasterVersion(
+              mastername: request.setupTypeOfMaster,
+              version: request.setupVersion,
+              status: 'success',
+            ));
+
+            print('success ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+
             masterResponse = MasterResponse(
               master: lovList,
               masterType: MasterTypes.products,
@@ -63,6 +74,15 @@ class MasterRepoImpl extends MasterRepo {
             // api response success : false , process error message
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+            await MasterversionCrudRepo().insert(MasterVersion(
+            mastername: request.setupTypeOfMaster,
+            version: request.setupVersion,
+            status: 'failure', 
+            ));
+
+            print('failure ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+
             failure = AuthFailure(message: errorMessage);
           }
 
@@ -85,6 +105,15 @@ class MasterRepoImpl extends MasterRepo {
             print('Products saved in db successfully... ');
             List<Product> p = await productsCrudRepo.getAll();
             print('productCrudRepo.getAll() => ${p.length}');
+
+            await MasterversionCrudRepo().insert(MasterVersion(
+              mastername: request.setupTypeOfMaster,
+              version: request.setupVersion,
+              status: 'success',
+            ));
+
+            print('success ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+
             masterResponse = MasterResponse(
               master: productsList,
               masterType: MasterTypes.productschema,
@@ -92,6 +121,15 @@ class MasterRepoImpl extends MasterRepo {
           } else {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+            await MasterversionCrudRepo().insert(MasterVersion(
+            mastername: request.setupTypeOfMaster,
+            version: request.setupVersion,
+            status: 'failure',
+            ));
+
+            print('failure ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+
             failure = AuthFailure(message: errorMessage);
           }
         // case ApiConstants.master_key_productschema:
