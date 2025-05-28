@@ -6,17 +6,16 @@ part of 'productschema.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ProductSchemaValues _$ProductSchemaValuesFromJson(Map<String, dynamic> json) =>
-    ProductSchemaValues(
+ProductSchema _$ProductSchemaFromJson(Map<String, dynamic> json) =>
+    ProductSchema(
       optionValue: json['optionValue'] as String,
       optionDesc: json['optionDesc'] as String,
       optionId: json['optionId'] as String,
     );
 
-Map<String, dynamic> _$ProductSchemaValuesToJson(
-  ProductSchemaValues instance,
-) => <String, dynamic>{
-  'optionValue': instance.optionValue,
-  'optionDesc': instance.optionDesc,
-  'optionId': instance.optionId,
-};
+Map<String, dynamic> _$ProductSchemaToJson(ProductSchema instance) =>
+    <String, dynamic>{
+      'optionValue': instance.optionValue,
+      'optionDesc': instance.optionDesc,
+      'optionId': instance.optionId,
+    };

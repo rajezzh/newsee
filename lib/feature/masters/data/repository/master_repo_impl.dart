@@ -10,16 +10,22 @@ import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
+import 'package:newsee/feature/masters/data/repository/product_master_parser_impl.dart';
+import 'package:newsee/feature/masters/data/repository/product_parser_impl.dart';
 import 'package:newsee/feature/masters/data/repository/productschema_parser_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
+import 'package:newsee/feature/masters/domain/modal/product.dart';
+import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/product_schema_crud_repo.dart';
+import 'package:newsee/feature/masters/domain/repository/products_crud_repo.dart';
+import 'package:newsee/feature/masters/domain/repository/products_master_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
 class MasterRepoImpl extends MasterRepo {
@@ -56,10 +62,10 @@ class MasterRepoImpl extends MasterRepo {
             }
 
             List<Lov> lovs = await lovCrudRepo.getAll();
-            print('lovCrudRepo.getAllTasks() => ${lovs.length}');
+            print('lovCrudRepo.getAll() => ${lovs.length}');
             masterResponse = MasterResponse(
               master: lovList,
-              masterType: masterTypes,
+              masterType: MasterTypes.products,
             );
           } else {
             // api response success : false , process error message
@@ -67,24 +73,51 @@ class MasterRepoImpl extends MasterRepo {
             print('on Error request.data["ErrorMessage"] => $errorMessage');
             failure = AuthFailure(message: errorMessage);
           }
-        
-        case ApiConstants.master_key_productschema:
-          masterTypes = MasterTypes.productschema;
+
+        case ApiConstants.master_key_products:
+          masterTypes = MasterTypes.products;
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
-          List<ProductSchemaValues> productSchemaList = ProductschemaParserImpl().parseResponse(response);
-          if(productSchemaList.isNotEmpty) {
-            Iterator<ProductSchemaValues> it = productSchemaList.iterator;
-            ProductSchemaCrudRepo productSchemaCrudRepo = ProductSchemaCrudRepo(db);
+          List<Product> productsList = ProductParserImpl().parseResponse(
+            response,
+          );
+          List<ProductMaster> productmasterList = ProductMasterParserImpl().parseResponse(
+            response
+          );
+          print("productmasterList is printing here => $productmasterList");
+          if (productsList.isNotEmpty) {
+            // insert products in to products table
+            Iterator<Product> it = productsList.iterator;
+            ProductsCrudRepo productsCrudRepo = ProductsCrudRepo(db);
             while (it.moveNext()) {
-              productSchemaCrudRepo.save(it.current);
+              productsCrudRepo.save(it.current);
             }
+            print('Products saved in db successfully... ');
+            List<Product> p = await productsCrudRepo.getAll();
+            print('productCrudRepo.getAll() => ${p.length}');
+            // masterResponse = MasterResponse(
+            //   master: productsList,
+            //   masterType: MasterTypes.productschema,
+            // );
+          } else {
+            var errorMessage = response.data['errorDesc'];
+            print('on Error request.data["ErrorMessage"] => $errorMessage');
+            failure = AuthFailure(message: errorMessage);
+          }
 
-            List<ProductSchemaValues> productschemalov = await productSchemaCrudRepo.getAll();
-            print('productschemalov.getAllTasks() => ${productschemalov.length}');
+          if (productmasterList.isNotEmpty) {
+            // insert products in to products table
+            Iterator<ProductMaster> it = productmasterList.iterator;
+            ProductMasterCrudRepo productsMasterCrudRepo = ProductMasterCrudRepo(db);
+            while (it.moveNext()) {
+              productsMasterCrudRepo.save(it.current);
+            }
+            print('Products saved in db successfully... ');
+            List<ProductMaster> p = await productsMasterCrudRepo.getAll();
+            print('productCrudRepo.getAll() => ${p.length}');
             masterResponse = MasterResponse(
-              master: productSchemaList,
+              master: productmasterList,
               masterType: MasterTypes.productschema,
             );
           } else {
@@ -92,6 +125,29 @@ class MasterRepoImpl extends MasterRepo {
             print('on Error request.data["ErrorMessage"] => $errorMessage');
             failure = AuthFailure(message: errorMessage);
           }
+
+        case ApiConstants.master_key_productschema:
+          masterTypes = MasterTypes.productschema;
+          Response response = await MastersRemoteDatasource(dio: ApiClient().getDio()).downloadMaster(request);
+          List<ProductSchema>productSchemaList =  ProductSchemaParserImpl().parseResponse(response);
+
+          if (productSchemaList.isNotEmpty) {
+            Iterator<ProductSchema> it = productSchemaList.iterator;
+            ProductSchemaCrudRepo productSchemaCrudRepo = ProductSchemaCrudRepo(db);
+            while (it.moveNext()) {
+              productSchemaCrudRepo.save(it.current);
+            }
+            print('Products Schema saved in db successfully... ');
+            List<ProductSchema> p = await productSchemaCrudRepo.getAll();
+            print('productSchemaCrudRepo.getAll() => ${p.length}');
+            masterResponse = MasterResponse(
+              master: productSchemaList,
+              masterType: MasterTypes.productschema,
+            );
+          }
+
+        // default:
+        //   break;
       }
 
       // returning AsyncResponseHandler...

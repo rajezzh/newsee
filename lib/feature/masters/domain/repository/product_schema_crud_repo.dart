@@ -5,7 +5,7 @@ import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/feature/masters/domain/repository/simple_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchemaValues> {
+class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchema> {
   final Database _db;
 
   ProductSchemaCrudRepo(this._db);
@@ -21,7 +21,7 @@ class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchemaValues> {
   //   });
   // }
     @override
-  Future<int> save(ProductSchemaValues o) async {
+  Future<int> save(ProductSchema o) async {
     return _db.transaction((txn) async {
       return await txn.insert(
         TableKeysProductSchema.tableName,
@@ -32,23 +32,23 @@ class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchemaValues> {
   }
 
   @override
-  Future<int> delete(ProductSchemaValues o) {
+  Future<int> delete(ProductSchema o) {
     // TODO: implement delete
     throw UnimplementedError();
   }
 
   @override
-  Future<List<ProductSchemaValues>> getAll() async {
+  Future<List<ProductSchema>> getAll() async {
     final List<Map<String, dynamic>> data = await _db.query(
       TableKeysProductSchema.tableName,
       orderBy: 'id DESC',
     );
     print("retdata $data");
-    return List.generate(data.length, (index) => ProductSchemaValues.fromJson(data[index]));
+    return List.generate(data.length, (index) => ProductSchema.fromJson(data[index]));
   }
 
   @override
-  Future<int> update(ProductSchemaValues o) {
+  Future<int> update(ProductSchema o) {
     // TODO: implement update
     throw UnimplementedError();
   }

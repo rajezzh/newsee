@@ -1,33 +1,35 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-/* 
-@author     : ganeshkumar.b 27/05/2025
-@desc       : data class for ProductSchemaMasters Model 
-@param      : refer ReadMe.MD in feature/masters/Readme.MD
- */
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
-// productschema.g.dart is a generated file by jsonserializable which having helper methods
-// for json seri deseri
+
+/* 
+@author    : karthick.d 27/05/2025
+@desc      : data class for ProductScheme Model
+@param     : {String optionValue} - 
+             {String optionDesc} - Scheme Name
+             {String optionId} - unique number assigned for a Scheme which is required to pass to 
+             listofvalues masters to fetch the scheme code
+ */
 part 'productschema.g.dart';
 
 @JsonSerializable()
-class ProductSchemaValues {
+class ProductSchema {
   final String optionValue;
   final String optionDesc;
   final String optionId;
-  ProductSchemaValues({
+  ProductSchema({
     required this.optionValue,
     required this.optionDesc,
     required this.optionId,
   });
 
-  ProductSchemaValues copyWith({
+  ProductSchema copyWith({
     String? optionValue,
     String? optionDesc,
     String? optionId,
   }) {
-    return ProductSchemaValues(
+    return ProductSchema(
       optionValue: optionValue ?? this.optionValue,
       optionDesc: optionDesc ?? this.optionDesc,
       optionId: optionId ?? this.optionId,
@@ -42,25 +44,25 @@ class ProductSchemaValues {
     };
   }
 
-  factory ProductSchemaValues.fromMap(Map<String, dynamic> map) {
-    return ProductSchemaValues(
+  factory ProductSchema.fromMap(Map<String, dynamic> map) {
+    return ProductSchema(
       optionValue: map['optionValue'] as String,
       optionDesc: map['optionDesc'] as String,
       optionId: map['optionId'] as String,
     );
   }
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toJson() => _$ProductSchemaToJson(this);
 
-  factory ProductSchemaValues.fromJson(Map<String, dynamic> json) => _$ProductSchemaValuesFromJson(json);
-
-  @override
-  String toString() {
-    return 'ProductSchemaValues(optionValue: $optionValue, optionDesc: $optionDesc, optionId: $optionId)';
-  }
+  factory ProductSchema.fromJson(Map<String, dynamic> json) =>
+      _$ProductSchemaFromJson(json);
 
   @override
-  bool operator ==(covariant ProductSchemaValues other) {
+  String toString() =>
+      'ProductSchema(optionValue: $optionValue, optionDesc: $optionDesc, optionId: $optionId)';
+
+  @override
+  bool operator ==(covariant ProductSchema other) {
     if (identical(this, other)) return true;
 
     return other.optionValue == optionValue &&
@@ -69,9 +71,6 @@ class ProductSchemaValues {
   }
 
   @override
-  int get hashCode {
-    return optionValue.hashCode ^
-        optionDesc.hashCode ^
-        optionId.hashCode;
-  }
+  int get hashCode =>
+      optionValue.hashCode ^ optionDesc.hashCode ^ optionId.hashCode;
 }
