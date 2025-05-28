@@ -108,7 +108,9 @@ class MasterRepoImpl extends MasterRepo {
 
           if (productmasterList.isNotEmpty) {
             // insert products in to products table
+            
             Iterator<ProductMaster> it = productmasterList.iterator;
+            print("fucntion passing here for product master list => $it");
             ProductMasterCrudRepo productsMasterCrudRepo = ProductMasterCrudRepo(db);
             while (it.moveNext()) {
               productsMasterCrudRepo.save(it.current);
@@ -145,9 +147,8 @@ class MasterRepoImpl extends MasterRepo {
               masterType: MasterTypes.productschema,
             );
           }
-
-        // default:
-        //   break;
+        default:
+          break;
       }
 
       // returning AsyncResponseHandler...

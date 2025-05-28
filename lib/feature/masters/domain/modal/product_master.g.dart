@@ -16,7 +16,7 @@ ProductMaster _$ProductMasterFromJson(Map<String, dynamic> json) =>
       prdSubCat: json['prdSubCat'] as String,
       prdTenorFrom: json['prdTenorFrom'] as String,
       prdTenorTo: json['prdTenorTo'] as String,
-      prdMoratoriumMax: json['prdMoratoriumMax'] as String,
+      // prdMoratoriumMax: json['prdMoratoriumMax'] as String?,
     );
 
 Map<String, dynamic> _$ProductMasterToJson(ProductMaster instance) =>
@@ -29,5 +29,5 @@ Map<String, dynamic> _$ProductMasterToJson(ProductMaster instance) =>
       'prdSubCat': instance.prdSubCat,
       'prdTenorFrom': instance.prdTenorFrom,
       'prdTenorTo': instance.prdTenorTo,
-      'prdMoratoriumMax': instance.prdMoratoriumMax,
+      // 'prdMoratoriumMax': instance.prdMoratoriumMax,
     };

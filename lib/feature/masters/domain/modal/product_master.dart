@@ -27,7 +27,7 @@ class ProductMaster {
   final String prdSubCat;
   final String prdTenorFrom;
   final String prdTenorTo;
-  final String? prdMoratoriumMax;
+  // final String? prdMoratoriumMax;
 
   ProductMaster({
     required this.prdCode,
@@ -38,7 +38,6 @@ class ProductMaster {
     required this.prdSubCat,
     required this.prdTenorFrom,
     required this.prdTenorTo,
-    required this.prdMoratoriumMax
   });
 
   ProductMaster copyWith({
@@ -50,7 +49,6 @@ class ProductMaster {
     String? prdSubCat,
     String? prdTenorFrom,
     String? prdTenorTo,
-    String? prdMoratoriumMax
   }) {
     return ProductMaster(
       prdCode: prdCode ?? this.prdCode,
@@ -61,7 +59,6 @@ class ProductMaster {
       prdSubCat: prdSubCat ?? this.prdSubCat,
       prdTenorFrom: prdTenorFrom ?? this.prdTenorFrom,
       prdTenorTo: prdTenorTo ?? this.prdTenorTo,
-      prdMoratoriumMax: prdMoratoriumMax ?? this.prdMoratoriumMax
     );
   }
 
@@ -75,7 +72,6 @@ class ProductMaster {
       'prdSubCat': prdSubCat,
       'prdTenorFrom': prdTenorFrom,
       'prdTenorTo': prdTenorTo,
-      'prdMoratoriumMax': prdMoratoriumMax
     };
   }
 
@@ -89,7 +85,6 @@ class ProductMaster {
       prdSubCat: map['prdSubCat'] as String,
       prdTenorFrom: map['prdTenorFrom'] as String,
       prdTenorTo: map['prdTenorTo'] as String,
-      prdMoratoriumMax: map['prdMoratoriumMax'] as String
     );
   }
 
@@ -100,34 +95,33 @@ class ProductMaster {
 
   @override
   String toString() {
-    return 'ProductMaster(prdCode: $prdCode, prdDesc: $prdDesc, prdamtFromRange: $prdamtFromRange,  prdamtToRange: $prdamtToRange, prdMainCat : $prdMainCat, prdSubCat: $prdSubCat, prdTenorFrom: $prdTenorFrom, prdTenorTo: $prdTenorTo, prdMoratoriumMax: $prdMoratoriumMax)';
+    return 'ProductMaster(prdCode: $prdCode, prdDesc: $prdDesc, prdamtFromRange: $prdamtFromRange, prdamtToRange: $prdamtToRange, prdMainCat: $prdMainCat, prdSubCat: $prdSubCat, prdTenorFrom: $prdTenorFrom, prdTenorTo: $prdTenorTo)';
   }
 
   @override
   bool operator ==(covariant ProductMaster other) {
     if (identical(this, other)) return true;
-
-    return other.prdCode == prdCode &&
-        other.prdDesc == prdDesc &&
-        other.prdamtFromRange == prdamtFromRange &&
-        other.prdamtToRange == prdamtToRange &&
-        other.prdMainCat == prdMainCat &&
-        other.prdSubCat == prdSubCat &&
-        other.prdTenorFrom == prdTenorFrom &&
-        other.prdTenorTo == prdTenorTo &&
-        other.prdMoratoriumMax == prdMoratoriumMax;
+  
+    return 
+      other.prdCode == prdCode &&
+      other.prdDesc == prdDesc &&
+      other.prdamtFromRange == prdamtFromRange &&
+      other.prdamtToRange == prdamtToRange &&
+      other.prdMainCat == prdMainCat &&
+      other.prdSubCat == prdSubCat &&
+      other.prdTenorFrom == prdTenorFrom &&
+      other.prdTenorTo == prdTenorTo;
   }
 
   @override
   int get hashCode {
     return prdCode.hashCode ^
-        prdDesc.hashCode ^
-        prdamtFromRange.hashCode ^
-        prdamtToRange.hashCode ^
-        prdMainCat.hashCode ^
-        prdSubCat.hashCode ^
-        prdTenorFrom.hashCode ^
-        prdTenorTo.hashCode ^
-        prdMoratoriumMax.hashCode;
+      prdDesc.hashCode ^
+      prdamtFromRange.hashCode ^
+      prdamtToRange.hashCode ^
+      prdMainCat.hashCode ^
+      prdSubCat.hashCode ^
+      prdTenorFrom.hashCode ^
+      prdTenorTo.hashCode;
   }
 }

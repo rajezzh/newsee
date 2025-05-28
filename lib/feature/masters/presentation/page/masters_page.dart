@@ -55,17 +55,16 @@ class MastersPage extends StatelessWidget {
                     ),
                   ),
                 );
-
-              case MasterTypes.productschema:
-                context.read<MastersBloc>().add(
-                  MasterFetch(
-                    request: MasterRequest(
-                      setupVersion: '4',
-                      setupmodule: 'AGRI',
-                      setupTypeOfMaster: ApiConstants.master_key_productschema,
-                    ),
-                  ),
-                );
+              // case MasterTypes.productschema:
+              //   context.read<MastersBloc>().add(
+              //     MasterFetch(
+              //       request: MasterRequest(
+              //         setupVersion: '4',
+              //         setupmodule: 'AGRI',
+              //         setupTypeOfMaster: ApiConstants.master_key_productschema,
+              //       ),
+              //     ),
+              //   );
               default:
                 break;
             }

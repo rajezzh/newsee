@@ -20,6 +20,7 @@ class AuthResponseModel {
   final String StatusCode;
   final List<String> UserGroups;
   final String token;
+  final Map<String, dynamic> masterDetails;
 
   AuthResponseModel({
     required this.id,
@@ -29,6 +30,7 @@ class AuthResponseModel {
     required this.StatusCode,
     required this.UserGroups,
     required this.token,
+    required this.masterDetails,
   });
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) =>

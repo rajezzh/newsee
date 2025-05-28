@@ -68,19 +68,17 @@ class LoginpageWithAC extends StatelessWidget {
       listener: (context, state) {
         switch (state.authStatus) {
           case AuthStatus.success:
-            print('LoginStatus.success...');
+            print('LoginStatus.success... ${state.authResponseModel}');
             context.goNamed('home');
           case AuthStatus.loading:
             print('LoginStatus.loading...');
-            context.goNamed('home');
 
           case AuthStatus.init:
             print('LoginStatus.init...');
 
           case AuthStatus.failure:
-            context.goNamed('home');
+            // context.goNamed('home');
             print('LoginStatus.error...');
-            context.goNamed('home');
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.errorMessage ?? 'Login Failed...')),
             );

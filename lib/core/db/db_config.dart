@@ -42,6 +42,8 @@ class DBConfig {
       printTableCreateSuccess(TableKeysProductSchema.tableName);
       await db.execute(TableKeysProducts.createTableQuery);
       printTableCreateSuccess(TableKeysProducts.tableName);
+      await db.execute(TableKeysProductMaster.createTableQuery);
+      printTableCreateSuccess(TableKeysProductMaster.tableName);
     } catch (e) {
       // db creation failure - > log u r exception
 

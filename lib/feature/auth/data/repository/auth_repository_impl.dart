@@ -40,7 +40,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
       print('auth request payload => $payload');
       var response = await authRemoteDatasource.loginWithUserAccount(payload);
-
       // process api response if it's success
       if (response.data['Success']) {
         var authResponse = AuthResponseModel.fromJson(
