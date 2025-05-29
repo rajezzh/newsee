@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
@@ -36,7 +37,7 @@ class MasterRepoImpl extends MasterRepo {
       masterType: masterTypes,
     );
     AuthFailure failure = AuthFailure(message: "");
-
+    
     try {
       switch (request.setupTypeOfMaster) {
         case ApiConstants.master_key_lov:
@@ -45,6 +46,10 @@ class MasterRepoImpl extends MasterRepo {
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
+
+          final String versionFromResponse = response.data['version'] ?? request.setupVersion;
+          final String masterNameFromResponse = response.data['masterName'] ?? request.setupTypeOfMaster;
+
           List<Lov> lovList = LovParserImpl().parseResponse(response);
           if (lovList.isNotEmpty) {
             /* Listofvalue master downloaded and saved in table */
@@ -58,13 +63,13 @@ class MasterRepoImpl extends MasterRepo {
             List<Lov> lovs = await lovCrudRepo.getAll();
             print('lovCrudRepo.getAll() => ${lovs.length}');
 
-            await MasterversionCrudRepo().insert(MasterVersion(
-              mastername: request.setupTypeOfMaster,
-              version: request.setupVersion,
-              status: 'success',
-            ));
+            // Save the updated master version into the db
+            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
 
-            print('success ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+            //Update the global master version with the latest downloaded version
+            Globalconfig.masterVersionMapper[request.setupTypeOfMaster] = versionFromResponse;
+            
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
 
             masterResponse = MasterResponse(
               master: lovList,
@@ -75,13 +80,9 @@ class MasterRepoImpl extends MasterRepo {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
 
-            await MasterversionCrudRepo().insert(MasterVersion(
-            mastername: request.setupTypeOfMaster,
-            version: request.setupVersion,
-            status: 'failure', 
-            ));
+            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
 
-            print('failure ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
 
             failure = AuthFailure(message: errorMessage);
           }
@@ -91,6 +92,9 @@ class MasterRepoImpl extends MasterRepo {
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
+
+          final String versionFromResponse = response.data['version'] ?? request.setupVersion;
+          final String masterNameFromResponse = response.data['masterName'] ?? request.setupTypeOfMaster;
 
           List<Product> productsList = ProductParserImpl().parseResponse(
             response,
@@ -106,13 +110,11 @@ class MasterRepoImpl extends MasterRepo {
             List<Product> p = await productsCrudRepo.getAll();
             print('productCrudRepo.getAll() => ${p.length}');
 
-            await MasterversionCrudRepo().insert(MasterVersion(
-              mastername: request.setupTypeOfMaster,
-              version: request.setupVersion,
-              status: 'success',
-            ));
+            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
 
-            print('success ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+            Globalconfig.masterVersionMapper[request.setupTypeOfMaster] = versionFromResponse;
+
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
 
             masterResponse = MasterResponse(
               master: productsList,
@@ -122,16 +124,13 @@ class MasterRepoImpl extends MasterRepo {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
 
-            await MasterversionCrudRepo().insert(MasterVersion(
-            mastername: request.setupTypeOfMaster,
-            version: request.setupVersion,
-            status: 'failure',
-            ));
+            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
 
-            print('failure ${request.setupTypeOfMaster} version: ${request.setupVersion}');
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
 
             failure = AuthFailure(message: errorMessage);
           }
+
         // case ApiConstants.master_key_productschema:
         //   masterTypes = MasterTypes.productschema;
 
@@ -157,6 +156,21 @@ class MasterRepoImpl extends MasterRepo {
       }
       return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
     }
+  }
+
+  Future<void> updateMasterVersion(
+
+    Database db , 
+    String masterNameFromResponse , 
+    String versionFromResponse,
+    String isMasterDownloadSuccess ) async {
+              final masterVersionCrudRepo = MasterversionCrudRepo(db);
+
+                  await masterVersionCrudRepo.insert(MasterVersion(
+            mastername: masterNameFromResponse,
+            version: versionFromResponse,
+            status: isMasterDownloadSuccess,
+            ));
   }
 
   // now lov is a List contains Map<String,dynamic>

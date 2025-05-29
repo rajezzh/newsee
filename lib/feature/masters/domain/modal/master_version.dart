@@ -1,6 +1,9 @@
 /*
 @author     : akshayaa.p 28/05/2025
 @desc       : data class for MastersVersion model
+@param    : {String mastername} - name of the masters ('lov','products')
+            {String version} - version fetched from the server
+            {String status} - master downloaded status (success or failure)
 */
 
 import 'dart:convert';
@@ -42,9 +45,9 @@ class MasterVersion {
 
   factory MasterVersion.fromMap(Map<String, dynamic> map) {
     return MasterVersion(
-      mastername: map['mastername'] as String, 
-      version: map['version'] as String,
-      status: map['status'] as String
+      mastername: map['mastername'], 
+      version: map['version'],
+      status: map['status']
       );
   }
 
