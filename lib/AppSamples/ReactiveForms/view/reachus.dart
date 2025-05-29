@@ -15,7 +15,7 @@ import 'package:flutter_svg/flutter_svg.dart';
           -the First action sheet whatsapp
           -the Secons action sheet contactUs
           -the third action sheet location 
-          -icondata show the Each action button 
+          -icondata show the Each action button
 
 
  */
