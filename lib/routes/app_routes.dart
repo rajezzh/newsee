@@ -30,7 +30,7 @@ final AuthRepository = AuthRepositoryImpl(
 final routes = GoRouter(
   // initial location changed to test masters feature , to see login page
   // modify the initialLocation
-  initialLocation: AppRouteConstants.MASTERS_PAGE['path'],
+  initialLocation: AppRouteConstants.LOGIN_PAGE['path'],
 
   routes: <RouteBase>[
     GoRoute(
