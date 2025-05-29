@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/core/api/failure.dart';
@@ -46,6 +47,10 @@ class AuthRepositoryImpl implements AuthRepository {
           response.data['responseData'],
         );
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
+        print("Auth Response from login: => $response");
+        Globalconfig.masterVersionDetails = response.data['responseData']['MasterDetails'];
+        print("masterResponse response from login, => ${Globalconfig.masterVersionDetails}");
+
         return AsyncResponseHandler.right(authResponse);
       } else {
         // api response success : false , process error message

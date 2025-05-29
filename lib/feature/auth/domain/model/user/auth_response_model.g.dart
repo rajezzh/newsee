@@ -21,7 +21,9 @@ AuthResponseModel _$AuthResponseModelFromJson(Map<String, dynamic> json) =>
               .map((e) => e as String)
               .toList(),
       token: json['token'] as String,
-      masterDetails: json['masterDetails'] as Map<String, dynamic>,
+      MasterDetails: MasterDetailsList.fromJson(
+        json['MasterDetails'] as Map<String, dynamic>,
+      ),
     );
 
 Map<String, dynamic> _$AuthResponseModelToJson(AuthResponseModel instance) =>
@@ -33,5 +35,31 @@ Map<String, dynamic> _$AuthResponseModelToJson(AuthResponseModel instance) =>
       'StatusCode': instance.StatusCode,
       'UserGroups': instance.UserGroups,
       'token': instance.token,
-      'masterDetails': instance.masterDetails,
+      'MasterDetails': instance.MasterDetails,
+    };
+
+MasterDetailsList _$MasterDetailsListFromJson(Map<String, dynamic> json) =>
+    MasterDetailsList(
+      DocumentMaster: json['DocumentMaster'] as String,
+      BankMaster: json['BankMaster'] as String,
+      IntRateMaster: json['IntRateMaster'] as String,
+      StateCityMaster: json['StateCityMaster'] as String,
+      ProductMaster: json['ProductMaster'] as String,
+      OrganizationMaster: json['OrganizationMaster'] as String,
+      SourcingMaster: json['SourcingMaster'] as String,
+      Listofvalues: json['Listofvalues'] as String,
+      ProductScheme: json['ProductScheme'] as String,
+    );
+
+Map<String, dynamic> _$MasterDetailsListToJson(MasterDetailsList instance) =>
+    <String, dynamic>{
+      'DocumentMaster': instance.DocumentMaster,
+      'BankMaster': instance.BankMaster,
+      'IntRateMaster': instance.IntRateMaster,
+      'StateCityMaster': instance.StateCityMaster,
+      'ProductMaster': instance.ProductMaster,
+      'OrganizationMaster': instance.OrganizationMaster,
+      'SourcingMaster': instance.SourcingMaster,
+      'Listofvalues': instance.Listofvalues,
+      'ProductScheme': instance.ProductScheme,
     };

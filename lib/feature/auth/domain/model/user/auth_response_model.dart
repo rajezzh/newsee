@@ -20,7 +20,7 @@ class AuthResponseModel {
   final String StatusCode;
   final List<String> UserGroups;
   final String token;
-  final Map<String, dynamic> masterDetails;
+  final MasterDetailsList MasterDetails;
 
   AuthResponseModel({
     required this.id,
@@ -30,7 +30,7 @@ class AuthResponseModel {
     required this.StatusCode,
     required this.UserGroups,
     required this.token,
-    required this.masterDetails,
+    required this.MasterDetails,
   });
 
   factory AuthResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -41,5 +41,41 @@ class AuthResponseModel {
   @override
   String toString() {
     return 'AuthResponseModel [ id = $id , userName = $UserName]';
+  }
+}
+
+@JsonSerializable()
+class MasterDetailsList {
+  final String? DocumentMaster;
+  final String? BankMaster;
+  final String? IntRateMaster;
+  final String? StateCityMaster;
+  final String? ProductMaster;
+  final String? OrganizationMaster;
+  final String? SourcingMaster;
+  final String? Listofvalues;
+  final String? ProductScheme;
+
+  MasterDetailsList({
+    required this.DocumentMaster,
+    required this.BankMaster,
+    required this.IntRateMaster,
+    required this.StateCityMaster,
+    required this.ProductMaster,
+    required this.OrganizationMaster,
+    required this.SourcingMaster,
+    required this.Listofvalues,
+    required this.ProductScheme,
+  });
+
+  factory MasterDetailsList.fromJson(Map<String, dynamic> json) =>
+      _$MasterDetailsListFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MasterDetailsListToJson(this);
+
+   bool compareto(lovmaster, productsmaster, productschemamaster) {
+    return Listofvalues == lovmaster &&
+    ProductMaster == productsmaster &&
+    productschemamaster == ProductScheme;
   }
 }
