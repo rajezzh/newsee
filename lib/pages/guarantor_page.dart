@@ -21,43 +21,51 @@ class GuarantorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Additional Borrowers"),
-      ),
+      appBar: AppBar(title: Text("Additional Borrowers")),
       body: ReactiveForm(
         formGroup: form,
         child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Dropdown(
-                controlName: 'applicanttype',
-                label: 'Applicant Type',
-                items: ['Co-Applicant', 'Guarantor'],
-              ),
-              SearchableDropdown(
-                controlName: 'title',
-                label: 'Title',
-                items: ['COLONEL', 'DR', 'LT.COL', 'M/S', 'MAJOR', 'MASTER(MINOR)',
-                'MESSERS', 'MIGRATION DEFAULT', 'MISS', 'MOHAMMAD', 'MR', 'MRS', 
-                'MX', 'SHEIKH', 'SIR'],
-              ),
-              IntegerTextField('firstname', 'First Name'),
-              IntegerTextField('lastname', 'Last Name'),
-              IntegerTextField('mobilenumber', 'Mobile Number'), 
-              IntegerTextField('networth', 'Networth of the Applicant(₹)'),
-              SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                  },
-                  child: Text('Save'),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Dropdown(
+                  controlName: 'applicanttype',
+                  label: 'Applicant Type',
+                  items: ['Co-Applicant', 'Guarantor'],
                 ),
-              ),
-            ],
+                SearchableDropdown(
+                  controlName: 'title',
+                  label: 'Title',
+                  items: [
+                    'COLONEL',
+                    'DR',
+                    'LT.COL',
+                    'M/S',
+                    'MAJOR',
+                    'MASTER(MINOR)',
+                    'MESSERS',
+                    'MIGRATION DEFAULT',
+                    'MISS',
+                    'MOHAMMAD',
+                    'MR',
+                    'MRS',
+                    'MX',
+                    'SHEIKH',
+                    'SIR',
+                  ],
+                ),
+                IntegerTextField('firstname', 'First Name'),
+                IntegerTextField('lastname', 'Last Name'),
+                IntegerTextField('mobilenumber', 'Mobile Number'),
+                IntegerTextField('networth', 'Networth of the Applicant(₹)'),
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(onPressed: () {}, child: Text('Save')),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
