@@ -4,12 +4,23 @@ import 'package:newsee/widgets/progress_bar.dart';
 import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
-// import 'master-download.dart';
-// import '../../../widgets/progress_bar.dart';
-import '../../../pages/master-download.dart';
 
+
+/*
+@author : Gayathri B    09/05/2025
+@description : This function displays a custom modal bottom sheet that serves as an MPIN 
+              (Mobile Personal Identification Number) entry interface. It includes:
+              - A fingerprint icon for biometric authentication.
+              - Four TextFields for entering a numeric MPIN.
+              - Action buttons for navigating to Maintenance, Reach Us, and More sections.
+              - A button to navigate to the Master Download page for checking progress.
+
+@props      :
+  - BuildContext context : The context in which the modal bottom sheet is displayed.
+*/
 
 mpin(BuildContext context) {
+  // show the custom modal bottom sheet 
   showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
@@ -22,6 +33,7 @@ mpin(BuildContext context) {
           
           children: [
             Row(
+              // Four TextFields for entering a numeric MPIN
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(5, (i) {
                 return Container(
@@ -33,6 +45,7 @@ mpin(BuildContext context) {
                     border: Border.all(width: 1.0, color: Colors.black),
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  // fingerprint icon for biometric authentication
                   child: i == 0
                       ? Center(
                           child: IconButton(onPressed: (){}, icon: Icon(Icons.fingerprint, size: 35,color: Color.fromARGB(255, 3, 9, 110),),),
@@ -60,6 +73,9 @@ mpin(BuildContext context) {
             ),
 
             //  SizedBox(height: 50),
+
+
+            // Action buttons for navigating to Maintenance, Reach Us, and More sections
 
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40),
@@ -134,7 +150,7 @@ mpin(BuildContext context) {
                 ],
               ),
             ),
-
+             // A button to navigate to the Master Download page for checking progress.
             Row(
               children: [
                 Center(

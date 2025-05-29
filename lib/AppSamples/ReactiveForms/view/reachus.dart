@@ -4,6 +4,24 @@ import 'contactUs.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+/*
+@action : Gayathri.b    15/05/2025
+@description : Display the cupertino action sheet labeled "Reach us" with each action button like 
+              whatsapp , contactus and branch locator and also when the click whatsapp button go to the whatsapp chat 
+              and click the contact button show  cupertino action sheet with  two options show the phone numbers  
+
+@ props : -BuilderContext context : The context in witch the cupertino modal displayed.
+          -title : title displayed at the topof the action sheet .
+          -the First action sheet whatsapp
+          -the Secons action sheet contactUs
+          -the third action sheet location 
+          -icondata show the Each action button 
+
+
+ */
+
+
+
 //Define the function take mulitiple pharameter and also take context 
 void reachUsActionSheet(
   BuildContext context,

@@ -6,33 +6,28 @@ import 'reachus.dart';
 import 'more.dart';
 import 'login_mpin.dart';
 
+
+/*
+author : Gayathri B 
+description : A stateless widget that serves as the main login screen for the app. It offers
+              users multiple ways to authenticate and access frequently used features:
+            - Login using fingerprint (biometric authentication)
+              - Login with account  username and password
+              - Login using mPIN
+              - Option to reset mPIN via action sheet
+              - Access to additional options like Maintenance, Reach Us, and More
+
+ */
+
 class LoginpageView extends StatelessWidget {
   void fingerPrintScanner() {
     print('clicked finger print');
   }
 
-  /*   login(AuthState state) {
-    if (loginFormgroup.valid) {
-      context.read<AuthBloc>().add(
-        LoginWithAccount(
-          loginRequest: LoginRequest(12
-            username: loginFormgroup.value['username'] as String,
-            password: loginFormgroup.value['password'] as String,
-          ),
-        ),
-      );
-      print(state.toString());
-
-      //context.goNamed('home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields')),
-      );
-    }
-  }
- */
+  
   @override
   Widget build(BuildContext context) {
+    //Header section of the landing page 
     return    
      SingleChildScrollView(
       child: Padding(
@@ -77,6 +72,8 @@ class LoginpageView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 20),
+                      //Login using fingerprint (biometric authentication)
+
                     IconButton(
                       onPressed: () {
                         fingerPrintScanner();
@@ -94,6 +91,7 @@ class LoginpageView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 30),
+                    // users multiple ways to authenticate and access frequently used features
                     Text(
                       "Frequently used features & special offers at your fingertips",
                       textAlign: TextAlign.center,
@@ -167,6 +165,7 @@ class LoginpageView extends StatelessWidget {
             ),
             SizedBox(height: 50),
 
+        // Login with account  username and password
             Padding(
               padding: const EdgeInsets.all(20),
               child: Center(
@@ -198,6 +197,7 @@ class LoginpageView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Login using mPIN
                 TextButton(
                   onPressed: () {
                     mpin(context);
@@ -221,6 +221,7 @@ class LoginpageView extends StatelessWidget {
             ),
             SizedBox(height: 150),
 
+        // Access to additional options like Maintenance, Reach Us, and More
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [

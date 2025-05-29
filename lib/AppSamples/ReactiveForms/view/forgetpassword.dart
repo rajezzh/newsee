@@ -1,6 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/*
+   @author   : Gayathri.B  06/05/2025
+   @description : This function displays a Cupertino-style action sheet prompting the user 
+              to reset their PIN. It shows a lock icon, a title, a message, and provides 
+              two action buttons (e.g., Continue and Cancel). 
+
+    @props  : - BuildContext context : The context in which the Cupertino modal is displayed.
+  - String title          : The title displayed at the top of the action sheet.
+  - String message        : The message or description displayed below the title.
+  - IconData icon         : An icon displayed at the top (e.g., lock icon).
+  - String action1        : Label for the first action button (e.g., "Continue").
+  - String action2        : Label for the second action button (e.g., "Cancel").
+
+
+ */
+
 //Define the function that take multiple pharmeter
 
 void forgetActionSheet(

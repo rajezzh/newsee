@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
+
+/*
+@author : Gayathri.b       27/05/2025
+@description : Displays a circular progress indicator with a percentage value in the center.
+         When the progress reaches 100%, a green checkmark icon is shown instead of the percentage.
+
+
+ */
+
 class ProgressBarExample extends StatelessWidget {
+  // define the progressValue 
   final double progressValue = 0.6; 
 
   @override
@@ -14,6 +24,7 @@ class ProgressBarExample extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
+              // Displays a circular progress indicator
               SizedBox(
                 width: 120,
                 height: 120,
@@ -26,12 +37,16 @@ class ProgressBarExample extends StatelessWidget {
       
                 ),
               ),
+              
+        //  When the progress reaches 100%, a green checkmark icon is shown instead of the percentage.
+
               progressValue == 1.0 
               ?
               Icon(Icons.check_circle,
               size: 50,
               color: Colors.green,
               ):
+              // a percentage value in the center
               Text(
                 "${(progressValue * 100).toInt()}%",
 

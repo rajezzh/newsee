@@ -1,6 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/*
+
+@author : Gayathri.b    14/05/25
+@description : Displays a cupertino action sheet labled "more" with a grid layout of 
+               loan categories and additional services and primary action button at the bottom of sheet 
+
+ @props       : - BuildContext context : The context in which the Cupertino modal is displayed.
+                - String action        : action button at the bottom of the sheet.
+
+
+ */
+
+
+
 //Define the function take context pharameters
 void moreActionSheet(
   BuildContext context,

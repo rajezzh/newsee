@@ -1,6 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+/*
+@author   : Gayathri.B  05/05/2025
+@description : This function displays a Cupertino-style action sheet with two contact numbers 
+              and a customizable icon
+
+@props  : - BuildContext context : The context in which the Cupertino modal is displayed.
+
+          - String title          : Title displayed at the top of the action sheet.
+          - String number1        : The first phone number option displayed.
+          - String number2        : The second phone number option displayed.
+          - IconData icon         : An icon displayed next to each phone number.
+
+
+
+ */
+
 //Define the function take mulitiple pharameter and also take context 
 
 void contact(
