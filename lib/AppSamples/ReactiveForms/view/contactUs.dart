@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 
  */
 
-//Define the function take mulitiple pharameter and also take context 
+//Define the function take mulitiple pharameter and also take context
 
 void contact(
   BuildContext context,
@@ -26,67 +26,58 @@ void contact(
   String number2,
   IconData icon,
 ) {
-
-  //popup the action sheet 
+  //popup the action sheet
   showCupertinoModalPopup<void>(
     context: context,
-    builder: (BuildContext context) => CupertinoActionSheet(
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-        textAlign: TextAlign.start,
-      ),
-      // list of Action sheet 
-      actions: [
-        CupertinoActionSheetAction(
-          onPressed: () {
-            // print(number1);
-           //close the action sheet when pressed void contact
-            Navigator.pop(context);
-          },
-          //List Of First number
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                number1,
-                style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
-              Icon(
-                icon,
-                color: Color.fromARGB(255, 32, 219, 35),
-                size: 30,
-              ),
-            ],
+    builder:
+        (BuildContext context) => CupertinoActionSheet(
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+            textAlign: TextAlign.start,
           ),
-        ),
-        CupertinoActionSheetAction(
-          onPressed: () {
-            print(number2);
-            Navigator.pop(context);
-          },
-         //List Of Second number
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                number2,
-                style: TextStyle(color: Colors.black, fontSize: 20),
+          // list of Action sheet
+          actions: [
+            CupertinoActionSheetAction(
+              onPressed: () {
+                // print(number1);
+                //close the action sheet when pressed void contact
+                Navigator.pop(context);
+              },
+              //List Of First number
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    number1,
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  Icon(icon, color: Color.fromARGB(255, 32, 219, 35), size: 30),
+                ],
               ),
-              Icon(
-                icon,
-                color: Color.fromARGB(255, 32, 219, 35),
-                size: 30,
+            ),
+            CupertinoActionSheetAction(
+              onPressed: () {
+                print(number2);
+                Navigator.pop(context);
+              },
+              //List Of Second number
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    number2,
+                    style: TextStyle(color: Colors.black, fontSize: 20),
+                  ),
+                  Icon(icon, color: Color.fromARGB(255, 32, 219, 35), size: 30),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-     
-    ),
   );
 }

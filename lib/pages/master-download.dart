@@ -7,12 +7,14 @@ import '../widgets/progress_bar.dart';
 @description : Displays a download screen UI with a progress bar and skeleton loaders,
              simulating content loading for "Download Master".
 
+
+
+
+
  */
 
-
 class MasterDownload extends StatelessWidget {
- 
- //customaized with and height 
+  //customaized with and height
   
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class MasterDownload extends StatelessWidget {
     final double scrheight = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor:Colors.white,
+      backgroundColor: Colors.white,
 
       body: SizedBox(
         width: scrwidth,
@@ -34,44 +36,43 @@ class MasterDownload extends StatelessWidget {
               children: [
                 //use the reusable widget ProgressBar
                 ProgressBarExample(),
-                const SizedBox(width: 30), 
+                const SizedBox(width: 30),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-             //use the reusable widget SkeletonLoader
-
+                    //use the reusable widget SkeletonLoader
                     SkeletonLoader(
                       height: 20,
-                      // child: Container(), 
+                      // child: Container(),
                     ),
                     SizedBox(height: 10),
-                      SkeletonLoader(
+                    SkeletonLoader(
                       height: 15,
                       width: 80,
-                      // child: Container(), 
-                    ),
-                     SizedBox(height: 10),
-                      SkeletonLoader(
-                      height: 15,
-                      width: 100,
-                      // child: Container(), 
+                      // child: Container(),
                     ),
                     SizedBox(height: 10),
-      
-                      SkeletonLoader(
+                    SkeletonLoader(
                       height: 15,
-                      // child: Container(), 
+                      width: 100,
+                      // child: Container(),
                     ),
-                     SizedBox(height: 10),
-      
-                      SkeletonLoader(
+                    SizedBox(height: 10),
+
+                    SkeletonLoader(
+                      height: 15,
+                      // child: Container(),
+                    ),
+                    SizedBox(height: 10),
+
+                    SkeletonLoader(
                       height: 10,
-                       width: 110,
-                      // child: Container(), 
+                      width: 110,
+                      // child: Container(),
                     ),
                     const SizedBox(height: 15),
-                    // Text the Download Master 
+                    // Text the Download Master
                     const Text(
                       'Download Master',
                       style: TextStyle(
@@ -81,18 +82,12 @@ class MasterDownload extends StatelessWidget {
                       ),
                     ),
                   ],
-                  
                 ),
-                Container()
-              
+                Container(),
               ],
-              
-            ), 
-              
+            ),
           ),
-          
         ),
-      
       ),
     );
   }

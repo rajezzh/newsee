@@ -5,7 +5,6 @@ import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
 
-
 /*
 @author : Gayathri B    09/05/2025
 @description : This function displays a custom modal bottom sheet that serves as an MPIN 
@@ -20,24 +19,20 @@ import 'more.dart';
 */
 
 mpin(BuildContext context) {
-  // show the custom modal bottom sheet 
+  // show the custom modal bottom sheet
   showModalBottomSheet<void>(
     context: context,
     builder: (BuildContext context) {
       return Container(
-        decoration:BoxDecoration(
-          
-        ),
+        decoration: BoxDecoration(),
         padding: EdgeInsets.all(16),
         child: Column(
-          
           children: [
             Row(
               // Four TextFields for entering a numeric MPIN
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(5, (i) {
                 return Container(
-                
                   width: 60,
                   height: 60,
                   margin: EdgeInsets.symmetric(horizontal: 4),
@@ -46,37 +41,42 @@ mpin(BuildContext context) {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   // fingerprint icon for biometric authentication
-                  child: i == 0
-                      ? Center(
-                          child: IconButton(onPressed: (){}, icon: Icon(Icons.fingerprint, size: 35,color: Color.fromARGB(255, 3, 9, 110),),),
-                        )
-                      : Center(
-                        child: TextField(
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(counterText: '',
-                             border: InputBorder.none, 
-                            
+                  child:
+                      i == 0
+                          ? Center(
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.fingerprint,
+                                size: 35,
+                                color: Color.fromARGB(255, 3, 9, 110),
+                              ),
                             ),
-                          
-                            
-                            onChanged: (v) {
-                              if (v.isNotEmpty && i + 1 < 5) {
-                                FocusScope.of(context).nextFocus();
-                              }
-                            },
+                          )
+                          : Center(
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              maxLength: 1,
+                              textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                counterText: '',
+                                border: InputBorder.none,
+                              ),
+
+                              onChanged: (v) {
+                                if (v.isNotEmpty && i + 1 < 5) {
+                                  FocusScope.of(context).nextFocus();
+                                }
+                              },
+                            ),
                           ),
-                      ),
                 );
               }),
             ),
 
             //  SizedBox(height: 50),
 
-
             // Action buttons for navigating to Maintenance, Reach Us, and More sections
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 40),
               child: Row(
@@ -150,28 +150,26 @@ mpin(BuildContext context) {
                 ],
               ),
             ),
-             // A button to navigate to the Master Download page for checking progress.
+            // A button to navigate to the Master Download page for checking progress.
             Row(
               children: [
                 Center(
                   child: ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(context, 
-                      MaterialPageRoute(builder: 
-                      (context)=>MasterDownload(),
-                      )
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MasterDownload(),
+                        ),
                       );
                     },
-                  
-                   child: Text('Click Your Progress')),
-                )
+
+                    child: Text('Click Your Progress'),
+                  ),
+                ),
               ],
-            )
-
-            
+            ),
           ],
-
-        
         ),
       );
     },

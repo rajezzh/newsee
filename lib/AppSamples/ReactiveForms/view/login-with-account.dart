@@ -9,7 +9,6 @@ import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-
 /*
 
 @author : Gayathri.b    12/05/2025
@@ -22,10 +21,7 @@ import 'package:reactive_forms/reactive_forms.dart';
   - BuildContext context : The context in which the bottom sheet is presented.
  */
 
-             
-
 void loginActionSheet(BuildContext context) {
-
   //dynamically adapts its size based on  screen width and height.
 
   final double screenwidth = MediaQuery.of(context).size.width;
@@ -114,8 +110,6 @@ class LoginpageWithAC extends StatelessWidget {
             'in build function isPasswordHidden=> ${state.isPasswordHidden}',
           );
           return Container(
-  
-
             // login form implemented using the `ReactiveForms` package and Bloc pattern
             child: SingleChildScrollView(
               child: Container(

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 /*
 @author : Gayathri.B 13/05/2025 
 @description : This function displayed the cupertino action sheet for maintenance It
@@ -21,7 +20,6 @@ void maintenanceActionSheet(
   IconData icon,
   String action1,
 ) {
-
   showCupertinoModalPopup<void>(
     context: context,
     builder:
@@ -53,11 +51,11 @@ void maintenanceActionSheet(
               color: const Color.fromARGB(178, 0, 0, 0),
             ),
           ),
-              //Axtions Button section
+          //Axtions Button section
           actions: <CupertinoActionSheetAction>[
             CupertinoActionSheetAction(
               onPressed: () {
-                //close the action sheet when pressed 
+                //close the action sheet when pressed
                 Navigator.pop(context);
               },
 

@@ -6,7 +6,6 @@ import 'reachus.dart';
 import 'more.dart';
 import 'login_mpin.dart';
 
-
 /*
 author : Gayathri B 
 description : A stateless widget that serves as the main login screen for the app. It offers
@@ -24,12 +23,10 @@ class LoginpageView extends StatelessWidget {
     print('clicked finger print');
   }
 
-  
   @override
   Widget build(BuildContext context) {
-    //Header section of the landing page 
-    return    
-     SingleChildScrollView(
+    //Header section of the landing page
+    return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.only(top: 50),
         child: Column(
@@ -72,8 +69,8 @@ class LoginpageView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 20),
-                      //Login using fingerprint (biometric authentication)
 
+                    //Login using fingerprint (biometric authentication)
                     IconButton(
                       onPressed: () {
                         fingerPrintScanner();
@@ -165,7 +162,7 @@ class LoginpageView extends StatelessWidget {
             ),
             SizedBox(height: 50),
 
-        // Login with account  username and password
+            // Login with account  username and password
             Padding(
               padding: const EdgeInsets.all(20),
               child: Center(
@@ -221,7 +218,7 @@ class LoginpageView extends StatelessWidget {
             ),
             SizedBox(height: 150),
 
-        // Access to additional options like Maintenance, Reach Us, and More
+            // Access to additional options like Maintenance, Reach Us, and More
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
