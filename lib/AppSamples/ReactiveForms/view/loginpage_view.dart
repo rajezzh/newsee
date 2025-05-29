@@ -4,13 +4,7 @@ import 'forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
-import 'package:newsee/Model/login_request.dart';
-import 'package:newsee/blocs/login/login_bloc.dart';
-import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
-import 'package:reactive_forms/reactive_forms.dart';
+import 'login_mpin.dart';
 
 class LoginpageView extends StatelessWidget {
   void fingerPrintScanner() {
@@ -21,7 +15,7 @@ class LoginpageView extends StatelessWidget {
     if (loginFormgroup.valid) {
       context.read<AuthBloc>().add(
         LoginWithAccount(
-          loginRequest: LoginRequest(
+          loginRequest: LoginRequest(12
             username: loginFormgroup.value['username'] as String,
             password: loginFormgroup.value['password'] as String,
           ),
@@ -39,14 +33,15 @@ class LoginpageView extends StatelessWidget {
  */
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return    
+     SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.only(top: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -65,7 +60,7 @@ class LoginpageView extends StatelessWidget {
 
             SizedBox(height: 50),
             Padding(
-              padding: const EdgeInsets.all(0),
+              padding: const EdgeInsets.only(top: 10),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -205,7 +200,7 @@ class LoginpageView extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    // mpin(context);
+                    mpin(context);
                   },
                   child: Text("Or, login with mPIN"),
                 ),

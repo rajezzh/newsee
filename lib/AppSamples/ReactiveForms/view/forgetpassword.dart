@@ -28,6 +28,7 @@ void forgetActionSheet(
               title,
               style: const TextStyle(
                 fontSize: 20,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -37,7 +38,7 @@ void forgetActionSheet(
       // below the title message
       message: Text(
         message,
-        style: const TextStyle(fontSize: 16, color: CupertinoColors.black),
+        style: const TextStyle(fontSize: 16, color:  Colors.black),
       ),
       // Two action Button 
       actions:
@@ -47,14 +48,16 @@ void forgetActionSheet(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(action2), 
+          child: Text(action2, style: const TextStyle( color:Color.fromARGB(255, 3, 9, 110)),
+ ), 
         ),
         //Continue Second action Button
         CupertinoActionSheetAction(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(action1), 
+          child: Text(action1, style: const TextStyle( color: Color.fromARGB(255, 3, 9, 110)),
+), 
         ),
       ],
     ),
