@@ -46,9 +46,9 @@ class MasterRepoImpl extends MasterRepo {
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
-
-          final String versionFromResponse = response.data['version'] ?? request.setupVersion;
-          final String masterNameFromResponse = response.data['masterName'] ?? request.setupTypeOfMaster;
+ 
+          final String versionFromResponse = response.data['version'];
+          final String masterNameFromResponse = ApiConstants.master_key_lov;
 
           List<Lov> lovList = LovParserImpl().parseResponse(response);
           if (lovList.isNotEmpty) {
@@ -64,10 +64,7 @@ class MasterRepoImpl extends MasterRepo {
             print('lovCrudRepo.getAll() => ${lovs.length}');
 
             // Save the updated master version into the db
-            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
-
-            //Update the global master version with the latest downloaded version
-            Globalconfig.masterVersionMapper[request.setupTypeOfMaster] = versionFromResponse;
+             await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
             
             print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
 
@@ -80,7 +77,7 @@ class MasterRepoImpl extends MasterRepo {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
 
-            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
 
             print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
 
@@ -93,8 +90,8 @@ class MasterRepoImpl extends MasterRepo {
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
 
-          final String versionFromResponse = response.data['version'] ?? request.setupVersion;
-          final String masterNameFromResponse = response.data['masterName'] ?? request.setupTypeOfMaster;
+          final String versionFromResponse = response.data['version'];
+          final String masterNameFromResponse = ApiConstants.master_key_products;
 
           List<Product> productsList = ProductParserImpl().parseResponse(
             response,
@@ -110,9 +107,7 @@ class MasterRepoImpl extends MasterRepo {
             List<Product> p = await productsCrudRepo.getAll();
             print('productCrudRepo.getAll() => ${p.length}');
 
-            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
-
-            Globalconfig.masterVersionMapper[request.setupTypeOfMaster] = versionFromResponse;
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
 
             print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
 
@@ -124,7 +119,7 @@ class MasterRepoImpl extends MasterRepo {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
 
-            updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
 
             print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
 
@@ -158,19 +153,24 @@ class MasterRepoImpl extends MasterRepo {
     }
   }
 
-  Future<void> updateMasterVersion(
-
+  Future<void> updateMasterVersion( 
     Database db , 
     String masterNameFromResponse , 
     String versionFromResponse,
-    String isMasterDownloadSuccess ) async {
-              final masterVersionCrudRepo = MasterversionCrudRepo(db);
+    String isMasterDownloadSuccess 
+    ) async {
+      try{
+        final masterVersionCrudRepo = MasterversionCrudRepo(db);
 
-                  await masterVersionCrudRepo.insert(MasterVersion(
+        await masterVersionCrudRepo.insert(MasterVersion(
             mastername: masterNameFromResponse,
             version: versionFromResponse,
             status: isMasterDownloadSuccess,
             ));
+      }
+      catch(e){
+        print("Error inserting masterversion : $e");
+      }        
   }
 
   // now lov is a List contains Map<String,dynamic>

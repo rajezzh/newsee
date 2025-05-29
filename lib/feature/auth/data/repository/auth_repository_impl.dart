@@ -48,8 +48,8 @@ class AuthRepositoryImpl implements AuthRepository {
           response.data['responseData'],
         );
 
-        final Map<String, dynamic> _masterdetail = response.data['responseData']['MasterDetails'];
-        Globalconfig.masterVersionMapper = _masterdetail;
+        final Map<String, dynamic> masterdetail = response.data['responseData']['MasterDetails'];
+        Globalconfig.masterVersionMapper = masterdetail;
         
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
         return AsyncResponseHandler.right(authResponse);
