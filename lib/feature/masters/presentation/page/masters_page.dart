@@ -6,7 +6,6 @@ import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
-import 'package:newsee/pages/master-download.dart';
 import 'package:newsee/widgets/download_progress_widget.dart';
 
 class MastersPage extends StatelessWidget {
@@ -94,11 +93,6 @@ class MastersPage extends StatelessWidget {
           },
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
-              final bool isLoading =
-                  state.status == MasterdownloadStatus.loading;
-              final MasterTypes currentMaster =
-                  state.masterResponse?.masterType ?? MasterTypes.lov;
-
               return DownloadProgressWidget(
                 downloadProgress: progress,
                 scrwidth: scrwidth,
