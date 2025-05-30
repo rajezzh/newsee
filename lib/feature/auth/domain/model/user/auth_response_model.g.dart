@@ -21,7 +21,7 @@ AuthResponseModel _$AuthResponseModelFromJson(Map<String, dynamic> json) =>
               .map((e) => e as String)
               .toList(),
       token: json['token'] as String,
-      masterDetails: json['masterDetails'] as Map<String, dynamic>,
+      MasterDetails: json['MasterDetails'] as Map<String, dynamic>,
     );
 
 Map<String, dynamic> _$AuthResponseModelToJson(AuthResponseModel instance) =>
@@ -33,5 +33,5 @@ Map<String, dynamic> _$AuthResponseModelToJson(AuthResponseModel instance) =>
       'StatusCode': instance.StatusCode,
       'UserGroups': instance.UserGroups,
       'token': instance.token,
-      'masterDetails': instance.masterDetails,
+      'MasterDetails': instance.MasterDetails,
     };

@@ -10,6 +10,9 @@ import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/core/api/failure.dart';
+import 'package:newsee/core/api/api_client.dart';
+import 'package:newsee/core/api/http_connection_failure.dart';
+import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
@@ -21,7 +24,6 @@ import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
-import 'package:newsee/feature/masters/domain/modal/post.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
@@ -47,7 +49,7 @@ class MasterRepoImpl extends MasterRepo {
       masterType: masterTypes,
     );
     AuthFailure failure = AuthFailure(message: "");
-    
+
     try {
       switch (request.setupTypeOfMaster) {
         case ApiConstants.master_key_lov:
@@ -56,7 +58,7 @@ class MasterRepoImpl extends MasterRepo {
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
- 
+
           final String versionFromResponse = response.data['version'];
           final String masterNameFromResponse = ApiConstants.master_key_lov;
 
@@ -74,9 +76,16 @@ class MasterRepoImpl extends MasterRepo {
             print('lovCrudRepo.getAll() => ${lovs.length}');
 
             // Save the updated master version into the db
-             await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
-            
-            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
+            await updateMasterVersion(
+              db,
+              masterNameFromResponse,
+              versionFromResponse,
+              'success',
+            );
+
+            print(
+              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+            );
 
             masterResponse = MasterResponse(
               master: lovList,
@@ -87,9 +96,16 @@ class MasterRepoImpl extends MasterRepo {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
 
-            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
+            await updateMasterVersion(
+              db,
+              masterNameFromResponse,
+              versionFromResponse,
+              'failure',
+            );
 
-            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
+            print(
+              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+            );
 
             failure = AuthFailure(message: errorMessage);
           }
@@ -101,7 +117,8 @@ class MasterRepoImpl extends MasterRepo {
           ).downloadMaster(request);
 
           final String versionFromResponse = response.data['version'];
-          final String masterNameFromResponse = ApiConstants.master_key_products;
+          final String masterNameFromResponse =
+              ApiConstants.master_key_products;
 
           List<Product> productsList = ProductParserImpl().parseResponse(
             response,
@@ -165,9 +182,16 @@ class MasterRepoImpl extends MasterRepo {
             List<ProductMaster> p = await productsMasterCrudRepo.getAll();
             print('productCrudRepo.getAll() => ${p.length}');
 
-            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
+            await updateMasterVersion(
+              db,
+              masterNameFromResponse,
+              versionFromResponse,
+              'success',
+            );
 
-            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
+            print(
+              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+            );
 
             masterResponse = MasterResponse(
               master: productmasterList,
@@ -177,9 +201,16 @@ class MasterRepoImpl extends MasterRepo {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
 
-            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
+            await updateMasterVersion(
+              db,
+              masterNameFromResponse,
+              versionFromResponse,
+              'failure',
+            );
 
-            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
+            print(
+              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+            );
 
             failure = AuthFailure(message: errorMessage);
           }
@@ -188,8 +219,11 @@ class MasterRepoImpl extends MasterRepo {
           masterTypes = MasterTypes.productschema;
           Response response = await MastersRemoteDatasource(dio: ApiClient().getDio()).downloadMaster(request);
           List<ProductSchema>productSchemaList =  ProductSchemaParserImpl().parseResponse(response);
-
+          final String versionFromResponse = response.data['version'];
+          final String masterNameFromResponse =
+              ApiConstants.master_key_products;
           if (productSchemaList.isNotEmpty) {
+            
             Iterator<ProductSchema> it = productSchemaList.iterator;
             ProductSchemaCrudRepo productSchemaCrudRepo = ProductSchemaCrudRepo(db);
             while (it.moveNext()) {
@@ -197,11 +231,39 @@ class MasterRepoImpl extends MasterRepo {
             }
             print('Products Schema saved in db successfully... ');
             List<ProductSchema> p = await productSchemaCrudRepo.getAll();
+
+            await updateMasterVersion(
+              db,
+              masterNameFromResponse,
+              versionFromResponse,
+              'success',
+            );
+
+            print(
+              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+            );
+
             print('productSchemaCrudRepo.getAll() => ${p.length}');
             masterResponse = MasterResponse(
               master: productSchemaList,
               masterType: MasterTypes.productschema,
             );
+          } else {
+            var errorMessage = response.data['errorDesc'];
+            print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+            await updateMasterVersion(
+              db,
+              masterNameFromResponse,
+              versionFromResponse,
+              'failure',
+            );
+
+            print(
+              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+            );
+
+            failure = AuthFailure(message: errorMessage);
           }
         default:
           break;
@@ -215,36 +277,31 @@ class MasterRepoImpl extends MasterRepo {
         return AsyncResponseHandler.left(failure);
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        print(
-          'Connection error: Check if the server is running or use the correct IP/port.',
-        );
-        return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
-      } else {
-        print('Dio error: $e');
-      }
-      return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
+      HttpConnectionFailure failure =
+          DioHttpExceptionParser(exception: e).parse();
+      return AsyncResponseHandler.left(failure);
     }
   }
 
-  Future<void> updateMasterVersion( 
-    Database db , 
-    String masterNameFromResponse , 
+  Future<void> updateMasterVersion(
+    Database db,
+    String masterNameFromResponse,
     String versionFromResponse,
-    String isMasterDownloadSuccess 
-    ) async {
-      try{
-        final masterVersionCrudRepo = MasterversionCrudRepo(db);
+    String isMasterDownloadSuccess,
+  ) async {
+    try {
+      final masterVersionCrudRepo = MasterversionCrudRepo(db);
 
-        await masterVersionCrudRepo.insert(MasterVersion(
-            mastername: masterNameFromResponse,
-            version: versionFromResponse,
-            status: isMasterDownloadSuccess,
-            ));
-      }
-      catch(e){
-        print("Error inserting masterversion : $e");
-      }        
+      await masterVersionCrudRepo.save(
+        MasterVersion(
+          mastername: masterNameFromResponse,
+          version: versionFromResponse,
+          status: isMasterDownloadSuccess,
+        ),
+      );
+    } catch (e) {
+      print("Error inserting masterversion : $e");
+    }
   }
 
   // now lov is a List contains Map<String,dynamic>

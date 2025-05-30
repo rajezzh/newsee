@@ -12,42 +12,36 @@ import 'package:newsee/Utils/local_biometric.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'login_mpin.dart';
+
+/*
+author : Gayathri B 
+description : A stateless widget that serves as the main login screen for the app. It offers
+              users multiple ways to authenticate and access frequently used features:
+            - Login using fingerprint (biometric authentication)
+              - Login with account  username and password
+              - Login using mPIN
+              - Option to reset mPIN via action sheet
+              - Access to additional options like Maintenance, Reach Us, and More
+
+ */
 
 class LoginpageView extends StatelessWidget {
   void fingerPrintScanner() {
     print('clicked finger print');
   }
 
-  /*   login(AuthState state) {
-    if (loginFormgroup.valid) {
-      context.read<AuthBloc>().add(
-        LoginWithAccount(
-          loginRequest: LoginRequest(
-            username: loginFormgroup.value['username'] as String,
-            password: loginFormgroup.value['password'] as String,
-          ),
-        ),
-      );
-      print(state.toString());
-
-      //context.goNamed('home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields')),
-      );
-    }
-  }
- */
   @override
   Widget build(BuildContext context) {
+    //Header section of the landing page
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(0),
+        padding: const EdgeInsets.only(top: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -66,7 +60,7 @@ class LoginpageView extends StatelessWidget {
 
             SizedBox(height: 50),
             Padding(
-              padding: const EdgeInsets.all(0),
+              padding: const EdgeInsets.only(top: 10),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -83,6 +77,8 @@ class LoginpageView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 20),
+
+                    //Login using fingerprint (biometric authentication)
                     IconButton(
                       onPressed: () {
                         fingerPrintScanner();
@@ -100,6 +96,7 @@ class LoginpageView extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 30),
+                    // users multiple ways to authenticate and access frequently used features
                     Text(
                       "Frequently used features & special offers at your fingertips",
                       textAlign: TextAlign.center,
@@ -173,6 +170,7 @@ class LoginpageView extends StatelessWidget {
             ),
             SizedBox(height: 50),
 
+            // Login with account  username and password
             Padding(
               padding: const EdgeInsets.all(20),
               child: Center(
@@ -204,9 +202,10 @@ class LoginpageView extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Login using mPIN
                 TextButton(
                   onPressed: () {
-                    // mpin(context);
+                    mpin(context);
                   },
                   child: Text("Or, login with mPIN"),
                 ),
@@ -227,6 +226,7 @@ class LoginpageView extends StatelessWidget {
             ),
             SizedBox(height: 150),
 
+            // Access to additional options like Maintenance, Reach Us, and More
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
