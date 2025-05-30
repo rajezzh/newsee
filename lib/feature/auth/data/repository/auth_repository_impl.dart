@@ -3,9 +3,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/Model/login_request.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:newsee/feature/auth/domain/model/user/auth_response_model.dart';
 import 'package:newsee/feature/auth/domain/model/user/user_model.dart';
@@ -46,10 +50,13 @@ class AuthRepositoryImpl implements AuthRepository {
         var authResponse = AuthResponseModel.fromJson(
           response.data['responseData'],
         );
+
+        final Map<String, dynamic> masterdetail = response.data['responseData']['MasterDetails'];
+        Globalconfig.masterVersionMapper = masterdetail;
+        
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
         print("Auth Response from login: => $response");
-        Globalconfig.masterVersionDetails = response.data['responseData']['MasterDetails'];
-        print("masterResponse response from login, => ${Globalconfig.masterVersionDetails}");
+        print("masterResponse response from login, => ${Globalconfig.masterVersionMapper}");
 
         return AsyncResponseHandler.right(authResponse);
       } else {

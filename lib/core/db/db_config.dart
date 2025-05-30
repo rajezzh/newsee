@@ -9,6 +9,7 @@ import 'package:newsee/AppData/DBConstants/dbconstants.dart';
 import 'package:newsee/AppData/DBConstants/table_key_products.dart';
 import 'package:newsee/AppData/DBConstants/table_key_productschema.dart';
 import 'package:newsee/AppData/DBConstants/table_keys_productmaster.dart';
+import 'package:newsee/AppData/DBConstants/table_key_masterversion.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -44,6 +45,8 @@ class DBConfig {
       printTableCreateSuccess(TableKeysProducts.tableName);
       await db.execute(TableKeysProductMaster.createTableQuery);
       printTableCreateSuccess(TableKeysProductMaster.tableName);
+      await db.execute(TableKeyMasterversion.createTableQuery);
+      printTableCreateSuccess(TableKeyMasterversion.tableName);
     } catch (e) {
       // db creation failure - > log u r exception
 

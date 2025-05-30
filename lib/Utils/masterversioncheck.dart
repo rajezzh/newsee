@@ -1,48 +1,48 @@
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/auth/domain/model/user/auth_response_model.dart';
-import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
+import 'package:newsee/feature/masters/domain/repository/masterversion_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
-class MasterVersion {
-  final String mastername;
-  final String version;
-  final String status;
-  MasterVersion({required this.mastername, required this.version, required this.status});
-
-  MasterVersion copyWith({
-    String? mastername,
-    String? version,
-    String? status,
-  }) {
-    return MasterVersion(
-      mastername: mastername ?? this.mastername,
-      version: version ?? this.version,
-      status: status ?? this.status,
-    );
-  }
-} 
+ /*
+  @author     : ganeshkumar.b 29/05/2025
+  @desc       : Check login master version and master table version
+  @param      : null
+  @return     : return true or
+   */
 
 Future<bool> versioncheck() async {
   try {
-    // Database db = await DBConfig().database;
-    // LovCrudRepo lovCrudRepo = LovCrudRepo(db);
+    Database db = await DBConfig().database;
+    MasterversionCrudRepo masterVersionCrudRepo = MasterversionCrudRepo(db);
 
-    final List<MasterVersion> masterversionsList = [];
+    List<MasterVersion> getmasterversiondata = [];
 
-    final MasterVersion lovmasterversions = 
-      MasterVersion(mastername: 'Listofvalues', version: '3', status: 'success');
-    final MasterVersion productmasterversions = 
-      MasterVersion(mastername: 'ProductMaster', version: '3', status: 'success');
-    final MasterVersion mainsubproductmasterversions = 
-      MasterVersion(mastername: 'MainSubProductMaster', version: '1', status: 'success');
-    final MasterVersion productschemamasterversions = 
-      MasterVersion(mastername: 'ProductScheme', version: '1', status: 'success');
-    final Map<String, dynamic> loginMasterVersion = Globalconfig.masterVersionDetails;
-    print("Listofvalues is ${loginMasterVersion['Listofvalues']} compare to lovmasterversions is ${lovmasterversions.version}");
+    getmasterversiondata = await masterVersionCrudRepo.getAllMasters();
+
+    print("getmasterversiondata $getmasterversiondata");
+
+    final MasterVersion lovmasterversion = getmasterversiondata.firstWhere(
+      (item) => item.mastername.contains('Listofvalues'),
+    );
+    print("masterversionsList.length $lovmasterversion");
+
+    final MasterVersion productmasterversions = getmasterversiondata.firstWhere(
+      (item) => item.mastername.contains('ProductMaster'),
+    );
+    print("masterversionsList.length $lovmasterversion");
+
+    final MasterVersion productschemamasterversions = getmasterversiondata.firstWhere(
+      (item) => item.mastername.contains('ProductScheme'),
+    );
+    print("masterversionsList.length ${lovmasterversion}");
+
+    final Map<String, dynamic> loginMasterVersion = Globalconfig.masterVersionMapper;
+    print("Listofvalues is ${loginMasterVersion['Listofvalues']} compare to lovmasterversions is ${lovmasterversion.version}");
     print("ProductMaster is ${loginMasterVersion['ProductMaster']} compare to productmasterversions is ${productmasterversions.version}");
     print("ProductScheme is ${loginMasterVersion['ProductScheme']} compare to productschemamasterversions is ${productschemamasterversions.version}");
-    bool lovCompareRes = compareobj(loginMasterVersion, lovmasterversions);
+    bool lovCompareRes = compareobj(loginMasterVersion, lovmasterversion);
     print("lovCompareRes $lovCompareRes");
     bool productMasterCompareRes = compareobj(loginMasterVersion, productmasterversions);
     print("productMasterCompareRes $productMasterCompareRes");
@@ -72,7 +72,6 @@ bool compareobj(Map<String, dynamic> obj1, MasterVersion obj2) {
     print("compareobj-error $error");
     return false;
   }
-  
 }
 
 // bool compareObj(Map<String, dynamic> obj1, List obj2) {

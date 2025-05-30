@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
@@ -64,8 +65,17 @@ class MastersPage extends StatelessWidget {
                   );
 
                 case MasterTypes.productschema:
-                  break;
-
+                  context.read<MastersBloc>().add(
+                    MasterFetch(
+                      request: MasterRequest(
+                        setupVersion: '4',
+                        setupmodule: 'AGRI',
+                        setupTypeOfMaster: ApiConstants.master_key_productschema,
+                      ),
+                    ),
+                  );
+                case MasterTypes.success: 
+                  context.pushNamed('home');
                 default:
                   break;
               }
@@ -110,10 +120,10 @@ class MastersPage extends StatelessWidget {
                       child:
                           isLoading
                               ? SizedBox(
-                                width: 200,
+                                width: 250,
                                 child: Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.center,
                                   children: [
                                     Text('Dowloading ${currentMaster.name}'),
                                     SizedBox(width: 8),
