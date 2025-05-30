@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
-import 'package:newsee/pages/master-download.dart';
 import 'package:newsee/widgets/download_progress_widget.dart';
 
 class MastersPage extends StatelessWidget {
@@ -16,7 +16,7 @@ class MastersPage extends StatelessWidget {
       '${state.masterResponse?.masterType.name}  MasterDownload Status => ${state.status}',
     );
   }
-
+                  
   @override
   Widget build(BuildContext context) {
     final double scrwidth = MediaQuery.of(context).size.width;
@@ -28,6 +28,10 @@ class MastersPage extends StatelessWidget {
       progress = completed / totalMaster;
       progress = double.parse(progress.toStringAsPrecision(2));
       return progress;
+    }
+
+    goTo(String name) {
+      context.goNamed('home');
     }
 
     return Scaffold(
@@ -52,7 +56,7 @@ class MastersPage extends StatelessWidget {
               ),
             ),
         child: BlocListener<MastersBloc, MastersState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state.status == MasterdownloadStatus.failue) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -60,7 +64,7 @@ class MastersPage extends StatelessWidget {
                 ),
               );
             } else {
-              switch (state.masterResponse?.masterType) {
+              switch (state.masterResponse?.masterType){
                 case MasterTypes.lov:
                   break;
                 case MasterTypes.products:
@@ -84,8 +88,21 @@ class MastersPage extends StatelessWidget {
                   // set completedMasters to 2
                   updateDownloadProgress(2);
                   print('progress completed => $progress');
+                  context.read<MastersBloc>().add(
+                    MasterFetch(
+                      request: MasterRequest(
+                        setupVersion: '4',
+                        setupmodule: 'AGRI',
+                        setupTypeOfMaster: ApiConstants.master_key_productschema,
+                      ),
+                    ),
+                  );
 
-                  break;
+                case MasterTypes.success:
+                  updateDownloadProgress(3);
+                  print('progress completed => $progress');
+                  await Future.delayed(const Duration(seconds: 2));
+                  goTo('home');
 
                 default:
                   break;
@@ -94,71 +111,10 @@ class MastersPage extends StatelessWidget {
           },
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
-              final bool isLoading =
-                  state.status == MasterdownloadStatus.loading;
-              final MasterTypes currentMaster =
-                  state.masterResponse?.masterType ?? MasterTypes.lov;
-
               return DownloadProgressWidget(
                 downloadProgress: progress,
                 scrwidth: scrwidth,
                 scrheight: scrheight,
-              );
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Color.fromARGB(255, 2, 59, 105),
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        minimumSize: WidgetStatePropertyAll(Size(400, 70)),
-                      ),
-                      onPressed:
-                          isLoading
-                              ? null
-                              : () {
-                                // on successfull completion of one type of master
-                                // have to sequentially call next master
-                                context.read<MastersBloc>().add(
-                                  MasterFetch(
-                                    request: MasterRequest(
-                                      setupVersion: '4',
-                                      setupmodule: 'AGRI',
-                                      setupTypeOfMaster:
-                                          ApiConstants.master_key_lov,
-                                    ),
-                                  ),
-                                );
-                                debugMasters(context, state);
-                              },
-                      child:
-                          isLoading
-                              ? SizedBox(
-                                width: 200,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Dowloading ${currentMaster.name}'),
-                                    SizedBox(width: 8),
-                                    CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.0,
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : Text(
-                                state.status != MasterdownloadStatus.success
-                                    ? "Download Master"
-                                    : "Download Completed",
-                              ),
-                    ),
-                  ),
-                ],
               );
             },
           ),

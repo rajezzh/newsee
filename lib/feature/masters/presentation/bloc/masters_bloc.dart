@@ -21,12 +21,12 @@ class MastersBloc extends Bloc<MastersEvent, MastersState> {
     emit(state.copyWith(status: MasterdownloadStatus.loading));
     AsyncResponseHandler<Failure, MasterResponse> responseHandler =
         await masterRepo.downloadMaster(request: event.request);
-
+        
     if (responseHandler.isRight()) {
       emit(
         state.copyWith(
           status:
-              responseHandler.right.masterType == MasterTypes.productschema
+              responseHandler.right.masterType == MasterTypes.success
                   ? MasterdownloadStatus.success
                   : MasterdownloadStatus.loading,
           masterResponse: responseHandler.right,

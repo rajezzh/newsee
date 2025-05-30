@@ -24,7 +24,7 @@ class DBConfig {
 
   Future<Database> get database async {
     _database ??= await _initDB();
-    return _database!;
+    return _database!; 
   }
 
   Future<Database> _initDB() async {
@@ -43,6 +43,8 @@ class DBConfig {
       printTableCreateSuccess(TableKeysProductSchema.tableName);
       await db.execute(TableKeysProducts.createTableQuery);
       printTableCreateSuccess(TableKeysProducts.tableName);
+      await db.execute(TableKeysProductMaster.createTableQuery);
+      printTableCreateSuccess(TableKeysProductMaster.tableName);
       await db.execute(TableKeyMasterversion.createTableQuery);
       printTableCreateSuccess(TableKeyMasterversion.tableName);
     } catch (e) {

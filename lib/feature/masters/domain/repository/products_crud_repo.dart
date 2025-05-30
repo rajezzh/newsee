@@ -1,5 +1,4 @@
 import 'package:newsee/AppData/DBConstants/table_key_products.dart';
-import 'package:newsee/AppData/DBConstants/table_keys_productmaster.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/repository/simple_crud_repo.dart';
 import 'package:sqflite/sqflite.dart';

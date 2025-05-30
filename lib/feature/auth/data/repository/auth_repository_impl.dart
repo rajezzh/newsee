@@ -2,6 +2,10 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:newsee/AppData/globalconfig.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/AppData/globalconfig.dart';
+import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/auth_failure.dart';
@@ -41,7 +45,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
       print('auth request payload => $payload');
       var response = await authRemoteDatasource.loginWithUserAccount(payload);
-
       // process api response if it's success
       if (response.data['Success']) {
         var authResponse = AuthResponseModel.fromJson(
@@ -53,6 +56,9 @@ class AuthRepositoryImpl implements AuthRepository {
         Globalconfig.masterVersionMapper = masterdetail;
 
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
+        print("Auth Response from login: => $response");
+        print("masterResponse response from login, => ${Globalconfig.masterVersionMapper}");
+
         return AsyncResponseHandler.right(authResponse);
       } else {
         // api response success : false , process error message
