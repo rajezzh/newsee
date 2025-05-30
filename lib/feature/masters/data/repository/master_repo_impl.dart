@@ -184,7 +184,7 @@ class MasterRepoImpl extends MasterRepo {
     try {
       final masterVersionCrudRepo = MasterversionCrudRepo(db);
 
-      await masterVersionCrudRepo.insert(
+      await masterVersionCrudRepo.save(
         MasterVersion(
           mastername: masterNameFromResponse,
           version: versionFromResponse,
