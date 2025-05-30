@@ -20,35 +20,35 @@ class MasterVersion {
   MasterVersion({
     required this.mastername,
     required this.version,
-    required this.status
+    required this.status,
   });
 
   MasterVersion copyWith({
     String? mastername,
     String? version,
-    String? status
+    String? status,
   }) {
     return MasterVersion(
       mastername: mastername ?? this.mastername,
       version: version ?? this.version,
-      status: status ?? this.status
-      );
+      status: status ?? this.status,
+    );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'mastername': mastername,
       'version': version,
-      'status': status
+      'status': status,
     };
   }
 
   factory MasterVersion.fromMap(Map<String, dynamic> map) {
     return MasterVersion(
-      mastername: map['mastername'], 
+      mastername: map['mastername'],
       version: map['version'],
-      status: map['status']
-      );
+      status: map['status'],
+    );
   }
 
   Map<String, dynamic> toJson() => _$MasterVersionToJson(this);
@@ -62,18 +62,16 @@ class MasterVersion {
   }
 
   @override
-  bool operator == (covariant MasterVersion other) {
-    if(identical(this, other)) return true;
+  bool operator ==(covariant MasterVersion other) {
+    if (identical(this, other)) return true;
 
     return other.mastername == mastername &&
-          other.version == version &&
-          other.status == status;
+        other.version == version &&
+        other.status == status;
   }
 
   @override
   int get hashCode {
-    return mastername.hashCode ^
-          version.hashCode ^
-          status.hashCode;
+    return mastername.hashCode ^ version.hashCode ^ status.hashCode;
   }
 }
