@@ -27,12 +27,14 @@ class MasterversionCrudRepo extends SimpleCrudRepo<MasterVersion>{
   
   @override
   Future<int> update(MasterVersion o) async {
-    return await _db.update(
-      TableKeyMasterversion.tableName,
-      o.toMap(),
-      where: 'mastername = ?',
-      whereArgs: [o.mastername],
-    );
+    return await _db.transaction((txn) async {
+      return await txn.update(
+        TableKeyMasterversion.tableName,
+        o.toMap(),
+        where: 'mastername = ?',
+        whereArgs: [o.mastername],
+      );
+    });
   }
 
   @override
