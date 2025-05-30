@@ -7,7 +7,6 @@ import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
-import 'package:newsee/pages/master-download.dart';
 import 'package:newsee/widgets/download_progress_widget.dart';
 
 class MastersPage extends StatelessWidget {
@@ -17,27 +16,22 @@ class MastersPage extends StatelessWidget {
       '${state.masterResponse?.masterType.name}  MasterDownload Status => ${state.status}',
     );
   }
-
-  navigateto(context) {
-    context.pushNamed('home');
-  }
-                    
-
-
+                  
   @override
   Widget build(BuildContext context) {
     final double scrwidth = MediaQuery.of(context).size.width;
     final double scrheight = MediaQuery.of(context).size.height;
-    double totalMaster = MasterTypes.values.length.toDouble() - 1;
-    print("totalMaster-> $totalMaster");
+    double totalMaster = MasterTypes.values.length.toDouble();
     double progress = 0.0;
 
     updateDownloadProgress(double completed) {
       progress = completed / totalMaster;
-      print("progress-before> $progress");
-      progress = double.parse(progress.toStringAsPrecision(3));
-      print("progress-After> $progress");
+      progress = double.parse(progress.toStringAsPrecision(2));
       return progress;
+    }
+
+    goTo(String name) {
+      context.goNamed('home');
     }
 
     return Scaffold(
@@ -62,7 +56,7 @@ class MastersPage extends StatelessWidget {
               ),
             ),
         child: BlocListener<MastersBloc, MastersState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state.status == MasterdownloadStatus.failue) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -103,15 +97,13 @@ class MastersPage extends StatelessWidget {
                       ),
                     ),
                   );
-                case MasterTypes.success: 
+
+                case MasterTypes.success:
                   updateDownloadProgress(3);
                   print('progress completed => $progress');
-                  Future.delayed(
-                    Duration(milliseconds: 3000),
-                    
-                    );
-                  navigateto(context);
-                  
+                  await Future.delayed(const Duration(seconds: 2));
+                  goTo('home');
+
                 default:
                   break;
               }
@@ -119,11 +111,6 @@ class MastersPage extends StatelessWidget {
           },
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
-              final bool isLoading =
-                  state.status == MasterdownloadStatus.loading;
-              final MasterTypes currentMaster =
-                  state.masterResponse?.masterType ?? MasterTypes.lov;
-
               return DownloadProgressWidget(
                 downloadProgress: progress,
                 scrwidth: scrwidth,
