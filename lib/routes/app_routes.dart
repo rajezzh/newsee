@@ -29,6 +29,7 @@ import 'package:newsee/pages/home_page.dart';
 import 'package:newsee/pages/newlead_page.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
 import 'package:newsee/pages/profile_page.dart';
+import 'package:newsee/widgets/progress_bar.dart';
 
 final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
   dio: ApiClient().getDio(),

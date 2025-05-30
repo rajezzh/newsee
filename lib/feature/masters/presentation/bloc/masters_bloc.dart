@@ -26,7 +26,7 @@ class MastersBloc extends Bloc<MastersEvent, MastersState> {
       emit(
         state.copyWith(
           status:
-              responseHandler.right.masterType == MasterTypes.productschema
+              responseHandler.right.masterType == MasterTypes.success
                   ? MasterdownloadStatus.success
                   : MasterdownloadStatus.loading,
           masterResponse: responseHandler.right,

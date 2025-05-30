@@ -3,14 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
-import 'package:newsee/core/api/failure.dart';
-import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/core/api/failure.dart';
-import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/http_connection_failure.dart';
 import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/core/db/db_config.dart';
@@ -76,16 +73,9 @@ class MasterRepoImpl extends MasterRepo {
             print('lovCrudRepo.getAll() => ${lovs.length}');
 
             // Save the updated master version into the db
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'success',
-            );
-
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
-            );
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
+            
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
 
             masterResponse = MasterResponse(
               master: lovList,
@@ -159,10 +149,6 @@ class MasterRepoImpl extends MasterRepo {
             print('Products saved in db successfully... ');
             List<ProductMaster> p = await productsMasterCrudRepo.getAll();
             print('productCrudRepo.getAll() => ${p.length}');
-            // masterResponse = MasterResponse(
-            //   master: productsList,
-            //   masterType: MasterTypes.productschema,
-            // );
           } else {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
@@ -219,9 +205,10 @@ class MasterRepoImpl extends MasterRepo {
           masterTypes = MasterTypes.productschema;
           Response response = await MastersRemoteDatasource(dio: ApiClient().getDio()).downloadMaster(request);
           List<ProductSchema>productSchemaList =  ProductSchemaParserImpl().parseResponse(response);
+
           final String versionFromResponse = response.data['version'];
-          final String masterNameFromResponse =
-              ApiConstants.master_key_products;
+          final String masterNameFromResponse = ApiConstants.master_key_productschema;
+
           if (productSchemaList.isNotEmpty) {
             
             Iterator<ProductSchema> it = productSchemaList.iterator;
@@ -244,9 +231,13 @@ class MasterRepoImpl extends MasterRepo {
             );
 
             print('productSchemaCrudRepo.getAll() => ${p.length}');
+
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
+
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
             masterResponse = MasterResponse(
               master: productSchemaList,
-              masterType: MasterTypes.productschema,
+              masterType: MasterTypes.success,
             );
           } else {
             var errorMessage = response.data['errorDesc'];
@@ -277,9 +268,15 @@ class MasterRepoImpl extends MasterRepo {
         return AsyncResponseHandler.left(failure);
       }
     } on DioException catch (e) {
-      HttpConnectionFailure failure =
-          DioHttpExceptionParser(exception: e).parse();
-      return AsyncResponseHandler.left(failure);
+      if (e.type == DioExceptionType.connectionError) {
+        print(
+          'Connection error: Check if the server is running or use the correct IP/port.',
+        );
+        return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
+      } else {
+        print('Dio error: $e');
+      }
+      return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
     }
   }
 

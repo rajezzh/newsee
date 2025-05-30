@@ -45,4 +45,10 @@ class MasterversionCrudRepo extends SimpleCrudRepo<MasterVersion>{
     );
     return List.generate(data.length, (index) => MasterVersion.fromMap(data[index]));
   }
+
+  Future<List<MasterVersion>> getAllMasters() async {
+    final _db = await DBConfig().database;
+    final List<Map<String,dynamic>> result = await _db.query(TableKeyMasterversion.tableName);
+    return result.map((e) => MasterVersion.fromMap(e)).toList();
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
@@ -17,16 +18,25 @@ class MastersPage extends StatelessWidget {
     );
   }
 
+  navigateto(context) {
+    context.pushNamed('home');
+  }
+                    
+
+
   @override
   Widget build(BuildContext context) {
     final double scrwidth = MediaQuery.of(context).size.width;
     final double scrheight = MediaQuery.of(context).size.height;
-    double totalMaster = MasterTypes.values.length.toDouble();
+    double totalMaster = MasterTypes.values.length.toDouble() - 1;
+    print("totalMaster-> $totalMaster");
     double progress = 0.0;
 
     updateDownloadProgress(double completed) {
       progress = completed / totalMaster;
-      progress = double.parse(progress.toStringAsPrecision(2));
+      print("progress-before> $progress");
+      progress = double.parse(progress.toStringAsPrecision(3));
+      print("progress-After> $progress");
       return progress;
     }
 
@@ -60,7 +70,7 @@ class MastersPage extends StatelessWidget {
                 ),
               );
             } else {
-              switch (state.masterResponse?.masterType) {
+              switch (state.masterResponse?.masterType){
                 case MasterTypes.lov:
                   break;
                 case MasterTypes.products:
@@ -84,9 +94,24 @@ class MastersPage extends StatelessWidget {
                   // set completedMasters to 2
                   updateDownloadProgress(2);
                   print('progress completed => $progress');
-
-                  break;
-
+                  context.read<MastersBloc>().add(
+                    MasterFetch(
+                      request: MasterRequest(
+                        setupVersion: '4',
+                        setupmodule: 'AGRI',
+                        setupTypeOfMaster: ApiConstants.master_key_productschema,
+                      ),
+                    ),
+                  );
+                case MasterTypes.success: 
+                  updateDownloadProgress(3);
+                  print('progress completed => $progress');
+                  Future.delayed(
+                    Duration(milliseconds: 3000),
+                    
+                    );
+                  navigateto(context);
+                  
                 default:
                   break;
               }
@@ -103,62 +128,6 @@ class MastersPage extends StatelessWidget {
                 downloadProgress: progress,
                 scrwidth: scrwidth,
                 scrheight: scrheight,
-              );
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Color.fromARGB(255, 2, 59, 105),
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        minimumSize: WidgetStatePropertyAll(Size(400, 70)),
-                      ),
-                      onPressed:
-                          isLoading
-                              ? null
-                              : () {
-                                // on successfull completion of one type of master
-                                // have to sequentially call next master
-                                context.read<MastersBloc>().add(
-                                  MasterFetch(
-                                    request: MasterRequest(
-                                      setupVersion: '4',
-                                      setupmodule: 'AGRI',
-                                      setupTypeOfMaster:
-                                          ApiConstants.master_key_lov,
-                                    ),
-                                  ),
-                                );
-                                debugMasters(context, state);
-                              },
-                      child:
-                          isLoading
-                              ? SizedBox(
-                                width: 200,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Dowloading ${currentMaster.name}'),
-                                    SizedBox(width: 8),
-                                    CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.0,
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : Text(
-                                state.status != MasterdownloadStatus.success
-                                    ? "Download Master"
-                                    : "Download Completed",
-                              ),
-                    ),
-                  ),
-                ],
               );
             },
           ),

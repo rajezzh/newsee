@@ -10,7 +10,7 @@ class Camera extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      // create: (_) => CameraBloc()..add(CameraOpen()),
+      // create: (_) => CameraBloc(),
       create: (_) => GetIt.instance.get<CameraBloc>()..add(CameraOpen()),
       child: CameraView(),
     );

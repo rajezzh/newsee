@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart';
 import 'package:newsee/Model/login_request.dart';
-// import 'package:newsee/blocs/login/login_bloc.dart';
+import 'package:newsee/Utils/masterversioncheck.dart';
+import 'package:newsee/blocs/login/login_bloc.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -80,11 +81,16 @@ class LoginpageWithAC extends StatelessWidget {
     }
 
     return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         switch (state.authStatus) {
           case AuthStatus.success:
             print('LoginStatus.success... ${state.authResponseModel}');
-            context.goNamed('home');
+            final verResponse = await versioncheck();
+            if (verResponse) {
+              context.goNamed('home');
+            } else {
+              context.goNamed('masters');
+            }
           case AuthStatus.loading:
             print('LoginStatus.loading...');
 
