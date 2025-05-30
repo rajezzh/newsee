@@ -82,7 +82,7 @@ class MastersPage extends StatelessWidget {
                 case MasterTypes.productschema:
                   // products master completed , fetching productschema
                   // set completedMasters to 2
-                  updateDownloadProgress(2);
+                  updateDownloadProgress(3);
                   print('progress completed => $progress');
 
                   break;
@@ -103,62 +103,6 @@ class MastersPage extends StatelessWidget {
                 downloadProgress: progress,
                 scrwidth: scrwidth,
                 scrheight: scrheight,
-              );
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: ElevatedButton(
-                      style: const ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll<Color>(
-                          Color.fromARGB(255, 2, 59, 105),
-                        ),
-                        foregroundColor: WidgetStatePropertyAll(Colors.white),
-                        minimumSize: WidgetStatePropertyAll(Size(400, 70)),
-                      ),
-                      onPressed:
-                          isLoading
-                              ? null
-                              : () {
-                                // on successfull completion of one type of master
-                                // have to sequentially call next master
-                                context.read<MastersBloc>().add(
-                                  MasterFetch(
-                                    request: MasterRequest(
-                                      setupVersion: '4',
-                                      setupmodule: 'AGRI',
-                                      setupTypeOfMaster:
-                                          ApiConstants.master_key_lov,
-                                    ),
-                                  ),
-                                );
-                                debugMasters(context, state);
-                              },
-                      child:
-                          isLoading
-                              ? SizedBox(
-                                width: 200,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Dowloading ${currentMaster.name}'),
-                                    SizedBox(width: 8),
-                                    CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 2.0,
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : Text(
-                                state.status != MasterdownloadStatus.success
-                                    ? "Download Master"
-                                    : "Download Completed",
-                              ),
-                    ),
-                  ),
-                ],
               );
             },
           ),
