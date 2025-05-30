@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
@@ -29,6 +30,10 @@ class MastersPage extends StatelessWidget {
       return progress;
     }
 
+    goTo(String name) {
+      context.goNamed('home');
+    }
+
     return Scaffold(
       body: BlocProvider(
         create:
@@ -51,7 +56,7 @@ class MastersPage extends StatelessWidget {
               ),
             ),
         child: BlocListener<MastersBloc, MastersState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state.status == MasterdownloadStatus.failue) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -83,8 +88,8 @@ class MastersPage extends StatelessWidget {
                   // set completedMasters to 2
                   updateDownloadProgress(3);
                   print('progress completed => $progress');
-
-                  break;
+                  await Future.delayed(const Duration(seconds: 2));
+                  goTo('home');
 
                 default:
                   break;
