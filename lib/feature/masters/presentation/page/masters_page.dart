@@ -6,6 +6,7 @@ import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
+import 'package:newsee/pages/master-download.dart';
 
 class MastersPage extends StatelessWidget {
   const MastersPage({super.key});
@@ -42,25 +43,33 @@ class MastersPage extends StatelessWidget {
             ),
         child: BlocListener<MastersBloc, MastersState>(
           listener: (context, state) {
-            switch (state.masterResponse?.masterType) {
-              case MasterTypes.lov:
-                break;
-              case MasterTypes.products:
-                context.read<MastersBloc>().add(
-                  MasterFetch(
-                    request: MasterRequest(
-                      setupVersion: '4',
-                      setupmodule: 'AGRI',
-                      setupTypeOfMaster: ApiConstants.master_key_products,
+            if (state.status == MasterdownloadStatus.failue) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg ?? 'Master Download Failed...'),
+                ),
+              );
+            } else {
+              switch (state.masterResponse?.masterType) {
+                case MasterTypes.lov:
+                  break;
+                case MasterTypes.products:
+                  context.read<MastersBloc>().add(
+                    MasterFetch(
+                      request: MasterRequest(
+                        setupVersion: '4',
+                        setupmodule: 'AGRI',
+                        setupTypeOfMaster: ApiConstants.master_key_products,
+                      ),
                     ),
-                  ),
-                );
+                  );
 
-              case MasterTypes.productschema:
-                break;
+                case MasterTypes.productschema:
+                  break;
 
-              default:
-                break;
+                default:
+                  break;
+              }
             }
           },
           child: BlocBuilder<MastersBloc, MastersState>(
@@ -69,6 +78,8 @@ class MastersPage extends StatelessWidget {
                   state.status == MasterdownloadStatus.loading;
               final MasterTypes currentMaster =
                   state.masterResponse?.masterType ?? MasterTypes.lov;
+
+              // return MasterDownload();
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

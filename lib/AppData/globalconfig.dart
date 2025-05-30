@@ -9,7 +9,6 @@ class Globalconfig {
 
 }
 
-
 /* 
 
 call masterVersionService() => { 'version' : ''}

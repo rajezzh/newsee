@@ -22,45 +22,57 @@ class IncomeDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Income Details"),
-      ),
+      appBar: AppBar(title: Text("Income Details")),
       body: ReactiveForm(
         formGroup: form,
         child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Dropdown(
-                controlName: 'occupation',
-                label: 'Occupation',
-                items: ['Agriculturalist', 'Business', 'Chartered Accountant', 'Ex Servicemen', 'Others',
-                  'Pensioner', 'Prof/Self Employed', 'Salaried'],
-              ),
-              IntegerTextField('grossincome', 'Gross Income/Salary(₹) (Per Month)'),
-              IntegerTextField('grossmonthly', 'Gross Monthly Deductions(₹) (Per Month)'),
-              IntegerTextField('netincome', 'Net Income(₹) (Per Year)'),
-              IntegerTextField('networth', 'Networth of the Applicant(₹)'),
-              CustomTextField('company', 'Company'),
-              IntegerTextField('totalyears', 'Total Years of Employment'),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (form.valid) {
-                      final tabController = DefaultTabController.of(context);
-                      if (tabController.index < tabController.length - 1) {
-                        tabController.animateTo(tabController.index + 1);
-                      }
-                    } else {
-                      form.markAllAsTouched();
-                    }
-                  },
-                  child: Text('Next'),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Dropdown(
+                  controlName: 'occupation',
+                  label: 'Occupation',
+                  items: [
+                    'Agriculturalist',
+                    'Business',
+                    'Chartered Accountant',
+                    'Ex Servicemen',
+                    'Others',
+                    'Pensioner',
+                    'Prof/Self Employed',
+                    'Salaried',
+                  ],
                 ),
-              ),
-            ],
+                IntegerTextField(
+                  'grossincome',
+                  'Gross Income/Salary(₹) (Per Month)',
+                ),
+                IntegerTextField(
+                  'grossmonthly',
+                  'Gross Monthly Deductions(₹) (Per Month)',
+                ),
+                IntegerTextField('netincome', 'Net Income(₹) (Per Year)'),
+                IntegerTextField('networth', 'Networth of the Applicant(₹)'),
+                CustomTextField('company', 'Company'),
+                IntegerTextField('totalyears', 'Total Years of Employment'),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (form.valid) {
+                        final tabController = DefaultTabController.of(context);
+                        if (tabController.index < tabController.length - 1) {
+                          tabController.animateTo(tabController.index + 1);
+                        }
+                      } else {
+                        form.markAllAsTouched();
+                      }
+                    },
+                    child: Text('Next'),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
         ),
       ),
     );
