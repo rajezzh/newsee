@@ -15,6 +15,5 @@ class ProgressState extends Equatable {
   ProgressState.initial() : downloadProgress = 0.0;
 
   @override
-  // TODO: implement props
   List<Object?> get props => [downloadProgress];
 }
