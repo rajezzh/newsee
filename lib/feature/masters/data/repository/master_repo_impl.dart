@@ -5,8 +5,11 @@ import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
@@ -17,12 +20,14 @@ import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/domain/modal/post.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
+import 'package:newsee/feature/masters/domain/repository/masterversion_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/product_schema_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/products_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/products_master_crud_repo.dart';
@@ -42,7 +47,7 @@ class MasterRepoImpl extends MasterRepo {
       masterType: masterTypes,
     );
     AuthFailure failure = AuthFailure(message: "");
-
+    
     try {
       switch (request.setupTypeOfMaster) {
         case ApiConstants.master_key_lov:
@@ -51,6 +56,10 @@ class MasterRepoImpl extends MasterRepo {
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
+ 
+          final String versionFromResponse = response.data['version'];
+          final String masterNameFromResponse = ApiConstants.master_key_lov;
+
           List<Lov> lovList = LovParserImpl().parseResponse(response);
           if (lovList.isNotEmpty) {
             /* Listofvalue master downloaded and saved in table */
@@ -63,6 +72,12 @@ class MasterRepoImpl extends MasterRepo {
 
             List<Lov> lovs = await lovCrudRepo.getAll();
             print('lovCrudRepo.getAll() => ${lovs.length}');
+
+            // Save the updated master version into the db
+             await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
+            
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
+
             masterResponse = MasterResponse(
               master: lovList,
               masterType: MasterTypes.products,
@@ -71,6 +86,11 @@ class MasterRepoImpl extends MasterRepo {
             // api response success : false , process error message
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
+
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
+
             failure = AuthFailure(message: errorMessage);
           }
 
@@ -79,6 +99,10 @@ class MasterRepoImpl extends MasterRepo {
           Response response = await MastersRemoteDatasource(
             dio: ApiClient().getDio(),
           ).downloadMaster(request);
+
+          final String versionFromResponse = response.data['version'];
+          final String masterNameFromResponse = ApiConstants.master_key_products;
+
           List<Product> productsList = ProductParserImpl().parseResponse(
             response,
           );
@@ -118,6 +142,33 @@ class MasterRepoImpl extends MasterRepo {
             print('Products saved in db successfully... ');
             List<ProductMaster> p = await productsMasterCrudRepo.getAll();
             print('productCrudRepo.getAll() => ${p.length}');
+            // masterResponse = MasterResponse(
+            //   master: productsList,
+            //   masterType: MasterTypes.productschema,
+            // );
+          } else {
+            var errorMessage = response.data['errorDesc'];
+            print('on Error request.data["ErrorMessage"] => $errorMessage');
+            failure = AuthFailure(message: errorMessage);
+          }
+
+          if (productmasterList.isNotEmpty) {
+            // insert products in to products table
+            
+            Iterator<ProductMaster> it = productmasterList.iterator;
+            print("fucntion passing here for product master list => $it");
+            ProductMasterCrudRepo productsMasterCrudRepo = ProductMasterCrudRepo(db);
+            while (it.moveNext()) {
+              productsMasterCrudRepo.save(it.current);
+            }
+            print('Products saved in db successfully... ');
+            List<ProductMaster> p = await productsMasterCrudRepo.getAll();
+            print('productCrudRepo.getAll() => ${p.length}');
+
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'success');
+
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success");
+
             masterResponse = MasterResponse(
               master: productmasterList,
               masterType: MasterTypes.productschema,
@@ -125,6 +176,11 @@ class MasterRepoImpl extends MasterRepo {
           } else {
             var errorMessage = response.data['errorDesc'];
             print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+            await updateMasterVersion(db, masterNameFromResponse, versionFromResponse, 'failure');
+
+            print("Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure");
+
             failure = AuthFailure(message: errorMessage);
           }
 
@@ -169,6 +225,26 @@ class MasterRepoImpl extends MasterRepo {
       }
       return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
     }
+  }
+
+  Future<void> updateMasterVersion( 
+    Database db , 
+    String masterNameFromResponse , 
+    String versionFromResponse,
+    String isMasterDownloadSuccess 
+    ) async {
+      try{
+        final masterVersionCrudRepo = MasterversionCrudRepo(db);
+
+        await masterVersionCrudRepo.insert(MasterVersion(
+            mastername: masterNameFromResponse,
+            version: versionFromResponse,
+            status: isMasterDownloadSuccess,
+            ));
+      }
+      catch(e){
+        print("Error inserting masterversion : $e");
+      }        
   }
 
   // now lov is a List contains Map<String,dynamic>
