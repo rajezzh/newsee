@@ -7,20 +7,11 @@ import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
 import 'package:newsee/pages/master-download.dart';
+import 'package:newsee/widgets/download_progress_widget.dart';
 
 class MastersPage extends StatelessWidget {
   const MastersPage({super.key});
   debugMasters(BuildContext context, MastersState state) {
-    // context.read<MastersBloc>().add(
-    //   MasterFetch(
-    //     request: MasterRequest(
-    //       setupfinal: '1',
-    //       setupmodule: 'AGRI',
-    //       setupTypeOfMaster: 'Listofvalues',
-    //     ),
-    //   ),
-    // );
-
     print(
       '${state.masterResponse?.masterType.name}  MasterDownload Status => ${state.status}',
     );
@@ -28,6 +19,17 @@ class MastersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double scrwidth = MediaQuery.of(context).size.width;
+    final double scrheight = MediaQuery.of(context).size.height;
+    double totalMaster = MasterTypes.values.length.toDouble();
+    double progress = 0.0;
+
+    updateDownloadProgress(double completed) {
+      progress = completed / totalMaster;
+      progress = double.parse(progress.toStringAsPrecision(2));
+      return progress;
+    }
+
     return Scaffold(
       body: BlocProvider(
         create:
@@ -38,6 +40,14 @@ class MastersPage extends StatelessWidget {
                 masterResponse: MasterResponse(
                   master: [],
                   masterType: MasterTypes.lov,
+                ),
+              ),
+            )..add(
+              MasterFetch(
+                request: MasterRequest(
+                  setupVersion: '4',
+                  setupmodule: 'AGRI',
+                  setupTypeOfMaster: ApiConstants.master_key_lov,
                 ),
               ),
             ),
@@ -54,6 +64,11 @@ class MastersPage extends StatelessWidget {
                 case MasterTypes.lov:
                   break;
                 case MasterTypes.products:
+                  // lov master completed , fetching products
+                  // set completedMasters to 1
+                  progress = 0.0;
+                  updateDownloadProgress(1);
+                  print('progress completed => $progress');
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
@@ -65,6 +80,11 @@ class MastersPage extends StatelessWidget {
                   );
 
                 case MasterTypes.productschema:
+                  // products master completed , fetching productschema
+                  // set completedMasters to 2
+                  updateDownloadProgress(2);
+                  print('progress completed => $progress');
+
                   break;
 
                 default:
@@ -79,7 +99,11 @@ class MastersPage extends StatelessWidget {
               final MasterTypes currentMaster =
                   state.masterResponse?.masterType ?? MasterTypes.lov;
 
-              // return MasterDownload();
+              return DownloadProgressWidget(
+                downloadProgress: progress,
+                scrwidth: scrwidth,
+                scrheight: scrheight,
+              );
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
