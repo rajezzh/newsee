@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/Model/api_core/AsyncResponseHandler.dart';
-import 'package:newsee/Model/api_core/failure.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
