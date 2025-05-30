@@ -24,11 +24,13 @@ import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
 import 'package:newsee/feature/masters/presentation/page/masters_page.dart';
+import 'package:newsee/feature/progressbar/presentation/bloc/progressbar_bloc.dart';
 import 'package:newsee/feature/savelead/presentation/bloc/savelead_sourcing_bloc.dart';
 import 'package:newsee/pages/home_page.dart';
 import 'package:newsee/pages/newlead_page.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
 import 'package:newsee/pages/profile_page.dart';
+import 'package:newsee/widgets/progress_bar.dart';
 
 final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
   dio: ApiClient().getDio(),
@@ -73,6 +75,18 @@ final routes = GoRouter(
       name: AppRouteConstants.PROFILE_PAGE['name'],
       builder: (context, state) => 
         ProfilePage()
+    ),
+    GoRoute(
+      path: AppRouteConstants.PROGRESS_PAGE['path']!,
+      name: AppRouteConstants.PROGRESS_PAGE['name'],
+      builder: 
+      (context, state) => Scaffold(
+          body: BlocProvider(
+            // create: (_) => CameraBloc()..add(CameraOpen()),
+            create: (_) => ProgressBarBloc(),
+            child: ProgressBarExample(),
+          ),
+        ),
     ),
     GoRoute(
       path: AppRouteConstants.CAMERA_PAGE['path']!,

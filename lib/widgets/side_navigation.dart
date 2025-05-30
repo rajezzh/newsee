@@ -1,4 +1,3 @@
-
 /*
  @created on : May 7,2025
  @author : Akshayaa 
@@ -19,7 +18,10 @@ class Sidenavigationbar extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(color: Colors.teal),
-            child: Text("Menu", style: TextStyle(color: Colors.white, fontSize: 24)),
+            child: Text(
+              "Menu",
+              style: TextStyle(color: Colors.white, fontSize: 24),
+            ),
           ),
           ListTile(
             leading: Icon(Icons.dashboard_rounded, color: Colors.teal),

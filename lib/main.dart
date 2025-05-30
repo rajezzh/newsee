@@ -13,6 +13,6 @@ void main() {
   // runApp(App()); // timerApp
   // runApp(ToolBarSample()); // Toolbar App
   //runApp(LoginApp()); // Login Form App
-  dependencyInjection();
+  // dependencyInjection();
   runApp(RouterApp()); // GoRouter Sample App
 }

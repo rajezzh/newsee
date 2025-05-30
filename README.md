@@ -29,3 +29,6 @@ which includes forms for sourcing details , personal details , address details ,
 
 # Ganesh Real Device Testing Comment
 flutter run -d RZ8TA0WL7KW
+
+
+git pull https://github.com/KarthickTechie/newsee.git download-progress-indicator

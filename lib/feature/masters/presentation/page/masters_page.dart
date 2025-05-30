@@ -42,31 +42,33 @@ class MastersPage extends StatelessWidget {
             ),
         child: BlocListener<MastersBloc, MastersState>(
           listener: (context, state) {
-            switch (state.masterResponse?.masterType) {
-              case MasterTypes.lov:
-                break;
-              case MasterTypes.products:
-                context.read<MastersBloc>().add(
-                  MasterFetch(
-                    request: MasterRequest(
-                      setupVersion: '4',
-                      setupmodule: 'AGRI',
-                      setupTypeOfMaster: ApiConstants.master_key_products,
+            if (state.status == MasterdownloadStatus.failue) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.errorMsg ?? 'Master Download Failed...'),
+                ),
+              );
+            } else {
+              switch (state.masterResponse?.masterType) {
+                case MasterTypes.lov:
+                  break;
+                case MasterTypes.products:
+                  context.read<MastersBloc>().add(
+                    MasterFetch(
+                      request: MasterRequest(
+                        setupVersion: '4',
+                        setupmodule: 'AGRI',
+                        setupTypeOfMaster: ApiConstants.master_key_products,
+                      ),
                     ),
-                  ),
-                );
-              // case MasterTypes.productschema:
-              //   context.read<MastersBloc>().add(
-              //     MasterFetch(
-              //       request: MasterRequest(
-              //         setupVersion: '4',
-              //         setupmodule: 'AGRI',
-              //         setupTypeOfMaster: ApiConstants.master_key_productschema,
-              //       ),
-              //     ),
-              //   );
-              default:
-                break;
+                  );
+
+                case MasterTypes.productschema:
+                  break;
+
+                default:
+                  break;
+              }
             }
           },
           child: BlocBuilder<MastersBloc, MastersState>(

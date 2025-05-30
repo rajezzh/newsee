@@ -10,7 +10,21 @@ import 'package:newsee/blocs/login/login_bloc.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+/*
+
+@author : Gayathri.b    12/05/2025
+@description :  This function displays a Cupertino-style modal bottom sheet containing 
+                a login form implemented using the `ReactiveForms` package and Bloc pattern.
+                It uses a gradient background and dynamically adapts its size based on 
+                screen width and height.
+
+@props      :
+  - BuildContext context : The context in which the bottom sheet is presented.
+ */
+
 void loginActionSheet(BuildContext context) {
+  //dynamically adapts its size based on  screen width and height.
+
   final double screenwidth = MediaQuery.of(context).size.width;
   final double screenheight = MediaQuery.of(context).size.height;
 
@@ -20,6 +34,7 @@ void loginActionSheet(BuildContext context) {
     builder:
         (BuildContext context) => SingleChildScrollView(
           child: Container(
+            //It uses a gradient background
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
@@ -100,12 +115,7 @@ class LoginpageWithAC extends StatelessWidget {
             'in build function isPasswordHidden=> ${state.isPasswordHidden}',
           );
           return Container(
-            // padding: const EdgeInsets.only(top: 20),
-            // height: double.infinity,
-            // width: double.infinity,
-            // decoration: BoxDecoration(
-
-            // ),
+            // login form implemented using the `ReactiveForms` package and Bloc pattern
             child: SingleChildScrollView(
               child: Container(
                 child: ReactiveForm(

@@ -31,9 +31,7 @@ final class LoginFetch extends LoginEvent {
   const LoginFetch({required this.loginRequest});
 }
 
-final class LoginPasswordSecure extends LoginEvent {
-  
-}
+final class LoginPasswordSecure extends LoginEvent {}
 
 // when click login api  responded in login page - LoginSuccess event dispatched
 

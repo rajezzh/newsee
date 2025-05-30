@@ -3,10 +3,12 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
-import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/api/auth_failure.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/core/api/http_connection_failure.dart';
+import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/data/datasource/masters_remote_datasource.dart';
 import 'package:newsee/feature/masters/data/repository/lov_parser_impl.dart';
@@ -159,17 +161,9 @@ class MasterRepoImpl extends MasterRepo {
         return AsyncResponseHandler.left(failure);
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        print(
-          'Connection error: Check if the server is running or use the correct IP/port.',
-        );
-        return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
-      } else {
-        print('Dio error: $e');
-      }
-      return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
+      HttpConnectionFailure failure =
+          DioHttpExceptionParser(exception: e).parse();
+      return AsyncResponseHandler.left(failure);
     }
   }
-
-  // now lov is a List contains Map<String,dynamic>
 }

@@ -1,3 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+
 /* 
 @author     : karthick.d  14/05/2025
 @desc       : Data class for Login Rest API response json serialization
@@ -20,7 +25,7 @@ class AuthResponseModel {
   final String StatusCode;
   final List<String> UserGroups;
   final String token;
-  final MasterDetailsList MasterDetails;
+  final Map<String, dynamic> MasterDetails;
 
   AuthResponseModel({
     required this.id,
@@ -40,42 +45,84 @@ class AuthResponseModel {
 
   @override
   String toString() {
-    return 'AuthResponseModel [ id = $id , userName = $UserName]';
+    return 'AuthResponseModel(id: $id, UserName: $UserName, Orgscode: $Orgscode, orgLocationList: $orgLocationList, StatusCode: $StatusCode, UserGroups: $UserGroups, token: $token, MasterDetails: $MasterDetails)';
   }
-}
 
-@JsonSerializable()
-class MasterDetailsList {
-  final String? DocumentMaster;
-  final String? BankMaster;
-  final String? IntRateMaster;
-  final String? StateCityMaster;
-  final String? ProductMaster;
-  final String? OrganizationMaster;
-  final String? SourcingMaster;
-  final String? Listofvalues;
-  final String? ProductScheme;
+  AuthResponseModel copyWith({
+    String? id,
+    String? UserName,
+    String? Orgscode,
+    List<String>? orgLocationList,
+    String? StatusCode,
+    List<String>? UserGroups,
+    String? token,
+    Map<String, dynamic>? MasterDetails,
+  }) {
+    return AuthResponseModel(
+      id: id ?? this.id,
+      UserName: UserName ?? this.UserName,
+      Orgscode: Orgscode ?? this.Orgscode,
+      orgLocationList: orgLocationList ?? this.orgLocationList,
+      StatusCode: StatusCode ?? this.StatusCode,
+      UserGroups: UserGroups ?? this.UserGroups,
+      token: token ?? this.token,
+      MasterDetails: MasterDetails ?? this.MasterDetails,
+    );
+  }
 
-  MasterDetailsList({
-    required this.DocumentMaster,
-    required this.BankMaster,
-    required this.IntRateMaster,
-    required this.StateCityMaster,
-    required this.ProductMaster,
-    required this.OrganizationMaster,
-    required this.SourcingMaster,
-    required this.Listofvalues,
-    required this.ProductScheme,
-  });
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'UserName': UserName,
+      'Orgscode': Orgscode,
+      'orgLocationList': orgLocationList,
+      'StatusCode': StatusCode,
+      'UserGroups': UserGroups,
+      'token': token,
+      'MasterDetails': MasterDetails,
+    };
+  }
 
-  factory MasterDetailsList.fromJson(Map<String, dynamic> json) =>
-      _$MasterDetailsListFromJson(json);
+  factory AuthResponseModel.fromMap(Map<String, dynamic> map) {
+    return AuthResponseModel(
+      id: map['id'] as String,
+      UserName: map['UserName'] as String,
+      Orgscode: map['Orgscode'] as String,
+      orgLocationList: List<String>.from(
+        (map['orgLocationList'] as List<String>),
+      ),
+      StatusCode: map['StatusCode'] as String,
+      UserGroups: List<String>.from((map['UserGroups'] as List<String>)),
+      token: map['token'] as String,
+      MasterDetails: Map<String, dynamic>.from(
+        (map['MasterDetails'] as Map<String, dynamic>),
+      ),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$MasterDetailsListToJson(this);
+  @override
+  bool operator ==(covariant AuthResponseModel other) {
+    if (identical(this, other)) return true;
 
-   bool compareto(lovmaster, productsmaster, productschemamaster) {
-    return Listofvalues == lovmaster &&
-    ProductMaster == productsmaster &&
-    productschemamaster == ProductScheme;
+    return other.id == id &&
+        other.UserName == UserName &&
+        other.Orgscode == Orgscode &&
+        listEquals(other.orgLocationList, orgLocationList) &&
+        other.StatusCode == StatusCode &&
+        listEquals(other.UserGroups, UserGroups) &&
+        other.token == token &&
+        mapEquals(other.MasterDetails, MasterDetails);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        UserName.hashCode ^
+        Orgscode.hashCode ^
+        orgLocationList.hashCode ^
+        StatusCode.hashCode ^
+        UserGroups.hashCode ^
+        token.hashCode ^
+        MasterDetails.hashCode;
   }
 }
