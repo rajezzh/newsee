@@ -268,15 +268,9 @@ class MasterRepoImpl extends MasterRepo {
         return AsyncResponseHandler.left(failure);
       }
     } on DioException catch (e) {
-      if (e.type == DioExceptionType.connectionError) {
-        print(
-          'Connection error: Check if the server is running or use the correct IP/port.',
-        );
-        return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
-      } else {
-        print('Dio error: $e');
-      }
-      return AsyncResponseHandler.left(AuthFailure(message: e.toString()));
+      HttpConnectionFailure failure =
+          DioHttpExceptionParser(exception: e).parse();
+      return AsyncResponseHandler.left(failure);
     }
   }
 
