@@ -10,17 +10,7 @@ class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchema> {
 
   ProductSchemaCrudRepo(this._db);
 
-  // @override
-  // Future<int> save(ProductSchemaValues o) async {
-  //   await _db.transaction((txn) async {
-  //     return await _db.insert(
-  //       TableKeysProductSchema.tableName, 
-  //       o.toMap(),
-  //       conflictAlgorithm: ConflictAlgorithm.replace
-  //     );
-  //   });
-  // }
-    @override
+  @override
   Future<int> save(ProductSchema o) async {
     return _db.transaction((txn) async {
       return await txn.insert(
@@ -33,7 +23,6 @@ class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchema> {
 
   @override
   Future<int> delete(ProductSchema o) {
-    // TODO: implement delete
     throw UnimplementedError();
   }
 
@@ -49,7 +38,6 @@ class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchema> {
 
   @override
   Future<int> update(ProductSchema o) {
-    // TODO: implement update
     throw UnimplementedError();
   }
 

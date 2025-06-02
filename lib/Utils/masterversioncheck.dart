@@ -19,7 +19,7 @@ Future<bool> versioncheck() async {
 
     List<MasterVersion> getmasterversiondata = [];
 
-    getmasterversiondata = await masterVersionCrudRepo.getAllMasters();
+    getmasterversiondata = await masterVersionCrudRepo.getAll();
 
     print("getmasterversiondata $getmasterversiondata");
 
