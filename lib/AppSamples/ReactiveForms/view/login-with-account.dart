@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart';
 import 'package:newsee/Model/login_request.dart';
@@ -85,8 +86,11 @@ class LoginpageWithAC extends StatelessWidget {
         switch (state.authStatus) {
           case AuthStatus.success:
             print('LoginStatus.success... ${state.authResponseModel}');
-            final verResponse = await versioncheck();
-            if (verResponse) {
+            final refetchMastersList = await compareVersions(
+              Globalconfig.masterVersionMapper,
+            );
+            print(refetchMastersList.toString());
+            if (refetchMastersList.isEmpty) {
               context.goNamed('home');
             } else {
               context.goNamed('masters');
