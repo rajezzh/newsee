@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:newsee/AppSamples/RouterApp/routerapp.dart';
+import 'package:newsee/Utils/injectiondependency.dart';
 
 void main() {
   // runApp(MyApp()) // Default MyApp()
