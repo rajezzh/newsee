@@ -91,7 +91,7 @@ class LoginpageWithAC extends StatelessWidget {
             );
             print(refetchMastersList.toString());
             if (refetchMastersList.isEmpty) {
-              context.goNamed('home');
+              context.goNamed('masters');
             } else {
               context.goNamed('masters');
             }

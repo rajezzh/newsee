@@ -8,6 +8,7 @@
 import 'package:newsee/AppData/DBConstants/dbconstants.dart';
 import 'package:newsee/AppData/DBConstants/table_key_products.dart';
 import 'package:newsee/AppData/DBConstants/table_key_productschema.dart';
+import 'package:newsee/AppData/DBConstants/table_key_statecitymaster.dart';
 import 'package:newsee/AppData/DBConstants/table_keys_productmaster.dart';
 import 'package:newsee/AppData/DBConstants/table_key_masterversion.dart';
 import 'package:path/path.dart';
@@ -24,7 +25,7 @@ class DBConfig {
 
   Future<Database> get database async {
     _database ??= await _initDB();
-    return _database!; 
+    return _database!;
   }
 
   Future<Database> _initDB() async {
@@ -47,6 +48,8 @@ class DBConfig {
       printTableCreateSuccess(TableKeysProductMaster.tableName);
       await db.execute(TableKeyMasterversion.createTableQuery);
       printTableCreateSuccess(TableKeyMasterversion.tableName);
+      await db.execute(TableKeyStatecitymaster.createTableQuery);
+      printTableCreateSuccess(TableKeyStatecitymaster.tableName);
     } catch (e) {
       // db creation failure - > log u r exception
 
