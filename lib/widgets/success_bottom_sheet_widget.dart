@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+/*
+ @created on : june 3,2025
+ @author : Lathamani 
+ Description : Custom bottom sheet widget for showing on lead successfull submission
+ usage: use showSuccessBottomSheet(arg1, arg2, arg3) method where ever want to show bottom sheet
+ arg1: context of that page,
+ arg2: header text of bottom sheet 
+ arg3: message text of bottom sheet
+*/
 void showSuccessBottomSheet(
   BuildContext context,
   String headerTxt,
