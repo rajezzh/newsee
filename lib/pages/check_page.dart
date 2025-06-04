@@ -35,26 +35,41 @@ class CheckPage extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                showSuccessBottomSheet(
+                  context,
+                  "Submitted",
+                  "Lead ID : LEAD/202526/00008213",
+                   "Lead details successfully submitted",
+                   );
+               },
+              icon: Icon(Icons.send, color: Colors.white),
+              label: RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    ),
+                    children: [
+                        TextSpan(text: 'Push to '),
+                        TextSpan(
+                            text: 'LEND',
+                            style: TextStyle(color: Colors.white),
                         ),
+                        TextSpan(
+                            text: 'perfect',
+                            style: TextStyle(fontStyle: FontStyle.italic),
                         ),
-                    onPressed: () {
-                        showSuccessBottomSheet(
-                          context,
-                          "Submitted",
-                          "Lead ID : LEAD/202526/00008213",
-                          "Lead details successfully submitted",
-                          );
-                           
-                      },
-                    child: Text('Push to LENDperfect'),
+                    ],
                   ),
+                ),
+              style: ButtonStyle(
+              minimumSize: MaterialStateProperty.all(Size(double.infinity, 50),),
+              backgroundColor: MaterialStateProperty.all( const Color.fromARGB(255, 75, 33, 83)),
+              ),
+              ),
                 ),
         ],
       ),
