@@ -8,7 +8,9 @@ import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart'
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/Utils/masterversioncheck.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 /*
@@ -86,14 +88,33 @@ class LoginpageWithAC extends StatelessWidget {
         switch (state.authStatus) {
           case AuthStatus.success:
             print('LoginStatus.success... ${state.authResponseModel}');
-            final refetchMastersList = await compareVersions(
+            AsyncResponseHandler<bool, List<MasterVersion>>
+            masterVersionCheckResponseHandler = await compareVersions(
               Globalconfig.masterVersionMapper,
             );
-            print(refetchMastersList.toString());
-            if (refetchMastersList.isEmpty) {
-              context.goNamed('home');
-            } else {
+            print(
+              'masterVersionCheckResponseHandler.isLeft => ${masterVersionCheckResponseHandler.isLeft()}',
+            );
+
+            print(
+              'masterVersionCheckResponseHandler.isRight => ${masterVersionCheckResponseHandler.isRight()}',
+            );
+            /* 
+              important : masterversion check based masterdownload happeing here
+                          Asynresponsehandler response eigther return List<MasterVersion>
+                          if masterupdate is required and list of mastertype that haev updated
+                          master version will be returned
+                          otherwise null will be returned in left
+
+             */
+            if (masterVersionCheckResponseHandler.isLeft()) {
               context.goNamed('masters');
+            } else if (masterVersionCheckResponseHandler.isRight()) {
+              if (masterVersionCheckResponseHandler.right.isNotEmpty) {
+                context.goNamed('masters');
+              } else {
+                context.goNamed('home');
+              }
             }
           case AuthStatus.loading:
             print('LoginStatus.loading...');

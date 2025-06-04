@@ -1,3 +1,4 @@
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/domain/repository/masterversion_crud_repo.dart';
@@ -7,10 +8,12 @@ import 'package:sqflite/sqlite_api.dart';
   @author     : karthick.d 02/06/62025 
   @desc       : Check login master version and master table version
   @param      : {Map<String, dynamic> source} - masterversionobject from loginapi resp
-  @return     : return Future<List<MasterVersion>>
+  @return     : return Future<List<MasterVersion>> 
    */
 
-Future<List<MasterVersion>> compareVersions(Map<String, dynamic> source) async {
+Future<AsyncResponseHandler<bool, List<MasterVersion>>> compareVersions(
+  Map<String, dynamic> source,
+) async {
   // source is a map that is going to be tested against the target
 
   // step 1 : target map have master version name and version number
@@ -38,13 +41,22 @@ Future<List<MasterVersion>> compareVersions(Map<String, dynamic> source) async {
   // hence this
   List<MasterVersion> differredMasters = [];
 
-  masterversionsList.forEach((e) {
-    differredMasters =
-        targetMasterList
-            .where(
-              (v) => (v.mastername == e.mastername) && (v.version != e.version),
-            )
-            .toList();
-  });
-  return differredMasters;
+  if (masterversionsList.isNotEmpty) {
+    // master version having values which means masters already downloaded
+    // and version are outdated and collected for master update
+    masterversionsList.forEach((e) {
+      differredMasters =
+          targetMasterList
+              .where(
+                (v) =>
+                    (v.mastername == e.mastername) && (v.version != e.version),
+              )
+              .toList();
+    });
+    return Future.value(AsyncResponseHandler.right(differredMasters));
+  } else {
+    // if left is returned which tells there is no masters downloaded yet
+    // first time hence masters should download
+    return Future.value(AsyncResponseHandler.left(false));
+  }
 }

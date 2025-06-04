@@ -49,7 +49,7 @@ class MastersPage extends StatelessWidget {
             )..add(
               MasterFetch(
                 request: MasterRequest(
-                  setupVersion: '4',
+                  setupVersion: '9',
                   setupmodule: 'AGRI',
                   setupTypeOfMaster: ApiConstants.master_key_lov,
                 ),
@@ -76,7 +76,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '4',
+                        setupVersion: '9',
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_products,
                       ),
@@ -91,7 +91,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '4',
+                        setupVersion: '9',
                         setupmodule: 'AGRI',
                         setupTypeOfMaster:
                             ApiConstants.master_key_productschema,
@@ -107,7 +107,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '4',
+                        setupVersion: '9',
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_statecity,
                       ),
