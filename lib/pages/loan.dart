@@ -17,7 +17,7 @@ class Loan extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Loan Details")),
+      appBar: AppBar(title: Text("Loan Details"),automaticallyImplyLeading: false,),
       body: ReactiveForm(
         formGroup: form,
         child: SafeArea(
