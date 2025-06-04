@@ -20,6 +20,8 @@ import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart'
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:newsee/feature/dedupe/presentation/page/dedup_search.dart';
+import 'package:newsee/feature/dedupe/presentation/page/dedupe_page.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
@@ -37,10 +39,11 @@ final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
 final AuthRepository = AuthRepositoryImpl(
   authRemoteDatasource: _authRemoteDatasource,
 );
+
 final routes = GoRouter(
   // initial location changed to test masters feature , to see login page
   // modify the initialLocation
-  initialLocation: AppRouteConstants.LOGIN_PAGE['path'],
+  initialLocation: AppRouteConstants.HOME_PAGE['path'],
 
   routes: <RouteBase>[
     GoRoute(
