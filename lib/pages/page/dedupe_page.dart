@@ -64,7 +64,7 @@ class DedupeView extends StatelessWidget {
     bool? selectedValue;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Dedupe Details")),
+      appBar: AppBar(title: const Text("Dedupe Details"),automaticallyImplyLeading: false,),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: StatefulBuilder(
