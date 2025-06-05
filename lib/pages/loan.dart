@@ -70,7 +70,10 @@ class Loan extends StatelessWidget {
                 LoanproductInit(loanproductState: LoanproductState.init()),
               ),
       child: Scaffold(
-        appBar: AppBar(title: Text("Loan Details")),
+        appBar: AppBar(
+          title: Text("Loan Details"),
+          automaticallyImplyLeading: false,
+        ),
         body: BlocListener<LoanproductBloc, LoanproductState>(
           listener: (context, state) {
             print(

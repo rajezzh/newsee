@@ -30,7 +30,7 @@ class Personal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Personal Details")),
+      appBar: AppBar(title: Text("Personal Details"),automaticallyImplyLeading: false,),
       body: ReactiveForm(
         formGroup: form,
         child: SafeArea(
