@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:newsee/AppSamples/ReactiveForms/forms.dart';
 
 /*
 
@@ -16,13 +15,13 @@ import 'package:newsee/AppSamples/ReactiveForms/forms.dart';
  */
 
 //Define the function take context pharameters
+
 void moreActionSheet(BuildContext context, String action) {
   //popup the action sheet
   showCupertinoModalPopup<void>(
     context: context,
     builder:
         (BuildContext context) => CupertinoActionSheet(
-          //title the action sheet
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
