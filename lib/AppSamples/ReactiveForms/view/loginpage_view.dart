@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
 import 'forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
-import 'package:newsee/Model/login_request.dart';
-import 'package:newsee/Utils/local_biometric.dart';
-import 'package:newsee/blocs/login/login_bloc.dart';
-import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 import 'login_mpin.dart';
+
 
 /*
 author : Gayathri B 
@@ -36,31 +30,39 @@ class LoginpageView extends StatelessWidget {
     //Header section of the landing page
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(top: 50),
+        padding: const EdgeInsets.only(top: 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Hello,\nUser",
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                  ),
-                  Icon(
-                    Icons.notifications_none,
-                    size: 30,
-                    color: Colors.deepPurpleAccent,
-                  ),
-                ],
-              ),
+            
+            Positioned.fill(
+            
+            
+            child: SvgPicture.asset('assets/app_background_2.svg', fit: BoxFit.cover,),
+            
+            
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 0),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         "Hello,\nUser",
+            //         style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            //       ),
+            //       Icon(
+            //         Icons.notifications_none,
+            //         size: 30,
+            //         color: Colors.deepPurpleAccent,
+            //       ),
+            //     ],
+            //   ),
+            // ),
 
-            SizedBox(height: 50),
+            SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.all(10),
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -104,64 +106,77 @@ class LoginpageView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
 
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.calculate_rounded),
-                                iconSize: 40,
-                                color: Colors.amber,
-                              ),
-                              Text(
-                                'Emi Calculator',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                    icon: SvgPicture.asset(
+                                        'assets/Retail.svg',
+                                        height: 40,
+                                        width: 40,
+                                      ),                                iconSize: 40,
+                                  color: Colors.amber,
                                 ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.local_offer),
-                                iconSize: 40,
-                                color: Colors.blue,
-                              ),
-                              Text(
-                                'Send Money',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
+                                Text(
+                                  'Home Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.shopping_bag),
-                                iconSize: 40,
-                                color: Colors.pink,
-                              ),
-                              Text(
-                                'pay Bills',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                        icon: SvgPicture.asset(
+                                        'assets/Agri_Loan.svg',
+                                        height: 40,
+                                        width: 40,
+                                      ),                                  iconSize: 40,
+                                  color: Colors.blue,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Text(
+                                  'Agree Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {},
+                                        icon: SvgPicture.asset(
+                                        'assets/MSME.svg',
+                                        height: 40,
+                                        width: 40,
+                                      ),                                 
+                                    iconSize: 40,
+                                  color: Colors.pink,
+                                ),
+                                Text(
+                                  'MSME Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -224,7 +239,7 @@ class LoginpageView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 150),
+            SizedBox(height: 80),
 
             // Access to additional options like Maintenance, Reach Us, and More
             Row(

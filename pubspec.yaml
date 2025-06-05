@@ -98,6 +98,15 @@ flutter:
     - assets/logo.jpg
     - assets/logo1.jpg
     - assets/whatsapp.svg
+    - assets/Agri_Loan.svg
+    - assets/app_background_1.svg
+    - assets/app_background_2.svg
+    - assets/Gold_Loan.svg
+    - assets/Home_Loan.svg
+    - assets/MSME.svg
+    - assets/Vehicle_Loan.svg
+    - assets/Retail.svg
+
     
     # - assets/logo1.jpg
 
