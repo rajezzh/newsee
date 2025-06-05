@@ -62,12 +62,12 @@ void moreActionSheet(BuildContext context, String action) {
                             child: Column(
                               children: [
                                   SvgPicture.asset(
-                                      'assets/Retail.svg',
+                                      'assets/Retail_loan.svg',
                                       height: 40,
                                       width: 40,
                                     ),       
                                 Text(
-                                  'MLAP Loan',
+                                  'Retail Loan',
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 15,
@@ -239,8 +239,8 @@ void moreActionSheet(BuildContext context, String action) {
                                 children: [
                                  SvgPicture.asset(
                                       'assets/Gold_Loan.svg',
-                                      height: 50,
-                                      width: 50,
+                                      height: 45,
+                                      width: 45,
                                     ),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),

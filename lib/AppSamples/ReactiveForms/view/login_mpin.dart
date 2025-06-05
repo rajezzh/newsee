@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:newsee/pages/master-download.dart';
 
 /*
 @author : Gayathri B    09/05/2025
@@ -20,7 +19,7 @@ mpin(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return Container(
-        height: 300,
+        height: 400,
         decoration: BoxDecoration(),
         padding: EdgeInsets.all(16),
         child: Column(
@@ -30,7 +29,7 @@ mpin(BuildContext context) {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                      
-                child: Title(color: Colors.black, child: Text('MPIN With Account', style: TextStyle(fontSize: 20,),textAlign: TextAlign.start,)),
+                child: Title(color: Colors.black, child: Text('Enter the MPIN', style: TextStyle(fontSize: 20,),textAlign: TextAlign.start,)),
               ),
             ),
             Row(
