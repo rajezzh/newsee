@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
+import 'package:newsee/pages/page/dedup_search.dart';
+import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -80,6 +82,32 @@ class Loan extends StatelessWidget {
             print(
               'LoanProductBlocListener:: log => ${state.productSchemeList}',
             );
+            if (state.productmasterList.isNotEmpty) {
+              openBottomSheet(
+                context,
+                0.7,
+                0.5,
+                0.9,
+                (ScrollController scrollController) => Expanded(
+                  child: ListView.builder(
+                    itemCount: state.productmasterList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        isThreeLine: true,
+
+                        leading: Text(state.productmasterList[index].prdDesc),
+                        subtitle: Text(
+                          state.productmasterList[index].prdamtToRange,
+                        ),
+                        title: Text(
+                          state.productmasterList[index].prdamtFromRange,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }
           },
           child: BlocBuilder<LoanproductBloc, LoanproductState>(
             builder: (context, state) {
@@ -112,10 +140,11 @@ class Loan extends StatelessWidget {
                           controlName: 'subcategory',
                           label: 'Sub Category',
                           items: state.subCategoryList,
-                          onChangeListener:
-                              (Product val) => context
-                                  .read<LoanproductBloc>()
-                                  .add(LoanProductDropdownChange(field: val)),
+                          onChangeListener: (Product val) {
+                            context.read<LoanproductBloc>().add(
+                              LoanProductDropdownChange(field: val),
+                            );
+                          },
                         ),
                         SizedBox(
                           height: 200,
@@ -123,16 +152,6 @@ class Loan extends StatelessWidget {
                               state.productmasterList.isNotEmpty
                                   ? Text(state.productmasterList.first.prdDesc)
                                   : Text('No product'),
-                          // child: ListView.builder(
-                          //   itemCount: state.productmasterList.length,
-                          //   itemBuilder: (context, index) {
-                          //     return ListTile(
-                          //       title: Text(
-                          //         state.productmasterList[index].prdDesc,
-                          //       ),
-                          //     );
-                          //   },
-                          // ),
                         ),
                         Center(
                           child: ElevatedButton(

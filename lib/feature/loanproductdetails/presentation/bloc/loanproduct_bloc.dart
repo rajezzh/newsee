@@ -38,7 +38,14 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
       List<ProductSchema> productSchemaList =
           await ProductSchemaCrudRepo(db).getAll();
       print('productSchemaList from DB => ${productSchemaList.length}');
-      emit(state.copyWith(productSchemeList: productSchemaList));
+      emit(
+        state.copyWith(
+          productSchemeList: productSchemaList,
+          mainCategoryList: [],
+          subCategoryList: [],
+          productmasterList: [],
+        ),
+      );
     }
   }
 
@@ -81,7 +88,13 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
       db,
     ).getByColumnName(columnName: 'lsfFacType', columnValue: optCode);
     print('mainCategoryList => $mainCategoryList');
-    emit(state.copyWith(mainCategoryList: mainCategoryList));
+    emit(
+      state.copyWith(
+        mainCategoryList: mainCategoryList,
+        subCategoryList: [],
+        productmasterList: [],
+      ),
+    );
   }
 
   Future<void> onChangeProduct(
@@ -104,7 +117,9 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
         columnValue: subCategoryId,
       );
       print('subCategoryList => $subCategoryList');
-      emit(state.copyWith(subCategoryList: subCategoryList));
+      emit(
+        state.copyWith(subCategoryList: subCategoryList, productmasterList: []),
+      );
     } else {
       // mainCategoryId != 0 and subCategoryId
       List<String> columnNames = ['prdMainCat', 'prdSubCat'];
