@@ -27,7 +27,15 @@ class LoanproductInit extends LoanproductEvent {
   LoanproductInit({required this.loanproductState});
 }
 
-/* 
-event for listening dropdown change 
+/*
+@author   : karthick.d  06/06/2025
+@desc     : event for listening dropdown change in loandetails page
+
+@param    : {T field} - 
+
+
  */
-class LoanProductDropdownChange extends LoanproductEvent {}
+class LoanProductDropdownChange<T> extends LoanproductEvent {
+  final T field;
+  LoanProductDropdownChange({required this.field});
+}

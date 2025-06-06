@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
+import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
@@ -96,17 +97,42 @@ class Loan extends StatelessWidget {
                           onChangeListener:
                               (ProductSchema val) => context
                                   .read<LoanproductBloc>()
-                                  .add(LoanProductDropdownChange()),
+                                  .add(LoanProductDropdownChange(field: val)),
                         ),
                         SearchableDropdown(
                           controlName: 'maincategory',
                           label: 'Main Category',
-                          items: ['Kisan Credit Card'],
+                          items: state.mainCategoryList,
+                          onChangeListener:
+                              (Product val) => context
+                                  .read<LoanproductBloc>()
+                                  .add(LoanProductDropdownChange(field: val)),
                         ),
                         SearchableDropdown(
                           controlName: 'subcategory',
                           label: 'Sub Category',
-                          items: ['Kisan Credit Card'],
+                          items: state.subCategoryList,
+                          onChangeListener:
+                              (Product val) => context
+                                  .read<LoanproductBloc>()
+                                  .add(LoanProductDropdownChange(field: val)),
+                        ),
+                        SizedBox(
+                          height: 200,
+                          child:
+                              state.productmasterList.isNotEmpty
+                                  ? Text(state.productmasterList.first.prdDesc)
+                                  : Text('No product'),
+                          // child: ListView.builder(
+                          //   itemCount: state.productmasterList.length,
+                          //   itemBuilder: (context, index) {
+                          //     return ListTile(
+                          //       title: Text(
+                          //         state.productmasterList[index].prdDesc,
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
                         ),
                         Center(
                           child: ElevatedButton(

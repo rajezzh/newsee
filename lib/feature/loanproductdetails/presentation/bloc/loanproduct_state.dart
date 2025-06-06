@@ -26,7 +26,7 @@ class LoanproductState extends Equatable {
   final Product? selectedMainCategory;
   final List<Product> subCategoryList;
   final Product? selectedSubCategoryList;
-  final List<Product> productmasterList;
+  final List<ProductMaster> productmasterList;
   final Product? selectedProduct;
   @override
   List<Object?> get props => [
@@ -61,7 +61,7 @@ class LoanproductState extends Equatable {
     Product? selectedMainCategory,
     List<Product>? subCategoryList,
     Product? selectedSubCategoryList,
-    List<Product>? productmasterList,
+    List<ProductMaster>? productmasterList,
     Product? selectedProduct,
   }) {
     return LoanproductState(
@@ -135,9 +135,9 @@ class LoanproductState extends Equatable {
                 map['selectedSubCategoryList'] as Map<String, dynamic>,
               )
               : null,
-      productmasterList: List<Product>.from(
-        (map['productmasterList'] as List<int>).map<Product>(
-          (x) => Product.fromMap(x as Map<String, dynamic>),
+      productmasterList: List<ProductMaster>.from(
+        (map['productmasterList'] as List<int>).map<ProductMaster>(
+          (x) => ProductMaster.fromMap(x as Map<String, dynamic>),
         ),
       ),
       selectedProduct:

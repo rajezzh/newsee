@@ -11,6 +11,7 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
+import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -34,8 +35,8 @@ class SearchableDropdown<T> extends StatelessWidget {
   String itemvalueMapper(T item) {
     if (item is ProductSchema) {
       return item.optionDesc;
-    } else if (item is ProductMaster) {
-      return item.prdDesc;
+    } else if (item is Product) {
+      return item.lsfFacDesc;
     } else if (item is Lov) {
       return item.optDesc;
     } else {
