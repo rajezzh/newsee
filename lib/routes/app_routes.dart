@@ -42,7 +42,7 @@ final AuthRepository = AuthRepositoryImpl(
 final routes = GoRouter(
   // initial location changed to test masters feature , to see login page
   // modify the initialLocation
-  initialLocation: AppRouteConstants.HOME_PAGE['path'],
+  initialLocation: AppRouteConstants.LOGIN_PAGE['path'],
 
   routes: <RouteBase>[
     GoRoute(
@@ -102,23 +102,23 @@ final routes = GoRouter(
                           child: Text('Cancel'),
                         ),
                         TextButton(
-                          onPressed: () =>
-                           Navigator.of(context).pop(true)
-                          ,
+                          onPressed: () => Navigator.of(context).pop(true),
                           child: Text('Yes'),
-                        
                         ),
                       ],
                     ),
               );
-               if (shouldPop ?? false) {
-                    context.push('/login');
-                   // closes the app
+              if (shouldPop ?? false) {
+                context.push('/login');
+                // closes the app
                 // context.go('/'); // Navigate back using GoRouter
               }
-            }, child: Scaffold(
-              body:BlocProvider(create: (_) => AuthBloc(authRepository: AuthRepository),
-              child:HomePage(),)
+            },
+            child: Scaffold(
+              body: BlocProvider(
+                create: (_) => AuthBloc(authRepository: AuthRepository),
+                child: HomePage(),
+              ),
             ),
           ),
     ),
