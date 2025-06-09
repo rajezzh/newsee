@@ -26,7 +26,7 @@ class Address extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: Text("Address Details")),
+      appBar: AppBar(title: Text("Address Details"),automaticallyImplyLeading: false,),
       body: ReactiveForm(
         formGroup: form,
         child: SafeArea(

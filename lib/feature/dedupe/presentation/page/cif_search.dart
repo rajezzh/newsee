@@ -118,53 +118,53 @@ class CIFSearch extends StatelessWidget {
         child: BlocBuilder<CifBloc, CifState>(
           builder: (context, state) {
             return ReactiveForm(
-              formGroup: cifForm,
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.fromLTRB(20, 0,0,0),
-                        child: Text("Cif Search", 
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24
+                formGroup: cifForm,
+                child: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.fromLTRB(20, 0,0,0),
+                          child: Text("Cif Search", 
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24
+                            ),
                           ),
                         ),
-                      ),
-                      Column(
-                        children: [
-                          IntegerTextField('cifid', 'CIF ID'),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                        Column(
+                          children: [
+                            IntegerTextField('cifid', 'CIF ID'),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
-                              ),
-                            onPressed: () {
-                              if (cifForm.valid) {
-                                final Map<String, dynamic> req = {
-                                "cifid": cifForm.control('cifid').value
-                              };
-                              context.read<CifBloc>().add(SearchCifEvent(request: req));
-                              } else {
-                                print("Click function passed go here, ${cifForm.valid}");
-                                cifForm.markAllAsTouched();
-                              }
-                              
-                            }, 
-                            child: state.status == CifStatus.loading ? CircularProgressIndicator() : Text("Search")
-                          )
-                        ],
-                      )
-                    ]
+                              onPressed: () {
+                                if (cifForm.valid) {
+                                  final Map<String, dynamic> req = {
+                                  "cifid": cifForm.control('cifid').value
+                                };
+                                context.read<CifBloc>().add(SearchCifEvent(request: req));
+                                } else {
+                                  print("Click function passed go here, ${cifForm.valid}");
+                                  cifForm.markAllAsTouched();
+                                }
+                                
+                              }, 
+                              child: state.status == CifStatus.loading ? CircularProgressIndicator() : Text("Search")
+                            )
+                          ],
+                        )
+                      ]
+                    )
                   )
                 )
-              )
             );
           }
           ),

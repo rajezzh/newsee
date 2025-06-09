@@ -42,7 +42,7 @@ final AuthRepository = AuthRepositoryImpl(
 final routes = GoRouter(
   // initial location changed to test masters feature , to see login page
   // modify the initialLocation
-  initialLocation: AppRouteConstants.HOME_PAGE['path'],
+  initialLocation: AppRouteConstants.LOGIN_PAGE['path'],
 
   routes: <RouteBase>[
     GoRoute(
@@ -86,7 +86,41 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.HOME_PAGE['path']!,
       name: AppRouteConstants.HOME_PAGE['name'],
-      builder: (context, state) => HomePage(),
+      builder:
+          (context, state) => PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didPop, result) async {
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: Text('Confirm'),
+                      content: Text('Are you sure you want to logout?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () =>
+                           Navigator.of(context).pop(true)
+                          ,
+                          child: Text('Yes'),
+                        
+                        ),
+                      ],
+                    ),
+              );
+               if (shouldPop ?? false) {
+                    context.push('/login');
+                   // closes the app
+                // context.go('/'); // Navigate back using GoRouter
+              }
+            }, child: Scaffold(
+              body:BlocProvider(create: (_) => AuthBloc(authRepository: AuthRepository),
+              child:HomePage(),)
+            ),
+          ),
     ),
     GoRoute(
       path: AppRouteConstants.NEWLEAD_PAGE['path']!,

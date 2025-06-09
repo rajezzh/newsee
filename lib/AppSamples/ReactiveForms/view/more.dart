@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /*
 
@@ -14,13 +15,13 @@ import 'package:flutter/material.dart';
  */
 
 //Define the function take context pharameters
+
 void moreActionSheet(BuildContext context, String action) {
   //popup the action sheet
   showCupertinoModalPopup<void>(
     context: context,
     builder:
         (BuildContext context) => CupertinoActionSheet(
-          //title the action sheet
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -43,89 +44,105 @@ void moreActionSheet(BuildContext context, String action) {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       //Retail Loan
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(130, 158, 158, 158),
-                            width: 2.0,
+                      GestureDetector(
+                        onTap: (){
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(130, 158, 158, 158),
+                              width: 2.0,
+                              
+                            ),
+                            
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.badge_sharp,
-                                color: const Color.fromARGB(255, 198, 27, 27),
-                                size: 30,
-                              ),
-                              Text(
-                                'Retail Loan',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                  SvgPicture.asset(
+                                      'assets/Retail_loan.svg',
+                                      height: 40,
+                                      width: 40,
+                                    ),       
+                                Text(
+                                  'Retail Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       //Agree Loan
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(130, 158, 158, 158),
-                            width: 2.0,
+                      GestureDetector(
+                        onTap: () {
+
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(130, 158, 158, 158),
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.agriculture,
-                                color: const Color.fromARGB(252, 198, 27, 27),
-                                size: 30,
-                              ),
-                              Text(
-                                'Agree Loan',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                      'assets/Agri_Loan.svg',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                Text(
+                                  'Agree Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
                       //MSME Loan
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(130, 158, 158, 158),
-                            width: 2.0,
+                      GestureDetector(
+                          onTap: () {
+
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(130, 158, 158, 158),
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.business,
-                                color: const Color.fromARGB(255, 198, 27, 27),
-                                size: 30,
-                              ),
-                              Text(
-                                'MSME Loan',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                               SvgPicture.asset(
+                                      'assets/MSME.svg',
+                                      height: 40,
+                                      width: 40,
+                                    ),
+                                Text(
+                                  'MSME Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -137,98 +154,111 @@ void moreActionSheet(BuildContext context, String action) {
 
               // Second row of loan options
               SingleChildScrollView(
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      //home Loan
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(130, 158, 158, 158),
-                            width: 2.0,
+                child: GestureDetector(
+                    onTap: () {
+
+                        },
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        //home Loan
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(130, 158, 158, 158),
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.home_filled,
-                                color: const Color.fromARGB(255, 198, 27, 27),
-                                size: 30,
-                              ),
-                              Text(
-                                'Home Loan',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                                SvgPicture.asset(
+                                      'assets/Home_Loan.svg',
+                                      height:50,
+                                      width: 50,
+                                    ),
+                                Text(
+                                  'Home Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      //vehicle Loan
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(130, 158, 158, 158),
-                            width: 2.0,
+                        //vehicle Loan
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: const Color.fromARGB(130, 158, 158, 158),
+                              width: 2.0,
+                            ),
                           ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.car_rental_rounded,
-                                color: const Color.fromARGB(255, 198, 27, 27),
-                                size: 30,
-                              ),
-                              Text(
-                                'Vehicle Loan',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: Column(
+                              children: [
+                               SvgPicture.asset(
+                                      'assets/Vehicle_Loan.svg',
+                                      height: 50,
+                                      width: 50,
+                                    ),
+                                Text(
+                                  'Vehicle Loan',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      //Gold Loan
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const Color.fromARGB(130, 158, 158, 158),
-                            width: 2.0,
+                        //Gold Loan
+                        GestureDetector(
+                            onTap: () {
+
+                        },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color.fromARGB(130, 158, 158, 158),
+                                width: 2.0,
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                children: [
+                                 SvgPicture.asset(
+                                      'assets/Gold_Loan.svg',
+                                      height: 45,
+                                      width: 45,
+                                    ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      'Gold Loan',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.card_giftcard,
-                                color: const Color.fromARGB(255, 198, 27, 27),
-                                size: 30,
-                              ),
-                              Text(
-                                'Gold Loan',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -236,96 +266,101 @@ void moreActionSheet(BuildContext context, String action) {
               SizedBox(height: 20),
 
               //Section for other Services
-              Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //Header of Other services
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20,
-                        bottom: 40,
-                        right: 20,
-                      ),
-                      child: Text(
-                        "OTHER SERVICES",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
+              GestureDetector(
+                  onTap: () {
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            // Manage e-Mandates row
-                            Icon(Icons.currency_rupee_rounded),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12),
-                              child: Text(
-                                'Manage e-Mandates',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                        },
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Header of Other services
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          top: 20,
+                          bottom: 40,
+                          right: 20,
+                        ),
+                        child: Text(
+                          "OTHER SERVICES",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              // Manage e-Mandates row
+                              Icon(Icons.currency_rupee_rounded),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: Text(
+                                  'Service One',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Icon(
-                            Icons.arrow_forward_ios_outlined,
-
-                            color: const Color.fromARGB(198, 7, 61, 105),
-                            size: 20,
-                            weight: 80,
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 30),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.person_add_alt),
-                            //Update employer Details
-                            Padding(
-                              padding: const EdgeInsets.only(left: 12),
-                              child: Text(
-                                'Update Employer Details',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.normal,
+                
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Icon(
+                              Icons.arrow_forward_ios_outlined,
+                
+                              color: const Color.fromARGB(198, 7, 61, 105),
+                              size: 20,
+                              weight: 80,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.person_add_alt),
+                              //Update employer Details
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12),
+                                child: Text(
+                                  'Service Two',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20),
-                          child: Icon(
-                            Icons.arrow_forward_ios_outlined,
-
-                            color: const Color.fromARGB(198, 7, 61, 105),
-                            size: 20,
-                            weight: 80,
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                
+                          Padding(
+                            padding: const EdgeInsets.only(right: 20),
+                            child: Icon(
+                              Icons.arrow_forward_ios_outlined,
+                
+                              color: const Color.fromARGB(198, 7, 61, 105),
+                              size: 20,
+                              weight: 80,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
