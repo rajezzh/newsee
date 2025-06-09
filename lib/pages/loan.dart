@@ -95,25 +95,28 @@ class Loan extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: state.productmasterList.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        isThreeLine: true,
-                        onTap: () {
-                          ProductMaster selectedProduct =
-                              state.productmasterList[index];
+                      return Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: ListTile(
+                          contentPadding: EdgeInsets.all(4.0),
+                          onTap: () {
+                            ProductMaster selectedProduct =
+                                state.productmasterList[index];
 
-                          ctxt.read<LoanproductBloc>().add(
-                            ResetShowBottomSheet(
-                              selectedProduct: selectedProduct,
-                            ),
-                          );
-                        },
+                            ctxt.read<LoanproductBloc>().add(
+                              ResetShowBottomSheet(
+                                selectedProduct: selectedProduct,
+                              ),
+                            );
+                          },
 
-                        leading: Text(state.productmasterList[index].prdDesc),
-                        subtitle: Text(
-                          state.productmasterList[index].prdamtToRange,
-                        ),
-                        title: Text(
-                          state.productmasterList[index].prdamtFromRange,
+                          leading: Text(state.productmasterList[index].prdDesc),
+                          subtitle: Text(
+                            'Amount To :${state.productmasterList[index].prdamtToRange}',
+                          ),
+                          title: Text(
+                            'Amount From:${state.productmasterList[index].prdamtFromRange}',
+                          ),
                         ),
                       );
                     },
@@ -142,10 +145,11 @@ class Loan extends StatelessWidget {
                         controlName: 'typeofloan',
                         label: 'Type Of Loan',
                         items: state.productSchemeList,
-                        onChangeListener:
-                            (ProductSchema val) => context
-                                .read<LoanproductBloc>()
-                                .add(LoanProductDropdownChange(field: val)),
+                        onChangeListener: (ProductSchema val) {
+                          context.read<LoanproductBloc>().add(
+                            LoanProductDropdownChange(field: val),
+                          );
+                        },
                       ),
                       SearchableDropdown(
                         controlName: 'maincategory',
