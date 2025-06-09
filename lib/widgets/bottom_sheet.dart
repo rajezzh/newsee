@@ -5,7 +5,7 @@ void openBottomSheet(
   double initialChildSize,
   double minChildSize,
   double maxChildSize,
-  Widget Function(ScrollController ctrl) renderWidget,
+  Widget Function(BuildContext context, ScrollController ctrl) renderWidget,
 ) {
   showModalBottomSheet(
     context: context,
@@ -17,7 +17,8 @@ void openBottomSheet(
           minChildSize: minChildSize,
           maxChildSize: maxChildSize,
           builder:
-              (context, scrollController) => renderWidget(scrollController),
+              (context, scrollController) =>
+                  renderWidget(context, scrollController),
         ),
   );
 }

@@ -4,6 +4,7 @@
 @param     : 
  */
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/DBConstants/table_key_products.dart';
 import 'package:newsee/Utils/query_builder.dart';
@@ -28,7 +29,10 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
   LoanproductBloc() : super(LoanproductState.init()) {
     on<LoanproductInit>(onLoanProductInit);
     on<LoanProductDropdownChange>(onLoanProductDropdownChange);
+    on<ResetShowBottomSheet>(onResetShowBottomSheet);
   }
+
+  // set the initial data for Type Of loan Dropdown
 
   Future<void> onLoanProductInit(LoanproductInit event, Emitter emit) async {
     // initiate the dataset for typeofloan
@@ -38,16 +42,12 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
       List<ProductSchema> productSchemaList =
           await ProductSchemaCrudRepo(db).getAll();
       print('productSchemaList from DB => ${productSchemaList.length}');
-      emit(
-        state.copyWith(
-          productSchemeList: productSchemaList,
-          mainCategoryList: [],
-          subCategoryList: [],
-          productmasterList: [],
-        ),
-      );
+      emit(state.copyWith(productSchemeList: productSchemaList));
     }
   }
+
+  // event handler for drowdown change - main product and sub product
+  // fetches respective data and return new LoanProductState
 
   Future<void> onLoanProductDropdownChange(
     LoanProductDropdownChange event,
@@ -64,6 +64,21 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
       print('subCatId => $subCatId');
       await onChangeProduct(event, mainCatId, subCatId, db, emit);
     }
+  }
+
+  // this event is triggered for setting bottomsheet show status
+  // on tap of bottomsheet list items ,
+
+  Future<void> onResetShowBottomSheet(
+    ResetShowBottomSheet event,
+    Emitter emit,
+  ) async {
+    emit(
+      state.copyWith(
+        selectedProduct: event.selectedProduct,
+        showBottomSheet: false,
+      ),
+    );
   }
 
   Future<void> onChangeProductScheme(
@@ -89,11 +104,7 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
     ).getByColumnName(columnName: 'lsfFacType', columnValue: optCode);
     print('mainCategoryList => $mainCategoryList');
     emit(
-      state.copyWith(
-        mainCategoryList: mainCategoryList,
-        subCategoryList: [],
-        productmasterList: [],
-      ),
+      state.copyWith(mainCategoryList: mainCategoryList, selectedProduct: null),
     );
   }
 
@@ -118,7 +129,7 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
       );
       print('subCategoryList => $subCategoryList');
       emit(
-        state.copyWith(subCategoryList: subCategoryList, productmasterList: []),
+        state.copyWith(subCategoryList: subCategoryList, selectedProduct: null),
       );
     } else {
       // mainCategoryId != 0 and subCategoryId
@@ -129,7 +140,13 @@ class LoanproductBloc extends Bloc<LoanproductEvent, LoanproductState> {
         db,
       ).getByColumnNames(columnNames: columnNames, columnValues: columsValues);
       print('productMasterList => $productMasterList');
-      emit(state.copyWith(productmasterList: productMasterList));
+      LoanproductState.init();
+      emit(
+        state.copyWith(
+          productmasterList: productMasterList,
+          showBottomSheet: true,
+        ),
+      );
     }
   }
 }

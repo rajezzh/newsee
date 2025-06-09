@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
+import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/pages/page/dedup_search.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
@@ -66,6 +68,7 @@ class Loan extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _context = context;
     return BlocProvider(
       create:
           (context) =>
@@ -77,23 +80,33 @@ class Loan extends StatelessWidget {
           title: Text("Loan Details"),
           automaticallyImplyLeading: false,
         ),
-        body: BlocListener<LoanproductBloc, LoanproductState>(
+        body: BlocConsumer<LoanproductBloc, LoanproductState>(
           listener: (context, state) {
-            print(
-              'LoanProductBlocListener:: log => ${state.productSchemeList}',
-            );
-            if (state.productmasterList.isNotEmpty) {
+            BuildContext ctxt = context;
+            print('LoanProductBlocListener:: log =>  ${state.showBottomSheet}');
+
+            if (state.showBottomSheet == true) {
               openBottomSheet(
                 context,
                 0.7,
                 0.5,
                 0.9,
-                (ScrollController scrollController) => Expanded(
+                (context, scrollController) => Expanded(
                   child: ListView.builder(
                     itemCount: state.productmasterList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         isThreeLine: true,
+                        onTap: () {
+                          ProductMaster selectedProduct =
+                              state.productmasterList[index];
+
+                          ctxt.read<LoanproductBloc>().add(
+                            ResetShowBottomSheet(
+                              selectedProduct: selectedProduct,
+                            ),
+                          );
+                        },
 
                         leading: Text(state.productmasterList[index].prdDesc),
                         subtitle: Text(
@@ -108,89 +121,101 @@ class Loan extends StatelessWidget {
                 ),
               );
             }
-          },
-          child: BlocBuilder<LoanproductBloc, LoanproductState>(
-            builder: (context, state) {
-              return ReactiveForm(
-                formGroup: form,
 
-                child: SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SearchableDropdown<ProductSchema>(
-                          controlName: 'typeofloan',
-                          label: 'Type Of Loan',
-                          items: state.productSchemeList,
-                          onChangeListener:
-                              (ProductSchema val) => context
-                                  .read<LoanproductBloc>()
-                                  .add(LoanProductDropdownChange(field: val)),
-                        ),
-                        SearchableDropdown(
-                          controlName: 'maincategory',
-                          label: 'Main Category',
-                          items: state.mainCategoryList,
-                          onChangeListener:
-                              (Product val) => context
-                                  .read<LoanproductBloc>()
-                                  .add(LoanProductDropdownChange(field: val)),
-                        ),
-                        SearchableDropdown(
-                          controlName: 'subcategory',
-                          label: 'Sub Category',
-                          items: state.subCategoryList,
-                          onChangeListener: (Product val) {
-                            context.read<LoanproductBloc>().add(
-                              LoanProductDropdownChange(field: val),
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: 200,
-                          child:
-                              state.productmasterList.isNotEmpty
-                                  ? Text(state.productmasterList.first.prdDesc)
-                                  : Text('No product'),
-                        ),
-                        Center(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+            if (state.selectedProduct != null &&
+                state.showBottomSheet == false) {
+              print('poping current route');
+              LoanproductState.init();
+              Navigator.of(_context).pop();
+            }
+          },
+          // child: BlocBuilder<LoanproductBloc, LoanproductState>(
+          builder: (context, state) {
+            return ReactiveForm(
+              formGroup: form,
+
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SearchableDropdown<ProductSchema>(
+                        controlName: 'typeofloan',
+                        label: 'Type Of Loan',
+                        items: state.productSchemeList,
+                        onChangeListener:
+                            (ProductSchema val) => context
+                                .read<LoanproductBloc>()
+                                .add(LoanProductDropdownChange(field: val)),
+                      ),
+                      SearchableDropdown(
+                        controlName: 'maincategory',
+                        label: 'Main Category',
+                        items: state.mainCategoryList,
+                        onChangeListener:
+                            (Product val) => context
+                                .read<LoanproductBloc>()
+                                .add(LoanProductDropdownChange(field: val)),
+                      ),
+                      SearchableDropdown(
+                        controlName: 'subcategory',
+                        label: 'Sub Category',
+                        items: state.subCategoryList,
+                        onChangeListener: (Product val) {
+                          context.read<LoanproductBloc>().add(
+                            LoanProductDropdownChange(field: val),
+                          );
+                        },
+                      ),
+                      Column(
+                        children:
+                            state.selectedProduct != null
+                                ? [
+                                  Text(
+                                    state.selectedProduct?.prdDesc as String,
+                                  ),
+                                  Text(
+                                    state.selectedProduct?.prdCode as String,
+                                  ),
+                                ]
+                                : [Text('No product')],
+                      ),
+                      Center(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
                             ),
-                            onPressed: () {
-                              if (form.valid) {
-                                final tabController = DefaultTabController.of(
-                                  context,
-                                );
-                                if (tabController.index <
-                                    tabController.length - 1) {
-                                  tabController.animateTo(
-                                    tabController.index + 1,
-                                  );
-                                }
-                              } else {
-                                form.markAllAsTouched();
-                              }
-                            },
-                            child: Text('Next'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
+                          onPressed: () {
+                            if (form.valid) {
+                              final tabController = DefaultTabController.of(
+                                context,
+                              );
+                              if (tabController.index <
+                                  tabController.length - 1) {
+                                tabController.animateTo(
+                                  tabController.index + 1,
+                                );
+                              }
+                            } else {
+                              form.markAllAsTouched();
+                            }
+                          },
+                          child: Text('Next'),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

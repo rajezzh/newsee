@@ -39,3 +39,12 @@ class LoanProductDropdownChange<T> extends LoanproductEvent {
   final T field;
   LoanProductDropdownChange({required this.field});
 }
+
+/* 
+ResetShowBottomSheet event will receive selected index of the list 
+and context object 
+ */
+class ResetShowBottomSheet extends LoanproductEvent {
+  final ProductMaster selectedProduct;
+  ResetShowBottomSheet({required this.selectedProduct});
+}

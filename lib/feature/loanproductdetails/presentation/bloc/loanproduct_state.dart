@@ -27,7 +27,9 @@ class LoanproductState extends Equatable {
   final List<Product> subCategoryList;
   final Product? selectedSubCategoryList;
   final List<ProductMaster> productmasterList;
-  final Product? selectedProduct;
+  final ProductMaster? selectedProduct;
+  final bool? showBottomSheet;
+
   @override
   List<Object?> get props => [
     leadId,
@@ -38,10 +40,10 @@ class LoanproductState extends Equatable {
     subCategoryList,
     selectedSubCategoryList,
     productmasterList,
-    selectedProduct,
+    showBottomSheet,
   ];
 
-  LoanproductState({
+  const LoanproductState({
     this.leadId,
     required this.productSchemeList,
     this.selectedProductScheme,
@@ -51,6 +53,7 @@ class LoanproductState extends Equatable {
     this.selectedSubCategoryList,
     required this.productmasterList,
     this.selectedProduct,
+    this.showBottomSheet,
   });
 
   LoanproductState copyWith({
@@ -62,7 +65,8 @@ class LoanproductState extends Equatable {
     List<Product>? subCategoryList,
     Product? selectedSubCategoryList,
     List<ProductMaster>? productmasterList,
-    Product? selectedProduct,
+    ProductMaster? selectedProduct,
+    bool? showBottomSheet,
   }) {
     return LoanproductState(
       leadId: leadId ?? this.leadId,
@@ -75,7 +79,8 @@ class LoanproductState extends Equatable {
       selectedSubCategoryList:
           selectedSubCategoryList ?? this.selectedSubCategoryList,
       productmasterList: productmasterList ?? this.productmasterList,
-      selectedProduct: selectedProduct ?? this.selectedProduct,
+      selectedProduct: selectedProduct,
+      showBottomSheet: showBottomSheet ?? this.showBottomSheet,
     );
   }
 
@@ -90,6 +95,7 @@ class LoanproductState extends Equatable {
       'selectedSubCategoryList': selectedSubCategoryList?.toMap(),
       'productmasterList': productmasterList.map((x) => x.toMap()).toList(),
       'selectedProduct': selectedProduct?.toMap(),
+      'showBottomSheet': showBottomSheet,
     };
   }
 
@@ -98,7 +104,10 @@ class LoanproductState extends Equatable {
     mainCategoryList: [],
     subCategoryList: [],
     productmasterList: [],
+    selectedProduct: null,
+    showBottomSheet: false,
   );
+
   factory LoanproductState.fromMap(Map<String, dynamic> map) {
     return LoanproductState(
       leadId: map['leadId'] != null ? map['leadId'] as String : null,
@@ -142,7 +151,13 @@ class LoanproductState extends Equatable {
       ),
       selectedProduct:
           map['selectedProduct'] != null
-              ? Product.fromMap(map['selectedProduct'] as Map<String, dynamic>)
+              ? ProductMaster.fromMap(
+                map['selectedProduct'] as Map<String, dynamic>,
+              )
+              : null,
+      showBottomSheet:
+          map['showBottomSheet'] != null
+              ? map['showBottomSheet'] as bool
               : null,
     );
   }
@@ -153,35 +168,5 @@ class LoanproductState extends Equatable {
       LoanproductState.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() {
-    return 'LoanproductState(leadId: $leadId, productSchemeList: $productSchemeList, selectedProductScheme: $selectedProductScheme, mainCategoryList: $mainCategoryList, selectedMainCategory: $selectedMainCategory, subCategoryList: $subCategoryList, selectedSubCategoryList: $selectedSubCategoryList, productmasterList: $productmasterList, selectedProduct: $selectedProduct)';
-  }
-
-  @override
-  bool operator ==(covariant LoanproductState other) {
-    if (identical(this, other)) return true;
-
-    return other.leadId == leadId &&
-        listEquals(other.productSchemeList, productSchemeList) &&
-        other.selectedProductScheme == selectedProductScheme &&
-        listEquals(other.mainCategoryList, mainCategoryList) &&
-        other.selectedMainCategory == selectedMainCategory &&
-        listEquals(other.subCategoryList, subCategoryList) &&
-        other.selectedSubCategoryList == selectedSubCategoryList &&
-        listEquals(other.productmasterList, productmasterList) &&
-        other.selectedProduct == selectedProduct;
-  }
-
-  @override
-  int get hashCode {
-    return leadId.hashCode ^
-        productSchemeList.hashCode ^
-        selectedProductScheme.hashCode ^
-        mainCategoryList.hashCode ^
-        selectedMainCategory.hashCode ^
-        subCategoryList.hashCode ^
-        selectedSubCategoryList.hashCode ^
-        productmasterList.hashCode ^
-        selectedProduct.hashCode;
-  }
+  bool get stringify => true;
 }
