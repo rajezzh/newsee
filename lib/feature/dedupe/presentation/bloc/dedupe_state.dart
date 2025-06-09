@@ -1,7 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+/* 
+@author     : ganeshkumar.b  04/06/2025
+@desc       : State Object for Dedupe Search
+@param      : {DedupeFetchStatus status} - enum for Fetch status 
+              {String errorMsg} - error message when service failure
+              {DedupeResponse dedupeResponse} - return DedupeResponse
+ */
+
 part of 'dedupe_bloc.dart';
 
-enum DedupeFetchStatus { init, loading, success, failue }
+enum DedupeFetchStatus { init, loading, success, failure }
 
 class DedupeState extends Equatable {
   final DedupeFetchStatus status;

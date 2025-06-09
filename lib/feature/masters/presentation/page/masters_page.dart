@@ -16,7 +16,7 @@ class MastersPage extends StatelessWidget {
       '${state.masterResponse?.masterType.name}  MasterDownload Status => ${state.status}',
     );
   }
-                  
+
   @override
   Widget build(BuildContext context) {
     final double scrwidth = MediaQuery.of(context).size.width;
@@ -49,7 +49,7 @@ class MastersPage extends StatelessWidget {
             )..add(
               MasterFetch(
                 request: MasterRequest(
-                  setupVersion: '4',
+                  setupVersion: '9',
                   setupmodule: 'AGRI',
                   setupTypeOfMaster: ApiConstants.master_key_lov,
                 ),
@@ -64,7 +64,7 @@ class MastersPage extends StatelessWidget {
                 ),
               );
             } else {
-              switch (state.masterResponse?.masterType){
+              switch (state.masterResponse?.masterType) {
                 case MasterTypes.lov:
                   break;
                 case MasterTypes.products:
@@ -76,7 +76,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '4',
+                        setupVersion: '9',
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_products,
                       ),
@@ -91,15 +91,30 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '4',
+                        setupVersion: '9',
                         setupmodule: 'AGRI',
-                        setupTypeOfMaster: ApiConstants.master_key_productschema,
+                        setupTypeOfMaster:
+                            ApiConstants.master_key_productschema,
                       ),
                     ),
                   );
 
-                case MasterTypes.success:
+                case MasterTypes.statecitymaster:
+                  // state and city master completed , fetching productschema
+                  // set completedMasters to 3
                   updateDownloadProgress(3);
+                  print('progress completed => $progress');
+                  context.read<MastersBloc>().add(
+                    MasterFetch(
+                      request: MasterRequest(
+                        setupVersion: '9',
+                        setupmodule: 'AGRI',
+                        setupTypeOfMaster: ApiConstants.master_key_statecity,
+                      ),
+                    ),
+                  );
+                case MasterTypes.success:
+                  updateDownloadProgress(4);
                   print('progress completed => $progress');
                   await Future.delayed(const Duration(seconds: 2));
                   goTo('home');

@@ -7,7 +7,7 @@ class DedupeDataSource {
  
  /*
   @author     : ganeshkumar.b 03/06/2025
-  @desc       : login api consumer - dio.post method 
+  @desc       : dedupe search api consumer - dio.post method 
                 datasource directory encapsulated http services and setup like
                 http interceptors etc
   @param      : http request payload

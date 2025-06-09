@@ -1,95 +1,62 @@
-import 'package:newsee/AppData/globalconfig.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/db/db_config.dart';
-import 'package:newsee/feature/auth/domain/model/user/auth_response_model.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/domain/repository/masterversion_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
 
- /*
-  @author     : ganeshkumar.b 29/05/2025
+/*
+  @author     : karthick.d 02/06/62025 
   @desc       : Check login master version and master table version
-  @param      : null
-  @return     : return true or
+  @param      : {Map<String, dynamic> source} - masterversionobject from loginapi resp
+  @return     : return Future<List<MasterVersion>> 
    */
 
-Future<bool> versioncheck() async {
-  try {
-    Database db = await DBConfig().database;
-    MasterversionCrudRepo masterVersionCrudRepo = MasterversionCrudRepo(db);
+Future<AsyncResponseHandler<bool, List<MasterVersion>>> compareVersions(
+  Map<String, dynamic> source,
+) async {
+  // source is a map that is going to be tested against the target
 
-    List<MasterVersion> getmasterversiondata = [];
+  // step 1 : target map have master version name and version number
+  // converted to a iterable of map
 
-    getmasterversiondata = await masterVersionCrudRepo.getAll();
+  final targetMasterList =
+      source.entries
+          .map(
+            (e) =>
+                MasterVersion(mastername: e.key, version: e.value, status: ''),
+          )
+          .toList();
 
-    print("getmasterversiondata $getmasterversiondata");
+  Database db = await DBConfig().database;
 
-    final MasterVersion lovmasterversion = getmasterversiondata.firstWhere(
-      (item) => item.mastername.contains('Listofvalues'),
-    );
-    print("masterversionsList.length $lovmasterversion");
+  // step 2 : masterversion table data collected , which is compared against
+  // targetObjList
+  List<MasterVersion> masterversionsList =
+      await MasterversionCrudRepo(db).getAll();
 
-    final MasterVersion productmasterversions = getmasterversiondata.firstWhere(
-      (item) => item.mastername.contains('ProductMaster'),
-    );
-    print("masterversionsList.length $lovmasterversion");
+  // check against targetMaster - if targetMasterList['mastername'] ==  masterversionsList['mastername']
+  // check the version if it's equal return else store it in a list
 
-    final MasterVersion productschemamasterversions = getmasterversiondata.firstWhere(
-      (item) => item.mastername.contains('ProductScheme'),
-    );
-    print("masterversionsList.length ${lovmasterversion}");
+  // list to store all the masters which versio are not equal to the targetMasterList
+  // hence this
+  List<MasterVersion> differredMasters = [];
 
-    final Map<String, dynamic> loginMasterVersion = Globalconfig.masterVersionMapper;
-    print("Listofvalues is ${loginMasterVersion['Listofvalues']} compare to lovmasterversions is ${lovmasterversion.version}");
-    print("ProductMaster is ${loginMasterVersion['ProductMaster']} compare to productmasterversions is ${productmasterversions.version}");
-    print("ProductScheme is ${loginMasterVersion['ProductScheme']} compare to productschemamasterversions is ${productschemamasterversions.version}");
-    bool lovCompareRes = compareobj(loginMasterVersion, lovmasterversion);
-    print("lovCompareRes $lovCompareRes");
-    bool productMasterCompareRes = compareobj(loginMasterVersion, productmasterversions);
-    print("productMasterCompareRes $productMasterCompareRes");
-    bool productSchemaCompareRes = compareobj(loginMasterVersion, productschemamasterversions);
-    print("productSchemaCompareRes $productSchemaCompareRes");
-    if (lovCompareRes && productMasterCompareRes && productSchemaCompareRes) {
-      return true;
-    }
-    return false;
-  } catch (error) {
-    print("master version check is => $error");
-    return false;
+  if (masterversionsList.isNotEmpty) {
+    // master version having values which means masters already downloaded
+    // and version are outdated and collected for master update
+    masterversionsList.forEach((e) {
+      differredMasters =
+          targetMasterList
+              .where(
+                (v) =>
+                    (v.mastername == e.mastername) && (v.version != e.version),
+              )
+              .toList();
+    });
+    return Future.value(AsyncResponseHandler.right(differredMasters));
+  } else {
+    // if left is returned which tells there is no masters downloaded yet
+    // first time hence masters should download
+    return Future.value(AsyncResponseHandler.left(false));
   }
 }
-
-bool compareobj(Map<String, dynamic> obj1, MasterVersion obj2) {
-  try {
-    for (var key in obj1.keys) {
-      if (key == obj2.mastername) {
-        if (obj1[key] == obj2.version) {
-          return true;
-        }
-      }
-    }
-    return false;
-  } catch(error) {
-    print("compareobj-error $error");
-    return false;
-  }
-}
-
-// bool compareObj(Map<String, dynamic> obj1, List obj2) {
-//   for (var list in obj2) {
-//     print("object 2 list ${list['mastername']}");
-//     for (var key in obj1.keys) {
-//       print("object 1 Keyname list  $key");
-//       if (key == list['mastername']) {
-//         print("obect 1 and object 2 is true");
-//         print("object 1 key value is ${obj1[key]}");
-//         if (obj1[key] == list['version']) {
-//           print("succesfully comapred");
-//         } else {
-//           print("wrong comaparison");
-//           return false;
-//         }
-//       }
-//     }
-//   }
-//   return true;
-// }

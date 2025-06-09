@@ -1,34 +1,34 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/feature/dedupe/data/repository/dedupe_search_repo_impl.dart';
 import 'package:newsee/feature/dedupe/domain/model/deduperequest.dart';
 import 'package:newsee/feature/dedupe/domain/model/deduperesponse.dart';
+import 'package:newsee/feature/dedupe/domain/repositoy/deduperepository.dart';
 
-part './dedupe_event.dart';
-part './dedupe_state.dart';
+part 'dedupe_event.dart';
+part 'dedupe_state.dart';
 
 class DedupeBloc extends Bloc<DedupeEvent, DedupeState> {
-  DedupeBloc({required DedupeState initState}):super(initState) {
+  final DedupeRepository dedupeRepository;
+  DedupeBloc({required this.dedupeRepository, required DedupeState initState}):super(initState) {
     on<FetchDedupeEvent>(dedupeFetch);
   }
 
   Future<void> dedupeFetch(FetchDedupeEvent event, Emitter emit) async {
-    print("Again Callinge here to know status => ${state.status}");
     emit(state.copyWith(status: DedupeFetchStatus.loading));
     final DedupeRequest dedupeRea =  event.request;
-    var responseHandler = await DedupeSearchRepositoryimpl().dedupeSearchforCustomer(dedupeRea);
-    print("responseHandler-dedupeFetch-string ${responseHandler.toString()}");
-
+    var responseHandler = await dedupeRepository.dedupeSearchforCustomer(dedupeRea);
     if (responseHandler.isRight()) {
-      emit(state.copyWith(
+      emit(state.
+        copyWith(
           status: DedupeFetchStatus.success,
-          dedupeResponse: responseHandler.right
+          dedupeResponse: responseHandler.right,
         )
       );
     } else {
-      emit(state.copyWith(
-          status: DedupeFetchStatus.failue,
-          errorMsg: responseHandler.left.message
+      emit(state.
+        copyWith(
+          status: DedupeFetchStatus.failure,
+          errorMsg: responseHandler.left.message,
         )
       );
     }

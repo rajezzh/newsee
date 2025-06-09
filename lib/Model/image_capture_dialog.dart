@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:newsee/AppData/app_constants.dart';
 
 /* 
-@author         :   faneshkumar.b    14/05/2025
+@author         :   ganeshkumar.b    14/05/2025
 @description    :   Action Sheet for accessing camera, gallery or file.
 @props          :   possible props BuildContext, List<FilePickingOptionList>
 

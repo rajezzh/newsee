@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
@@ -20,8 +21,6 @@ import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart'
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
-import 'package:newsee/feature/dedupe/presentation/page/dedup_search.dart';
-import 'package:newsee/feature/dedupe/presentation/page/dedupe_page.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
@@ -50,10 +49,37 @@ final routes = GoRouter(
       path: AppRouteConstants.LOGIN_PAGE['path']!,
       name: AppRouteConstants.LOGIN_PAGE['name'],
       builder:
-          (context, state) => Scaffold(
-            body: BlocProvider(
-              create: (_) => AuthBloc(authRepository: AuthRepository),
-              child: LoginpageView(),
+          (context, state) => PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didpop, data) async {
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: Text('Confirm'),
+                      content: Text('Do you want to Exit ?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    ),
+              );
+              if (shouldPop ?? false) {
+                await SystemNavigator.pop();
+                // context.go('/'); // Navigate back using GoRouter
+              }
+            },
+            child: Scaffold(
+              body: BlocProvider(
+                create: (_) => AuthBloc(authRepository: AuthRepository),
+                child: LoginpageView(),
+              ),
             ),
           ),
     ),
@@ -75,21 +101,21 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.PROFILE_PAGE['path']!,
       name: AppRouteConstants.PROFILE_PAGE['name'],
-      builder: (context, state) => 
-        ProfilePage()
+      builder: (context, state) => ProfilePage(),
     ),
     GoRoute(
       path: AppRouteConstants.CAMERA_PAGE['path']!,
       name: AppRouteConstants.CAMERA_PAGE['name'],
       builder:
-        (context, state) => Scaffold(
-          body: BlocProvider(
-            // create: (_) => CameraBloc()..add(CameraOpen()),
-            create: (_) => GetIt.instance.get<CameraBloc>()..add(CameraOpen()),
-            child: CameraView(),
+          (context, state) => Scaffold(
+            body: BlocProvider(
+              // create: (_) => CameraBloc()..add(CameraOpen()),
+              create:
+                  (_) => GetIt.instance.get<CameraBloc>()..add(CameraOpen()),
+              child: CameraView(),
+            ),
           ),
-        ),
-    )
+    ),
   ],
   redirect: (context, state) {
     print(state.fullPath);
