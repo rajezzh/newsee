@@ -11,12 +11,12 @@ part of 'dedupe_bloc.dart';
 enum DedupeFetchStatus { init, loading, success, failure }
 
 class DedupeState extends Equatable {
-  final DedupeFetchStatus status;
+  final DedupeFetchStatus? status;
   final String? errorMsg;
   final DedupeResponse? dedupeResponse;
 
   DedupeState({
-    required this.status,
+    this.status,
     this.errorMsg,
     this.dedupeResponse,
   });

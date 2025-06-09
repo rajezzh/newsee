@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/feature/dedupe/data/repository/dedupe_search_repo_impl.dart';
+import 'package:newsee/AppData/app_forms.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
-import 'package:newsee/feature/dedupe/presentation/page/cif_search.dart';
+import 'package:newsee/feature/cif/presentation/page/cif_search.dart';
 import 'package:newsee/feature/dedupe/presentation/page/dedup_search.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -11,18 +11,8 @@ class DedupeView extends StatelessWidget {
 
   DedupeView(String s, {required this.title, super.key});
 
-  final dedupeForm = FormGroup({
-    'title': FormControl<String>(validators: [Validators.required]),
-    'firstname': FormControl<String>(validators: [Validators.required]),
-    'lastname': FormControl<String>(validators: [Validators.required]),
-    'mobilenumber': FormControl<String>(validators: []),
-    'pan': FormControl<String>(validators: []),
-    'aadhaar': FormControl<String>(validators: [Validators.required]),
-  });
-
-  final cifForm = FormGroup({
-    'cifid': FormControl<String>(validators: [Validators.required]),
-  });
+  final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
+  final cifForm = AppForms.CIF_DETAILS_FORM;
 
   void _openModalSheet(BuildContext context, bool isNewCustomer, FormGroup form) {
     final tabController = DefaultTabController.of(context);
@@ -94,7 +84,7 @@ class DedupeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Dedupe Details")),
       body: BlocProvider(
-        create: (context) => DedupeBloc(dedupeRepository: DedupeSearchRepositoryimpl(), initState: DedupeState(status: DedupeFetchStatus.init)),
+        create: (context) => DedupeBloc(),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: StatefulBuilder(

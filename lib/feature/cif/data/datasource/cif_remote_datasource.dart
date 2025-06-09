@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 
  /*
   @author     : gayathri
@@ -16,13 +17,13 @@ class CifRemoteDatasource {
   CifRemoteDatasource({required this.dio});
 
   
-  Future<Response> searchCif(Map<String, dynamic> payload) async {
+  Future<Response> searchCif(payload) async {
     Response response = await dio.post(
-      'MobileService/CIFSearch',
+      ApiConfig.CIF_API_ENDPOINT,
       data: payload,
       options: Options(
         headers: {
-          'token': payload['token'] ?? ApiConfig.AUTH_TOKEN,
+          'token': ApiConfig.AUTH_TOKEN,
           'deviceId': ApiConfig.DEVICE_ID,
           'userid': '4321',
         },

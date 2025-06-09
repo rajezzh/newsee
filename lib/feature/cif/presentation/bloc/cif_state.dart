@@ -16,18 +16,15 @@ enum CifStatus { initial, loading, success, failure }
 
 
 class CifState extends Equatable {
-  final CifStatus status;
+  final CifStatus? status;
   final CifResponseModel? cifResponseModel;
-  final String errorMessage;
-  // final bool isResponseValid;
+  final String? errorMessage;
   
   // private constructor for instance initialisation
-
   const CifState({
-    required this.status,
+    this.status,
     this.cifResponseModel,
-    this.errorMessage = '',
-    // this.isResponseValid = false,
+    this.errorMessage
   });
 
   factory CifState.init() => const CifState(status: CifStatus.initial);

@@ -1,5 +1,9 @@
  
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/feature/dedupe/domain/model/deduperequest.dart';
 
 class DedupeDataSource {
   final Dio dio;
@@ -15,7 +19,7 @@ class DedupeDataSource {
    */
   dedupeSearchcustomer(payload) async {
     final res = await dio.post(
-      'MobileService/getDedupeSearch', 
+      ApiConfig.DEDUPE_API_ENDPOINT, 
       data: payload
     );
     // print("REsponse for dedupe $res" );

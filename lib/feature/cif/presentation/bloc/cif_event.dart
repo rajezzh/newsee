@@ -8,20 +8,13 @@ part of 'cif_bloc.dart';
 
 //create abstract class event extends Equatable
 
-abstract class CifEvent extends Equatable {
+abstract class CifEvent {
   const CifEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 //Trigger First Event SearchCif 
 
 class SearchCifEvent extends CifEvent {
-  final Map<String, dynamic> request;
-  //  create constractor 
+  final CIFRequest request;
   const SearchCifEvent({required this.request});
-
-  @override
-  List<Object?> get props => [request];
 }

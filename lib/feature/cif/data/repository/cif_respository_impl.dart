@@ -1,37 +1,36 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/api_client.dart';
+import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/core/api/failure.dart';
+import 'package:newsee/core/api/http_connection_failure.dart';
+import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/feature/cif/data/datasource/cif_remote_datasource.dart';
+import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_response_model.dart';
 import 'package:newsee/feature/cif/domain/repository/cif_repository.dart';
 
 class CifRepositoryImpl implements CifRepository {
-  // final CifRemoteDatasource cifRemoteDatasource;
-
-  // CifRepositoryImpl({required this.cifRemoteDatasource});
-
   @override
   Future<AsyncResponseHandler<Failure, CifResponseModel>> searchCif(
-    Map<String, dynamic> req,
+    CIFRequest req,
   ) async {
     try {
       print('CIF Search request payload => $req');
-      final payload =  {
-        "custId": "902534",
-        "uniqueId": "3",
-        "cifId": '121212',
-        "type": "borrower",
-        "token": "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3"
-      };
+      // final payload =  {
+      //   "custId": "902534",
+      //   "uniqueId": "3",
+      //   "cifId": '121212',
+      //   "type": "borrower",
+      //   "token": "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3"
+      // };
+      final payload = req.toJson();
       var response = await CifRemoteDatasource(dio: ApiClient().getDio()).searchCif(payload);
 
-      if (response.data['Success']) {
+      if (response.data[ApiConfig.API_RESPONSE_SUCCESS_KEY]) {
         var cifResponse = CifResponseModel.fromJson(
-          response.data['responseData'],
+          response.data[ApiConfig.API_RESPONSE_RESPONSE_KEY],
         );
         print('ChifResponseModel => ${cifResponse.toString()}');
         return AsyncResponseHandler.right(cifResponse);
@@ -41,19 +40,13 @@ class CifRepositoryImpl implements CifRepository {
         return AsyncResponseHandler.left(AuthFailure(message: errorMessage));
       }
     } on DioException catch (e) {
-      if (e.error is SocketException) {
-        return AsyncResponseHandler.left(
-          AuthFailure(
-            message: "Could not reach server. Please try again later.",
-          ),
-        );
-      }
+      HttpConnectionFailure failure =
+        DioHttpExceptionParser(exception: e).parse();
+        return AsyncResponseHandler.left(failure);
+    } catch (error) {
+      print("cifResponseHandler-> $error");
       return AsyncResponseHandler.left(
-        AuthFailure(message: "Server Error Occurred"),
-      );
-    } on Exception {
-      return AsyncResponseHandler.left(
-        AuthFailure(message: "Unexpected Failure during CIF Search"),
+        HttpConnectionFailure(message: "Unexpected Failure during CIF Search"),
       );
     }
   }

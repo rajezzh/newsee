@@ -1,6 +1,7 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/feature/cif/data/repository/cif_repository.dart';
+import 'package:newsee/feature/cif/data/repository/cif_respository_impl.dart';
+import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 import 'package:newsee/feature/cif/domain/repository/cif_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_response_model.dart';
@@ -9,14 +10,14 @@ part 'cif_state.dart';
 
 final class CifBloc extends Bloc<CifEvent, CifState> {
 
-  final CifRepository cifRepo;
-  CifBloc({required this.cifRepo, required CifState initState}):super(initState) {
+  CifBloc():super(CifState()) {
     on<SearchCifEvent>(_onSearchCif);
   }
 
   Future _onSearchCif(SearchCifEvent event, Emitter<CifState> emit) async {
     emit(state.copyWith(status: CifStatus.loading));
-    final response = await cifRepo.searchCif(event.request);
+    CifRepository dedupeRepository = CifRepositoryImpl();
+    final response = await dedupeRepository.searchCif(event.request);
     if (response.isRight()) {
       emit(
         state.copyWith(
