@@ -62,37 +62,37 @@ class Personal extends StatelessWidget {
                 CustomTextField('middlename', 'Middle Name'),
                 CustomTextField('lastname', 'Last Name'),
                 Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: ReactiveTextField<String>(
-                            formControlName: 'dateofbirth',
-                            validationMessages: {
-                              ValidationMessage.required:
-                                  (error) => 'Date of Birth is required',
-                            },
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: 'Date Of Birth',
-                              suffixIcon: Icon(Icons.calendar_today),
-                            ),
-                            onTap: (control) async {
-                              final DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now().subtract(
-                                  Duration(days: 365 * 18),
-                                ),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now(),
-                              );
-                              if (pickedDate != null) {
-                                final formatted =
-                                    "${pickedDate.day.toString().padLeft(2, '0')}/"
-                                    "${pickedDate.month.toString().padLeft(2, '0')}/"
-                                    "${pickedDate.year}";
-                                form.control('dateofbirth').value = formatted;
-                              }
-                            },
-                          ),
+                  padding: const EdgeInsets.all(12.0),
+                  child: ReactiveTextField<String>(
+                    formControlName: 'dateofbirth',
+                    validationMessages: {
+                      ValidationMessage.required:
+                          (error) => 'Date of Birth is required',
+                    },
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      labelText: 'Date Of Birth',
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                    onTap: (control) async {
+                      final DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now().subtract(
+                          Duration(days: 365 * 18),
                         ),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now(),
+                      );
+                      if (pickedDate != null) {
+                        final formatted =
+                            "${pickedDate.day.toString().padLeft(2, '0')}/"
+                            "${pickedDate.month.toString().padLeft(2, '0')}/"
+                            "${pickedDate.year}";
+                        form.control('dateofbirth').value = formatted;
+                      }
+                    },
+                  ),
+                ),
                 IntegerTextField('primarymobilenumber', 'Primary Mobile Number'),
                 IntegerTextField('secondarymobilenumber', 'Secondary Mobile Number'),
                 CustomTextField('emailid', 'Email ID'),
@@ -112,6 +112,7 @@ class Personal extends StatelessWidget {
                         ),
                         ),
                     onPressed: () {
+                      print("personal Details value ${form.value}");
                       if (form.valid) {
                         final tabController = DefaultTabController.of(context);
                         if (tabController.index < tabController.length - 1) {

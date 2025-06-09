@@ -38,10 +38,11 @@ final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
 final AuthRepository = AuthRepositoryImpl(
   authRemoteDatasource: _authRemoteDatasource,
 );
+
 final routes = GoRouter(
   // initial location changed to test masters feature , to see login page
   // modify the initialLocation
-  initialLocation: AppRouteConstants.LOGIN_PAGE['path'],
+  initialLocation: AppRouteConstants.HOME_PAGE['path'],
 
   routes: <RouteBase>[
     GoRoute(
