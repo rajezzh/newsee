@@ -145,6 +145,10 @@ class Loan extends StatelessWidget {
                         label: 'Type Of Loan',
                         items: state.productSchemeList,
                         onChangeListener: (ProductSchema val) {
+                          form.controls['typeofloan']?.updateValue(
+                            val.optionDesc,
+                          );
+
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
@@ -154,16 +158,25 @@ class Loan extends StatelessWidget {
                         controlName: 'maincategory',
                         label: 'Main Category',
                         items: state.mainCategoryList,
-                        onChangeListener:
-                            (Product val) => context
-                                .read<LoanproductBloc>()
-                                .add(LoanProductDropdownChange(field: val)),
+                        onChangeListener: (Product val) {
+                          form.controls['maincategory']?.updateValue(
+                            val.lsfFacDesc,
+                          );
+
+                          context.read<LoanproductBloc>().add(
+                            LoanProductDropdownChange(field: val),
+                          );
+                        },
                       ),
                       SearchableDropdown(
                         controlName: 'subcategory',
                         label: 'Sub Category',
                         items: state.subCategoryList,
                         onChangeListener: (Product val) {
+                          form.controls['subcategory']?.updateValue(
+                            val.lsfFacDesc,
+                          );
+
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
