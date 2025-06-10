@@ -103,48 +103,11 @@ class Loan extends StatelessWidget {
                               ),
                             );
                           },
-// <<<<<<< custom-card
-                          child: ProductCard(productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
-// =======
-                          child: Card(
-                            margin: EdgeInsets.all(6.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    state.productmasterList[index].prdDesc,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  BuildCard(
-                                    icon: Icons.currency_rupee_rounded,
-                                    label: "Amount From",
-                                    value:
-                                        state
-                                            .productmasterList[index]
-                                            .prdamtFromRange,
-                                  ),
-                                  BuildCard(
-                                    icon: Icons.currency_rupee_rounded,
-                                    label: "Amount From",
-                                    value:
-                                        state
-                                            .productmasterList[index]
-                                            .prdamtToRange,
-                                  ),
-                                ],
-                              ),
-                            ),
+                          child: ProductCard(
+                            productDescription: product.prdDesc,
+                            amountFrom: product.prdamtFromRange,
+                            amountTo: product.prdamtToRange,
                           ),
-// >>>>>>> main
                         ),
                       );
                     },
@@ -216,56 +179,14 @@ class Loan extends StatelessWidget {
                         children:
                             state.selectedProduct != null
                                 ? [
-// <<<<<<< custom-card
-                                  ProductCard(productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
-// =======
-                                  Card(
-                                    margin: EdgeInsets.all(6.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              state.selectedProduct?.prdDesc
-                                                  as String,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            BuildCard(
-                                              icon:
-                                                  Icons.currency_rupee_rounded,
-                                              label: "Amount From",
-                                              value:
-                                                  state
-                                                          .selectedProduct
-                                                          ?.prdamtFromRange
-                                                      as String,
-                                            ),
-                                            BuildCard(
-                                              icon:
-                                                  Icons.currency_rupee_rounded,
-                                              label: "Amount To",
-                                              value:
-                                                  state
-                                                          .selectedProduct
-                                                          ?.prdamtToRange
-                                                      as String,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                  ProductCard(
+                                    productDescription:
+                                        state.selectedProduct!.prdDesc,
+                                    amountFrom:
+                                        state.selectedProduct!.prdamtFromRange,
+                                    amountTo:
+                                        state.selectedProduct!.prdamtToRange,
                                   ),
-// >>>>>>> main
                                 ]
                                 : [Text('No product')],
                       ),
@@ -311,4 +232,3 @@ class Loan extends StatelessWidget {
     );
   }
 }
-
