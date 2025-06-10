@@ -189,17 +189,17 @@ class LoginpageWithAC extends StatelessWidget {
 
                           ReactiveTextField(
                             formControlName: 'password',
-                            obscureText: isPasswordHidden,
+                            obscureText: state.isPasswordHidden,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  isPasswordHidden
+                                  state.isPasswordHidden
                                       ? Icons.visibility
                                       : Icons.visibility_off,
                                 ),
                                 onPressed: () {
-                                  context.read().add(PasswordSecure());
+                                  context.read<AuthBloc>().add(PasswordSecure());
                                 },
                               ),
                               border: OutlineInputBorder(

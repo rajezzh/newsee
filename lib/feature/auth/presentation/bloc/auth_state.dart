@@ -40,7 +40,7 @@ class AuthState extends Equatable {
       authStatus: status ?? authStatus,
       authResponseModel: authResponseModel ?? this.authResponseModel,
       errorMessage: errorMessage ?? this.errorMessage,
-      isPasswordHidden: isPasswordShown ?? this.isPasswordHidden,
+      isPasswordHidden: isPasswordHidden ?? this.isPasswordHidden,
     );
   }
 
