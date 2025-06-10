@@ -7,6 +7,7 @@ import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
+import 'package:newsee/widgets/productcard.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -101,42 +102,7 @@ class Loan extends StatelessWidget {
                               ),
                             );
                           },
-                          child: Card(
-                            margin: EdgeInsets.all(6.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    state.productmasterList[index].prdDesc,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10),
-                                  BuildCard(
-                                    icon:Icons.currency_rupee_rounded,
-                                    label: "Amount From",
-                                    value:  state
-                                        .productmasterList[index]
-                                        .prdamtFromRange,
-                                  ),
-                                  BuildCard(
-                                    icon:Icons.currency_rupee_rounded,
-                                    label: "Amount From",
-                                    value:state
-                                        .productmasterList[index]
-                                        .prdamtToRange,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          child: ProductCard(productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
                         ),
                       );
                     },
@@ -207,48 +173,7 @@ class Loan extends StatelessWidget {
                         children:
                             state.selectedProduct != null
                                 ? [
-                                  Card(
-                                    margin: EdgeInsets.all(6.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              state.selectedProduct?.prdDesc
-                                                  as String,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            BuildCard(
-                                              icon: Icons.currency_rupee_rounded,
-                                              label:"Amount From",
-                                              value:state
-                                                      .selectedProduct
-                                                      ?.prdamtFromRange
-                                                  as String,
-                                            ),
-                                            BuildCard(
-                                              icon:Icons.currency_rupee_rounded,
-                                              label:"Amount To",
-                                              value:state
-                                                      .selectedProduct
-                                                      ?.prdamtToRange
-                                                  as String,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  ProductCard(productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
                                 ]
                                 : [Text('No product')],
                       ),
@@ -296,39 +221,5 @@ class Loan extends StatelessWidget {
 }
 
 
-/*   @author   :  Sandhiya A  10/06/2025
-     @desc     :  Create a dynamic UI to display an icon, a key, and a value in a single row."
-  */
-  
-class BuildCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  BuildCard({required this.icon, required this.label, required this.value});
-  @override
-  Widget build (BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.1,
-          child: Icon(icon, color: Colors.teal),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.25,
-          child: Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
-          child: Text(value, style: const TextStyle(fontSize: 13)),
-        ),
-      ],
-    ),
-  );
-  }
-}
+
+
