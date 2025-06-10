@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/drop_down.dart';
@@ -34,87 +35,6 @@ class Personal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-// <<<<<<< new-custom-text-field
-      appBar: AppBar(title: Text("Personal Details"),automaticallyImplyLeading: false,),
-      body: ReactiveForm(
-        formGroup: form,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children:[
-                SearchableDropdown(
-                  controlName: 'title',
-                  label: 'Title',
-                  items: [
-                    'COLONEL',
-                    'DR',
-                    'LT.COL',
-                    'M/S',
-                    'MAJOR',
-                    'MASTER(MINOR)',
-                    'MESSERS',
-                    'MIGRATION DEFAULT',
-                    'MISS',
-                    'MOHAMMAD',
-                    'MR',
-                    'MRS',
-                    'MX',
-                    'SHEIKH',
-                    'SIR',
-                  ],
-                ),
-                CustomTextField(controlName: 'firstname',label: 'First Name'),
-                CustomTextField(controlName: 'middlename',label: 'Middle Name'),
-                CustomTextField(controlName: 'lastname',label: 'Last Name'),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: ReactiveTextField<String>(
-                    formControlName: 'dateofbirth',
-                    validationMessages: {
-                      ValidationMessage.required:
-                          (error) => 'Date of Birth is required',
-                    },
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'Date Of Birth',
-                      suffixIcon: Icon(Icons.calendar_today),
-                    ),
-                    onTap: (control) async {
-                      final DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now().subtract(
-                          Duration(days: 365 * 18),
-                        ),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      );
-                      if (pickedDate != null) {
-                        final formatted =
-                            "${pickedDate.day.toString().padLeft(2, '0')}/"
-                            "${pickedDate.month.toString().padLeft(2, '0')}/"
-                            "${pickedDate.year}";
-                        form.control('dateofbirth').value = formatted;
-                      }
-                    },
-                  ),
-                ),
-                IntegerTextField('primarymobilenumber', 'Primary Mobile Number'),
-                IntegerTextField('secondarymobilenumber', 'Secondary Mobile Number'),
-                CustomTextField(controlName: 'emailid',label: 'Email Id'),
-                CustomTextField(controlName: 'panno',label: 'Pan No'),
-                IntegerTextField('aadhaarno', 'Aadhaar No'),
-                IntegerTextField('loanamount', 'Loan Amount Required'),
-                Dropdown(controlName: 'natureofactivity', label: 'Nature Of Activity', items: []),
-                SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-// =======
       appBar: AppBar(
         title: Text("Personal Details"),
         automaticallyImplyLeading: false,
@@ -138,10 +58,23 @@ class Personal extends StatelessWidget {
                             state.lovList!
                                 .where((v) => v.Header == 'Title')
                                 .toList(),
+                        onChangeListener:
+                            (Lov val) => form.controls['title']?.updateValue(
+                              val.optvalue,
+                            ),
                       ),
-                      CustomTextField('firstname', 'First Name'),
-                      CustomTextField('middlename', 'Middle Name'),
-                      CustomTextField('lastname', 'Last Name'),
+                      CustomTextField(
+                        controlName: 'firstname',
+                        label: 'First Name',
+                      ),
+                      CustomTextField(
+                        controlName: 'middlename',
+                        label: 'Middle Name',
+                      ),
+                      CustomTextField(
+                        controlName: 'lastname',
+                        label: 'Last Name',
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: ReactiveTextField<String>(
@@ -172,7 +105,7 @@ class Personal extends StatelessWidget {
                               form.control('dateofbirth').value = formatted;
                             }
                           },
-// >>>>>>> personal-details
+                          // >>>>>>> personal-details
                         ),
                       ),
                       IntegerTextField(
@@ -183,8 +116,11 @@ class Personal extends StatelessWidget {
                         'secondarymobilenumber',
                         'Secondary Mobile Number',
                       ),
-                      CustomTextField('emailid', 'Email ID'),
-                      CustomTextField('panno', 'PAN No'),
+                      CustomTextField(
+                        controlName: 'emailid',
+                        label: 'Email Id',
+                      ),
+                      CustomTextField(controlName: 'panno', label: 'Pan No'),
                       IntegerTextField('aadhaarno', 'Aadhaar No'),
                       IntegerTextField('loanamount', 'Loan Amount Required'),
                       SearchableDropdown(
@@ -194,6 +130,9 @@ class Personal extends StatelessWidget {
                             state.lovList!
                                 .where((v) => v.Header == 'NatureOfActivity')
                                 .toList(),
+                        onChangeListener:
+                            (Lov val) => form.controls['natureofactivity']
+                                ?.updateValue(val.optvalue),
                       ),
                       SizedBox(height: 20),
                       Center(
@@ -211,6 +150,7 @@ class Personal extends StatelessWidget {
                           ),
                           onPressed: () {
                             print("personal Details value ${form.value}");
+
                             if (form.valid) {
                               final tabController = DefaultTabController.of(
                                 context,

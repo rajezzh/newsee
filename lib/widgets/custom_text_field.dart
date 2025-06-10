@@ -7,7 +7,6 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-// <<<<<<< new-custom-text-field
 class CustomTextField extends StatelessWidget {
   final String controlName;
   final String label;
@@ -37,38 +36,6 @@ class CustomTextField extends StatelessWidget {
                 TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
               ],
             ),
-// =======
-Widget CustomTextField(String controlName, String label, [bool? mantatory]) {
-  bool setUpperCase() {
-    if (controlName == 'pan') return true;
-    return false;
-  }
-
-  return Padding(
-    padding: const EdgeInsets.all(16),
-    child: ReactiveTextField<String>(
-      formControlName: controlName,
-      textCapitalization:
-          setUpperCase()
-              ? TextCapitalization.characters
-              : TextCapitalization.none,
-      validationMessages: {
-        ValidationMessage.required: (error) => '$label is required',
-        ValidationMessage.email: (error) => 'Enter valid $label',
-        ValidationMessage.pattern: (error) => 'Enter valid $label',
-      },
-      decoration: InputDecoration(
-        label: RichText(
-          text: TextSpan(
-            text: label,
-            style: TextStyle(color: Colors.black, fontSize: 16),
-            children: [
-              TextSpan(
-                text: mantatory == null ? ' *' : '',
-                style: TextStyle(color: Colors.red),
-              ),
-            ],
-// >>>>>>> personal-details
           ),
         ),
       ),
