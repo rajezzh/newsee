@@ -58,9 +58,9 @@ class Personal extends StatelessWidget {
                     'SIR',
                   ],
                 ),
-                CustomTextField('firstname', 'First Name'),
-                CustomTextField('middlename', 'Middle Name'),
-                CustomTextField('lastname', 'Last Name'),
+                CustomTextField(controlName: 'firstname',label: 'First Name'),
+                CustomTextField(controlName: 'middlename',label: 'Middle Name'),
+                CustomTextField(controlName: 'lastname',label: 'Last Name'),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: ReactiveTextField<String>(
@@ -95,8 +95,8 @@ class Personal extends StatelessWidget {
                 ),
                 IntegerTextField('primarymobilenumber', 'Primary Mobile Number'),
                 IntegerTextField('secondarymobilenumber', 'Secondary Mobile Number'),
-                CustomTextField('emailid', 'Email ID'),
-                CustomTextField('panno', 'PAN No'),
+                CustomTextField(controlName: 'emailid',label: 'Email Id'),
+                CustomTextField(controlName: 'panno',label: 'Pan No'),
                 IntegerTextField('aadhaarno', 'Aadhaar No'),
                 IntegerTextField('loanamount', 'Loan Amount Required'),
                 Dropdown(controlName: 'natureofactivity', label: 'Nature Of Activity', items: []),
