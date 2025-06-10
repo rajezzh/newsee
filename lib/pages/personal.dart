@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
@@ -15,22 +16,38 @@ class Personal extends StatelessWidget {
 
   final form = FormGroup({
     'title': FormControl<String>(validators: [Validators.required]),
-    'firstname': FormControl<String>(validators: [Validators.required]),
-    'middlename': FormControl<String>(validators: [Validators.required]),
-    'lastname': FormControl<String>(validators: [Validators.required]),
-    'dateofbirth': FormControl<String>(validators: [Validators.required]),
-    'primarymobilenumber': FormControl<String>(
+    'firstName': FormControl<String>(validators: [Validators.required]),
+    'middleName': FormControl<String>(validators: [Validators.required]),
+    'lastName': FormControl<String>(validators: [Validators.required]),
+    'dob': FormControl<String>(validators: [Validators.required]),
+    'primaryMobileNumber': FormControl<String>(
       validators: [Validators.required],
     ),
-    'secondarymobilenumber': FormControl<String>(
+    'secondaryMobileNumber': FormControl<String>(
       validators: [Validators.required],
     ),
-    'emailid': FormControl<String>(validators: [Validators.email]),
-    'panno': FormControl<String>(validators: [Validators.required]),
-    'aadhaarno': FormControl<String>(validators: [Validators.required]),
-    'loanamount': FormControl<String>(validators: [Validators.required]),
-    'natureofactivity': FormControl<String>(validators: [Validators.required]),
+    'email': FormControl<String>(validators: [Validators.email]),
+    'panNumber': FormControl<String>(validators: [Validators.required]),
+    'aadharRefNo': FormControl<String>(validators: [Validators.required]),
+    'loanAmountRequested': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'natureOfActivity': FormControl<String>(validators: [Validators.required]),
   });
+
+  void showSnack(BuildContext context, {required String message}) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void goToNextTab(BuildContext context) {
+    showSnack(context, message: 'Personal Details Saved Successfully');
+    final tabController = DefaultTabController.of(context);
+    if (tabController.index < tabController.length - 1) {
+      tabController.animateTo(tabController.index + 1);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +58,12 @@ class Personal extends StatelessWidget {
       ),
       body: BlocConsumer<PersonalDetailsBloc, PersonalDetailsState>(
         listener: (context, state) {
-          print('personaldetail::BlocConsumer:listen => ${state.lovList}');
+          print(
+            'personaldetail::BlocConsumer:listen => ${state.lovList} ${state.personalData} ${state.status?.name}',
+          );
+          if (state.status == SaveStatus.success) {
+            goToNextTab(context);
+          }
         },
         builder:
             (context, state) => ReactiveForm(
@@ -64,21 +86,21 @@ class Personal extends StatelessWidget {
                             ),
                       ),
                       CustomTextField(
-                        controlName: 'firstname',
+                        controlName: 'firstName',
                         label: 'First Name',
                       ),
                       CustomTextField(
-                        controlName: 'middlename',
+                        controlName: 'middleName',
                         label: 'Middle Name',
                       ),
                       CustomTextField(
-                        controlName: 'lastname',
+                        controlName: 'lastName',
                         label: 'Last Name',
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: ReactiveTextField<String>(
-                          formControlName: 'dateofbirth',
+                          formControlName: 'dob',
                           validationMessages: {
                             ValidationMessage.required:
                                 (error) => 'Date of Birth is required',
@@ -102,36 +124,38 @@ class Personal extends StatelessWidget {
                                   "${pickedDate.day.toString().padLeft(2, '0')}/"
                                   "${pickedDate.month.toString().padLeft(2, '0')}/"
                                   "${pickedDate.year}";
-                              form.control('dateofbirth').value = formatted;
+                              form.control('dob').value = formatted;
                             }
                           },
-                          // >>>>>>> personal-details
                         ),
                       ),
                       IntegerTextField(
-                        'primarymobilenumber',
+                        'primaryMobileNumber',
                         'Primary Mobile Number',
                       ),
                       IntegerTextField(
-                        'secondarymobilenumber',
+                        'secondaryMobileNumber',
                         'Secondary Mobile Number',
                       ),
+                      CustomTextField(controlName: 'email', label: 'Email Id'),
                       CustomTextField(
-                        controlName: 'emailid',
-                        label: 'Email Id',
+                        controlName: 'panNumber',
+                        label: 'Pan No',
                       ),
-                      CustomTextField(controlName: 'panno', label: 'Pan No'),
-                      IntegerTextField('aadhaarno', 'Aadhaar No'),
-                      IntegerTextField('loanamount', 'Loan Amount Required'),
+                      IntegerTextField('aadharRefNo', 'Aadhaar No'),
+                      IntegerTextField(
+                        'loanAmountRequested',
+                        'Loan Amount Required',
+                      ),
                       SearchableDropdown(
-                        controlName: 'natureofactivity',
+                        controlName: 'natureOfActivity',
                         label: 'Nature of Activity',
                         items:
                             state.lovList!
                                 .where((v) => v.Header == 'NatureOfActivity')
                                 .toList(),
                         onChangeListener:
-                            (Lov val) => form.controls['natureofactivity']
+                            (Lov val) => form.controls['natureOfActivity']
                                 ?.updateValue(val.optvalue),
                       ),
                       SizedBox(height: 20),
@@ -152,17 +176,28 @@ class Personal extends StatelessWidget {
                             print("personal Details value ${form.value}");
 
                             if (form.valid) {
-                              final tabController = DefaultTabController.of(
-                                context,
+                              PersonalData personalData = PersonalData.fromMap(
+                                form.value,
                               );
-                              if (tabController.index <
-                                  tabController.length - 1) {
-                                tabController.animateTo(
-                                  tabController.index + 1,
-                                );
-                              }
+                              context.read<PersonalDetailsBloc>().add(
+                                PersonalDetailsSaveEvent(
+                                  personalData: personalData,
+                                ),
+                              );
                             } else {
                               form.markAllAsTouched();
+                              showSnack(
+                                context,
+                                message:
+                                    'Please Check Error Message and Enter Valid Data',
+                              );
+                              // ScaffoldMessenger.of(context).showSnackBar(
+                              //   SnackBar(
+                              //     content: Text(
+                              //       'Please Check Error Message and Enter Valid Data ',
+                              //     ),
+                              //   ),
+                              // );
                             }
                           },
                           child: Text('Next'),

@@ -25,4 +25,7 @@ class PersonalDetailsInitEvent extends PersonalDetailsEvent {
   PersonalDetailsInitEvent({required this.cifResponseModel});
 }
 
-class PersonalDetailsSave extends PersonalDetailsEvent {}
+class PersonalDetailsSaveEvent extends PersonalDetailsEvent {
+  final PersonalData? personalData;
+  PersonalDetailsSaveEvent({required this.personalData});
+}
