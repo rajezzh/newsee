@@ -94,6 +94,7 @@ class Loan extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.all(5.0),
                         child: InkWell(
+                          // card widget for showing products
                           onTap: () {
                             ProductMaster selectedProduct = product;
                             ctxt.read<LoanproductBloc>().add(
@@ -102,7 +103,48 @@ class Loan extends StatelessWidget {
                               ),
                             );
                           },
+// <<<<<<< custom-card
                           child: ProductCard(productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
+// =======
+                          child: Card(
+                            margin: EdgeInsets.all(6.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    state.productmasterList[index].prdDesc,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  BuildCard(
+                                    icon: Icons.currency_rupee_rounded,
+                                    label: "Amount From",
+                                    value:
+                                        state
+                                            .productmasterList[index]
+                                            .prdamtFromRange,
+                                  ),
+                                  BuildCard(
+                                    icon: Icons.currency_rupee_rounded,
+                                    label: "Amount From",
+                                    value:
+                                        state
+                                            .productmasterList[index]
+                                            .prdamtToRange,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+// >>>>>>> main
                         ),
                       );
                     },
@@ -169,11 +211,61 @@ class Loan extends StatelessWidget {
                           );
                         },
                       ),
+
                       Column(
                         children:
                             state.selectedProduct != null
                                 ? [
+// <<<<<<< custom-card
                                   ProductCard(productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
+// =======
+                                  Card(
+                                    margin: EdgeInsets.all(6.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: SizedBox(
+                                      width: double.infinity,
+                                      child: Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              state.selectedProduct?.prdDesc
+                                                  as String,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            BuildCard(
+                                              icon:
+                                                  Icons.currency_rupee_rounded,
+                                              label: "Amount From",
+                                              value:
+                                                  state
+                                                          .selectedProduct
+                                                          ?.prdamtFromRange
+                                                      as String,
+                                            ),
+                                            BuildCard(
+                                              icon:
+                                                  Icons.currency_rupee_rounded,
+                                              label: "Amount To",
+                                              value:
+                                                  state
+                                                          .selectedProduct
+                                                          ?.prdamtToRange
+                                                      as String,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+// >>>>>>> main
                                 ]
                                 : [Text('No product')],
                       ),
@@ -219,7 +311,4 @@ class Loan extends StatelessWidget {
     );
   }
 }
-
-
-
 

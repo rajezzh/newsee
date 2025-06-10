@@ -17,8 +17,8 @@ class Address extends StatelessWidget {
     'address2': FormControl<String>(validators: [Validators.required]),
     'address3': FormControl<String>(validators: [Validators.required]),
     'state': FormControl<String>(validators: [Validators.required]),
-    'citydistrict': FormControl<String>(validators: [Validators.required]),
-    'area': FormControl<String>(validators: [Validators.required]),
+    'city': FormControl<String>(validators: [Validators.required]),
+    'district': FormControl<String>(validators: [Validators.required]),
     'pincode': FormControl<String>(validators: [Validators.required]),
   });
 
@@ -38,22 +38,22 @@ class Address extends StatelessWidget {
                   label: 'Address Type',
                   items: ['Present','Permanent'],
                 ),
-                CustomTextField('address1','Address 1'),
-                CustomTextField('address2','Address 2'),
-                CustomTextField('address3','Address 3'),
+                CustomTextField(controlName: 'address1',label: 'Address 1'),
+                CustomTextField(controlName: 'address2',label: 'Address 2'),
+                CustomTextField(controlName: 'address3',label: 'Address 3'),
                 SearchableDropdown(
                   controlName: 'state',
                   label: 'State',
                   items: ['Tamil Nadu','Kerala'],
                 ),
                 SearchableDropdown(
-                  controlName: 'citydistrict',
-                  label: 'City/District',
+                  controlName: 'city',
+                  label: 'City',
                   items: ['Chennai','Madurai'],
                 ),
                 SearchableDropdown(
-                  controlName: 'area',
-                  label: 'Area',
+                  controlName: 'district',
+                  label: 'District',
                   items: ['Sholinganallur','Navalur'],
                 ),
                 IntegerTextField('pincode', 'Pin Code'),
@@ -71,6 +71,7 @@ class Address extends StatelessWidget {
                         ),
                         ),
                     onPressed: () {
+                      print("Address Details value ${form.value}");
                       if (form.valid) {
                         final tabController = DefaultTabController.of(context);
                         if (tabController.index < tabController.length - 1) {
