@@ -53,7 +53,7 @@ class IncomeDetailsPage extends StatelessWidget {
                 ),
                 IntegerTextField('netincome', 'Net Income(₹) (Per Year)'),
                 IntegerTextField('networth', 'Networth of the Applicant(₹)'),
-                CustomTextField('company', 'Company'),
+                CustomTextField(controlName: 'company',label: 'Company'),
                 IntegerTextField('totalyears', 'Total Years of Employment'),
                 Center(
                   child: ElevatedButton(
