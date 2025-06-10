@@ -7,6 +7,7 @@ import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
+import 'package:newsee/widgets/productcard.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -102,6 +103,9 @@ class Loan extends StatelessWidget {
                               ),
                             );
                           },
+// <<<<<<< custom-card
+                          child: ProductCard(productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
+// =======
                           child: Card(
                             margin: EdgeInsets.all(6.0),
                             shape: RoundedRectangleBorder(
@@ -140,6 +144,7 @@ class Loan extends StatelessWidget {
                               ),
                             ),
                           ),
+// >>>>>>> main
                         ),
                       );
                     },
@@ -211,6 +216,9 @@ class Loan extends StatelessWidget {
                         children:
                             state.selectedProduct != null
                                 ? [
+// <<<<<<< custom-card
+                                  ProductCard(productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
+// =======
                                   Card(
                                     margin: EdgeInsets.all(6.0),
                                     shape: RoundedRectangleBorder(
@@ -257,6 +265,7 @@ class Loan extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+// >>>>>>> main
                                 ]
                                 : [Text('No product')],
                       ),
@@ -303,39 +312,3 @@ class Loan extends StatelessWidget {
   }
 }
 
-/*   @author   :  Sandhiya A  10/06/2025
-     @desc     :  Create a dynamic UI to display an icon, a key, and a value in a single row."
-  */
-
-class BuildCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  BuildCard({required this.icon, required this.label, required this.value});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.1,
-            child: Icon(icon, color: Colors.teal),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.25,
-            child: Text(
-              "$label: ",
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.3,
-            child: Text(value, style: const TextStyle(fontSize: 13)),
-          ),
-        ],
-      ),
-    );
-  }
-}
