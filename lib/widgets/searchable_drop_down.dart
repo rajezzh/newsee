@@ -46,8 +46,7 @@ class SearchableDropdown<T> extends StatelessWidget {
     }
   }
 
-  _onChangeListener(val) => onChangeListener!(val);
-
+  _onChangeListener(T? val) => onChangeListener!(val);
   @override
   Widget build(BuildContext context) {
     return ReactiveFormField<String, T>(
@@ -55,6 +54,7 @@ class SearchableDropdown<T> extends StatelessWidget {
       validationMessages: {
         ValidationMessage.required: (error) => '$label is required',
       },
+
       builder: (field) {
         return Padding(
           padding: const EdgeInsets.all(12),
@@ -95,7 +95,13 @@ class SearchableDropdown<T> extends StatelessWidget {
                 ),
               ),
             ),
-            onChanged: (val) => _onChangeListener(val),
+            onChanged: (val) {
+              if (val != null) {
+                print('field value => ${itemvalueMapper(val)}');
+              }
+
+              _onChangeListener(val);
+            },
           ),
         );
       },
