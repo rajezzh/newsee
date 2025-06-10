@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/app_forms.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/cif/presentation/page/cif_search.dart';
-import 'package:newsee/feature/dedupe/presentation/page/dedup_search.dart';
+import 'package:newsee/feature/dedupe/presentation/page/dedupe_search.dart';
+import 'package:newsee/widgets/response_widget.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DedupeView extends StatelessWidget {
@@ -95,6 +96,7 @@ class DedupeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool? selectedValue;
+    List<Map<String, dynamic>> dataList;
 
     return Scaffold(
       appBar: AppBar(
@@ -103,7 +105,8 @@ class DedupeView extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => DedupeBloc(),
-        child: Padding(
+        child: 
+        Padding(
           padding: const EdgeInsets.all(20.0),
           child: StatefulBuilder(
             builder:
