@@ -7,7 +7,11 @@ class AppConstants {
   );
 
   static final RegExp PAN_PATTERN = RegExp(
-    '[A-Z]{4}P{1}[0-9]{4}[A-Z]{1}',
+    r'^[A-Z]{5}[0-9]{4}[A-Z]$'
+  );
+
+  static final RegExp AADHAAR_PATTERN = RegExp(
+    '[0-9]{12}',
   );
 
   static final RegExp PATTER_ONLYALPHABET = RegExp(r'(\w+)');

@@ -83,10 +83,27 @@ class PersonalDetailsPage extends StatelessWidget {
                     'SIR',
                   ],
                 ),
-                IntegerTextField('mobilenumber', 'Mobile Number'),
-                CustomTextField('emailid', 'Email Id'),
-                CustomTextField('address', 'Address'),
-                CustomTextField('addressline1', 'Address Line 1'),
+                IntegerTextField(
+                  controlName: 'mobilenumber', 
+                  label: 'Mobile Number',
+                  mantatory: true,
+                  maxlength: 10
+                ),
+                CustomTextField(
+                  controlName: 'emailid', 
+                  label: 'Email Id',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'address',
+                  label: 'Address',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'addressline1',
+                  label: 'Address Line 1',
+                  mantatory: true
+                ),
                 SearchableDropdown(
                   controlName: 'state',
                   label: 'State',
@@ -97,8 +114,11 @@ class PersonalDetailsPage extends StatelessWidget {
                   label: 'City',
                   items: ['Chennai', 'Madurai', 'Bangalore'],
                 ),
-                IntegerTextField('pincode', 'Pincode'),
-
+                IntegerTextField(
+                  controlName: 'pincode', 
+                  label: 'Pincode',
+                  mantatory: true
+                ),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: Row(

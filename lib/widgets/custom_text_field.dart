@@ -7,18 +7,20 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-Widget CustomTextField(String controlName, String label, [bool? mantatory]) {
-
-   bool setUpperCase() {
-    if (controlName == 'pan') return true;
-    return false;
-  }
+Widget CustomTextField({
+  required String controlName, 
+  required String label, 
+  required bool mantatory,
+  bool? autoCapitalize,
+  int? maxlength
+}) {
 
   return Padding(
     padding: const EdgeInsets.all(16),
     child: ReactiveTextField<String>( 
       formControlName: controlName,
-      textCapitalization: setUpperCase() ? TextCapitalization.characters : TextCapitalization.none,
+      maxLength: maxlength,
+      textCapitalization: (autoCapitalize != null && autoCapitalize ) ? TextCapitalization.characters : TextCapitalization.none,
       validationMessages: {
         ValidationMessage.required: (error) => '$label is required',
         ValidationMessage.email: (error) => 'Enter valid $label',
@@ -30,7 +32,7 @@ Widget CustomTextField(String controlName, String label, [bool? mantatory]) {
             text: label,
             style: TextStyle(color: Colors.black, fontSize: 16),
             children: [
-              TextSpan(text: mantatory == null ? ' *' : '', style: TextStyle(color: Colors.red)),
+              TextSpan(text: mantatory ? ' *' : '', style: TextStyle(color: Colors.red)),
             ],
           ),
         ),

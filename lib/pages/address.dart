@@ -38,9 +38,21 @@ class Address extends StatelessWidget {
                   label: 'Address Type',
                   items: ['Present','Permanent'],
                 ),
-                CustomTextField('address1','Address 1'),
-                CustomTextField('address2','Address 2'),
-                CustomTextField('address3','Address 3'),
+                CustomTextField(
+                  controlName: 'address1',
+                  label: 'Address 1',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'address2',
+                  label: 'Address 2',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'address3',
+                  label: 'Address 3',
+                  mantatory: true
+                ),
                 SearchableDropdown(
                   controlName: 'state',
                   label: 'State',
@@ -56,7 +68,12 @@ class Address extends StatelessWidget {
                   label: 'Area',
                   items: ['Sholinganallur','Navalur'],
                 ),
-                IntegerTextField('pincode', 'Pin Code'),
+                IntegerTextField(
+                  controlName: 'pincode', 
+                  label: 'Pin Code',
+                  mantatory: true,
+                  maxlength: 6
+                ),
                 SizedBox(height: 20),
                 // ElevatedButton(onPressed: () {}, child: Text("ADD")),
                 // SizedBox(height: 50),

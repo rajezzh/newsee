@@ -32,8 +32,16 @@ class KycPage extends StatelessWidget {
                   label: 'Applicant Type',
                   items: ['', ''],
                 ),
-                CustomTextField('panno', 'PAN No'),
-                IntegerTextField('aadhaarno', 'Aadhaar No'),
+                CustomTextField(
+                  controlName: 'panno', 
+                  label: 'PAN No',
+                  mantatory: true
+                ),
+                IntegerTextField(
+                  controlName: 'aadhaarno', 
+                  label: 'Aadhaar No',
+                  mantatory: true
+                ),
                 Dropdown(
                   controlName: 'otheridproof',
                   label: 'Other ID Proof',
@@ -43,8 +51,11 @@ class KycPage extends StatelessWidget {
                   formControlName: 'otheridproof',
                   builder: (context, control, child) {
                     return control.value != null && control.value!.isNotEmpty
-                        ? IntegerTextField('otheridno', 'Other ID No')
-                        : SizedBox.shrink();
+                      ? IntegerTextField(
+                        controlName: 'otheridno', 
+                        label: 'Other ID No',
+                        mantatory: true
+                        ) : SizedBox.shrink();
                   },
                 ),
                 Center(

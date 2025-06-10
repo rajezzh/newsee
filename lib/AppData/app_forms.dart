@@ -23,9 +23,11 @@ class AppForms {
     'title': FormControl<String>(validators: [Validators.required]),
     'firstname': FormControl<String>(validators: [Validators.required]),
     'lastname': FormControl<String>(validators: [Validators.required]),
-    'mobilenumber': FormControl<String>(validators: []),
+    'mobilenumber': FormControl<String>(validators: [Validators.maxLength(10), Validators.minLength(10)]),
     'pan': FormControl<String>(validators: [Validators.pattern(AppConstants.PAN_PATTERN)]),
-    'aadhaar': FormControl<String>(validators: [Validators.required]),
+    'aadhaar': FormControl<String>(validators: [
+      Validators.required, Validators.maxLength(12), Validators.minLength(12),
+      Validators.pattern(AppConstants.AADHAAR_PATTERN)]),
   });
 
 

@@ -114,7 +114,11 @@ class CIFSearch extends StatelessWidget {
                         ),
                         Column(
                           children: [
-                            IntegerTextField('cifid', 'CIF ID'),
+                            IntegerTextField(
+                              controlName: 'cifid', 
+                              label: 'CIF ID',
+                              mantatory: true,
+                            ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Color.fromARGB(255, 3, 9, 110),

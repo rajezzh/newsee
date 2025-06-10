@@ -58,9 +58,21 @@ class Personal extends StatelessWidget {
                     'SIR',
                   ],
                 ),
-                CustomTextField('firstname', 'First Name'),
-                CustomTextField('middlename', 'Middle Name'),
-                CustomTextField('lastname', 'Last Name'),
+                CustomTextField(
+                  controlName: 'firstname', 
+                  label: 'First Name',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'middlename',
+                  label: 'Middle Name',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'lastname',
+                  label: 'Last Name',
+                  mantatory: true
+                ),
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: ReactiveTextField<String>(
@@ -93,13 +105,44 @@ class Personal extends StatelessWidget {
                     },
                   ),
                 ),
-                IntegerTextField('primarymobilenumber', 'Primary Mobile Number'),
-                IntegerTextField('secondarymobilenumber', 'Secondary Mobile Number'),
-                CustomTextField('emailid', 'Email ID'),
-                CustomTextField('panno', 'PAN No'),
-                IntegerTextField('aadhaarno', 'Aadhaar No'),
-                IntegerTextField('loanamount', 'Loan Amount Required'),
-                Dropdown(controlName: 'natureofactivity', label: 'Nature Of Activity', items: []),
+                IntegerTextField(
+                  controlName: 'primarymobilenumber',
+                  label: 'Primary Mobile Number',
+                  mantatory: true,
+                  maxlength: 10
+                ),
+                IntegerTextField(
+                  controlName: 'secondarymobilenumber',
+                  label: 'Secondary Mobile Number',
+                  mantatory: true,
+                  maxlength: 10
+                ),
+                CustomTextField(
+                  controlName: 'emailid',
+                  label: 'Email ID',
+                  mantatory: true
+                ),
+                CustomTextField(
+                  controlName: 'panno', 
+                  label: 'PAN No',
+                  mantatory: true
+                ),
+                IntegerTextField(
+                  controlName: 'aadhaarno',
+                  label: 'Aadhaar No',
+                  mantatory: true,
+                  maxlength: 12,
+                ),
+                IntegerTextField(
+                  controlName: 'loanamount', 
+                  label: 'Loan Amount Required',
+                  mantatory: true
+                ),
+                Dropdown(
+                  controlName: 'natureofactivity', 
+                  label: 'Nature Of Activity', 
+                  items: []
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(

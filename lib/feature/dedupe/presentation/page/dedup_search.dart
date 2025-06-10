@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:newsee/feature/dedupe/domain/model/deduperequest.dart';
 // import 'package:newsee/feature/dedupe/domain/repositoy/deduperepository.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
@@ -10,7 +9,6 @@ import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/response_widget.dart';
 // import 'package:newsee/widgets/response_widget.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:newsee/widgets/build_in_row.dart';
 
 class DedupeSearch extends StatelessWidget {
   final FormGroup dedupeForm;
@@ -86,11 +84,37 @@ class DedupeSearch extends StatelessWidget {
                             label: 'Title',
                             items: ['Mr', 'Mrs', 'Miss', 'Others'],
                           ),
-                          CustomTextField('firstname', 'First Name'),
-                          CustomTextField('lastname', 'Last Name'),
-                          IntegerTextField('mobilenumber', 'Mobile Number', false),
-                          CustomTextField('pan', 'PAN Number', false),
-                          IntegerTextField('aadhaar', 'Aadhaar Number'),
+                          CustomTextField(
+                            controlName: 'firstname',
+                            label: 'First Name',
+                            mantatory: true
+                          ),
+                          CustomTextField(
+                            controlName: 'lastname', 
+                            label: 'Last Name',
+                            mantatory: true
+                          ),
+                          IntegerTextField(
+                            controlName: 'mobilenumber', 
+                            label: 'Mobile Number', 
+                            mantatory: false,
+                            maxlength: 10,
+                            minlength: 10,
+                          ),
+                          CustomTextField(
+                            controlName: 'pan', 
+                            label: 'PAN Number', 
+                            mantatory: false,
+                            maxlength: 10,
+                            autoCapitalize: true
+                          ),
+                          IntegerTextField(
+                            controlName: 'aadhaar', 
+                            label: 'Aadhaar Number',
+                            mantatory: true,
+                            maxlength: 12,
+                            minlength: 12,
+                          ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromARGB(255, 3, 9, 110),
