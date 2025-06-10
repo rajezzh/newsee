@@ -169,6 +169,7 @@ class Loan extends StatelessWidget {
                           );
                         },
                       ),
+                      
                       Column(
                         children:
                             state.selectedProduct != null

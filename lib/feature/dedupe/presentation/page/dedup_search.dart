@@ -88,8 +88,8 @@ class DedupeSearch extends StatelessWidget {
                           ),
                           CustomTextField('firstname', 'First Name'),
                           CustomTextField('lastname', 'Last Name'),
-                          IntegerTextField('mobilenumber', 'Mobile Number'),
-                          CustomTextField('pan', 'PAN Number'),
+                          IntegerTextField('mobilenumber', 'Mobile Number', false),
+                          CustomTextField('pan', 'PAN Number', false),
                           IntegerTextField('aadhaar', 'Aadhaar Number'),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
