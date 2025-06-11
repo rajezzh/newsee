@@ -6,7 +6,6 @@ import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/api/http_connection_failure.dart';
 import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/feature/aadharvalidation/data/datasource/aadhar_validate_datasource.dart';
-import 'package:newsee/feature/aadharvalidation/data/repository/aadhar_response_parser.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_request.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/aadharvalidation/domain/repository/aadharvalidate_repo.dart';
@@ -29,7 +28,7 @@ class AadharValidateImpl extends AadharvalidateRepo {
   Future<AsyncResponseHandler<Failure, AadharvalidateResponse>> validateAadhar({
     required AadharvalidateRequest request,
   }) async {
-    AuthFailure failure = AuthFailure(message: "");
+    HttpConnectionFailure failure = HttpConnectionFailure(message: "");
     try {
       var responseData = await AadharValidateDatasource(
         dio: ApiClient().getDio(),

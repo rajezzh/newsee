@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/feature/aadharvalidation/data/repository/aadhar_response_parser.dart';
 import 'package:newsee/feature/aadharvalidation/data/repository/aadhar_validate_impl.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_request.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/aadharvalidation/domain/repository/aadharvalidate_repo.dart';
-import 'package:newsee/feature/aadharvalidation/presentation/bloc/aadhar_state.dart';
 import 'package:newsee/feature/dedupe/data/repository/dedupe_search_repo_impl.dart';
 import 'package:newsee/feature/dedupe/domain/model/deduperequest.dart';
 import 'package:newsee/feature/dedupe/domain/model/deduperesponse.dart';
