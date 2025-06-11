@@ -108,7 +108,7 @@ class DedupeView extends StatelessWidget {
                       SizedBox(
                         child: BlocBuilder<DedupeBloc, DedupeState>(
                           builder: (context, state) {
-                            if (state.status == DedupeFetchStatus.success && state.dedupeResponse != null) {
+                            if (state.status == DedupeFetchStatus.success && state.aadharvalidateResponse == null) {
                               dataList = [
                                 {"icon": Icons.currency_rupee, "label": "CBS", "value": "true"},
                                 {"icon": Icons.assignment_add, "label": "Remarks", "value": state.dedupeResponse?.remarks as String},
@@ -120,6 +120,50 @@ class DedupeView extends StatelessWidget {
                                   ),
                                   Text("Dedupe Response", style: TextStyle(fontWeight: FontWeight.bold),),
                                   ResponseWidget(heightSize: 0.32, dataList: dataList, buttonshow: false, onpressed: () {})
+                                ],
+                              );
+                            } else if (state.status == DedupeFetchStatus.success && state.aadharvalidateResponse != null) {
+                              dataList = [
+                                {
+                                  "icon": Icons.person,
+                                  "label": "Name",
+                                  "value": state.aadharvalidateResponse?.name as String,
+                                },
+                                {
+                                  "icon":
+                                      state.aadharvalidateResponse?.gender == "MALE"
+                                          ? Icons.male
+                                          : Icons.female,
+                                  "label": "Gender",
+                                  "value":
+                                      state.aadharvalidateResponse?.gender as String,
+                                },
+                                {
+                                  "icon": Icons.calendar_month,
+                                  "label": "DOB",
+                                  "value":
+                                      state.aadharvalidateResponse?.dateOfBirth
+                                          as String,
+                                },
+                                {
+                                  "icon": Icons.contact_phone,
+                                  "label": "Mobile",
+                                  "value": "",
+                                },
+                                {
+                                  "icon": Icons.home,
+                                  "label": "Address",
+                                  "value":
+                                      '${state.aadharvalidateResponse?.house} ${state.aadharvalidateResponse?.street} ${state.aadharvalidateResponse?.locality} ${state.aadharvalidateResponse?.vtcName} ${state.aadharvalidateResponse?.postOfficeName}',
+                                },
+                              ];
+                              return Column(
+                                children: [
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  Text("Aadhaar Response", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  ResponseWidget(heightSize: 0.4, dataList: dataList, buttonshow: false, onpressed: () {})
                                 ],
                               );
                             }

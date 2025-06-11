@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/core/db/db_config.dart';
+import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_response_model.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';

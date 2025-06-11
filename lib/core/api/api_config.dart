@@ -6,6 +6,7 @@ class ApiConfig {
       'U2FsdGVkX180H+UTzJxvLfDRxLNCZeZK0gzxeLDg9Azi7YqYqp0KqhJkMb7DiIns';
 
   static const String MASTERS_API_ENDPOINT = 'MasterDetails/getMasterDetails';
+  static const String AADHAAR_API_ENDPOINT = 'MobileService/getAadhaarDetails';
 
   static const String CIF_API_ENDPOINT = 'MobileService/CIFSearch';
 

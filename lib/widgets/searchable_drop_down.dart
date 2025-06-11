@@ -21,17 +21,20 @@ class SearchableDropdown<T> extends StatelessWidget {
   final String label;
   final List<T> items;
   final bool? mantatory;
+
   /* 
   @modifiedby   : karthick.d  05/06/2025
   @desc         : this is a changelister function that handle dropdown option change
   */
   final Function? onChangeListener;
+  final Function? keyMapper;
   SearchableDropdown({
     required this.controlName,
     required this.label,
     required this.items,
     this.mantatory,
     this.onChangeListener,
+    this.keyMapper,
   });
 
   String itemvalueMapper(T item) {
@@ -60,7 +63,10 @@ class SearchableDropdown<T> extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: DropdownSearch<T>(
             items: items,
-            itemAsString: (item) => itemvalueMapper(item),
+            itemAsString:
+                this.keyMapper != null
+                    ? this.keyMapper!()
+                    : (item) => itemvalueMapper(item),
             dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(
                 // labelText: label,
@@ -69,7 +75,10 @@ class SearchableDropdown<T> extends StatelessWidget {
                     text: label,
                     style: TextStyle(color: Colors.black, fontSize: 16),
                     children: [
-                      TextSpan(text: mantatory == null ? ' *' : '', style: TextStyle(color: Colors.red)),
+                      TextSpan(
+                        text: mantatory == null ? ' *' : '',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ],
                   ),
                 ),
