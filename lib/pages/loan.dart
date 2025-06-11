@@ -7,11 +7,7 @@ import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
-<<<<<<< HEAD
-import 'package:newsee/widgets/dynamic_card.dart';
-=======
 import 'package:newsee/widgets/productcard.dart';
->>>>>>> origin/main
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -65,31 +61,6 @@ class Loan extends StatelessWidget {
     'subcategory': FormControl<String>(validators: [Validators.required]),
   });
 
-  //  InfoCard buildInfoCard(ProductMaster product) {
-  //   return InfoCard(
-  //     title: 'Loan Product Info',
-  //     subtitle: product.prdDesc,
-  //     labels: [
-  //       InfoLabel(
-  //         icon: Icons.money,
-  //         label: 'Amount From',
-  //         value: product.prdamtFromRange.toString(),
-  //       ),
-  //       InfoLabel(
-  //         icon: Icons.attach_money,
-  //         label: 'Amount To',
-  //         value: product.prdamtToRange.toString(),
-  //       ),
-  //       InfoLabel(
-  //         icon: Icons.qr_code_2,
-  //         label: 'Product Code',
-  //         value: product.prdCode,
-  //       ),
-  //     ],
-  //   );
-  // }
-
-
   @override
   Widget build(BuildContext context) {
     final _context = context;
@@ -123,11 +94,7 @@ class Loan extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.all(5.0),
                         child: InkWell(
-<<<<<<< HEAD
-
-=======
                           // card widget for showing products
->>>>>>> origin/main
                           onTap: () {
                             ProductMaster selectedProduct = product;
                             ctxt.read<LoanproductBloc>().add(
@@ -136,46 +103,11 @@ class Loan extends StatelessWidget {
                               ),
                             );
                           },
-<<<<<<< HEAD
-                         child: InfoCardWidget(
-                              card: InfoCard(
-                            
-                                title: 'Loan Product Info',
-                                subtitle:state.productmasterList[index].prdDesc,
-                                labels: [
-                                  InfoLabel(
-                                    icon: Icons.money,
-                                    label: 'Amount From',
-                                    value:state.productmasterList[index].prdamtFromRange.toString(),
-                                  ),
-                                  InfoLabel(
-                                    icon: Icons.currency_rupee,
-                                    label: 'Amount To',
-                                    value: state.productmasterList[index].prdamtToRange.toString(),
-                                  ),
-                                  InfoLabel(
-                                    icon: Icons.qr_code_2,
-                                    label: 'Product Code',
-                                    value: state.productmasterList[index].prdCode,
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                        
-                          // subtitle: Text(
-                          //   'Amount To :${state.productmasterList[index].prdamtToRange}',
-                          // ),
-                          // title: Text(
-                          //   'Amount From:${state.productmasterList[index].prdamtFromRange}',
-                          // ),
-=======
                           child: ProductCard(
                             productDescription: product.prdDesc,
                             amountFrom: product.prdamtFromRange,
                             amountTo: product.prdamtToRange,
                           ),
->>>>>>> origin/main
                         ),
                       );
                     },
@@ -242,39 +174,6 @@ class Loan extends StatelessWidget {
                           );
                         },
                       ),
-<<<<<<< HEAD
-                      
-                     state.selectedProduct != null
-                              ? Card(
-                                  color: Colors.white,
-                                  elevation: 3,
-                                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          state.selectedProduct!.prdDesc,
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(height: 8),
-                                        Text(
-                                          'Product Code: ${state.selectedProduct!.prdCode}',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey[700],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-=======
 
                       Column(
                         children:
@@ -287,11 +186,10 @@ class Loan extends StatelessWidget {
                                         state.selectedProduct!.prdamtFromRange,
                                     amountTo:
                                         state.selectedProduct!.prdamtToRange,
->>>>>>> origin/main
                                   ),
-                                )
-                              : Text('No product'),
-
+                                ]
+                                : [Text('No product')],
+                      ),
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
