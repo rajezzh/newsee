@@ -4,11 +4,13 @@ import 'package:newsee/widgets/build_in_row.dart';
 class ResponseWidget extends StatelessWidget {
   double heightSize;
   List<Map<String, dynamic>> dataList;
+  bool buttonshow;
   VoidCallback? onpressed;
 
   ResponseWidget({
     required this.heightSize,
     required this.dataList,
+    required this.buttonshow,
     this.onpressed,
   });
 
@@ -43,7 +45,7 @@ class ResponseWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          Center(
+          buttonshow ? Center(
             child: ElevatedButton.icon(
               onPressed: onpressed,
               icon: Icon(Icons.send, color: Colors.white),
@@ -66,7 +68,7 @@ class ResponseWidget extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ) : SizedBox(height: 50,)
         ],
       ),
     );

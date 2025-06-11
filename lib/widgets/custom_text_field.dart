@@ -30,6 +30,8 @@ class CustomTextField extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: ReactiveTextField<String>(
         formControlName: controlName,
+        maxLength: maxlength,
+        textCapitalization:  autoCapitalize == true ? TextCapitalization.characters : TextCapitalization.none,
         validationMessages: {
           ValidationMessage.required: (error) => '$label is required',
           ValidationMessage.email: (error) => 'Enter valid $label',
@@ -39,8 +41,8 @@ class CustomTextField extends StatelessWidget {
             text: TextSpan(
               text: label,
               style: const TextStyle(color: Colors.black, fontSize: 16),
-              children: const [
-                TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+              children: [
+                TextSpan(text:  mantatory ? ' *' : '', style: TextStyle(color: Colors.red)),
               ],
             ),
           ),

@@ -18,137 +18,133 @@ class DedupeSearch extends StatelessWidget {
     dedupeForm.reset();
     Navigator.of(context).pop();
     Navigator.of(context).pop();
-    if (tabController.index < tabController.length - 1) {
-      tabController.animateTo(tabController.index + 1);
-    }
+    // if (tabController.index < tabController.length - 1) {
+    //   tabController.animateTo(tabController.index + 1);
+    // }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     List<Map<String, dynamic>> dataList;
-    return BlocProvider(
-      create: (_) => DedupeBloc(),
-      child: BlocConsumer<DedupeBloc, DedupeState>(
-        listener: (context, state) => {
-          if (state.status == DedupeFetchStatus.success) {
-            dataList = [
-              {"icon": Icons.currency_rupee, "label": "CBS", "value": "true"},
-              {"icon": Icons.assignment_add, "label": "Remarks", "value": state.dedupeResponse?.remarks as String},
-            ],
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ResponseWidget(heightSize: 0.32, dataList: dataList, onpressed: () => disposeResponse(context))
-                );
-              },
-            )
-          } else if (state.status == DedupeFetchStatus.failure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMsg!)),
-            )
-          }
-        },
-        builder: (context, state) { 
-          return ReactiveForm(
-          formGroup: dedupeForm, 
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 0,0,0),
-                      child: Text("Dedupe Search", 
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24
-                        ),
+    return BlocConsumer<DedupeBloc, DedupeState>(
+      listener: (context, state) => {
+        if (state.status == DedupeFetchStatus.success) {
+          dataList = [
+            {"icon": Icons.currency_rupee, "label": "CBS", "value": "true"},
+            {"icon": Icons.assignment_add, "label": "Remarks", "value": state.dedupeResponse?.remarks as String},
+          ],
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Dialog(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ResponseWidget(heightSize: 0.32, dataList: dataList, buttonshow: true, onpressed: () => disposeResponse(context))
+              );
+            },
+          )
+        } else if (state.status == DedupeFetchStatus.failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.errorMsg!)),
+          )
+        }
+      },
+      builder: (context, state) { 
+        return ReactiveForm(
+        formGroup: dedupeForm, 
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 0,0,0),
+                    child: Text("Dedupe Search", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24
                       ),
                     ),
-                    
-                    SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Dropdown(
-                          controlName: 'title',
-                          label: 'Title',
-                          items: ['Mr', 'Mrs', 'Miss', 'Others'],
-                        ),
-                        CustomTextField(
-                          controlName: 'firstname',
-                          label: 'First Name',
-                          mantatory: true
-                        ),
-                        CustomTextField(
-                          controlName: 'lastname', 
-                          label: 'Last Name',
-                          mantatory: true
-                        ),
-                        IntegerTextField(
-                          controlName: 'mobilenumber', 
-                          label: 'Mobile Number', 
-                          mantatory: false,
-                          maxlength: 10,
-                          minlength: 10,
-                        ),
-                        CustomTextField(
-                          controlName: 'pan', 
-                          label: 'PAN Number', 
-                          mantatory: false,
-                          maxlength: 10,
-                          autoCapitalize: true
-                        ),
-                        IntegerTextField(
-                          controlName: 'aadhaar', 
-                          label: 'Aadhaar Number',
-                          mantatory: true,
-                          maxlength: 12,
-                          minlength: 12,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                  ),
+                  
+                  SizedBox(height: 20),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Dropdown(
+                        controlName: 'title',
+                        label: 'Title',
+                        items: ['Mr', 'Mrs', 'Miss', 'Others'],
+                      ),
+                      CustomTextField(
+                        controlName: 'firstname',
+                        label: 'First Name',
+                        mantatory: true
+                      ),
+                      CustomTextField(
+                        controlName: 'lastname', 
+                        label: 'Last Name',
+                        mantatory: true
+                      ),
+                      IntegerTextField(
+                        controlName: 'mobilenumber', 
+                        label: 'Mobile Number', 
+                        mantatory: false,
+                        maxlength: 10,
+                        minlength: 10,
+                      ),
+                      CustomTextField(
+                        controlName: 'pan', 
+                        label: 'PAN Number', 
+                        mantatory: false,
+                        maxlength: 10,
+                        autoCapitalize: true
+                      ),
+                      IntegerTextField(
+                        controlName: 'aadhaar', 
+                        label: 'Aadhaar Number',
+                        mantatory: true,
+                        maxlength: 12,
+                        minlength: 12,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          onPressed: () {
-                            print("Click function passed ${dedupeForm.value}");
-                            if (dedupeForm.valid) {
-                              print("Click function passed go here, ${dedupeForm.valid}");
-                              final DedupeRequest request = DedupeRequest().copyWith(
-                                aadharCard: dedupeForm.control('aadhaar').value,
-                                panCard: dedupeForm.control('pan').value,
-                                mobileno: dedupeForm.control('mobilenumber').value
-                              );
-                              
-                              context.read<DedupeBloc>().add(FetchDedupeEvent(request: request));
-                            } else {
-                              print("Click function passed go here, ${dedupeForm.valid}");
-                              dedupeForm.markAllAsTouched();
-                            }
-                          }, 
-                          // child: Text("click"),
-                          child: state.status == DedupeFetchStatus.loading ? CircularProgressIndicator() : Text("Search")
                         ),
-                      ]
-                    )
-                  ]
-                )
-              ) 
-            )
-          );
-        }
-      )
-    ); 
+                        onPressed: () {
+                          print("Click function passed ${dedupeForm.value}");
+                          if (dedupeForm.valid) {
+                            print("Click function passed go here, ${dedupeForm.valid}");
+                            final DedupeRequest request = DedupeRequest().copyWith(
+                              aadharCard: dedupeForm.control('aadhaar').value,
+                              panCard: dedupeForm.control('pan').value,
+                              mobileno: dedupeForm.control('mobilenumber').value
+                            );
+                            
+                            context.read<DedupeBloc>().add(FetchDedupeEvent(request: request));
+                          } else {
+                            print("Click function passed go here, ${dedupeForm.valid}");
+                            dedupeForm.markAllAsTouched();
+                          }
+                        }, 
+                        child: state.status == DedupeFetchStatus.loading ? CircularProgressIndicator() : Text("Search")
+                      ),
+                    ]
+                  )
+                ]
+              )
+            ) 
+          )
+        );
+      }
+    );
   }
 }
 
