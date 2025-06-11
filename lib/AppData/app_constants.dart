@@ -6,9 +6,7 @@ class AppConstants {
     r'[\*\%!$\^.,;:{}\(\)\-_+=\[\]]',
   );
 
-  static final RegExp PAN_PATTERN = RegExp(
-    '[A-Z]{4}P{1}[0-9]{4}[A-Z]{1}',
-  );
+  static final RegExp PAN_PATTERN = RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]$');
 
   static final RegExp PATTER_ONLYALPHABET = RegExp(r'(\w+)');
 }

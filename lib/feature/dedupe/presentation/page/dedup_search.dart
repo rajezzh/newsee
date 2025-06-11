@@ -26,12 +26,12 @@ class DedupeSearch extends StatelessWidget {
     print("Welcome here for you $state");
     dedupeForm.reset();
     Navigator.of(context).pop();
-    if (state['dedupeResponse']['remarksFlag']) {
-      Navigator.of(context).pop();
-      if (tabController.index < tabController.length - 1) {
-        tabController.animateTo(tabController.index + 1);
-      }
+    // if (state['dedupeResponse']['remarksFlag']) {
+    Navigator.of(context).pop();
+    if (tabController.index < tabController.length - 1) {
+      tabController.animateTo(tabController.index + 1);
     }
+    // }
   }
 
   @override
@@ -153,10 +153,19 @@ class DedupeSearch extends StatelessWidget {
                           label: 'Title',
                           items: ['Mr', 'Mrs', 'Miss', 'Others'],
                         ),
-                        CustomTextField('firstname', 'First Name'),
-                        CustomTextField('lastname', 'Last Name'),
+                        CustomTextField(
+                          controlName: 'firstname',
+                          label: 'First Name',
+                        ),
+                        CustomTextField(
+                          controlName: 'lastname',
+                          label: 'Last Name',
+                        ),
                         IntegerTextField('mobilenumber', 'Mobile Number'),
-                        CustomTextField('pan', 'PAN Number'),
+                        CustomTextField(
+                          controlName: 'pan',
+                          label: 'PAN Number',
+                        ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
