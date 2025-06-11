@@ -1,8 +1,14 @@
 import 'dart:convert';
 
+/* @author   : Rajesh.S 10/06/2025
+@desc        : Represents a request for Aadhaar validation.
+This class encapsulates the Aadhaar number required for validation and provides
+utility methods for object manipulation, serialization, and deserialization.
+*/
+
 class AadharvalidateRequest {
-  final String aadhaarNumber;
-  AadharvalidateRequest({required this.aadhaarNumber});
+  final String? aadhaarNumber;
+  AadharvalidateRequest({this.aadhaarNumber});
 
   AadharvalidateRequest copyWith({String? aadhaarNumber}) {
     return AadharvalidateRequest(
@@ -15,7 +21,10 @@ class AadharvalidateRequest {
   }
 
   factory AadharvalidateRequest.fromMap(Map<String, dynamic> map) {
-    return AadharvalidateRequest(aadhaarNumber: map['aadhaarNumber'] ?? '');
+    return AadharvalidateRequest(
+      aadhaarNumber:
+          map['aadhaarNumber'] != null ? map['aadhaarNumber'] as String : null,
+    );
   }
 
   String toJson() => json.encode(toMap());

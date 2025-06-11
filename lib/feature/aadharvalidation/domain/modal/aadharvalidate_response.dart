@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-// class AadharvalidateResponse<T> {
-//   final dynamic aadharResponse;
-//   AadharvalidateResponse({required this.aadharResponse});
-// }
+/* @author   : Rajesh.S 10/06/2025
+@desc        : A model class to represent the response for Aadhaar validation.
+*/
 
 class AadharvalidateResponse {
   final String pincode;

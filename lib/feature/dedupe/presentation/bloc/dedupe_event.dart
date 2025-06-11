@@ -6,12 +6,14 @@
 
 part of 'dedupe_bloc.dart';
 
-class DedupeEvent {
-
-}
+class DedupeEvent {}
 
 class FetchDedupeEvent extends DedupeEvent {
   DedupeRequest request;
   FetchDedupeEvent({required this.request});
 }
 
+class ValiateAadharEvent extends DedupeEvent {
+  final AadharvalidateRequest request;
+  ValiateAadharEvent({required this.request});
+}

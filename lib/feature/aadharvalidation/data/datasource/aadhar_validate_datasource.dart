@@ -8,7 +8,7 @@ class AadharValidateDatasource {
   /*
   @author     : Rajesh. S 05/06/2025
   @desc       : validate aadhar number and fetch the aadhar response using dio.post method.
-  @param      : http request payload
+  @param      : http request payload containing aadhaarNumber
   @return     : Future<Response> Response - > HttpResponse
    */
 
@@ -16,7 +16,7 @@ class AadharValidateDatasource {
     Response response = await dio.post(
       ApiConfig.AADHAAR_API_ENDPOINT,
       data: {
-        "aadhaarNumber": "123443211234",
+        "aadhaarNumber": payload,
         "token":
             "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3",
       },
