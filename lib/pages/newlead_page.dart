@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/globalconfig.dart';
+import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/page/dedupe_page.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/feature/saveprofilepicture/profilepicturebloc/saveprofilepicture_bloc.dart';
@@ -32,6 +33,12 @@ class NewLeadPage extends StatelessWidget {
               (context) =>
                   PersonalDetailsBloc()
                     ..add(PersonalDetailsInitEvent(cifResponseModel: null)),
+        ),
+        BlocProvider(
+          create:
+              (context) =>
+                  AddressDetailsBloc()
+                    ..add(AddressDetailsInitEvent(cifResponseModel: null)),
         ),
       ],
       child: DefaultTabController(
