@@ -7,34 +7,38 @@
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-Widget CustomTextField(String controlName, String label, [bool? mantatory]) {
+class CustomTextField extends StatelessWidget {
+  final String controlName;
+  final String label;
 
-   bool setUpperCase() {
-    if (controlName == 'pan') return true;
-    return false;
-  }
+  const CustomTextField({
+    super.key,
+    required this.controlName,
+    required this.label,
+  });
 
-  return Padding(
-    padding: const EdgeInsets.all(16),
-    child: ReactiveTextField<String>( 
-      formControlName: controlName,
-      textCapitalization: setUpperCase() ? TextCapitalization.characters : TextCapitalization.none,
-      validationMessages: {
-        ValidationMessage.required: (error) => '$label is required',
-        ValidationMessage.email: (error) => 'Enter valid $label',
-        ValidationMessage.pattern: (error) => 'Enter valid $label',
-      },
-      decoration: InputDecoration(
-        label: RichText(
-          text: TextSpan(
-            text: label,
-            style: TextStyle(color: Colors.black, fontSize: 16),
-            children: [
-              TextSpan(text: mantatory == null ? ' *' : '', style: TextStyle(color: Colors.red)),
-            ],
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: ReactiveTextField<String>(
+        formControlName: controlName,
+        validationMessages: {
+          ValidationMessage.required: (error) => '$label is required',
+          ValidationMessage.email: (error) => 'Enter valid $label',
+        },
+        decoration: InputDecoration(
+          label: RichText(
+            text: TextSpan(
+              text: label,
+              style: const TextStyle(color: Colors.black, fontSize: 16),
+              children: const [
+                TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 }

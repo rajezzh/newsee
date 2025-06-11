@@ -7,7 +7,11 @@ import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
+<<<<<<< HEAD
 import 'package:newsee/widgets/dynamic_card.dart';
+=======
+import 'package:newsee/widgets/productcard.dart';
+>>>>>>> origin/main
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -49,15 +53,10 @@ import 'package:reactive_forms/reactive_forms.dart';
     },
 
   step 2:
-
   step 3:
-
-
-
  */
 class Loan extends StatelessWidget {
   final String title;
-
   Loan(String s, {super.key, required this.title});
 
   final form = FormGroup({
@@ -120,20 +119,24 @@ class Loan extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: state.productmasterList.length,
                     itemBuilder: (context, index) {
+                      final product = state.productmasterList[index];
                       return Padding(
                         padding: EdgeInsets.all(5.0),
                         child: InkWell(
+<<<<<<< HEAD
 
+=======
+                          // card widget for showing products
+>>>>>>> origin/main
                           onTap: () {
-                            ProductMaster selectedProduct =
-                                state.productmasterList[index];
-
+                            ProductMaster selectedProduct = product;
                             ctxt.read<LoanproductBloc>().add(
                               ResetShowBottomSheet(
                                 selectedProduct: selectedProduct,
                               ),
                             );
                           },
+<<<<<<< HEAD
                          child: InfoCardWidget(
                               card: InfoCard(
                             
@@ -166,6 +169,13 @@ class Loan extends StatelessWidget {
                           // title: Text(
                           //   'Amount From:${state.productmasterList[index].prdamtFromRange}',
                           // ),
+=======
+                          child: ProductCard(
+                            productDescription: product.prdDesc,
+                            amountFrom: product.prdamtFromRange,
+                            amountTo: product.prdamtToRange,
+                          ),
+>>>>>>> origin/main
                         ),
                       );
                     },
@@ -232,6 +242,7 @@ class Loan extends StatelessWidget {
                           );
                         },
                       ),
+<<<<<<< HEAD
                       
                      state.selectedProduct != null
                               ? Card(
@@ -263,6 +274,20 @@ class Loan extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+=======
+
+                      Column(
+                        children:
+                            state.selectedProduct != null
+                                ? [
+                                  ProductCard(
+                                    productDescription:
+                                        state.selectedProduct!.prdDesc,
+                                    amountFrom:
+                                        state.selectedProduct!.prdamtFromRange,
+                                    amountTo:
+                                        state.selectedProduct!.prdamtToRange,
+>>>>>>> origin/main
                                   ),
                                 )
                               : Text('No product'),
