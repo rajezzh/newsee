@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:newsee/pages/page/customer_response_page.dart';
+import 'package:newsee/feature/dedupe/presentation/page/customer_response_page.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 

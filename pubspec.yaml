@@ -68,7 +68,8 @@ dependencies:
   percent_indicator: ^4.2.2
   shimmer: ^3.0.0
   keyboard_detection: ^0.8.0
-
+  popover: ^0.3.1
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:
@@ -98,6 +99,15 @@ flutter:
     - assets/logo.jpg
     - assets/logo1.jpg
     - assets/whatsapp.svg
+    - assets/Agri_Loan.svg
+    - assets/app_background_1.svg
+    - assets/app_background_2.svg
+    - assets/Gold_Loan.svg
+    - assets/Home_Loan.svg
+    - assets/MSME.svg
+    - assets/Vehicle_Loan.svg
+    - assets/Retail_loan.svg
+
     
     # - assets/logo1.jpg
 

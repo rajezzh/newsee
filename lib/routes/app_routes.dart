@@ -38,6 +38,7 @@ final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
 final AuthRepository = AuthRepositoryImpl(
   authRemoteDatasource: _authRemoteDatasource,
 );
+
 final routes = GoRouter(
   // initial location changed to test masters feature , to see login page
   // modify the initialLocation
