@@ -5,7 +5,7 @@ enum SaveStatus { init, success, failure }
 
 class AddressDetailsState extends Equatable {
   final List<Lov>? lovList;
-  final List<Statecitymaster>? stateCityMaster;
+  final List<GeographyMaster>? stateCityMaster;
   final AddressData? addressData;
   final SaveStatus? status;
 
@@ -30,7 +30,7 @@ class AddressDetailsState extends Equatable {
     List<Lov>? lovList,
     AddressData? addressData,
     SaveStatus? status,
-    List<Statecitymaster>? stateCityMaster,
+    List<GeographyMaster>? stateCityMaster,
   }) {
     return AddressDetailsState(
       lovList: lovList ?? this.lovList,

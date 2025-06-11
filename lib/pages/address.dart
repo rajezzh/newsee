@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
+import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/statecitymaster.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
@@ -36,20 +37,6 @@ class Address extends StatelessWidget {
     if (tabController.index < tabController.length - 1) {
       tabController.animateTo(tabController.index + 1);
     }
-  }
-
-  List<Statecitymaster> getStates(List<Statecitymaster> master) {
-    List<Statecitymaster> stateMaster = [];
-    for (final m in master) {
-      if (stateMaster.isNotEmpty) {
-        if (!stateMaster.contains(m)) {
-          stateMaster.add(m);
-        }
-      } else {
-        stateMaster.add(m);
-      }
-    }
-    return stateMaster;
   }
 
   @override
@@ -104,7 +91,10 @@ class Address extends StatelessWidget {
                       SearchableDropdown(
                         controlName: 'state',
                         label: 'State',
-                        items: getStates(state.stateCityMaster!),
+                        items: state.stateCityMaster!,
+                        onChangeListener:
+                            (GeographyMaster val) =>
+                                form.controls['state']?.updateValue(val.code),
                       ),
                       SearchableDropdown(
                         controlName: 'city',
@@ -117,7 +107,7 @@ class Address extends StatelessWidget {
                         items: ['Sholinganallur', 'Navalur'],
                       ),
                       IntegerTextField(
-                        controlName: 'pincode', 
+                        controlName: 'pincode',
                         label: 'Pin Code',
                         mantatory: true,
                         maxlength: 6,
