@@ -7,7 +7,6 @@ import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/Utils/masterversioncheck.dart';
-import 'package:newsee/blocs/login/login_bloc.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
@@ -189,17 +188,17 @@ class LoginpageWithAC extends StatelessWidget {
 
                           ReactiveTextField(
                             formControlName: 'password',
-                            obscureText: isPasswordHidden,
+                            obscureText: state.isPasswordHidden,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               suffixIcon: IconButton(
                                 icon: Icon(
-                                  isPasswordHidden
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                                  state.isPasswordHidden
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
                                 ),
                                 onPressed: () {
-                                  context.read().add(PasswordSecure());
+                                  context.read<AuthBloc>().add(PasswordSecure());
                                 },
                               ),
                               border: OutlineInputBorder(
