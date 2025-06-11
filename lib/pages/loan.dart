@@ -7,6 +7,7 @@ import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
+import 'package:newsee/widgets/productcard.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -48,15 +49,10 @@ import 'package:reactive_forms/reactive_forms.dart';
     },
 
   step 2:
-
   step 3:
-
-
-
  */
 class Loan extends StatelessWidget {
   final String title;
-
   Loan(String s, {super.key, required this.title});
 
   final form = FormGroup({
@@ -94,27 +90,23 @@ class Loan extends StatelessWidget {
                   child: ListView.builder(
                     itemCount: state.productmasterList.length,
                     itemBuilder: (context, index) {
+                      final product = state.productmasterList[index];
                       return Padding(
                         padding: EdgeInsets.all(5.0),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.all(4.0),
+                        child: InkWell(
+                          // card widget for showing products
                           onTap: () {
-                            ProductMaster selectedProduct =
-                                state.productmasterList[index];
-
+                            ProductMaster selectedProduct = product;
                             ctxt.read<LoanproductBloc>().add(
                               ResetShowBottomSheet(
                                 selectedProduct: selectedProduct,
                               ),
                             );
                           },
-
-                          leading: Text(state.productmasterList[index].prdDesc),
-                          subtitle: Text(
-                            'Amount To :${state.productmasterList[index].prdamtToRange}',
-                          ),
-                          title: Text(
-                            'Amount From:${state.productmasterList[index].prdamtFromRange}',
+                          child: ProductCard(
+                            productDescription: product.prdDesc,
+                            amountFrom: product.prdamtFromRange,
+                            amountTo: product.prdamtToRange,
                           ),
                         ),
                       );
@@ -145,6 +137,10 @@ class Loan extends StatelessWidget {
                         label: 'Type Of Loan',
                         items: state.productSchemeList,
                         onChangeListener: (ProductSchema val) {
+                          form.controls['typeofloan']?.updateValue(
+                            val.optionDesc,
+                          );
+
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
@@ -154,30 +150,42 @@ class Loan extends StatelessWidget {
                         controlName: 'maincategory',
                         label: 'Main Category',
                         items: state.mainCategoryList,
-                        onChangeListener:
-                            (Product val) => context
-                                .read<LoanproductBloc>()
-                                .add(LoanProductDropdownChange(field: val)),
+                        onChangeListener: (Product val) {
+                          form.controls['maincategory']?.updateValue(
+                            val.lsfFacDesc,
+                          );
+
+                          context.read<LoanproductBloc>().add(
+                            LoanProductDropdownChange(field: val),
+                          );
+                        },
                       ),
                       SearchableDropdown(
                         controlName: 'subcategory',
                         label: 'Sub Category',
                         items: state.subCategoryList,
                         onChangeListener: (Product val) {
+                          form.controls['subcategory']?.updateValue(
+                            val.lsfFacDesc,
+                          );
+
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
                         },
                       ),
+
                       Column(
                         children:
                             state.selectedProduct != null
                                 ? [
-                                  Text(
-                                    state.selectedProduct?.prdDesc as String,
-                                  ),
-                                  Text(
-                                    state.selectedProduct?.prdCode as String,
+                                  ProductCard(
+                                    productDescription:
+                                        state.selectedProduct!.prdDesc,
+                                    amountFrom:
+                                        state.selectedProduct!.prdamtFromRange,
+                                    amountTo:
+                                        state.selectedProduct!.prdamtToRange,
                                   ),
                                 ]
                                 : [Text('No product')],

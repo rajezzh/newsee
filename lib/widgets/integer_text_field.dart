@@ -11,8 +11,9 @@ import 'package:reactive_forms/reactive_forms.dart';
 class IntegerTextField extends StatelessWidget {
   final String controlName;
   final String label;
+  final bool? mantatory;
 
-  const IntegerTextField(this.controlName, this.label);
+  const IntegerTextField(this.controlName, this.label, [this.mantatory]);
 
   /* Returns the maximum number of digits allowed. If the field is for 'mobilenumber',
   restricted to 10 digits.*/
@@ -20,7 +21,7 @@ class IntegerTextField extends StatelessWidget {
   int getMaxLength() {
     if (controlName == 'mobilenumber') return 10;
     if (controlName == 'pincode') return 6;
-    if (controlName == 'aadharno') return 12;
+    if (controlName == 'aadhaar') return 12;
     return 15;
   }
 
@@ -41,7 +42,7 @@ class IntegerTextField extends StatelessWidget {
               text: label,
               style: TextStyle(color: Colors.black, fontSize: 16),
               children: [
-                TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+                TextSpan(text: mantatory == null ? ' *' : '', style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
