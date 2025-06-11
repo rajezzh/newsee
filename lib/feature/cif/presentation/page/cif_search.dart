@@ -41,123 +41,122 @@ class CIFSearch extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> dataList;
     String formattedDate;
-    return BlocProvider(
-      create: (context) => CifBloc(),
-      child: BlocListener<CifBloc, CifState>(
-        listener:
-            (context, state) => {
-              if (state.status == CifStatus.success)
-                {
-                  formattedDate = getDateFormat(state),
-                  dataList = [
-                    {
-                      "icon": Icons.person,
-                      "label": "Name",
-                      "value": [
-                        state
-                                .cifResponseModel
-                                ?.lpretLeadDetails['lleadfrstname'] ??
-                            '',
-                        state
-                                .cifResponseModel
-                                ?.lpretLeadDetails['lleadmidname'] ??
-                            '',
-                        state
-                                .cifResponseModel
-                                ?.lpretLeadDetails['lleadlastname'] ??
-                            '',
-                      ].where((val) => val.isNotEmpty).join(' '),
-                    },
+    return BlocListener<CifBloc, CifState>(
+      listener:
+          (context, state) => {
+            if (state.status == CifStatus.success)
+              {
+                formattedDate = getDateFormat(state),
+                dataList = [
+                  {
+                    "icon": Icons.person,
+                    "label": "Name",
+                    "value": [
+                      state
+                              .cifResponseModel
+                              ?.lpretLeadDetails['lleadfrstname'] ??
+                          '',
+                      state
+                              .cifResponseModel
+                              ?.lpretLeadDetails['lleadmidname'] ??
+                          '',
+                      state
+                              .cifResponseModel
+                              ?.lpretLeadDetails['lleadlastname'] ??
+                          '',
+                    ].where((val) => val.isNotEmpty).join(' '),
+                  },
 
-                    {
-                      "icon": Icons.date_range,
-                      "label": "DOB",
-                      "value": formattedDate,
-                    },
-                    {
-                      "icon": Icons.call,
-                      "label": "Mobile",
-                      "value":
-                          state
-                              .cifResponseModel
-                              ?.lpretLeadDetails['lleadmobno'],
-                    },
-                    {
-                      "icon": Icons.chrome_reader_mode_rounded,
-                      "label": "PAN",
-                      "value":
-                          state
-                              .cifResponseModel
-                              ?.lpretLeadDetails['lleadpanno'],
-                    },
-                    {
-                      "icon": Icons.elevator_rounded,
-                      "label": "AAdhaar",
-                      "value":
-                          state
-                              .cifResponseModel
-                              ?.lpretLeadDetails['lleadadharno'],
-                    },
-                    {
-                      "icon": Icons.home,
-                      "label": "Address",
-                      "value": [
+                  {
+                    "icon": Icons.date_range,
+                    "label": "DOB",
+                    "value": formattedDate,
+                  },
+                  {
+                    "icon": Icons.call,
+                    "label": "Mobile",
+                    "value":
                         state
-                                .cifResponseModel
-                                ?.lpretLeadDetails['lleadaddress'] ??
-                            '',
+                            .cifResponseModel
+                            ?.lpretLeadDetails['lleadmobno'],
+                  },
+                  {
+                    "icon": Icons.chrome_reader_mode_rounded,
+                    "label": "PAN",
+                    "value":
                         state
-                                .cifResponseModel
-                                ?.lpretLeadDetails['lleadaddresslane1'] ??
-                            '',
+                            .cifResponseModel
+                            ?.lpretLeadDetails['lleadpanno'],
+                  },
+                  {
+                    "icon": Icons.elevator_rounded,
+                    "label": "AAdhaar",
+                    "value":
                         state
-                                .cifResponseModel
-                                ?.lpretLeadDetails['lleadaddresslane2'] ??
-                            '',
-                      ].where((val) => val.isNotEmpty).join(' '),
-                    },
-                    {
-                      "icon": Icons.format_list_numbered_rtl_rounded,
-                      "label": "Pinocode",
-                      "value":
-                          state
+                            .cifResponseModel
+                            ?.lpretLeadDetails['lleadadharno'],
+                  },
+                  {
+                    "icon": Icons.home,
+                    "label": "Address",
+                    "value": [
+                      state
                               .cifResponseModel
-                              ?.lpretLeadDetails['lleadpinno'],
-                    },
-                  ],
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      // final DateFormat parser = DateFormat("MMM dd, yyyy, hh:mm:ss a");
-                      // DateTime date = parser.parse(state.cifResponseModel?.lpretLeadDetails['lleaddob']);
+                              ?.lpretLeadDetails['lleadaddress'] ??
+                          '',
+                      state
+                              .cifResponseModel
+                              ?.lpretLeadDetails['lleadaddresslane1'] ??
+                          '',
+                      state
+                              .cifResponseModel
+                              ?.lpretLeadDetails['lleadaddresslane2'] ??
+                          '',
+                    ].where((val) => val.isNotEmpty).join(' '),
+                  },
+                  {
+                    "icon": Icons.format_list_numbered_rtl_rounded,
+                    "label": "Pinocode",
+                    "value":
+                        state
+                            .cifResponseModel
+                            ?.lpretLeadDetails['lleadpinno'],
+                  },
+                ],
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    // final DateFormat parser = DateFormat("MMM dd, yyyy, hh:mm:ss a");
+                    // DateTime date = parser.parse(state.cifResponseModel?.lpretLeadDetails['lleaddob']);
 
-                      // // Format to desired output
-                      // final DateFormat formatter = DateFormat('dd-MM-yyyy');
-                      // String formattedDate = formatter.format(date);
-                      return Dialog(
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: ResponseWidget(
-                          heightSize: 0.6,
-                          dataList: dataList,
-                          onpressed: () => disposeResponse(context),
-                        ),
-                      );
-                    },
-                  ),
-                }
-              else if (state.status == CifStatus.failure)
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.errorMessage as String)),
-                  ),
-                },
-            },
-        child: BlocBuilder<CifBloc, CifState>(
-          builder: (context, state) {
-            return ReactiveForm(
+                    // // Format to desired output
+                    // final DateFormat formatter = DateFormat('dd-MM-yyyy');
+                    // String formattedDate = formatter.format(date);
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ResponseWidget(
+                        heightSize: 0.6,
+                        dataList: dataList,
+                        buttonshow: true,
+                        onpressed: () => disposeResponse(context),
+                      ),
+                    );
+                  },
+                ),
+              }
+            else if (state.status == CifStatus.failure)
+              {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.errorMessage as String)),
+                ),
+              },
+          },
+      child: BlocBuilder<CifBloc, CifState>(
+        builder: (context, state) {
+          return ReactiveForm(
               formGroup: cifForm,
               child: SafeArea(
                 child: SingleChildScrollView(
@@ -165,60 +164,50 @@ class CIFSearch extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: Text(
-                          "Cif Search",
+                        padding: EdgeInsets.fromLTRB(20, 0,0,0),
+                        child: Text("Cif Search", 
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 24
                           ),
                         ),
                       ),
                       Column(
                         children: [
-                          IntegerTextField('cifid', 'CIF ID'),
+                          IntegerTextField(
+                            controlName: 'cifid', 
+                            label: 'CIF ID',
+                            mantatory: true,
+                          ),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromARGB(255, 3, 9, 110),
                               foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                            ),
                             onPressed: () {
                               if (cifForm.valid) {
-                                final CIFRequest req =
-                                    CIFRequest(
-                                      cifId: cifForm.control('cifid').value,
-                                    ).copyWith();
-                                context.read<CifBloc>().add(
-                                  SearchCifEvent(request: req),
-                                );
+                                final CIFRequest req = CIFRequest(cifId: cifForm.control('cifid').value).copyWith();
+                                context.read<CifBloc>().add(SearchCifEvent(request: req));
                               } else {
-                                print(
-                                  "Click function passed go here, ${cifForm.valid}",
-                                );
+                                print("Click function passed go here, ${cifForm.valid}");
                                 cifForm.markAllAsTouched();
                               }
-                            },
-                            child:
-                                state.status == CifStatus.loading
-                                    ? CircularProgressIndicator()
-                                    : Text("Search"),
-                          ),
+                              
+                            }, 
+                            child: state.status == CifStatus.loading ? CircularProgressIndicator() : Text("Search")
+                          )
                         ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+                      )
+                    ]
+                  )
+                )
+              )
+          );
+        },
       ),
     );
   }

@@ -3,9 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/statecitymaster.dart';
-import 'package:newsee/widgets/alpha_text_field.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
-import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -91,14 +89,17 @@ class Address extends StatelessWidget {
                       CustomTextField(
                         controlName: 'address1',
                         label: 'Address 1',
+                        mantatory: true,
                       ),
                       CustomTextField(
                         controlName: 'address2',
                         label: 'Address 2',
+                        mantatory: true,
                       ),
                       CustomTextField(
                         controlName: 'address3',
                         label: 'Address 3',
+                        mantatory: true,
                       ),
                       SearchableDropdown(
                         controlName: 'state',
@@ -115,7 +116,13 @@ class Address extends StatelessWidget {
                         label: 'District',
                         items: ['Sholinganallur', 'Navalur'],
                       ),
-                      IntegerTextField('pincode', 'Pin Code'),
+                      IntegerTextField(
+                        controlName: 'pincode', 
+                        label: 'Pin Code',
+                        mantatory: true,
+                        maxlength: 6,
+                        minlength: 6,
+                      ),
                       SizedBox(height: 20),
                       // ElevatedButton(onPressed: () {}, child: Text("ADD")),
                       // SizedBox(height: 50),

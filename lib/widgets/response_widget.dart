@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:newsee/widgets/build_in_row.dart';
 
-// ignore: must_be_immutable
 class ResponseWidget extends StatelessWidget {
   double heightSize;
   List<Map<String, dynamic>> dataList;
+  bool buttonshow;
   VoidCallback? onpressed;
 
   ResponseWidget({
     required this.heightSize,
     required this.dataList,
+    required this.buttonshow,
     this.onpressed,
   });
 
@@ -31,11 +33,10 @@ class ResponseWidget extends StatelessWidget {
                 children: [
                   ...dataList
                       .map(
-                        (list) => _buildInfoRow(
-                          context,
-                          list['icon'] as IconData,
-                          list['label'] as String,
-                          list['value'] as String,
+                        (list) => BuildInRow(
+                          icon:  list['icon'] as IconData,
+                          label:  list['label'] as String,
+                          value:  list['value'] as String,
                         ),
                       )
                       .toList(),
@@ -44,7 +45,7 @@ class ResponseWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          Center(
+          buttonshow ? Center(
             child: ElevatedButton.icon(
               onPressed: onpressed,
               icon: Icon(Icons.send, color: Colors.white),
@@ -67,51 +68,9 @@ class ResponseWidget extends StatelessWidget {
                 ),
               ),
             ),
-          ),
+          ) : SizedBox(height: 50,)
         ],
       ),
     );
   }
-}
-
-Widget _buildInfoRow(
-  BuildContext context,
-  IconData icon,
-  String label,
-  String value,
-) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.1,
-          child: Icon(icon, color: Colors.teal),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.2,
-          child: Text(
-            "$label: ",
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.3,
-          child: Text(value, style: const TextStyle(fontSize: 13)),
-        ),
-      ],
-    ),
-  );
-}
-
-class ResponseWidgetList {
-  String icon;
-  String label;
-  String value;
-  ResponseWidgetList({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
 }

@@ -76,7 +76,11 @@ class LoanDetailsPage extends StatelessWidget {
                   label: 'Loan Product',
                   items: ['', ''],
                 ),
-                IntegerTextField('loanamount', 'Loan Amount Requested(₹)'),
+                IntegerTextField(
+                  controlName: 'loanamount',
+                  label: 'Loan Amount Requested(₹)',
+                  mantatory: true
+                ),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {

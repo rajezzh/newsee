@@ -54,10 +54,27 @@ class GuarantorPage extends StatelessWidget {
                     'SIR',
                   ],
                 ),
-                IntegerTextField('firstname', 'First Name'),
-                IntegerTextField('lastname', 'Last Name'),
-                IntegerTextField('mobilenumber', 'Mobile Number'),
-                IntegerTextField('networth', 'Networth of the Applicant(₹)'),
+                IntegerTextField(
+                  controlName: 'firstname',
+                  label: 'First Name',
+                  mantatory: true,
+                ),
+                IntegerTextField(
+                  controlName: 'lastname', 
+                  label: 'Last Name',
+                  mantatory: true
+                ),
+                IntegerTextField(
+                  controlName: 'mobilenumber',
+                  label: 'Mobile Number',
+                  mantatory: true,
+                  maxlength: 10
+                ),
+                IntegerTextField(
+                  controlName: 'networth', 
+                  label: 'Networth of the Applicant(₹)',
+                  mantatory: true
+                ),
                 SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(onPressed: () {}, child: Text('Save')),
