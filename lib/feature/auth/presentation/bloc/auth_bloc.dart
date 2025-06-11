@@ -53,6 +53,6 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     print('securePassword event handler .... => $event');
-    emit(state.copyWith(isPasswordShown: !state.isPasswordHidden));
+    emit(state.copyWith(isPasswordHidden: !state.isPasswordHidden));
   }
 }
