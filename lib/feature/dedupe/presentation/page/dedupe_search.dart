@@ -17,13 +17,13 @@ class DedupeSearch extends StatelessWidget {
   disposeResponse(context, state) {
     print("Welcome here for you $state");
     Navigator.of(context).pop();
-    if (state['dedupeResponse'] != null) {
+    if (state('dedupeResponse') != null) {
       dedupeForm.reset();
       Navigator.of(context).pop();
       if (tabController.index < tabController.length - 1) {
         tabController.animateTo(tabController.index + 1);
       }
-    } else if (state['dedupeResponse']?.remarksFlag) {
+    } else if (state('dedupeResponse')?.remarksFlag) {
       dedupeForm.reset();
       Navigator.of(context).pop();
       if (tabController.index < tabController.length - 1) {

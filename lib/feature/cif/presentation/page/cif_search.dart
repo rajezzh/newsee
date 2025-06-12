@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 import 'package:newsee/feature/cif/presentation/bloc/cif_bloc.dart';
 import 'package:newsee/widgets/build_in_row.dart';
@@ -14,17 +15,6 @@ class CIFSearch extends StatelessWidget {
   final FormGroup cifForm;
   final TabController tabController;
   CIFSearch({super.key, required this.cifForm, required this.tabController});
-
-  // Convert Cif Response date to String date(dd-MM-yyyy);
-  String getDateFormat(dynamic state) {
-    final DateFormat parser = DateFormat("MMM dd, yyyy, hh:mm:ss a");
-    DateTime date = parser.parse(
-      state.cifResponseModel?.lpretLeadDetails['lleaddob'],
-    );
-    DateFormat formatter = DateFormat('dd-MM-yyyy');
-    String convertedDateString = formatter.format(date);
-    return convertedDateString;
-  }
 
   //Dispose Popover
   disposeResponse(context) {
@@ -46,7 +36,7 @@ class CIFSearch extends StatelessWidget {
           (context, state) => {
             if (state.status == CifStatus.success)
               {
-                formattedDate = getDateFormat(state),
+                formattedDate = getDateFormat(state.cifResponseModel?.lpretLeadDetails['lleaddob']),
                 dataList = [
                   {
                     "icon": Icons.person,

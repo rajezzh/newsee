@@ -44,9 +44,9 @@ class DedupeResponse {
     );
   }
 
-  Map<String, dynamic> toJson() => _$DeduperesponseToJson(this);
+  Map<String, dynamic> toJson() => _$DedupeResponseToJson(this);
 
-  factory DedupeResponse.fromJson(Map<String, dynamic> source) => _$DeduperesponseFromJson(source);
+  factory DedupeResponse.fromJson(Map<String, dynamic> source) => _$DedupeResponseFromJson(source);
 
   @override
   String toString() => 'DedupeResponse(CBS: $CBS, remarksFlag: $remarksFlag, remarks: $remarks)';

@@ -253,7 +253,7 @@ class MasterRepoImpl extends MasterRepo {
             );
             masterResponse = MasterResponse(
               master: productSchemaList,
-              masterType: MasterTypes.statecitymaster,
+              masterType: MasterTypes.success,
             );
           } else {
             var errorMessage = response.data['errorDesc'];
