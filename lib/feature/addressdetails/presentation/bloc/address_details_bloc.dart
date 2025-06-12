@@ -7,7 +7,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/DBConstants/table_key_geographymaster.dart';
 import 'package:newsee/Model/address_data.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/db/db_config.dart';
+import 'package:newsee/feature/addressdetails/data/repository/citylist_repo_impl.dart';
+import 'package:newsee/feature/addressdetails/domain/model/citydistrictrequest.dart';
+import 'package:newsee/feature/addressdetails/domain/repository/cityrepository.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_response_model.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -25,6 +30,8 @@ final class AddressDetailsBloc
   AddressDetailsBloc() : super(AddressDetailsState.init()) {
     on<AddressDetailsInitEvent>(initAddressDetails);
     on<AddressDetailsSaveEvent>(saveAddressDetails);
+    on<OnStateCityChangeEvent>(getCityListBasedOnState);
+    // on<OnStateCityChangeEvent>(getDisctrictListBasedOnCity);
   }
 
   Future<void> initAddressDetails(
@@ -63,4 +70,127 @@ final class AddressDetailsBloc
       ),
     );
   }
+
+  /* 
+@author   : Rajesh. S  12/06/2025
+@Desc     :Handles fetching the city list and district list based on the state and optionally the city code.
+First, it attempts to fetch the data from the local database.If no matching data is found locally,
+ it fetches data from the server. The fetched data is then stored in the local database.
+ */
+  Future<void> getCityListBasedOnState(
+    OnStateCityChangeEvent event,
+    Emitter emit,
+  ) async {
+    Database db = await DBConfig().database;
+    List<String> columnNames = [
+      TableKeysGeographyMaster.stateId,
+      TableKeysGeographyMaster.cityId,
+    ];
+    List<String> columnValues;
+    if (event.cityCode != null) {
+      columnValues = [event.stateCode, event.cityCode ?? '0'];
+    } else {
+      columnValues = [event.stateCode, '0'];
+    }
+
+    List<GeographyMaster> cityDistrictMaster = await GeographymasterCrudRepo(
+      db,
+    ).getByColumnNames(columnNames: columnNames, columnValues: columnValues);
+
+    if (event.cityCode == null && cityDistrictMaster.isNotEmpty) {
+      emit(state.copyWith(cityMaster: cityDistrictMaster));
+    } else if (event.cityCode != null && cityDistrictMaster.isNotEmpty) {
+      emit(state.copyWith(districtMaster: cityDistrictMaster));
+    } else {
+      emit(state.copyWith(status: SaveStatus.loading));
+      final CityDistrictRequest citydistrictrequest;
+      Cityrepository cityrepository = CitylistRepoImpl();
+      AsyncResponseHandler<Failure, dynamic> responseHandler;
+      if (event.cityCode != null) {
+        citydistrictrequest = CityDistrictRequest(
+          stateCode: event.stateCode,
+          cityCode: event.cityCode,
+        );
+        responseHandler = await cityrepository.fetchCityList(
+          citydistrictrequest,
+        );
+      } else {
+        citydistrictrequest = CityDistrictRequest(stateCode: event.stateCode);
+        responseHandler = await cityrepository.fetchCityList(
+          citydistrictrequest,
+        );
+      }
+      if (responseHandler.isRight()) {
+        List<GeographyMaster> cityList = responseHandler.right;
+        if (cityList.isNotEmpty) {
+          Iterator<GeographyMaster> it = cityList.iterator;
+          GeographymasterCrudRepo statecityMasterCrudRepo =
+              GeographymasterCrudRepo(db);
+          while (it.moveNext()) {
+            statecityMasterCrudRepo.save(it.current);
+          }
+          if (event.cityCode != null) {
+            Future.delayed(Duration(seconds: 3));
+            emit(
+              state.copyWith(
+                districtMaster: cityList,
+                status: SaveStatus.mastersucess,
+              ),
+            );
+          } else {
+            Future.delayed(Duration(seconds: 3));
+            emit(
+              state.copyWith(
+                cityMaster: cityList,
+                status: SaveStatus.mastersucess,
+              ),
+            );
+          }
+        }
+      } else {
+        emit(state.copyWith(status: SaveStatus.failure));
+      }
+    }
+  }
+
+  // Future<void> getDisctrictListBasedOnCity(
+  //   OnStateCityChangeEvent event,
+  //   Emitter emit,
+  // ) async {
+  //   Database _db = await DBConfig().database;
+  //   List<GeographyMaster> districtMaster = await GeographymasterCrudRepo(
+  //     _db,
+  //   ).getByColumnNames(
+  //     columnNames: [
+  //       TableKeysGeographyMaster.stateId,
+  //       TableKeysGeographyMaster.cityId,
+  //     ],
+  //     columnValues: [event.stateCode, event.cityCode],
+  //   );
+  //   if (districtMaster.isNotEmpty) {
+  //     emit(state.copyWith(districtMaster: districtMaster));
+  //   } else {
+  //     emit(state.copyWith(status: SaveStatus.loading));
+  //     final Cityrequest districtrequest = Cityrequest(
+  //       stateCode: event.stateCode,
+  //       cityCode: event.cityCode,
+  //     );
+  //     Cityrepository cityrepository = CitylistRepoImpl();
+  //     var responseHandler = await cityrepository.fetchCityList(districtrequest);
+  //     if (responseHandler.isRight()) {
+  //       List<GeographyMaster> cityList = responseHandler.right;
+  //       if (cityList.isNotEmpty) {
+  //         Iterator<GeographyMaster> it = cityList.iterator;
+  //         GeographymasterCrudRepo statecityMasterCrudRepo =
+  //             GeographymasterCrudRepo(_db);
+  //         while (it.moveNext()) {
+  //           statecityMasterCrudRepo.save(it.current);
+  //         }
+  //         emit(state.copyWith(districtMaster: cityList));
+  //       }
+  //     } else {
+  //       emit(state.copyWith(status: SaveStatus.failure));
+  //     }
+  //   }
+  // }
 }

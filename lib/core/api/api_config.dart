@@ -11,6 +11,9 @@ class ApiConfig {
   static const String CIF_API_ENDPOINT = 'MobileService/CIFSearch';
 
   static const String DEDUPE_API_ENDPOINT = "MobileService/getDedupeSearch";
+  static const String GETCITY_API_ENDPOINT = "MasterDetails/getCityCode";
+  static const String GETDISCTRICT_API_ENDPOINT =
+      "MasterDetails/getDistrictCode";
 
   static const String API_RESPONSE_SUCCESS_KEY = 'Success';
 
