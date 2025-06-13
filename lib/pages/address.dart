@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -12,7 +13,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class Address extends StatelessWidget {
   final String title;
 
-  Address(String s, {required this.title, super.key});
+  Address({required this.title, super.key});
 
   final form = FormGroup({
     'addresstype': FormControl<String>(validators: [Validators.required]),
@@ -147,13 +148,12 @@ class Address extends StatelessWidget {
                         onPressed: () {
                           print("Address Details value ${form.value}");
                           if (form.valid) {
-                            final tabController = DefaultTabController.of(
-                              context,
+                            AddressData addressData = AddressData.fromMap(
+                              form.value,
                             );
-                            if (tabController.index <
-                                tabController.length - 1) {
-                              tabController.animateTo(tabController.index + 1);
-                            }
+                            context.read<AddressDetailsBloc>().add(
+                              AddressDetailsSaveEvent(addressData: addressData),
+                            );
                           } else {
                             form.markAllAsTouched();
                           }
