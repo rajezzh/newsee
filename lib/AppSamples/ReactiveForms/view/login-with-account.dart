@@ -198,7 +198,9 @@ class LoginpageWithAC extends StatelessWidget {
                                       : Icons.visibility,
                                 ),
                                 onPressed: () {
-                                  context.read<AuthBloc>().add(PasswordSecure());
+                                  context.read<AuthBloc>().add(
+                                    PasswordSecure(),
+                                  );
                                 },
                               ),
                               border: OutlineInputBorder(

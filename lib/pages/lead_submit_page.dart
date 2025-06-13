@@ -31,7 +31,10 @@ class LeadSubmitPage extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
 
-            children: showLeadSubmitCard(personalData, productMaster, context),
+            children:
+                (personalData != null && productMaster != null)
+                    ? showLeadSubmitCard(personalData, productMaster, context)
+                    : showNoDataCard(),
           );
         },
       ),
@@ -116,6 +119,34 @@ class LeadSubmitPage extends StatelessWidget {
             backgroundColor: MaterialStateProperty.all(
               const Color.fromARGB(255, 75, 33, 83),
             ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  /* 
+
+incase of incomplete dataentry show no data card
+
+*/
+
+  List<Widget> showNoDataCard() {
+    return <Widget>[
+      Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SysmoTitle(
+                icon: Icons.close,
+                label: "No Data",
+                value: 'Please complete Lead DataEntry...!!',
+              ),
+            ],
           ),
         ),
       ),
