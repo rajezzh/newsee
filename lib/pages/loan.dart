@@ -114,6 +114,7 @@ class Loan extends StatelessWidget {
             if (state.selectedProduct != null &&
                 state.showBottomSheet == false) {
               print('poping current route');
+              print("hello");
               LoanproductState.init();
               Navigator.of(_context).pop();
             }
