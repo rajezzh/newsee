@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -12,7 +13,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class Address extends StatelessWidget {
   final String title;
 
-  Address(String s, {required this.title, super.key});
+  Address({required this.title, super.key});
 
   final form = FormGroup({
     'addresstype': FormControl<String>(validators: [Validators.required]),
@@ -22,7 +23,9 @@ class Address extends StatelessWidget {
     'state': FormControl<String>(validators: [Validators.required]),
     'city': FormControl<String>(validators: [Validators.required]),
     'district': FormControl<String>(validators: [Validators.required]),
-    'pincode': FormControl<String>(validators: [Validators.required]),
+    'pincode': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(6)],
+    ),
   });
 
   void showSnack(BuildContext context, {required String message}) {
@@ -55,104 +58,117 @@ class Address extends StatelessWidget {
             goToNextTab(context);
           }
         },
-        builder:
-            (context, state) => ReactiveForm(
-              formGroup: form,
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SearchableDropdown(
-                        controlName: 'addresstype',
-                        label: 'Address Type',
-                        items:
-                            state.lovList!
-                                .where((v) => v.Header == 'AddressType')
-                                .toList(),
-                        onChangeListener:
-                            (Lov val) => form.controls['addresstype']
-                                ?.updateValue(val.optvalue),
-                      ),
-                      CustomTextField(
-                        controlName: 'address1',
-                        label: 'Address 1',
-                        mantatory: true,
-                      ),
-                      CustomTextField(
-                        controlName: 'address2',
-                        label: 'Address 2',
-                        mantatory: true,
-                      ),
-                      CustomTextField(
-                        controlName: 'address3',
-                        label: 'Address 3',
-                        mantatory: true,
-                      ),
-                      SearchableDropdown(
-                        controlName: 'state',
-                        label: 'State',
-                        items: state.stateCityMaster!,
-                        onChangeListener:
-                            (GeographyMaster val) =>
-                                form.controls['state']?.updateValue(val.code),
-                      ),
-                      SearchableDropdown(
-                        controlName: 'city',
-                        label: 'City',
-                        items: ['Chennai', 'Madurai'],
-                      ),
-                      SearchableDropdown(
-                        controlName: 'district',
-                        label: 'District',
-                        items: ['Sholinganallur', 'Navalur'],
-                      ),
-                      IntegerTextField(
-                        controlName: 'pincode',
-                        label: 'Pin Code',
-                        mantatory: true,
-                        maxlength: 6,
-                        minlength: 6,
-                      ),
-                      SizedBox(height: 20),
-                      // ElevatedButton(onPressed: () {}, child: Text("ADD")),
-                      // SizedBox(height: 50),
-                      Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+        builder: (context, state) {
+          return ReactiveForm(
+            formGroup: form,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SearchableDropdown(
+                      controlName: 'addresstype',
+                      label: 'Address Type',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'AddressType')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['addresstype']
+                              ?.updateValue(val.optvalue),
+                    ),
+                    CustomTextField(
+                      controlName: 'address1',
+                      label: 'Address 1',
+                      mantatory: true,
+                    ),
+                    CustomTextField(
+                      controlName: 'address2',
+                      label: 'Address 2',
+                      mantatory: true,
+                    ),
+                    CustomTextField(
+                      controlName: 'address3',
+                      label: 'Address 3',
+                      mantatory: true,
+                    ),
+                    SearchableDropdown(
+                      controlName: 'state',
+                      label: 'State',
+                      items: state.stateCityMaster!,
+                      onChangeListener: (GeographyMaster val) {
+                        form.controls['state']?.updateValue(val.code);
+                        context.read<AddressDetailsBloc>().add(
+                          OnStateCityChangeEvent(stateCode: val.code),
+                        );
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'city',
+                      label: 'City',
+                      items: state.cityMaster!,
+                      onChangeListener: (GeographyMaster val) {
+                        form.controls['city']?.updateValue(val.code);
+                        context.read<AddressDetailsBloc>().add(
+                          OnStateCityChangeEvent(
+                            stateCode: form.controls['state']?.value as String,
+                            cityCode: val.code,
                           ),
-                          onPressed: () {
-                            print("Address Details value ${form.value}");
-                            if (form.valid) {
-                              final tabController = DefaultTabController.of(
-                                context,
-                              );
-                              if (tabController.index <
-                                  tabController.length - 1) {
-                                tabController.animateTo(
-                                  tabController.index + 1,
-                                );
-                              }
-                            } else {
-                              form.markAllAsTouched();
-                            }
-                          },
-                          child: Text('Next'),
+                        );
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'district',
+                      label: 'District',
+                      items: state.districtMaster!,
+                      onChangeListener: (GeographyMaster val) {
+                        form.controls['district']?.updateValue(val.code);
+                      },
+                    ),
+                    IntegerTextField(
+                      controlName: 'pincode',
+                      label: 'Pin Code',
+                      mantatory: true,
+                      maxlength: 6,
+                      minlength: 6,
+                    ),
+                    SizedBox(height: 20),
+                    // ElevatedButton(onPressed: () {}, child: Text("ADD")),
+                    // SizedBox(height: 50),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
+                        onPressed: () {
+                          print("Address Details value ${form.value}");
+                          if (form.valid) {
+                            AddressData addressData = AddressData.fromMap(
+                              form.value,
+                            );
+                            context.read<AddressDetailsBloc>().add(
+                              AddressDetailsSaveEvent(addressData: addressData),
+                            );
+                          } else {
+                            form.markAllAsTouched();
+                          }
+                        },
+                        child: Text('Next'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
+          );
+        },
       ),
     );
   }

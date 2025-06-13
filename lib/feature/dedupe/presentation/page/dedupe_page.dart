@@ -7,7 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class DedupeView extends StatelessWidget {
   final String title;
-  DedupeView(String s, {required this.title, super.key});
+  DedupeView({required this.title, super.key});
 
   final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
   final cifForm = AppForms.CIF_DETAILS_FORM;  

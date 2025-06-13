@@ -22,6 +22,7 @@ class PersonalData {
   final String? farmerType;
   final String? religion;
   final String? caste;
+  final String? cityDistrict;
   final String? sourceid;
   final String? sourcename;
   final String? subActivity;
@@ -46,6 +47,7 @@ class PersonalData {
     this.farmerType,
     this.religion,
     this.caste,
+    this.cityDistrict,
     this.sourceid,
     this.sourcename,
     this.subActivity,
@@ -72,6 +74,7 @@ class PersonalData {
     String? farmerType,
     String? religion,
     String? caste,
+    String? cityDistrict,
     String? sourceid,
     String? sourcename,
     String? subActivity,
@@ -98,6 +101,7 @@ class PersonalData {
       farmerType: farmerType ?? this.farmerType,
       religion: religion ?? this.religion,
       caste: caste ?? this.caste,
+      cityDistrict: cityDistrict ?? this.cityDistrict,
       sourceid: sourceid ?? this.sourceid,
       sourcename: sourcename ?? this.sourcename,
       subActivity: subActivity ?? this.subActivity,
@@ -126,6 +130,7 @@ class PersonalData {
       'farmerType': farmerType,
       'religion': religion,
       'caste': caste,
+      'cityDistrict': cityDistrict,
       'sourceid': sourceid,
       'sourcename': sourcename,
       'subActivity': subActivity,
@@ -184,7 +189,8 @@ class PersonalData {
           map['farmerType'] != null ? map['farmerType'] as String : null,
       religion: map['religion'] != null ? map['religion'] as String : null,
       caste: map['caste'] != null ? map['caste'] as String : null,
-      sourceid: map['sourceid'] != null ? map['sourceid'] as String : null,
+      cityDistrict: map['cityDistrict'] != null ? map['caste'] as String : null,
+      sourceid: map['sourceid'] != null ? map['cityDistrict'] as String : null,
       sourcename:
           map['sourcename'] != null ? map['sourcename'] as String : null,
       subActivity:
@@ -226,6 +232,7 @@ class PersonalData {
         other.farmerType == farmerType &&
         other.religion == religion &&
         other.caste == caste &&
+        other.cityDistrict == cityDistrict &&
         other.sourceid == sourceid &&
         other.sourcename == sourcename &&
         other.subActivity == subActivity;
@@ -253,6 +260,7 @@ class PersonalData {
         farmerType.hashCode ^
         religion.hashCode ^
         caste.hashCode ^
+        cityDistrict.hashCode ^
         sourceid.hashCode ^
         sourcename.hashCode ^
         subActivity.hashCode;

@@ -2,11 +2,13 @@
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
+  final String productId;
   final String productDescription;
   final String amountFrom;
   final String amountTo;
 
   const ProductCard({
+    required this.productId,
     required this.productDescription,
     required this.amountFrom,
     required this.amountTo,
@@ -33,6 +35,11 @@ class ProductCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
+            BuildCard(
+              icon: Icons.file_copy_rounded,
+               label: "Procuct Id", 
+               value: productId,
+               ),
             BuildCard(
               icon: Icons.currency_rupee_rounded,
               label: "Amount From",

@@ -44,7 +44,7 @@
 //             (context, state) => {
 //               if (state.status == DedupeFetchStatus.success)
 //                 {
-//                   /* If aadharvalidateResponse is not null, show the response(name,dob,address etc) 
+//                   /* If aadharvalidateResponse is not null, show the response(name,dob,address etc)
 //                   in card */
 //                   if (state.aadharvalidateResponse != null)
 //                     {

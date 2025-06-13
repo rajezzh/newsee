@@ -17,3 +17,15 @@ class AddressDetailsSaveEvent extends AddressDetailsEvent {
   final AddressData? addressData;
   AddressDetailsSaveEvent({required this.addressData});
 }
+
+class OnStateCityChangeEvent extends AddressDetailsEvent {
+  final String stateCode;
+  final String? cityCode;
+  OnStateCityChangeEvent({required this.stateCode, this.cityCode});
+}
+
+// class OnCityChangeEvent<T> extends AddressDetailsEvent {
+//   final T stateCode;
+//   final T cityCode;
+//   OnCityChangeEvent({required this.stateCode, required this.cityCode});
+// }

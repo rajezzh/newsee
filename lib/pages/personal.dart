@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_request.dart';
@@ -14,7 +15,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class Personal extends StatelessWidget {
   final String title;
 
-  Personal(String s, {required this.title, super.key});
+  Personal({required this.title, super.key});
 
   final form = FormGroup({
     'title': FormControl<String>(validators: [Validators.required]),
@@ -23,15 +24,25 @@ class Personal extends StatelessWidget {
     'lastName': FormControl<String>(validators: [Validators.required]),
     'dob': FormControl<String>(validators: [Validators.required]),
     'primaryMobileNumber': FormControl<String>(
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.minLength(10)],
     ),
     'secondaryMobileNumber': FormControl<String>(
-      validators: [Validators.required],
+      validators: [Validators.required, Validators.minLength(10)],
     ),
     'email': FormControl<String>(validators: [Validators.email]),
-    'panNumber': FormControl<String>(validators: [Validators.required]),
     'aadhaar': FormControl<String>(validators: []),
-    'aadharRefNo': FormControl<String>(validators: [Validators.required]),
+    'panNumber': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.PAN_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'aadharRefNo': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.AADHAAR_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
     'loanAmountRequested': FormControl<String>(
       validators: [Validators.required],
     ),
