@@ -75,7 +75,6 @@ class Personal extends StatelessWidget {
             form.control('firstName').updateValue(getNameArray[0]);
           } 
         }
-        // form.control('title').updateValue(state.aadhaarData?.gender ? state.aadhaarData?.gender : form.control('title').value);
         form.control('dob').updateValue(val?.dateOfBirth!);
         form.control('primaryMobileNumber').updateValue(val?.mobile!);
         form.control('email').updateValue(val?.email!);
