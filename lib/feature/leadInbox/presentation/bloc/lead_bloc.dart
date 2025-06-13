@@ -1,3 +1,11 @@
+/* 
+  @author     : gayathri.b 12/06/2025
+  @desc       : BLoC class that encapsulates business logic for lead search feature.
+                Listens to LeadEvent events and emits updated LeadState based on repository responses.
+  @param      : LeadEvent, LeadState
+*/
+
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:newsee/feature/leadInbox/data/repository/lead_respository_impl.dart';
@@ -21,6 +29,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     emit(state.copyWith(status: LeadStatus.loading));
 
     final response = await leadRepository.searchLead(event.request);
+    // check if response i success and contains valid data , success status is emitted
 
     if (response.isRight()) {
       emit(state.copyWith(

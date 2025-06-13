@@ -1,7 +1,7 @@
 /*
- @created on : May 7,2025
- @author : Akshayaa 
- Description : Custom widget for displaying individual lead details in card format
+ @created on : jun 13 ,2025
+ @author : Gayathri.b 
+ Description : Custom shimmer card and text widget for displaying individual lead details inside the  card format
 */
 
 import 'package:flutter/material.dart';

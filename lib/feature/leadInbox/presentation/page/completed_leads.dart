@@ -1,9 +1,20 @@
+
+/*
+  @author     : gayathri.b 12/06/2025
+  @desc       : Stateless widget that renders a list of completed leads using BLoC.
+                It dispatches a SearchLeadEvent on initialization and listens to state changes.
+                Based on the state (loading, success, or failure), it renders:
+                - Shimmer loading cards while waiting,
+              
+*/
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/leadInbox/presentation/bloc/lead_bloc.dart';
 import 'package:newsee/widgets/lead_tile_card-shimmer.dart';
-import 'lead_tile_card.dart';
+import '../../../../widgets/lead_tile_card.dart';
 
 class CompletedLeads extends StatelessWidget {
   @override
@@ -73,8 +84,7 @@ class CompletedLeads extends StatelessWidget {
                 loanamount: lead['lldLoanamtRequested']?.toString() ?? '',
               );
             },
-             
-           
+            
             
           );
         },

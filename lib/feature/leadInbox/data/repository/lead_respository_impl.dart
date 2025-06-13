@@ -11,6 +11,14 @@ import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_responce_model.dart';
 import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart';
 
+/*
+@author       :  gayathri.b 12/05/2025 by
+@description   : Implements the [LeadRepository] interface to perform lead search functionality.
+                  It uses [LeadRemoteDatasource] to make a network request through Dio.
+                  Handles API success and failure responses, including data parsing and error types.
+ @returns       : [Future] of [AsyncResponseHandler] containing either a [Failure] or a list of [LeadResponseModel].
+*/
+
 class LeadRepositoryImpl implements LeadRepository {
   @override
   Future<AsyncResponseHandler<Failure, List<LeadResponseModel>>> searchLead(

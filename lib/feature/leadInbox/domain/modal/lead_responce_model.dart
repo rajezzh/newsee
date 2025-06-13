@@ -1,6 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
+/*
+  @author      : gayathri.b 11/06/2025
+  @description : Represents the response payload returned from the lead search API.
+                 This model contains lead list data, types of loans, and sourcing channel LOVs,
+                 and supports JSON serialization, deep equality, and immutability.
+ @param       : leadlists - List of leads returned from the API.
+                 typeofloan - List of available loan types.
+                 sourcingChannelLov - List of sourcing channels (LOVs).
+  @return      : JSON serializable object used across data and domain layers.
+                
+*/
+
 class LeadResponseModel {
   final List<Map<String, dynamic>> leadlists;
   final List<Map<String, dynamic>> typeofloan;

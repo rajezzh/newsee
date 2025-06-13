@@ -1,5 +1,9 @@
 import 'dart:convert';
 
+  /*
+  @author     : gayathri.b 12/06/2025
+ @description: Represents the request payload for the lead search API.
+   */
 class LeadRequest {
   String userid;
   String? token;

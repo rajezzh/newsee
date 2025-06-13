@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'cif_response_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable() 
 class CifResponseModel {
   final String staffFlag;
   final String cifFlag;
