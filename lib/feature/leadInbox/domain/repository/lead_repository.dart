@@ -1,0 +1,12 @@
+
+
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
+import 'package:newsee/core/api/failure.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/lead_responce_model.dart';
+
+abstract class LeadRepository {
+  Future<AsyncResponseHandler<Failure ,List<LeadResponseModel>>> searchLead(
+    LeadRequest req,
+  );
+}
