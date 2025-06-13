@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
+import 'package:newsee/pages/rupeeformatter.dart';
 import 'package:newsee/widgets/success_bottom_sheet.dart';
 import 'package:newsee/widgets/sysmo_title.dart';
 
@@ -74,7 +76,7 @@ class LeadSubmitPage extends StatelessWidget {
               SysmoTitle(
                 icon: Icons.currency_rupee,
                 label: "Loan Amount",
-                value: '${personalData?.loanAmountRequested}',
+                value: formatAmount('${personalData?.loanAmountRequested}'),
               ),
               SysmoTitle(
                 icon: Icons.location_on,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
@@ -99,8 +100,8 @@ class Loan extends StatelessWidget {
                         child: ProductCard(
                           productId: product.prdCode,
                           productDescription: product.prdDesc,
-                          amountFrom: product.prdamtFromRange,
-                          amountTo: product.prdamtToRange,
+                          amountFrom: formatAmount(product.prdamtFromRange),
+                          amountTo: formatAmount(product.prdamtToRange),
                         ),
                       ),
                     );
@@ -175,10 +176,12 @@ class Loan extends StatelessWidget {
                                   productId: state.selectedProduct!.prdCode,
                                   productDescription:
                                       state.selectedProduct!.prdDesc,
-                                  amountFrom:
-                                      state.selectedProduct!.prdamtFromRange,
-                                  amountTo:
-                                      state.selectedProduct!.prdamtToRange,
+                                  amountFrom: formatAmount(
+                                    state.selectedProduct!.prdamtFromRange,
+                                  ),
+                                  amountTo: formatAmount(
+                                    state.selectedProduct!.prdamtToRange,
+                                  ),
                                 ),
                               ]
                               : [Text('No product')],
