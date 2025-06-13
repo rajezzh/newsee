@@ -73,31 +73,34 @@ class Loan extends StatelessWidget {
           BuildContext ctxt = context;
           print('LoanProductBlocListener:: log =>  ${state.showBottomSheet}');
 
-            if (state.showBottomSheet == true) {
-              openBottomSheet(
-                context,
-                0.7,
-                0.5,
-                0.9,
-                (context, scrollController) => Expanded(
-                  child: ListView.builder(
-                    itemCount: state.productmasterList.length,
-                    itemBuilder: (context, index) {
-                      final product = state.productmasterList[index];
-                      return Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: InkWell(
-                          // card widget for showing products
-                          onTap: () {
-                            ProductMaster selectedProduct = product;
-                            ctxt.read<LoanproductBloc>().add(
-                              ResetShowBottomSheet(
-                                selectedProduct: selectedProduct,
-                              ),
-                            );
-                          },
-                          child: ProductCard(productId:product.prdCode,productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
-     
+          if (state.showBottomSheet == true) {
+            openBottomSheet(
+              context,
+              0.7,
+              0.5,
+              0.9,
+              (context, scrollController) => Expanded(
+                child: ListView.builder(
+                  itemCount: state.productmasterList.length,
+                  itemBuilder: (context, index) {
+                    final product = state.productmasterList[index];
+                    return Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: InkWell(
+                        // card widget for showing products
+                        onTap: () {
+                          ProductMaster selectedProduct = product;
+                          ctxt.read<LoanproductBloc>().add(
+                            ResetShowBottomSheet(
+                              selectedProduct: selectedProduct,
+                            ),
+                          );
+                        },
+                        child: ProductCard(
+                          productId: product.prdCode,
+                          productDescription: product.prdDesc,
+                          amountFrom: product.prdamtFromRange,
+                          amountTo: product.prdamtToRange,
                         ),
                       ),
                     );
@@ -106,7 +109,6 @@ class Loan extends StatelessWidget {
               ),
             );
           }
-
 
           if (state.selectedProduct != null && state.showBottomSheet == false) {
             print('poping current route');
@@ -170,7 +172,7 @@ class Loan extends StatelessWidget {
                           state.selectedProduct != null
                               ? [
                                 ProductCard(
-                                  productId:state.selectedProduct!.prdCode,
+                                  productId: state.selectedProduct!.prdCode,
                                   productDescription:
                                       state.selectedProduct!.prdDesc,
                                   amountFrom:
