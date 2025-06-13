@@ -16,7 +16,12 @@ class CIFSearch extends StatelessWidget {
   final FormGroup cifForm;
   final TabController tabController;
   final String customerConstitution;
-  CIFSearch({super.key, required this.cifForm, required this.tabController, required this.customerConstitution});
+  CIFSearch({
+    super.key,
+    required this.cifForm,
+    required this.tabController,
+    required this.customerConstitution,
+  });
 
   //Dispose Popover
   disposeResponse(context) {
@@ -34,132 +39,149 @@ class CIFSearch extends StatelessWidget {
     List<Map<String, dynamic>> dataList;
     String formattedDate;
     return BlocConsumer<DedupeBloc, DedupeState>(
-      listener: (context, state) => {
-        if (state.status == DedupeFetchStatus.success)
-          {
-            formattedDate = getDateFormat(state.cifResponse?.lleaddob),
-            dataList = [
+      listener:
+          (context, state) => {
+            if (state.status == DedupeFetchStatus.success)
               {
-                "icon": Icons.person,
-                "label": "Name",
-                "value": [
-                  state.cifResponse?.lleadfrstname ?? '',
-                  state.cifResponse?.lleadmidname ?? '',
-                  state.cifResponse?.lleadlastname ?? '',
-                ].where((val) => val.isNotEmpty).join(' '),
-              },
+                formattedDate = getDateFormat(state.cifResponse?.lleaddob),
+                dataList = [
+                  {
+                    "icon": Icons.person,
+                    "label": "Name",
+                    "value": [
+                      state.cifResponse?.lleadfrstname ?? '',
+                      state.cifResponse?.lleadmidname ?? '',
+                      state.cifResponse?.lleadlastname ?? '',
+                    ].where((val) => val.isNotEmpty).join(' '),
+                  },
 
+                  {
+                    "icon": Icons.date_range,
+                    "label": "DOB",
+                    "value": formattedDate,
+                  },
+                  {
+                    "icon": Icons.call,
+                    "label": "Mobile",
+                    "value": state.cifResponse?.lleadmobno,
+                  },
+                  {
+                    "icon": Icons.chrome_reader_mode_rounded,
+                    "label": "PAN",
+                    "value": state.cifResponse?.lleadpanno,
+                  },
+                  {
+                    "icon": Icons.elevator_rounded,
+                    "label": "AAdhaar",
+                    "value": state.cifResponse?.lleadadharno,
+                  },
+                  {
+                    "icon": Icons.home,
+                    "label": "Address",
+                    "value": [
+                      state.cifResponse?.lleadaddress ?? '',
+                      state.cifResponse?.lleadaddresslane1 ?? '',
+                      state.cifResponse?.lleadaddresslane2 ?? '',
+                    ].where((val) => val.isNotEmpty).join(' '),
+                  },
+                  {
+                    "icon": Icons.format_list_numbered_rtl_rounded,
+                    "label": "Pinocode",
+                    "value": state.cifResponse?.lleadpinno,
+                  },
+                ],
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Dialog(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ResponseWidget(
+                        heightSize: 0.6,
+                        dataList: dataList,
+                        buttonshow: true,
+                        onpressed: () => disposeResponse(context),
+                      ),
+                    );
+                  },
+                ),
+              }
+            else if (state.status == CifStatus.failure)
               {
-                "icon": Icons.date_range,
-                "label": "DOB",
-                "value": formattedDate,
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.errorMsg as String)),
+                ),
               },
-              {
-                "icon": Icons.call,
-                "label": "Mobile",
-                "value": state.cifResponse?.lleadmobno,
-              },
-              {
-                "icon": Icons.chrome_reader_mode_rounded,
-                "label": "PAN",
-                "value": state.cifResponse?.lleadpanno,
-              },
-              {
-                "icon": Icons.elevator_rounded,
-                "label": "AAdhaar",
-                "value": state.cifResponse?.lleadadharno,
-              },
-              {
-                "icon": Icons.home,
-                "label": "Address",
-                "value": [
-                  state.cifResponse?.lleadaddress ?? '',
-                  state.cifResponse?.lleadaddresslane1 ?? '',
-                  state.cifResponse?.lleadaddresslane2 ?? '',
-                ].where((val) => val.isNotEmpty).join(' '),
-              },
-              {
-                "icon": Icons.format_list_numbered_rtl_rounded,
-                "label": "Pinocode",
-                "value": state.cifResponse?.lleadpinno,
-              },
-            ],
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Dialog(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(color: Colors.grey.shade300),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ResponseWidget(
-                    heightSize: 0.6,
-                    dataList: dataList,
-                    buttonshow: true,
-                    onpressed: () => disposeResponse(context),
-                  ),
-                );
-              },
-            ),
-          }
-        else if (state.status == CifStatus.failure)
-          {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMsg as String)),
-            ),
           },
-      },
       builder: (context, state) {
         return ReactiveForm(
-            formGroup: cifForm,
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(20, 0,0,0),
-                      child: Text("Cif Search", 
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24
-                        ),
+          formGroup: cifForm,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    child: Text(
+                      "Cif Search",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
                       ),
                     ),
-                    Column(
-                      children: [
-                        IntegerTextField(
-                          controlName: 'cifid', 
-                          label: 'CIF ID',
-                          mantatory: true,
+                  ),
+                  Column(
+                    children: [
+                      IntegerTextField(
+                        controlName: 'cifid',
+                        label: 'CIF ID',
+                        mantatory: true,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                        onPressed: () {
+                          if (cifForm.valid) {
+                            final CIFRequest req =
+                                CIFRequest(
+                                  cifId: cifForm.control('cifid').value,
+                                ).copyWith();
+                            context.read<DedupeBloc>().add(
+                              SearchCifEvent(
+                                request: req,
+                                constitution: customerConstitution,
                               ),
-                            ),
-                          onPressed: () {
-                            if (cifForm.valid) {
-                              final CIFRequest req = CIFRequest(cifId: cifForm.control('cifid').value).copyWith();
-                              context.read<DedupeBloc>().add(SearchCifEvent(request: req, constitution: customerConstitution));
-                            } else {
-                              print("Click function passed go here, ${cifForm.valid}");
-                              cifForm.markAllAsTouched();
-                            }
-                            
-                          }, 
-                          child: state.status == DedupeFetchStatus.loading ? CircularProgressIndicator() : Text("Search")
-                        )
-                      ],
-                    )
-                  ]
-                )
-              )
-            )
+                            );
+                          } else {
+                            print(
+                              "Click function passed go here, ${cifForm.valid}",
+                            );
+                            cifForm.markAllAsTouched();
+                          }
+                        },
+                        child:
+                            state.status == DedupeFetchStatus.loading
+                                ? CircularProgressIndicator()
+                                : Text("Search"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
