@@ -18,4 +18,7 @@ class ApiConfig {
   static const String API_RESPONSE_SUCCESS_KEY = 'Success';
 
   static const String API_RESPONSE_RESPONSE_KEY = 'responseData';
+
+    static const String LEAD_INBOX_API_ENDPOINT = 'MobileService/getLeadInboxDetails';
+
 }
