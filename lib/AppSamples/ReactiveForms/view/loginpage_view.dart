@@ -101,7 +101,7 @@ class LoginpageView extends StatelessWidget {
                       textAlign: TextAlign.center,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      padding: const EdgeInsets.only(bottom: 30),
 
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -145,7 +145,7 @@ class LoginpageView extends StatelessWidget {
                                 color: Colors.blue,
                               ),
                               Text(
-                                'Agree Loan',
+                                'Agri Loan',
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -238,7 +238,7 @@ class LoginpageView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 80),
+            SizedBox(height: 50),
 
             // Access to additional options like Maintenance, Reach Us, and More
             Row(

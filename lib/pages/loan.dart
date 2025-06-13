@@ -47,187 +47,177 @@ import 'package:reactive_forms/reactive_forms.dart';
             "subCategory": "426",
             "producrId": "10"
     },
-
   step 2:
   step 3:
  */
+
 class Loan extends StatelessWidget {
   final String title;
-  Loan(String s, {super.key, required this.title});
+  Loan({super.key, required this.title});
 
   final form = FormGroup({
     'typeofloan': FormControl<String>(validators: [Validators.required]),
     'maincategory': FormControl<String>(validators: [Validators.required]),
     'subcategory': FormControl<String>(validators: [Validators.required]),
   });
-
   @override
   Widget build(BuildContext context) {
     final _context = context;
-    return BlocProvider(
-      create:
-          (context) =>
-              LoanproductBloc()..add(
-                LoanproductInit(loanproductState: LoanproductState.init()),
-              ),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("Loan Details"),
-          automaticallyImplyLeading: false,
-        ),
-        body: BlocConsumer<LoanproductBloc, LoanproductState>(
-          listener: (context, state) {
-            BuildContext ctxt = context;
-            print('LoanProductBlocListener:: log =>  ${state.showBottomSheet}');
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Loan Details"),
+        automaticallyImplyLeading: false,
+      ),
+      body: BlocConsumer<LoanproductBloc, LoanproductState>(
+        listener: (context, state) {
+          BuildContext ctxt = context;
+          print('LoanProductBlocListener:: log =>  ${state.showBottomSheet}');
 
-            if (state.showBottomSheet == true) {
-              openBottomSheet(
-                context,
-                0.7,
-                0.5,
-                0.9,
-                (context, scrollController) => Expanded(
-                  child: ListView.builder(
-                    itemCount: state.productmasterList.length,
-                    itemBuilder: (context, index) {
-                      final product = state.productmasterList[index];
-                      return Padding(
-                        padding: EdgeInsets.all(5.0),
-                        child: InkWell(
-                          // card widget for showing products
-                          onTap: () {
-                            ProductMaster selectedProduct = product;
-                            ctxt.read<LoanproductBloc>().add(
-                              ResetShowBottomSheet(
-                                selectedProduct: selectedProduct,
-                              ),
-                            );
-                          },
-                          child: ProductCard(
-                            productDescription: product.prdDesc,
-                            amountFrom: product.prdamtFromRange,
-                            amountTo: product.prdamtToRange,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              );
-            }
-
-            if (state.selectedProduct != null &&
-                state.showBottomSheet == false) {
-              print('poping current route');
-              LoanproductState.init();
-              Navigator.of(_context).pop();
-            }
-          },
-          // child: BlocBuilder<LoanproductBloc, LoanproductState>(
-          builder: (context, state) {
-            return ReactiveForm(
-              formGroup: form,
-
-              child: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SearchableDropdown<ProductSchema>(
-                        controlName: 'typeofloan',
-                        label: 'Type Of Loan',
-                        items: state.productSchemeList,
-                        onChangeListener: (ProductSchema val) {
-                          form.controls['typeofloan']?.updateValue(
-                            val.optionDesc,
-                          );
-
-                          context.read<LoanproductBloc>().add(
-                            LoanProductDropdownChange(field: val),
-                          );
-                        },
-                      ),
-                      SearchableDropdown(
-                        controlName: 'maincategory',
-                        label: 'Main Category',
-                        items: state.mainCategoryList,
-                        onChangeListener: (Product val) {
-                          form.controls['maincategory']?.updateValue(
-                            val.lsfFacDesc,
-                          );
-
-                          context.read<LoanproductBloc>().add(
-                            LoanProductDropdownChange(field: val),
-                          );
-                        },
-                      ),
-                      SearchableDropdown(
-                        controlName: 'subcategory',
-                        label: 'Sub Category',
-                        items: state.subCategoryList,
-                        onChangeListener: (Product val) {
-                          form.controls['subcategory']?.updateValue(
-                            val.lsfFacDesc,
-                          );
-
-                          context.read<LoanproductBloc>().add(
-                            LoanProductDropdownChange(field: val),
-                          );
-                        },
-                      ),
-
-                      Column(
-                        children:
-                            state.selectedProduct != null
-                                ? [
-                                  ProductCard(
-                                    productDescription:
-                                        state.selectedProduct!.prdDesc,
-                                    amountFrom:
-                                        state.selectedProduct!.prdamtFromRange,
-                                    amountTo:
-                                        state.selectedProduct!.prdamtToRange,
-                                  ),
-                                ]
-                                : [Text('No product')],
-                      ),
-                      Center(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
+          if (state.showBottomSheet == true) {
+            openBottomSheet(
+              context,
+              0.7,
+              0.5,
+              0.9,
+              (context, scrollController) => Expanded(
+                child: ListView.builder(
+                  itemCount: state.productmasterList.length,
+                  itemBuilder: (context, index) {
+                    final product = state.productmasterList[index];
+                    return Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: InkWell(
+                        // card widget for showing products
+                        onTap: () {
+                          ProductMaster selectedProduct = product;
+                          ctxt.read<LoanproductBloc>().add(
+                            ResetShowBottomSheet(
+                              selectedProduct: selectedProduct,
                             ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (form.valid) {
-                              final tabController = DefaultTabController.of(
-                                context,
-                              );
-                              if (tabController.index <
-                                  tabController.length - 1) {
-                                tabController.animateTo(
-                                  tabController.index + 1,
-                                );
-                              }
-                            } else {
-                              form.markAllAsTouched();
-                            }
-                          },
-                          child: Text('Next'),
+                          );
+                        },
+                        child: ProductCard(
+                          productId: product.prdCode,
+                          productDescription: product.prdDesc,
+                          amountFrom: product.prdamtFromRange,
+                          amountTo: product.prdamtToRange,
                         ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             );
-          },
-        ),
+          }
+
+          if (state.selectedProduct != null && state.showBottomSheet == false) {
+            print('poping current route');
+            LoanproductState.init();
+            Navigator.of(_context).pop();
+          }
+        },
+        // child: BlocBuilder<LoanproductBloc, LoanproductState>(
+        builder: (context, state) {
+          return ReactiveForm(
+            formGroup: form,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SearchableDropdown<ProductSchema>(
+                      controlName: 'typeofloan',
+                      label: 'Type Of Loan',
+                      items: state.productSchemeList,
+                      onChangeListener: (ProductSchema val) {
+                        form.controls['typeofloan']?.updateValue(
+                          val.optionDesc,
+                        );
+
+                        context.read<LoanproductBloc>().add(
+                          LoanProductDropdownChange(field: val),
+                        );
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'maincategory',
+                      label: 'Main Category',
+                      items: state.mainCategoryList,
+                      onChangeListener: (Product val) {
+                        form.controls['maincategory']?.updateValue(
+                          val.lsfFacDesc,
+                        );
+
+                        context.read<LoanproductBloc>().add(
+                          LoanProductDropdownChange(field: val),
+                        );
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'subcategory',
+                      label: 'Sub Category',
+                      items: state.subCategoryList,
+                      onChangeListener: (Product val) {
+                        form.controls['subcategory']?.updateValue(
+                          val.lsfFacDesc,
+                        );
+
+                        context.read<LoanproductBloc>().add(
+                          LoanProductDropdownChange(field: val),
+                        );
+                      },
+                    ),
+
+                    Column(
+                      children:
+                          state.selectedProduct != null
+                              ? [
+                                ProductCard(
+                                  productId: state.selectedProduct!.prdCode,
+                                  productDescription:
+                                      state.selectedProduct!.prdDesc,
+                                  amountFrom:
+                                      state.selectedProduct!.prdamtFromRange,
+                                  amountTo:
+                                      state.selectedProduct!.prdamtToRange,
+                                ),
+                              ]
+                              : [Text('No product')],
+                    ),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (form.valid) {
+                            final tabController = DefaultTabController.of(
+                              context,
+                            );
+                            if (tabController.index <
+                                tabController.length - 1) {
+                              tabController.animateTo(tabController.index + 1);
+                            }
+                          } else {
+                            form.markAllAsTouched();
+                          }
+                        },
+                        child: Text('Next'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

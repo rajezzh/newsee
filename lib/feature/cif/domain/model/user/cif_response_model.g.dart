@@ -16,7 +16,7 @@ CifResponseModel _$CifResponseModelFromJson(Map<String, dynamic> json) =>
       remarks: json['remarks'] as String,
       shgFlag: json['shgFlag'] as bool,
     );
-
+ 
 Map<String, dynamic> _$CifResponseModelToJson(CifResponseModel instance) =>
     <String, dynamic>{
       'staffFlag': instance.staffFlag,
