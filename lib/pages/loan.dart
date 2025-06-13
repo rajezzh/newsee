@@ -47,10 +47,10 @@ import 'package:reactive_forms/reactive_forms.dart';
             "subCategory": "426",
             "producrId": "10"
     },
-
   step 2:
   step 3:
  */
+
 class Loan extends StatelessWidget {
   final String title;
   Loan({super.key, required this.title});
@@ -60,7 +60,6 @@ class Loan extends StatelessWidget {
     'maincategory': FormControl<String>(validators: [Validators.required]),
     'subcategory': FormControl<String>(validators: [Validators.required]),
   });
-
   @override
   Widget build(BuildContext context) {
     final _context = context;
@@ -74,33 +73,31 @@ class Loan extends StatelessWidget {
           BuildContext ctxt = context;
           print('LoanProductBlocListener:: log =>  ${state.showBottomSheet}');
 
-          if (state.showBottomSheet == true) {
-            openBottomSheet(
-              context,
-              0.7,
-              0.5,
-              0.9,
-              (context, scrollController) => Expanded(
-                child: ListView.builder(
-                  itemCount: state.productmasterList.length,
-                  itemBuilder: (context, index) {
-                    final product = state.productmasterList[index];
-                    return Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: InkWell(
-                        // card widget for showing products
-                        onTap: () {
-                          ProductMaster selectedProduct = product;
-                          ctxt.read<LoanproductBloc>().add(
-                            ResetShowBottomSheet(
-                              selectedProduct: selectedProduct,
-                            ),
-                          );
-                        },
-                        child: ProductCard(
-                          productDescription: product.prdDesc,
-                          amountFrom: product.prdamtFromRange,
-                          amountTo: product.prdamtToRange,
+            if (state.showBottomSheet == true) {
+              openBottomSheet(
+                context,
+                0.7,
+                0.5,
+                0.9,
+                (context, scrollController) => Expanded(
+                  child: ListView.builder(
+                    itemCount: state.productmasterList.length,
+                    itemBuilder: (context, index) {
+                      final product = state.productmasterList[index];
+                      return Padding(
+                        padding: EdgeInsets.all(5.0),
+                        child: InkWell(
+                          // card widget for showing products
+                          onTap: () {
+                            ProductMaster selectedProduct = product;
+                            ctxt.read<LoanproductBloc>().add(
+                              ResetShowBottomSheet(
+                                selectedProduct: selectedProduct,
+                              ),
+                            );
+                          },
+                          child: ProductCard(productId:product.prdCode,productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
+     
                         ),
                       ),
                     );
@@ -109,6 +106,7 @@ class Loan extends StatelessWidget {
               ),
             );
           }
+
 
           if (state.selectedProduct != null && state.showBottomSheet == false) {
             print('poping current route');
@@ -120,7 +118,6 @@ class Loan extends StatelessWidget {
         builder: (context, state) {
           return ReactiveForm(
             formGroup: form,
-
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
@@ -173,6 +170,7 @@ class Loan extends StatelessWidget {
                           state.selectedProduct != null
                               ? [
                                 ProductCard(
+                                  productId:state.selectedProduct!.prdCode,
                                   productDescription:
                                       state.selectedProduct!.prdDesc,
                                   amountFrom:
