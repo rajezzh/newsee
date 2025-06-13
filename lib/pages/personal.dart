@@ -4,7 +4,6 @@ import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
-import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -88,14 +87,17 @@ class Personal extends StatelessWidget {
                       CustomTextField(
                         controlName: 'firstName',
                         label: 'First Name',
+                        mantatory: true,
                       ),
                       CustomTextField(
                         controlName: 'middleName',
                         label: 'Middle Name',
+                        mantatory: true,
                       ),
                       CustomTextField(
                         controlName: 'lastName',
                         label: 'Last Name',
+                        mantatory: true,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -130,22 +132,40 @@ class Personal extends StatelessWidget {
                         ),
                       ),
                       IntegerTextField(
-                        'primaryMobileNumber',
-                        'Primary Mobile Number',
+                        controlName: 'primaryMobileNumber',
+                        label: 'Primary Mobile Number',
+                        mantatory: true,
+                        maxlength: 10,
+                        minlength: 10,
                       ),
                       IntegerTextField(
-                        'secondaryMobileNumber',
-                        'Secondary Mobile Number',
+                        controlName: 'secondaryMobileNumber',
+                        label: 'Secondary Mobile Number',
+                        mantatory: true,
+                        maxlength: 10,
+                        minlength: 10,
                       ),
-                      CustomTextField(controlName: 'email', label: 'Email Id'),
+                      CustomTextField(
+                        controlName: 'email', 
+                        label: 'Email Id',
+                        mantatory: true,
+                      ),
                       CustomTextField(
                         controlName: 'panNumber',
                         label: 'Pan No',
+                        mantatory: true,
                       ),
-                      IntegerTextField('aadharRefNo', 'Aadhaar No'),
                       IntegerTextField(
-                        'loanAmountRequested',
-                        'Loan Amount Required',
+                        controlName: 'aadharRefNo', 
+                        label: 'Aadhaar No',
+                        mantatory: true,
+                        maxlength: 12,
+                        minlength: 12,
+                      ),
+                      IntegerTextField(
+                        controlName: 'loanAmountRequested',
+                        label: 'Loan Amount Required',
+                        mantatory: true,
                       ),
                       SearchableDropdown(
                         controlName: 'natureOfActivity',

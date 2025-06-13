@@ -103,6 +103,7 @@ class Loan extends StatelessWidget {
                             );
                           },
                           child: ProductCard(productId:product.prdCode,productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
+                         
                         ),
                       );
                     },
@@ -176,6 +177,14 @@ class Loan extends StatelessWidget {
                             state.selectedProduct != null
                                 ? [
                                   ProductCard(productId:state.selectedProduct!.prdCode,productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
+                                  ProductCard(
+                                    productDescription:
+                                        state.selectedProduct!.prdDesc,
+                                    amountFrom:
+                                        state.selectedProduct!.prdamtFromRange,
+                                    amountTo:
+                                        state.selectedProduct!.prdamtToRange,
+                                  ),
                                 ]
                                 : [Text('No product')],
                       ),
@@ -221,4 +230,3 @@ class Loan extends StatelessWidget {
     );
   }
 }
-
