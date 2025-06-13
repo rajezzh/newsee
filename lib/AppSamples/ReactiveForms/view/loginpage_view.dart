@@ -7,7 +7,6 @@ import 'reachus.dart';
 import 'more.dart';
 import 'login_mpin.dart';
 
-
 /*
 author : Gayathri B 
 description : A stateless widget that serves as the main login screen for the app. It offers
@@ -34,14 +33,13 @@ class LoginpageView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Positioned.fill(
-            
-            
-            child: SvgPicture.asset('assets/app_background_2.svg', fit: BoxFit.cover,),
-            
-            
+              child: SvgPicture.asset(
+                'assets/app_background_2.svg',
+                fit: BoxFit.cover,
+              ),
             ),
+
             // Padding(
             //   padding: const EdgeInsets.only(top: 0),
             //   child: Row(
@@ -59,7 +57,6 @@ class LoginpageView extends StatelessWidget {
             //     ],
             //   ),
             // ),
-
             SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.all(10),
@@ -114,11 +111,12 @@ class LoginpageView extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {},
-                                  icon: SvgPicture.asset(
-                                      'assets/Retail_loan.svg',
-                                      height: 40,
-                                      width: 40,
-                                    ), iconSize: 40,
+                                icon: SvgPicture.asset(
+                                  'assets/Retail_loan.svg',
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                iconSize: 40,
                                 color: Colors.amber,
                               ),
                               Padding(
@@ -138,11 +136,12 @@ class LoginpageView extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {},
-                                      icon: SvgPicture.asset(
-                                      'assets/Agri_Loan.svg',
-                                      height: 40,
-                                      width: 40,
-                                    ),                                  iconSize: 40,
+                                icon: SvgPicture.asset(
+                                  'assets/Agri_Loan.svg',
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                iconSize: 40,
                                 color: Colors.blue,
                               ),
                               Text(
@@ -159,12 +158,12 @@ class LoginpageView extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {},
-                                      icon: SvgPicture.asset(
-                                      'assets/MSME.svg',
-                                      height: 40,
-                                      width: 40,
-                                    ),                                 
-                                  iconSize: 40,
+                                icon: SvgPicture.asset(
+                                  'assets/MSME.svg',
+                                  height: 40,
+                                  width: 40,
+                                ),
+                                iconSize: 40,
                                 color: Colors.pink,
                               ),
                               Text(
