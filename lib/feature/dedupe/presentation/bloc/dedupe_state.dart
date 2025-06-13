@@ -15,12 +15,18 @@ class DedupeState extends Equatable {
   final String? errorMsg;
   final DedupeResponse? dedupeResponse;
   final AadharvalidateResponse? aadharvalidateResponse;
+  final CifResponse? cifResponse;
+  final bool? isNewCustomer;
+  final String? constitution;
 
   DedupeState({
     this.status,
     this.errorMsg,
     this.dedupeResponse,
     this.aadharvalidateResponse,
+    this.cifResponse,
+    this.isNewCustomer,
+    this.constitution,
   });
 
   DedupeState copyWith({
@@ -28,13 +34,18 @@ class DedupeState extends Equatable {
     String? errorMsg,
     DedupeResponse? dedupeResponse,
     AadharvalidateResponse? aadharvalidateResponse,
+    CifResponse? cifResponse,
+    bool? isNewCustomer,
+    String? constitution
   }) {
     return DedupeState(
       status: status ?? this.status,
       errorMsg: errorMsg ?? this.errorMsg,
       dedupeResponse: dedupeResponse ?? this.dedupeResponse,
-      aadharvalidateResponse:
-          aadharvalidateResponse ?? this.aadharvalidateResponse,
+      aadharvalidateResponse: aadharvalidateResponse ?? this.aadharvalidateResponse,
+      cifResponse: cifResponse ?? this.cifResponse,
+      isNewCustomer: isNewCustomer ?? this.isNewCustomer,
+      constitution: constitution ?? this.constitution
     );
   }
 
@@ -47,5 +58,8 @@ class DedupeState extends Equatable {
     errorMsg,
     dedupeResponse,
     aadharvalidateResponse,
+    cifResponse,
+    isNewCustomer,
+    constitution
   ];
 }
