@@ -62,7 +62,7 @@ final class AddressDetailsBloc
     AddressDetailsSaveEvent event,
     Emitter emit,
   ) async {
-    print('PersonalData => ${event.addressData}');
+    print('Address Data => ${event.addressData}');
     emit(
       state.copyWith(
         addressData: event.addressData,

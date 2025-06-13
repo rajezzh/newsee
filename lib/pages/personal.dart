@@ -11,7 +11,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class Personal extends StatelessWidget {
   final String title;
 
-  Personal(String s, {required this.title, super.key});
+  Personal({required this.title, super.key});
 
   final form = FormGroup({
     'title': FormControl<String>(validators: [Validators.required]),
@@ -146,7 +146,7 @@ class Personal extends StatelessWidget {
                         minlength: 10,
                       ),
                       CustomTextField(
-                        controlName: 'email', 
+                        controlName: 'email',
                         label: 'Email Id',
                         mantatory: true,
                       ),
@@ -156,7 +156,7 @@ class Personal extends StatelessWidget {
                         mantatory: true,
                       ),
                       IntegerTextField(
-                        controlName: 'aadharRefNo', 
+                        controlName: 'aadharRefNo',
                         label: 'Aadhaar No',
                         mantatory: true,
                         maxlength: 12,
