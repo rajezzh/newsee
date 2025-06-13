@@ -1,14 +1,15 @@
 /*
- @created on : May 7,2025
- @author : Akshayaa 
- Description : Custom widget for displaying individual lead details in card format
+ @created on : jun 13 ,2025
+ @author : Gayathri.b 
+ Description : Custom shimmer card and text widget for displaying individual lead details inside the  card format
 */
 
 import 'package:flutter/material.dart';
+import 'package:newsee/widgets/shimmer_runner.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Utils/utils.dart';
 
-class LeadTileCard extends StatelessWidget {
+class LeadTileCardShimmer extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
@@ -20,7 +21,7 @@ class LeadTileCard extends StatelessWidget {
   final String location;
   final String loanamount;
 
-  const LeadTileCard({
+  const LeadTileCardShimmer({
     Key? key,
     required this.title,
     required this.subtitle,
@@ -36,6 +37,7 @@ class LeadTileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return InkWell(
       onTap: () {},
       child: Card(
@@ -50,29 +52,19 @@ class LeadTileCard extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     backgroundColor: color.withOpacity(0.1),
-                    child: Icon(icon, color: color),
+                    child: ShimmerRunner(container: "sdfsdfsdfsdfsdf", isIcon: true),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(subtitle, style: TextStyle(color: Colors.black)),
+                        ShimmerRunner(container: "sdfsdfsdfsdfsdf", isIcon: false),
+                        ShimmerRunner(container: "sdfsdfsdfsdfsdf", isIcon: false),
                       ],
                     ),
                   ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.black,
-                  ),
+                  const ShimmerRunner(container: "sdfsdfsdfsdfsdf", isIcon: true)
                 ],
               ),
               const SizedBox(height: 12),
@@ -85,15 +77,16 @@ class LeadTileCard extends StatelessWidget {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Expanded(
-                      child: GestureDetector(
-                        onTap: () async {
+                Expanded(
+                      child: TextButton(
+                        onPressed: () async {
                           final phoneNumber = "919940362579";
-                           final Uri uri = Uri.parse('tel:$phoneNumber');
-                          if (!await canLaunchUrl(uri)) {
-                            throw 'Could not launch $uri';
+                          final Uri _url = Uri.parse('https://wa.me/sms:$phoneNumber');
+
+                          if (!await canLaunchUrl(_url)) {
+                            throw 'Could not launch $_url';
                           } else {
-                            await launchUrl(uri);
+                            await launchUrl(_url);
                           }
                           Navigator.pop(context);
                         },
@@ -132,9 +125,9 @@ class LeadTileCard extends StatelessWidget {
   Widget iconWithLabel(IconData iconData, String label) {
     return Row(
       children: [
-        Icon(iconData, size: 16, color: color),
+        ShimmerRunner(container:'sdfsdfsdfsdfsdf', isIcon: true),
         const SizedBox(width: 6),
-        Flexible(child: Text(label, style: const TextStyle(fontSize: 12))),
+        Flexible(child: ShimmerRunner(container: "sdfsdfsdfsdfsdf", isIcon: false)),
       ],
     );
   }

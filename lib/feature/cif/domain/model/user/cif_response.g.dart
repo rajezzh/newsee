@@ -6,7 +6,7 @@ part of 'cif_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CifResponse _$CifResponseModelFromJson(Map<String, dynamic> json) =>
+CifResponse _$CifResponseFromJson(Map<String, dynamic> json) =>
     CifResponse(
       lleadtitle: json['lleadtitle'] as String,
       lleadfrstname: json['lleadfrstname'] as String,
@@ -33,7 +33,7 @@ CifResponse _$CifResponseModelFromJson(Map<String, dynamic> json) =>
       lleadResidentStatus: json['lleadResidentStatus'] as String,
     );
 
-Map<String, dynamic> _$CifResponseModelToJson(CifResponse instance) =>
+Map<String, dynamic> _$CifResponseToJson(CifResponse instance) =>
     <String, dynamic>{
       'lleadtitle': instance.lleadtitle,
       'lleadfrstname': instance.lleadfrstname,

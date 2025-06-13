@@ -164,9 +164,9 @@ class CifResponse {
     );
   }
 
-  Map<String, dynamic> toJson() => _$CifResponseModelToJson(this);
+  Map<String, dynamic> toJson() => _$CifResponseToJson(this);
 
-  factory CifResponse.fromJson(Map<String, dynamic> source) => _$CifResponseModelFromJson(source);
+  factory CifResponse.fromJson(Map<String, dynamic> source) => _$CifResponseFromJson(source);
 
   @override
   String toString() {
