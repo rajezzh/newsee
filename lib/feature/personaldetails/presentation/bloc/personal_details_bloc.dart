@@ -42,7 +42,7 @@ final class PersonalDetailsBloc
       PersonalDetailsState(
         lovList: listOfLov,
         personalData: null,
-        status: SaveStatus.datafetch,
+        status: SaveStatus.init,
       ),
     );
   }
@@ -73,7 +73,7 @@ final class PersonalDetailsBloc
     if (responseHandler.isRight()) {
       emit(
         state.copyWith(
-          status: SaveStatus.datafetch,
+          status: SaveStatus.init,
           aadhaarData: responseHandler.right,
         ),
       );

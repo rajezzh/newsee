@@ -17,7 +17,7 @@ part of 'personal_details_bloc.dart';
 /* 
 
  */
-enum SaveStatus { init, loading, datafetch, success, failure }
+enum SaveStatus { init, loading, success, failure }
 
 class PersonalDetailsState extends Equatable {
   final List<Lov>? lovList;

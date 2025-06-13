@@ -144,9 +144,9 @@ class Personal extends StatelessWidget {
         },
         builder:
             (context, state)  {        
-              if (state.status == SaveStatus.datafetch && state.aadhaarData != null) {
+              if (state.status == SaveStatus.init && state.aadhaarData != null) {
                 mapAadhaarData(state.aadhaarData);
-              } else if (state.status == SaveStatus.datafetch && state.lovList != null) {
+              } else if (state.status == SaveStatus.init && state.lovList != null) {
                 form.control('title').updateValue("3");
                 final dedupeState = context.read<DedupeBloc>().state;
                 if (dedupeState.cifResponse != null) {
