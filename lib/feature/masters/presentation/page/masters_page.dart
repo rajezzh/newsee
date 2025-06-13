@@ -102,6 +102,7 @@ class MastersPage extends StatelessWidget {
                 case MasterTypes.statecitymaster:
                   // state and city master completed , fetching productschema
                   // set completedMasters to 3
+
                   updateDownloadProgress(3);
                   print('progress completed => $progress');
                   context.read<MastersBloc>().add(

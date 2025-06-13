@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_request.dart';
-import 'package:newsee/feature/cif/presentation/bloc/cif_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
@@ -55,6 +54,11 @@ class Personal extends StatelessWidget {
     }
   }
 
+  /* 
+    @author     : ganeshkumar.b  13/06/2025
+    @desc       : map Aadhaar response in personal form
+    @param      : {AadharvalidateResponse val} - aadhaar response
+  */
   mapAadhaarData(val) {
     try {
       if (val != null) {
@@ -75,8 +79,8 @@ class Personal extends StatelessWidget {
             form.control('firstName').updateValue(getNameArray[0]);
           } 
         }
-        form.control('dob').updateValue(val?.dateOfBirth!);
-        form.control('primaryMobileNumber').updateValue(val?.mobile!);
+        form.control('dob').updateValue(getCorrectDateFormat(val?.dateOfBirth!));
+        // form.control('primaryMobileNumber').updateValue(val?.mobile!);
         form.control('email').updateValue(val?.email!);
       }
     } catch(error) {
@@ -84,17 +88,28 @@ class Personal extends StatelessWidget {
     }
   }
 
-  mapCifDate(val) {
+
+  /* 
+    @author     : ganeshkumar.b  13/06/2025
+    @desc       : map cif response in personal form
+    @param      : {CifResponse val} - cifresponse
+  */
+  mapCifDate(val, state) {
     try {
-      form.control('firstName').updateValue(val['lleadfrstname']!);
-      form.control('middleName').updateValue(val['lleadmidname']!);
-      form.control('lastName').updateValue(val['lleadlastname']!);
-      form.control('dob').updateValue(getDateFormat(val['lleaddob']!));
-      form.control('primaryMobileNumber').updateValue(val['lleadmobno']!);
-      form.control('email').updateValue(val['lleademailid']!);
-      form.control('panNumber').updateValue(val['lleadpanno']!);
-      form.control('aadharRefNo').updateValue(val['lleadadharno']!);  
-      form.control('title').updateValue(val['lleadtitle']!);    
+      form.control('firstName').updateValue(val.lleadfrstname!);
+      form.control('middleName').updateValue(val.lleadmidname!);
+      form.control('lastName').updateValue(val.lleadlastname!);
+      form.control('dob').updateValue(getDateFormat(val.lleaddob!));
+      form.control('primaryMobileNumber').updateValue(val.lleadmobno!);
+      form.control('email').updateValue(val.lleademailid!);
+      form.control('panNumber').updateValue(val.lleadpanno!);
+      form.control('aadharRefNo').updateValue(val.lleadadharno!);  
+      if (val.lleadadharno != null) {
+        refAadhaar = true;
+      }
+      // Lov vtitledata = state.lovList?.firstWhere((lov) => lov.Header == 'Title' && lov.optvalue == val['lleadtitle']);
+      // print("vtitledata.optDesc =>  ${vtitledata.optDesc}");
+      // form.control('title').updateValue(vtitledata.optvalue);
     } catch(error) {
       print("autoPopulateData-catch-error $error");
     }
@@ -114,22 +129,21 @@ class Personal extends StatelessWidget {
           );
           if (state.status == SaveStatus.success) {
             goToNextTab(context);
-          } else if (state.status == SaveStatus.datafetch && state.aadhaarData != null) {
-            mapAadhaarData(state.aadhaarData);
-          } else if (state.status == SaveStatus.datafetch && state.lovList != null) {
-            final cifState = context.read<CifBloc>().state;
-            if (cifState.cifResponseModel != null && cifState.cifResponseModel!.lpretLeadDetails.isNotEmpty) {
-              mapCifDate(cifState.cifResponseModel?.lpretLeadDetails);
-            }
-            final dedupeState = context.read<DedupeBloc>().state;
-            if (dedupeState.aadharvalidateResponse != null) {
-              mapAadhaarData(dedupeState.aadharvalidateResponse);
-            } else if (dedupeState.dedupeResponse!.remarksFlag ) {
-            }
-          }
+          } 
         },
         builder:
-            (context, state)  {              
+            (context, state)  {        
+              if (state.status == SaveStatus.datafetch && state.aadhaarData != null) {
+                mapAadhaarData(state.aadhaarData);
+              } else if (state.status == SaveStatus.datafetch && state.lovList != null) {
+                form.control('title').updateValue("3");
+                final dedupeState = context.read<DedupeBloc>().state;
+                if (dedupeState.cifResponse != null) {
+                  mapCifDate(dedupeState.cifResponse, state);
+                } else if (dedupeState.aadharvalidateResponse != null) {
+                   mapAadhaarData(dedupeState.aadharvalidateResponse);
+                }
+              }
               return ReactiveForm(
                 formGroup: form,
                 child: SafeArea(
@@ -144,7 +158,9 @@ class Personal extends StatelessWidget {
                                   .where((v) => v.Header == 'Title')
                                   .toList(),
                           onChangeListener:
-                              (Lov val) => form.controls['title']?.updateValue(
+                          
+                              (Lov val) => 
+                              form.controls['title']?.updateValue(
                                 val.optvalue,
                               ),
                         ),
@@ -240,7 +256,6 @@ class Personal extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            // if (state.?.remarksFlag == false)
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color.fromARGB(

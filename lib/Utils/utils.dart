@@ -10,17 +10,30 @@ String formatAmount(String amount) {
   }
 }
 
-// Convert API Response Date to String Date(dd-MM-yyyy);
+// Convert CIF Response Date to String Date(dd-MM-yyyy);
 String getDateFormat(dynamic value) {
   try {
     final DateFormat parser = DateFormat("MMM dd, yyyy, hh:mm:ss a");
     DateTime date = parser.parse(value);
     DateFormat formatter = DateFormat('dd-MM-yyyy');
     String convertedDateString = formatter.format(date);
-  return convertedDateString;
+    return convertedDateString;
   } catch (error) {
     print("getDateFormat-string $error");
     return "";
   }
-  
+}
+
+// Convert Aadhaar Response Date to String Date(dd-MM-yyyy);
+String getCorrectDateFormat(dynamic value) {
+  try {
+    DateFormat parser = DateFormat('yyyy-MM-dd');
+    DateTime date = parser.parse(value);
+    DateFormat formatter = DateFormat('dd-MM-yyyy');
+    String convertedDateString = formatter.format(date);
+    return convertedDateString;
+  } catch (error) {
+    print("getCorrectDateFormat-string $error");
+    return "";
+  }
 }

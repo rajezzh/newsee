@@ -5,11 +5,14 @@
  */
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/DBConstants/table_key_geographymaster.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_response_model.dart';
+import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/statecitymaster.dart';
+import 'package:newsee/feature/masters/domain/repository/geographymaster_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/masters/domain/repository/statecity_master_crud_repo.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -30,8 +33,15 @@ final class AddressDetailsBloc
   ) async {
     Database _db = await DBConfig().database;
     List<Lov> listOfLov = await LovCrudRepo(_db).getAll();
-    List<Statecitymaster> stateCityMaster =
-        await StatecityMasterCrudRepo(_db).getAll();
+    List<GeographyMaster> stateCityMaster = await GeographymasterCrudRepo(
+      _db,
+    ).getByColumnNames(
+      columnNames: [
+        TableKeysGeographyMaster.stateId,
+        TableKeysGeographyMaster.cityId,
+      ],
+      columnValues: ['0', '0'],
+    );
     emit(
       state.copyWith(
         lovList: listOfLov,
