@@ -32,7 +32,7 @@ class KycPage extends StatelessWidget {
                   label: 'Applicant Type',
                   items: ['', ''],
                 ),
-                CustomTextField('panno', 'PAN No'),
+                CustomTextField(controlName: 'panno',label: 'PAN NO'),
                 IntegerTextField('aadhaarno', 'Aadhaar No'),
                 Dropdown(
                   controlName: 'otheridproof',

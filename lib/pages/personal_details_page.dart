@@ -84,9 +84,9 @@ class PersonalDetailsPage extends StatelessWidget {
                   ],
                 ),
                 IntegerTextField('mobilenumber', 'Mobile Number'),
-                CustomTextField('emailid', 'Email Id'),
-                CustomTextField('address', 'Address'),
-                CustomTextField('addressline1', 'Address Line 1'),
+                CustomTextField(controlName: 'emailid',label: 'Email Id'),
+                CustomTextField(controlName: 'address',label: 'Address'),
+                CustomTextField(controlName: 'addressline1',label: 'Address 1'),
                 SearchableDropdown(
                   controlName: 'state',
                   label: 'State',

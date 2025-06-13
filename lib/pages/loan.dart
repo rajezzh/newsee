@@ -93,6 +93,7 @@ class Loan extends StatelessWidget {
                       return Padding(
                         padding: EdgeInsets.all(5.0),
                         child: InkWell(
+                          // card widget for showing products
                           onTap: () {
                             ProductMaster selectedProduct = product;
                             ctxt.read<LoanproductBloc>().add(
@@ -168,6 +169,7 @@ class Loan extends StatelessWidget {
                           );
                         },
                       ),
+
                       Column(
                         children:
                             state.selectedProduct != null
@@ -218,7 +220,4 @@ class Loan extends StatelessWidget {
     );
   }
 }
-
-
-
 

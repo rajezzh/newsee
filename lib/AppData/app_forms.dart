@@ -1,3 +1,4 @@
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class AppForms {
@@ -23,7 +24,7 @@ class AppForms {
     'firstname': FormControl<String>(validators: [Validators.required]),
     'lastname': FormControl<String>(validators: [Validators.required]),
     'mobilenumber': FormControl<String>(validators: []),
-    'pan': FormControl<String>(validators: []),
+    'pan': FormControl<String>(validators: [Validators.pattern(AppConstants.PAN_PATTERN)]),
     'aadhaar': FormControl<String>(validators: [Validators.required]),
   });
 
