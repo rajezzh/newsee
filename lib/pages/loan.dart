@@ -47,10 +47,10 @@ import 'package:reactive_forms/reactive_forms.dart';
             "subCategory": "426",
             "producrId": "10"
     },
-
   step 2:
   step 3:
  */
+
 class Loan extends StatelessWidget {
   final String title;
   Loan(String s, {super.key, required this.title});
@@ -60,7 +60,6 @@ class Loan extends StatelessWidget {
     'maincategory': FormControl<String>(validators: [Validators.required]),
     'subcategory': FormControl<String>(validators: [Validators.required]),
   });
-
   @override
   Widget build(BuildContext context) {
     final _context = context;
@@ -102,7 +101,7 @@ class Loan extends StatelessWidget {
                               ),
                             );
                           },
-                          child: ProductCard(productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
+                          child: ProductCard(productId:product.prdCode,productDescription: product.prdDesc, amountFrom: product.prdamtFromRange, amountTo: product.prdamtToRange)
                         ),
                       );
                     },
@@ -159,11 +158,11 @@ class Loan extends StatelessWidget {
                         controlName: 'subcategory',
                         label: 'Sub Category',
                         items: state.subCategoryList,
+
                         onChangeListener: (Product val) {
                           form.controls['subcategory']?.updateValue(
                             val.lsfFacDesc,
                           );
-
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
@@ -173,7 +172,7 @@ class Loan extends StatelessWidget {
                         children:
                             state.selectedProduct != null
                                 ? [
-                                  ProductCard(productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
+                                  ProductCard(productId:state.selectedProduct!.prdCode,productDescription: state.selectedProduct!.prdDesc, amountFrom: state.selectedProduct!.prdamtFromRange, amountTo: state.selectedProduct!.prdamtToRange)
                                 ]
                                 : [Text('No product')],
                       ),
