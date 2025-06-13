@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/Utils/utils.dart';
+import 'package:newsee/core/db/db_config.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_request.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
+import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
@@ -88,17 +90,18 @@ class Personal extends StatelessWidget {
             form.control('lastName').updateValue(getNameArray[1]);
           } else if (getNameArray.length == 1) {
             form.control('firstName').updateValue(getNameArray[0]);
-          } 
+          }
         }
-        form.control('dob').updateValue(getCorrectDateFormat(val?.dateOfBirth!));
+        form
+            .control('dob')
+            .updateValue(getCorrectDateFormat(val?.dateOfBirth!));
         // form.control('primaryMobileNumber').updateValue(val?.mobile!);
         form.control('email').updateValue(val?.email!);
       }
-    } catch(error) {
+    } catch (error) {
       print("autoPopulateData-catch-error $error");
     }
   }
-
 
   /* 
     @author     : ganeshkumar.b  13/06/2025
@@ -114,14 +117,11 @@ class Personal extends StatelessWidget {
       form.control('primaryMobileNumber').updateValue(val.lleadmobno!);
       form.control('email').updateValue(val.lleademailid!);
       form.control('panNumber').updateValue(val.lleadpanno!);
-      form.control('aadharRefNo').updateValue(val.lleadadharno!);  
+      form.control('aadharRefNo').updateValue(val.lleadadharno!);
       if (val.lleadadharno != null) {
         refAadhaar = true;
       }
-      // Lov vtitledata = state.lovList?.firstWhere((lov) => lov.Header == 'Title' && lov.optvalue == val['lleadtitle']);
-      // print("vtitledata.optDesc =>  ${vtitledata.optDesc}");
-      // form.control('title').updateValue(vtitledata.optvalue);
-    } catch(error) {
+    } catch (error) {
       print("autoPopulateData-catch-error $error");
     }
   }
@@ -140,121 +140,130 @@ class Personal extends StatelessWidget {
           );
           if (state.status == SaveStatus.success) {
             goToNextTab(context);
-          } 
+          }
         },
-        builder:
-            (context, state)  {        
-              if (state.status == SaveStatus.init && state.aadhaarData != null) {
-                mapAadhaarData(state.aadhaarData);
-              } else if (state.status == SaveStatus.init && state.lovList != null) {
-                form.control('title').updateValue("3");
-                final dedupeState = context.read<DedupeBloc>().state;
-                if (dedupeState.cifResponse != null) {
-                  mapCifDate(dedupeState.cifResponse, state);
-                } else if (dedupeState.aadharvalidateResponse != null) {
-                   mapAadhaarData(dedupeState.aadharvalidateResponse);
-                }
-              }
-              return ReactiveForm(
-                formGroup: form,
-                child: SafeArea(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SearchableDropdown(
-                          controlName: 'title',
-                          label: 'Title',
-                          items:
-                              state.lovList!
-                                  .where((v) => v.Header == 'Title')
-                                  .toList(),
-                          onChangeListener:
-                          
-                              (Lov val) => 
-                              form.controls['title']?.updateValue(
-                                val.optvalue,
-                              ),
+        builder: (context, state) {
+          DedupeState? dedupeState;
+          if (state.status == SaveStatus.init && state.aadhaarData != null) {
+            mapAadhaarData(state.aadhaarData);
+          } else if (state.status == SaveStatus.init) {
+            dedupeState = context.read<DedupeBloc>().state;
+            if (dedupeState.cifResponse != null) {
+              print(
+                'cif response title => ${dedupeState.cifResponse?.lleadtitle}',
+              );
+              print('state.lovList =>${state.lovList}');
+              mapCifDate(dedupeState.cifResponse, state);
+            } else if (dedupeState.aadharvalidateResponse != null) {
+              mapAadhaarData(dedupeState.aadharvalidateResponse);
+            }
+          }
+          return ReactiveForm(
+            formGroup: form,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SearchableDropdown(
+                      controlName: 'title',
+                      label: 'Title',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'Title')
+                              .toList(),
+                      selItem:
+                          dedupeState?.cifResponse != null
+                              ? state.lovList?.firstWhere(
+                                (lov) =>
+                                    lov.Header == 'Title' &&
+                                    lov.optvalue ==
+                                        dedupeState?.cifResponse?.lleadtitle,
+                              )
+                              : null,
+                      onChangeListener:
+                          (Lov val) =>
+                              form.controls['title']?.updateValue(val.optvalue),
+                    ),
+                    CustomTextField(
+                      controlName: 'firstName',
+                      label: 'First Name',
+                      mantatory: true,
+                    ),
+                    CustomTextField(
+                      controlName: 'middleName',
+                      label: 'Middle Name',
+                      mantatory: true,
+                    ),
+                    CustomTextField(
+                      controlName: 'lastName',
+                      label: 'Last Name',
+                      mantatory: true,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: ReactiveTextField<String>(
+                        formControlName: 'dob',
+                        validationMessages: {
+                          ValidationMessage.required:
+                              (error) => 'Date of Birth is required',
+                        },
+                        readOnly: true,
+                        decoration: InputDecoration(
+                          labelText: 'Date Of Birth',
+                          suffixIcon: Icon(Icons.calendar_today),
                         ),
-                        CustomTextField(
-                          controlName: 'firstName',
-                          label: 'First Name',
-                          mantatory: true,
-                        ),
-                        CustomTextField(
-                          controlName: 'middleName',
-                          label: 'Middle Name',
-                          mantatory: true,
-                        ),
-                        CustomTextField(
-                          controlName: 'lastName',
-                          label: 'Last Name',
-                          mantatory: true,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: ReactiveTextField<String>(
-                            formControlName: 'dob',
-                            validationMessages: {
-                              ValidationMessage.required:
-                                  (error) => 'Date of Birth is required',
-                            },
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: 'Date Of Birth',
-                              suffixIcon: Icon(Icons.calendar_today),
+                        onTap: (control) async {
+                          final DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now().subtract(
+                              Duration(days: 365 * 18),
                             ),
-                            onTap: (control) async {
-                              final DateTime? pickedDate = await showDatePicker(
-                                context: context,
-                                initialDate: DateTime.now().subtract(
-                                  Duration(days: 365 * 18),
-                                ),
-                                firstDate: DateTime(1900),
-                                lastDate: DateTime.now(),
-                              );
-                              if (pickedDate != null) {
-                                final formatted =
-                                    "${pickedDate.day.toString().padLeft(2, '0')}/"
-                                    "${pickedDate.month.toString().padLeft(2, '0')}/"
-                                    "${pickedDate.year}";
-                                form.control('dob').value = formatted;
-                              }
-                            },
-                          ),
-                        ),
-                        IntegerTextField(
-                          controlName: 'primaryMobileNumber',
-                          label: 'Primary Mobile Number',
-                          mantatory: true,
-                          maxlength: 10,
-                          minlength: 10,
-                        ),
-                        IntegerTextField(
-                          controlName: 'secondaryMobileNumber',
-                          label: 'Secondary Mobile Number',
-                          mantatory: true,
-                          maxlength: 10,
-                          minlength: 10,
-                        ),
-                        CustomTextField(
-                          controlName: 'email', 
-                          label: 'Email Id',
-                          mantatory: true,
-                        ),
-                        CustomTextField(
-                          controlName: 'panNumber',
-                          label: 'Pan No',
-                          mantatory: true,
-                        ),
-                        refAadhaar ? 
-                        IntegerTextField(
-                          controlName: 'aadharRefNo', 
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                          );
+                          if (pickedDate != null) {
+                            final formatted =
+                                "${pickedDate.day.toString().padLeft(2, '0')}/"
+                                "${pickedDate.month.toString().padLeft(2, '0')}/"
+                                "${pickedDate.year}";
+                            form.control('dob').value = formatted;
+                          }
+                        },
+                      ),
+                    ),
+                    IntegerTextField(
+                      controlName: 'primaryMobileNumber',
+                      label: 'Primary Mobile Number',
+                      mantatory: true,
+                      maxlength: 10,
+                      minlength: 10,
+                    ),
+                    IntegerTextField(
+                      controlName: 'secondaryMobileNumber',
+                      label: 'Secondary Mobile Number',
+                      mantatory: true,
+                      maxlength: 10,
+                      minlength: 10,
+                    ),
+                    CustomTextField(
+                      controlName: 'email',
+                      label: 'Email Id',
+                      mantatory: true,
+                    ),
+                    CustomTextField(
+                      controlName: 'panNumber',
+                      label: 'Pan No',
+                      mantatory: true,
+                    ),
+                    refAadhaar
+                        ? IntegerTextField(
+                          controlName: 'aadharRefNo',
                           label: 'Aadhaar No',
                           mantatory: true,
                           maxlength: 12,
                           minlength: 12,
-                        ) :
-                        Row(
+                        )
+                        : Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
@@ -267,107 +276,109 @@ class Personal extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color.fromARGB(
-                                    255,
-                                    3,
-                                    9,
-                                    110,
-                                  ),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 10,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                  255,
+                                  3,
+                                  9,
+                                  110,
                                 ),
-                                onPressed: () {
-                                  final AadharvalidateRequest
-                                  aadharvalidateRequest = AadharvalidateRequest(
-                                    aadhaarNumber:
-                                        form.control('aadhaar').value,
-                                  );
-                                  context.read<PersonalDetailsBloc>().add(
-                                    AadhaarValidateEvent(
-                                      request: aadharvalidateRequest,
-                                    ),
-                                  );
-                                  print(state.aadhaarData);
-                                },
-                                child: state.status == SaveStatus.loading ? CircularProgressIndicator() : const Text("Validate"),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 10,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                          ],
-                        ),
-                        IntegerTextField(
-                          controlName: 'loanAmountRequested',
-                          label: 'Loan Amount Required',
-                          mantatory: true,
-                        ),
-                        SearchableDropdown(
-                          controlName: 'natureOfActivity',
-                          label: 'Nature of Activity',
-                          items:
-                              state.lovList!
-                                  .where((v) => v.Header == 'NatureOfActivity')
-                                  .toList(),
-                          onChangeListener:
-                              (Lov val) => form.controls['natureOfActivity']
-                                  ?.updateValue(val.optvalue),
-                        ),
-                        SizedBox(height: 20),
-                        Center(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 3, 9, 110),
-                              foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 24,
-                                vertical: 12,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            onPressed: () {
-                              print("personal Details value ${form.value}");
-
-                              if (form.valid) {
-                                PersonalData personalData = PersonalData.fromMap(
-                                  form.value,
+                              onPressed: () {
+                                final AadharvalidateRequest
+                                aadharvalidateRequest = AadharvalidateRequest(
+                                  aadhaarNumber: form.control('aadhaar').value,
                                 );
                                 context.read<PersonalDetailsBloc>().add(
-                                  PersonalDetailsSaveEvent(
-                                    personalData: personalData,
+                                  AadhaarValidateEvent(
+                                    request: aadharvalidateRequest,
                                   ),
                                 );
-                              } else {
-                                form.markAllAsTouched();
-                                showSnack(
-                                  context,
-                                  message:
-                                      'Please Check Error Message and Enter Valid Data',
-                                );
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   SnackBar(
-                                //     content: Text(
-                                //       'Please Check Error Message and Enter Valid Data ',
-                                //     ),
-                                //   ),
-                                // );
-                              }
-                            },
-                            child: Text('Next'),
+                              },
+                              child:
+                                  state.status == SaveStatus.loading
+                                      ? CircularProgressIndicator()
+                                      : const Text("Validate"),
+                            ),
+                          ],
+                        ),
+                    IntegerTextField(
+                      controlName: 'loanAmountRequested',
+                      label: 'Loan Amount Required',
+                      mantatory: true,
+                      isRupeeFormat: true,
+                    ),
+                    SearchableDropdown(
+                      controlName: 'natureOfActivity',
+                      label: 'Nature of Activity',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'NatureOfActivity')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['natureOfActivity']
+                              ?.updateValue(val.optvalue),
+                    ),
+                    SizedBox(height: 20),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color.fromARGB(255, 3, 9, 110),
+                          foregroundColor: Colors.white,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                      ],
+                        onPressed: () {
+                          print("personal Details value ${form.value}");
+
+                          if (form.valid) {
+                            PersonalData personalData = PersonalData.fromMap(
+                              form.value,
+                            );
+                            context.read<PersonalDetailsBloc>().add(
+                              PersonalDetailsSaveEvent(
+                                personalData: personalData,
+                              ),
+                            );
+                          } else {
+                            form.markAllAsTouched();
+                            showSnack(
+                              context,
+                              message:
+                                  'Please Check Error Message and Enter Valid Data',
+                            );
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(
+                            //     content: Text(
+                            //       'Please Check Error Message and Enter Valid Data ',
+                            //     ),
+                            //   ),
+                            // );
+                          }
+                        },
+                        child: Text('Next'),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              );
-            }
+              ),
+            ),
+          );
+        },
       ),
     );
   }
