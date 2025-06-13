@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
+import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
@@ -21,6 +22,7 @@ class SearchableDropdown<T> extends StatelessWidget {
   final String label;
   final List<T> items;
   final bool? mantatory;
+
   /* 
   @modifiedby   : karthick.d  05/06/2025
   @desc         : this is a changelister function that handle dropdown option change
@@ -41,6 +43,8 @@ class SearchableDropdown<T> extends StatelessWidget {
       return item.lsfFacDesc;
     } else if (item is Lov) {
       return item.optDesc;
+    } else if (item is GeographyMaster) {
+      return item.value;
     } else {
       return '';
     }
@@ -69,7 +73,10 @@ class SearchableDropdown<T> extends StatelessWidget {
                     text: label,
                     style: TextStyle(color: Colors.black, fontSize: 16),
                     children: [
-                      TextSpan(text: mantatory == null ? ' *' : '', style: TextStyle(color: Colors.red)),
+                      TextSpan(
+                        text: mantatory == null ? ' *' : '',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ],
                   ),
                 ),

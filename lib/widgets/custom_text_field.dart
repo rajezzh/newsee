@@ -10,11 +10,18 @@ import 'package:reactive_forms/reactive_forms.dart';
 class CustomTextField extends StatelessWidget {
   final String controlName;
   final String label;
+  final bool mantatory;
+  bool? autoCapitalize;
+  int? maxlength;
+  
 
-  const CustomTextField({
+  CustomTextField({
     super.key,
     required this.controlName,
     required this.label,
+    required this.mantatory,
+    this.autoCapitalize,
+    this.maxlength
   });
 
   @override
@@ -23,6 +30,8 @@ class CustomTextField extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: ReactiveTextField<String>(
         formControlName: controlName,
+        maxLength: maxlength,
+        textCapitalization:  autoCapitalize == true ? TextCapitalization.characters : TextCapitalization.none,
         validationMessages: {
           ValidationMessage.required: (error) => '$label is required',
           ValidationMessage.email: (error) => 'Enter valid $label',
@@ -32,8 +41,8 @@ class CustomTextField extends StatelessWidget {
             text: TextSpan(
               text: label,
               style: const TextStyle(color: Colors.black, fontSize: 16),
-              children: const [
-                TextSpan(text: ' *', style: TextStyle(color: Colors.red)),
+              children: [
+                TextSpan(text:  mantatory ? ' *' : '', style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
