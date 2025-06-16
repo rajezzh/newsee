@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/Utils/utils.dart';
+import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
+import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
+import 'package:newsee/feature/leadsubmit/domain/modal/dedupe.dart';
+import 'package:newsee/feature/leadsubmit/domain/modal/loan_product.dart';
+import 'package:newsee/feature/leadsubmit/domain/modal/loan_type.dart';
 import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
@@ -12,8 +18,33 @@ import 'package:newsee/widgets/sysmo_title.dart';
 
 class LeadSubmitPage extends StatelessWidget {
   final String title;
+  late final PersonalDetailsState? personalState;
+  late final LoanproductState? loanproductState;
+  late final AddressDetailsState? addressState;
+  late final DedupeState? dedupeState;
 
-  const LeadSubmitPage({required this.title, super.key});
+  LeadSubmitPage({required this.title, super.key});
+
+  submitLead({required BuildContext context}) {
+    LeadSubmitPushEvent leadSubmitPushEvent = LeadSubmitPushEvent(
+      loanType: LoanType(
+        typeOfLoan: loanproductState?.selectedProductScheme?.optionValue,
+      ),
+      loanProduct: LoanProduct(
+        mainCategory: loanproductState?.selectedMainCategory?.lsfFacId,
+        subCategory: loanproductState?.selectedSubCategoryList?.lsfFacId,
+        producrId: loanproductState?.selectedProduct?.prdCode,
+      ),
+      dedupe: Dedupe(
+        existingCustomer: dedupeState?.isNewCustomer,
+        cifNumber: dedupeState?.cifResponse?.lldCbsid,
+        constitution: dedupeState?.constitution,
+      ),
+      personalData: personalState?.personalData,
+      addressData: addressState?.addressData,
+    );
+    context.read<LeadSubmitBloc>().add(leadSubmitPushEvent);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,20 +53,28 @@ class LeadSubmitPage extends StatelessWidget {
       body: BlocConsumer<LeadSubmitBloc, LeadSubmitState>(
         listener: (context, state) {},
         builder: (context, state) {
-          PersonalData? personalData;
-          ProductMaster? productMaster;
           final personalDetailsBloc = context.watch<PersonalDetailsBloc?>();
           final loanproductBloc = context.watch<LoanproductBloc?>();
-          personalData = personalDetailsBloc?.state.personalData;
-          productMaster = loanproductBloc?.state.selectedProduct;
-          print('personaldata => $personalData');
+          final addressBloc = context.watch<AddressDetailsBloc?>();
+          final dedupeBloc = context.watch<DedupeBloc?>();
+
+          personalState = personalDetailsBloc?.state;
+          loanproductState = loanproductBloc?.state;
+          addressState = addressBloc?.state;
+          dedupeState = dedupeBloc?.state;
 
           return ListView(
             padding: const EdgeInsets.all(16),
 
             children:
-                (personalData != null && productMaster != null)
-                    ? showLeadSubmitCard(personalData, productMaster, context)
+                (personalState?.personalData != null &&
+                        loanproductState?.selectedProduct != null &&
+                        addressState?.addressData != null)
+                    ? showLeadSubmitCard(
+                      personalState?.personalData,
+                      loanproductState?.selectedProduct,
+                      context,
+                    )
                     : showNoDataCard(),
           );
         },
@@ -91,12 +130,14 @@ class LeadSubmitPage extends StatelessWidget {
       Center(
         child: ElevatedButton.icon(
           onPressed: () {
-            showSuccessBottomSheet(
-              context,
-              "Submitted",
-              "Lead ID : LEAD/202526/00008213",
-              "Lead details successfully submitted",
-            );
+            submitLead(context: context);
+            // show this success bottomsheet when leadsubmitstatus.success
+            // showSuccessBottomSheet(
+            //   context,
+            //   "Submitted",
+            //   "Lead ID : LEAD/202526/00008213",
+            //   "Lead details successfully submitted",
+            // );
           },
           icon: Icon(Icons.send, color: Colors.white),
           label: RichText(

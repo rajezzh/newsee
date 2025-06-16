@@ -19,6 +19,9 @@ class ApiConfig {
 
   static const String API_RESPONSE_RESPONSE_KEY = 'responseData';
 
-    static const String LEAD_INBOX_API_ENDPOINT = 'MobileService/getLeadInboxDetails';
+  static const String LEAD_INBOX_API_ENDPOINT =
+      'MobileService/getLeadInboxDetails';
 
+  static const String LEAD_SUBMIT_API_ENDPOINT =
+      'MobileService/saveLeadDetails';
 }
