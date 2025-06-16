@@ -68,6 +68,9 @@ class Address extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          if (state.cityMaster != null && state.cityMaster!.isEmpty) {
+            form.controls['city']?.updateValue(null);
+          }
           return Stack(
             alignment: Alignment.topLeft,
             children: [
