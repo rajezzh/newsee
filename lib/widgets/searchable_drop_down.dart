@@ -20,6 +20,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class SearchableDropdown<T> extends StatelessWidget {
   final String controlName;
   final String label;
+  final T? selectedItem;
   final List<T> items;
   final bool? mantatory;
 
@@ -31,6 +32,7 @@ class SearchableDropdown<T> extends StatelessWidget {
   SearchableDropdown({
     required this.controlName,
     required this.label,
+    this.selectedItem,
     required this.items,
     this.mantatory,
     this.onChangeListener,
@@ -64,6 +66,7 @@ class SearchableDropdown<T> extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: DropdownSearch<T>(
             items: items,
+            selectedItem: selectedItem,
             itemAsString: (item) => itemvalueMapper(item),
             dropdownDecoratorProps: DropDownDecoratorProps(
               dropdownSearchDecoration: InputDecoration(

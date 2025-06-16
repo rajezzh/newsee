@@ -118,9 +118,9 @@ class Personal extends StatelessWidget {
       if (val.lleadadharno != null) {
         refAadhaar = true;
       }
-      // Lov vtitledata = state.lovList?.firstWhere((lov) => lov.Header == 'Title' && lov.optvalue == val['lleadtitle']);
-      // print("vtitledata.optDesc =>  ${vtitledata.optDesc}");
-      // form.control('title').updateValue(vtitledata.optvalue);
+      Lov vtitledata = state.lovList?.firstWhere((lov) => lov.Header == 'Title' && lov.optvalue == val['lleadtitle']);
+      print("vtitledata.optDesc =>  ${vtitledata.optDesc}");
+      form.control('title').updateValue(vtitledata.optvalue);
     } catch(error) {
       print("autoPopulateData-catch-error $error");
     }
@@ -143,11 +143,12 @@ class Personal extends StatelessWidget {
           } 
         },
         builder:
-            (context, state)  {        
+            (context, state)  {      
+              Lov? titlelov = state.lovList?.firstWhere((lov) => lov.Header == 'Title' && lov.optvalue == '3');
+              print("titlelov $titlelov");
               if (state.status == SaveStatus.init && state.aadhaarData != null) {
                 mapAadhaarData(state.aadhaarData);
-              } else if (state.status == SaveStatus.init && state.lovList != null) {
-                form.control('title').updateValue("3");
+              } else if (state.status == SaveStatus.init && state.lovList!.isNotEmpty) {
                 final dedupeState = context.read<DedupeBloc>().state;
                 if (dedupeState.cifResponse != null) {
                   mapCifDate(dedupeState.cifResponse, state);
@@ -164,6 +165,7 @@ class Personal extends StatelessWidget {
                         SearchableDropdown(
                           controlName: 'title',
                           label: 'Title',
+                          selectedItem: null ,
                           items:
                               state.lovList!
                                   .where((v) => v.Header == 'Title')
