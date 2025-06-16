@@ -111,10 +111,22 @@ class Loan extends StatelessWidget {
             );
           }
 
-          if (state.selectedProduct != null && state.showBottomSheet == false) {
+          if (state.selectedProduct != null &&
+              state.showBottomSheet == false &&
+              state.status != SaveStatus.success) {
             print('poping current route');
             LoanproductState.init();
             Navigator.of(_context).pop();
+          }
+
+          if (state.status == SaveStatus.success) {
+            print(
+              'loan details saved success =>prodscheme ${state.selectedProductScheme}  maincat ${state.selectedMainCategory} subCat ${state.selectedSubCategoryList} status ${state.status}',
+            );
+            showSnack(context, message: 'Loan Details saved Successfully.');
+            goToNextTab(context: context);
+          } else if (state.status == SaveStatus.failure) {
+            showSnack(context, message: 'Failed to Save Loan Details.');
           }
         },
         // child: BlocBuilder<LoanproductBloc, LoanproductState>(
@@ -131,14 +143,23 @@ class Loan extends StatelessWidget {
                       items: state.productSchemeList,
                       onChangeListener: (ProductSchema val) {
                         form.controls['typeofloan']?.updateValue(
-                          val.optionDesc,
+                          val.optionValue,
                         );
 
                         context.read<LoanproductBloc>().add(
                           LoanProductDropdownChange(field: val),
                         );
                       },
-                      selItem: () {},
+                      selItem: () {
+                        if (state.selectedProductScheme != null) {
+                          form.controls['typeofloan']?.updateValue(
+                            state.selectedProductScheme?.optionValue,
+                          );
+                          return state.selectedProductScheme;
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
                     SearchableDropdown(
                       controlName: 'maincategory',
@@ -146,29 +167,45 @@ class Loan extends StatelessWidget {
                       items: state.mainCategoryList,
                       onChangeListener: (Product val) {
                         form.controls['maincategory']?.updateValue(
-                          val.lsfFacDesc,
+                          val.lsfFacId,
                         );
 
                         context.read<LoanproductBloc>().add(
                           LoanProductDropdownChange(field: val),
                         );
                       },
-                      selItem: () {},
+                      selItem: () {
+                        if (state.selectedMainCategory != null) {
+                          form.controls['maincategory']?.updateValue(
+                            state.selectedMainCategory?.lsfFacId,
+                          );
+                          return state.selectedMainCategory;
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
                     SearchableDropdown(
                       controlName: 'subcategory',
                       label: 'Sub Category',
                       items: state.subCategoryList,
                       onChangeListener: (Product val) {
-                        form.controls['subcategory']?.updateValue(
-                          val.lsfFacDesc,
-                        );
+                        form.controls['subcategory']?.updateValue(val.lsfFacId);
 
                         context.read<LoanproductBloc>().add(
                           LoanProductDropdownChange(field: val),
                         );
                       },
-                      selItem: () {},
+                      selItem: () {
+                        if (state.selectedSubCategoryList != null) {
+                          form.controls['subcategory']?.updateValue(
+                            state.selectedSubCategoryList?.lsfFacId,
+                          );
+                          return state.selectedSubCategoryList;
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
 
                     Column(
@@ -187,7 +224,7 @@ class Loan extends StatelessWidget {
                                   ),
                                 ),
                               ]
-                              : [Text('No product')],
+                              : [Text('')],
                     ),
                     Center(
                       child: ElevatedButton(
@@ -204,13 +241,9 @@ class Loan extends StatelessWidget {
                         ),
                         onPressed: () {
                           if (form.valid) {
-                            final tabController = DefaultTabController.of(
-                              context,
+                            context.read<LoanproductBloc>().add(
+                              SaveLoanProduct(choosenProduct: form.value),
                             );
-                            if (tabController.index <
-                                tabController.length - 1) {
-                              tabController.animateTo(tabController.index + 1);
-                            }
                           } else {
                             form.markAllAsTouched();
                           }

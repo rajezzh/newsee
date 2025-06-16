@@ -53,20 +53,6 @@ class Personal extends StatelessWidget {
 
   bool refAadhaar = false;
 
-  void showSnack(BuildContext context, {required String message}) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void goToNextTab(BuildContext context) {
-    showSnack(context, message: 'Personal Details Saved Successfully');
-    final tabController = DefaultTabController.of(context);
-    if (tabController.index < tabController.length - 1) {
-      tabController.animateTo(tabController.index + 1);
-    }
-  }
-
   /* 
     @author     : ganeshkumar.b  13/06/2025
     @desc       : map Aadhaar response in personal form
@@ -139,7 +125,7 @@ class Personal extends StatelessWidget {
             'personaldetail::BlocConsumer:listen => ${state.lovList} ${state.personalData} ${state.status?.name}',
           );
           if (state.status == SaveStatus.success) {
-            goToNextTab(context);
+            goToNextTab(context: context);
           }
         },
         builder: (context, state) {
@@ -269,6 +255,7 @@ class Personal extends StatelessWidget {
                       controlName: 'panNumber',
                       label: 'Pan No',
                       mantatory: true,
+                      autoCapitalize: true,
                     ),
                     refAadhaar
                         ? IntegerTextField(
