@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
+import 'package:newsee/pages/rupeeformatter.dart';
 import 'package:newsee/widgets/success_bottom_sheet.dart';
 import 'package:newsee/widgets/sysmo_title.dart';
 
@@ -31,7 +33,10 @@ class LeadSubmitPage extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
 
-            children: showLeadSubmitCard(personalData, productMaster, context),
+            children:
+                (personalData != null && productMaster != null)
+                    ? showLeadSubmitCard(personalData, productMaster, context)
+                    : showNoDataCard(),
           );
         },
       ),
@@ -71,7 +76,7 @@ class LeadSubmitPage extends StatelessWidget {
               SysmoTitle(
                 icon: Icons.currency_rupee,
                 label: "Loan Amount",
-                value: '${personalData?.loanAmountRequested}',
+                value: formatAmount('${personalData?.loanAmountRequested}'),
               ),
               SysmoTitle(
                 icon: Icons.location_on,
@@ -116,6 +121,34 @@ class LeadSubmitPage extends StatelessWidget {
             backgroundColor: MaterialStateProperty.all(
               const Color.fromARGB(255, 75, 33, 83),
             ),
+          ),
+        ),
+      ),
+    ];
+  }
+
+  /* 
+
+incase of incomplete dataentry show no data card
+
+*/
+
+  List<Widget> showNoDataCard() {
+    return <Widget>[
+      Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SysmoTitle(
+                icon: Icons.close,
+                label: "No Data",
+                value: 'Please complete Lead DataEntry...!!',
+              ),
+            ],
           ),
         ),
       ),

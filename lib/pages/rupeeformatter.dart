@@ -7,6 +7,7 @@
 */
 
 import 'package:flutter/services.dart';
+import 'package:newsee/Utils/utils.dart';
 
 class Rupeeformatter extends TextInputFormatter {
   @override
@@ -19,19 +20,9 @@ class Rupeeformatter extends TextInputFormatter {
 
     if (raw.isEmpty) return newValue;
 
-    // Extract last 3 digits then extract remaining digits before the last 3 digits 
+    // Extract last 3 digits then extract remaining digits before the last 3 digits
     // then group the remaining digits in 2s from the end
-    String lastThree = raw.length > 3 ? raw.substring(raw.length - 3) : raw;
-    String otherNumbers = raw.length > 3 ? raw.substring(0, raw.length - 3) : '';
-    String formatted = '';
-    while (otherNumbers.length > 2) {
-      formatted = ',${otherNumbers.substring(otherNumbers.length - 2)}$formatted';
-      otherNumbers = otherNumbers.substring(0, otherNumbers.length - 2);
-    }
-    if (otherNumbers.isNotEmpty) formatted = otherNumbers + formatted;
-
-    String finalValue =
-        formatted.isEmpty ? lastThree : '$formatted,$lastThree';
+    String finalValue = formatAmount(raw);
 
     return TextEditingValue(
       text: finalValue,
