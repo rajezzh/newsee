@@ -19,7 +19,7 @@ class RouterApp extends StatelessWidget {
               children: [
                 MaterialApp.router(
                   routerConfig: routes,
-                  debugShowCheckedModeBanner: true,
+                  debugShowCheckedModeBanner: false,
                 ),
                 if (state.isLoading)
                   Center(child: CustomLoading(message: state.message)),

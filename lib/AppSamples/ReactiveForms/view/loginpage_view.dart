@@ -26,41 +26,34 @@ class LoginpageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+   final size = MediaQuery.of(context).size;
+   final screenWidth = size.width;
+   final screenHeight = size.height;
     //Header section of the landing page
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 0),
-        child: Column(
+    return Scaffold(
+      body:   Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Positioned.fill(
+            Container(
+              
+              width: screenWidth,
+              height: screenHeight * 0.31,
               child: SvgPicture.asset(
                 'assets/app_background_2.svg',
                 fit: BoxFit.cover,
               ),
+          
             ),
-
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 0),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       Text(
-            //         "Hello,\nUser",
-            //         style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-            //       ),
-            //       Icon(
-            //         Icons.notifications_none,
-            //         size: 30,
-            //         color: Colors.deepPurpleAccent,
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(10),
+         SizedBox(height: screenHeight * 0.01),
+            Expanded(child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+              padding: const EdgeInsets.all(5),
               child: Container(
+              width: double.infinity,
+
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(0),
@@ -75,7 +68,7 @@ class LoginpageView extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 20),
+                          SizedBox(height: screenHeight * 0.03),
 
                     //Login using fingerprint (biometric authentication)
                     IconButton(
@@ -83,25 +76,29 @@ class LoginpageView extends StatelessWidget {
                         fingerPrintScanner();
                       },
                       icon: Icon(Icons.fingerprint),
-                      iconSize: 60,
+                      iconSize: screenWidth * 0.18,
                       color: const Color.fromARGB(255, 3, 9, 110),
                     ),
 
                     Text(
                       "Login with Fingerprint",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: screenWidth *0.045,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 30),
+                          SizedBox(height: screenHeight * 0.03),
                     // users multiple ways to authenticate and access frequently used features
                     Text(
                       "Frequently used features & special offers at your fingertips",
                       textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: screenWidth * 0.035),
+
                     ),
+                          SizedBox(height: screenHeight * 0.02),
+
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
+                            padding: EdgeInsets.only(bottom: screenHeight * 0.02),
 
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -113,10 +110,12 @@ class LoginpageView extends StatelessWidget {
                                 onPressed: () {},
                                 icon: SvgPicture.asset(
                                   'assets/Retail_loan.svg',
-                                  height: 40,
-                                  width: 40,
+                                  // width: screenWidth * 0.02,
+                                  // height: screenHeight,
+                                  width: screenWidth *0.06,
+                                  height: screenHeight *0.06,
                                 ),
-                                iconSize: 40,
+                                iconSize: screenWidth *0.08,
                                 color: Colors.amber,
                               ),
                               Padding(
@@ -125,7 +124,7 @@ class LoginpageView extends StatelessWidget {
                                   'Retail Loan',
                                   style: TextStyle(
                                     color: Colors.black,
-                                    fontSize: 14,
+                                    fontSize: screenWidth *0.04,
                                   ),
                                 ),
                               ),
@@ -138,17 +137,17 @@ class LoginpageView extends StatelessWidget {
                                 onPressed: () {},
                                 icon: SvgPicture.asset(
                                   'assets/Agri_Loan.svg',
-                                  height: 40,
-                                  width: 40,
+                                   width: screenWidth *0.06,
+                                  height: screenHeight *0.06
                                 ),
-                                iconSize: 40,
+                                iconSize:  screenWidth *0.08,
                                 color: Colors.blue,
                               ),
                               Text(
                                 'Agri Loan',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14,
+                                  fontSize:  screenWidth *0.04,
                                 ),
                               ),
                             ],
@@ -160,17 +159,17 @@ class LoginpageView extends StatelessWidget {
                                 onPressed: () {},
                                 icon: SvgPicture.asset(
                                   'assets/MSME.svg',
-                                  height: 40,
-                                  width: 40,
+                                width: screenWidth *0.06,
+                                  height: screenHeight *0.06
                                 ),
-                                iconSize: 40,
+                                iconSize:  screenWidth *0.07,
                                 color: Colors.pink,
                               ),
                               Text(
                                 'MSME Loan',
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 14,
+                                  fontSize:   screenWidth *0.04,
                                 ),
                               ),
                             ],
@@ -182,11 +181,11 @@ class LoginpageView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 50),
+      SizedBox(height: screenHeight * 0.04),
 
             // Login with account  username and password
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding:  EdgeInsets.symmetric(vertical:screenHeight *0.01, horizontal: screenWidth * 0.12),
               child: Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
@@ -199,16 +198,14 @@ class LoginpageView extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                          fontSize: screenWidth * 0.045,
                     ),
                   ),
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(
-                      Size(double.infinity, 50),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(
-                      const Color.fromARGB(246, 4, 13, 95),
-                    ),
+                  style:  ElevatedButton.styleFrom(
+                     minimumSize: Size(double.infinity, screenHeight * 0.07),
+
+                    backgroundColor: const Color.fromARGB(246, 4, 13, 95),
+
                   ),
                 ),
               ),
@@ -221,7 +218,11 @@ class LoginpageView extends StatelessWidget {
                   onPressed: () {
                     mpin(context);
                   },
-                  child: Text("Or, login with mPIN"),
+                  child: Text("Or, login with mPIN",
+                   style: TextStyle(fontSize: screenWidth * 0.035),
+
+                  
+                  ),
                 ),
                 TextButton(
                   onPressed: () {
@@ -234,86 +235,103 @@ class LoginpageView extends StatelessWidget {
                       "Continue",
                     );
                   },
-                  child: Text("Forgot mPIN?"),
+                  child: Text("Forgot mPIN?",
+                  style: TextStyle(fontSize: screenWidth * 0.035),
+
+                  
+                  ),
                 ),
               ],
             ),
-            SizedBox(height: 50),
+          SizedBox(height: screenHeight * 0.04),
 
             // Access to additional options like Maintenance, Reach Us, and More
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        maintenanceActionSheet(
-                          context,
-                          "Comming Soon....",
-                          "We are Working to improve Your experence with our new mobile app.",
-                          Icons.person,
-                          "okay",
-                        );
-                      },
-                      icon: Icon(
-                        Icons.medical_information,
-                        color: const Color.fromARGB(246, 4, 13, 95),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          maintenanceActionSheet(
+                            context,
+                            "Comming Soon....",
+                            "We are Working to improve Your experence with our new mobile app.",
+                            Icons.person,
+                            "okay",
+                          );
+                        },
+                        icon: Icon(
+                          Icons.medical_information,
+                          color: const Color.fromARGB(246, 4, 13, 95),
+                        ),
+                        label: Text(
+                          'Maintenance',
+                          style: TextStyle(color: Colors.black, fontSize: screenWidth * 0.035),
+                        ),
                       ),
-                      label: Text(
-                        'Maintenance',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          reachUsActionSheet(
+                            context,
+                            "Reach Us...",
+                            "Whatsapp",
+                            "ContactUs",
+                            "BranchLocator",
+                            Icons.phone,
+                            Icons.location_pin,
+                          );
+                        },
+                        icon: Icon(
+                          Icons.movie_creation_rounded,
+                          color: const Color.fromARGB(246, 4, 13, 95),
+                        ),
+                        label: Text(
+                          'Reach Us',
+                          style: TextStyle(color: Colors.black, fontSize: screenWidth * 0.035),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        reachUsActionSheet(
-                          context,
-                          "Reach Us...",
-                          "Whatsapp",
-                          "ContactUs",
-                          "BranchLocator",
-                          Icons.phone,
-                          Icons.location_pin,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.movie_creation_rounded,
-                        color: const Color.fromARGB(246, 4, 13, 95),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      TextButton.icon(
+                        onPressed: () {
+                          moreActionSheet(context, 'Okay');
+                        },
+                        icon: Icon(
+                          Icons.more,
+                          color: const Color.fromARGB(246, 4, 13, 95),
+                        ),
+                        label: Text(
+                          'More',
+                          style: TextStyle(color: Colors.black, fontSize: screenWidth * 0.035),
+                        ),
                       ),
-                      label: Text(
-                        'Reach Us',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        moreActionSheet(context, 'Okay');
-                      },
-                      icon: Icon(
-                        Icons.more,
-                        color: const Color.fromARGB(246, 4, 13, 95),
-                      ),
-                      label: Text(
-                        'More',
-                        style: TextStyle(color: Colors.black, fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-      ),
+
+            ),
+              ),
+          ]
+          ),
     );
+            
+            
+      
+            
+      
+  
   }
 }
