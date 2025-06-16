@@ -128,11 +128,7 @@ class MastersPage extends StatelessWidget {
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
               return SafeArea(
-                child: DownloadProgressWidget(
-                  downloadProgress: progress,
-                  scrwidth: scrwidth,
-                  scrheight: scrheight,
-                ),
+                child: DownloadProgressWidget(downloadProgress: progress),
               );
             },
           ),
