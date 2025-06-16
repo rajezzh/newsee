@@ -121,6 +121,7 @@ class Personal extends StatelessWidget {
       if (val.lleadadharno != null) {
         refAadhaar = true;
       }
+      form.control('title').updateValue(val.lleadtitle!);
     } catch (error) {
       print("autoPopulateData-catch-error $error");
     }
