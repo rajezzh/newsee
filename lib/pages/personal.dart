@@ -121,7 +121,6 @@ class Personal extends StatelessWidget {
       if (val.lleadadharno != null) {
         refAadhaar = true;
       }
-      form.control('title').updateValue(val.lleadtitle!);
     } catch (error) {
       print("autoPopulateData-catch-error $error");
     }
@@ -148,7 +147,7 @@ class Personal extends StatelessWidget {
           if (state.status == SaveStatus.init && state.aadhaarData != null) {
             mapAadhaarData(state.aadhaarData);
           } else if (state.status == SaveStatus.init) {
-            dedupeState = context.read<DedupeBloc>().state;
+            dedupeState = context.watch<DedupeBloc>().state;
             if (dedupeState.cifResponse != null) {
               print(
                 'cif response title => ${dedupeState.cifResponse?.lleadtitle}',
@@ -158,6 +157,8 @@ class Personal extends StatelessWidget {
             } else if (dedupeState.aadharvalidateResponse != null) {
               mapAadhaarData(dedupeState.aadharvalidateResponse);
             }
+          } else if (state.status == SaveStatus.success) {
+            print('saved personal data =>${state.personalData}');
           }
           return ReactiveForm(
             formGroup: form,
@@ -172,15 +173,28 @@ class Personal extends StatelessWidget {
                           state.lovList!
                               .where((v) => v.Header == 'Title')
                               .toList(),
-                      selItem:
-                          dedupeState?.cifResponse != null
-                              ? state.lovList?.firstWhere(
-                                (lov) =>
-                                    lov.Header == 'Title' &&
-                                    lov.optvalue ==
-                                        dedupeState?.cifResponse?.lleadtitle,
-                              )
-                              : null,
+                      selItem: () {
+                        if (dedupeState?.cifResponse != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'Title' &&
+                                lov.optvalue ==
+                                    dedupeState?.cifResponse?.lleadtitle,
+                          );
+                          form.controls['title']?.updateValue(lov?.optvalue);
+                          return lov;
+                        } else if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'Title' &&
+                                lov.optvalue == state.personalData?.title,
+                          );
+                          form.controls['title']?.updateValue(lov?.optvalue);
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
                       onChangeListener:
                           (Lov val) =>
                               form.controls['title']?.updateValue(val.optvalue),
@@ -328,6 +342,22 @@ class Personal extends StatelessWidget {
                       onChangeListener:
                           (Lov val) => form.controls['natureOfActivity']
                               ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'NatureOfActivity' &&
+                                lov.optvalue ==
+                                    state.personalData?.natureOfActivity,
+                          );
+                          form.controls['natureOfActivity']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
                     ),
                     SizedBox(height: 20),
                     Center(

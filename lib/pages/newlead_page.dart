@@ -31,7 +31,7 @@ class NewLeadPage extends StatelessWidget {
               (context) =>
                   PersonalDetailsBloc()
                     ..add(PersonalDetailsInitEvent(cifResponseModel: null)),
-                  lazy: false
+                  lazy: false,
         ),
         BlocProvider(
           create:
@@ -40,7 +40,6 @@ class NewLeadPage extends StatelessWidget {
                     ..add(AddressDetailsInitEvent(cifResponseModel: null)),
         ),
         BlocProvider(create: (context) => DedupeBloc()),
-        BlocProvider(create: (context) => CifBloc()),
         BlocProvider(create: (context) => LeadSubmitBloc()),
       ],
       child: DefaultTabController(
