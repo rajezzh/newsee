@@ -18,30 +18,27 @@ import 'package:newsee/widgets/sysmo_title.dart';
 
 class LeadSubmitPage extends StatelessWidget {
   final String title;
-  late final PersonalDetailsState? personalState;
-  late final LoanproductState? loanproductState;
-  late final AddressDetailsState? addressState;
-  late final DedupeState? dedupeState;
+  // late final PersonalDetailsState? personalState;
+  // late final LoanproductState? loanproductState;
+  // late final AddressDetailsState? addressState;
+  // late final DedupeState? dedupeState;
 
   LeadSubmitPage({required this.title, super.key});
 
-  submitLead({required BuildContext context}) {
+  submitLead({
+    required BuildContext context,
+    required PersonalData personlData,
+    required LoanType loanType,
+    required LoanProduct loanProduct,
+    required Dedupe dedupeData,
+    required AddressData addressData,
+  }) {
     LeadSubmitPushEvent leadSubmitPushEvent = LeadSubmitPushEvent(
-      loanType: LoanType(
-        typeOfLoan: loanproductState?.selectedProductScheme?.optionValue,
-      ),
-      loanProduct: LoanProduct(
-        mainCategory: loanproductState?.selectedMainCategory?.lsfFacId,
-        subCategory: loanproductState?.selectedSubCategoryList?.lsfFacId,
-        producrId: loanproductState?.selectedProduct?.prdCode,
-      ),
-      dedupe: Dedupe(
-        existingCustomer: dedupeState?.isNewCustomer,
-        cifNumber: dedupeState?.cifResponse?.lldCbsid,
-        constitution: dedupeState?.constitution,
-      ),
-      personalData: personalState?.personalData,
-      addressData: addressState?.addressData,
+      loanType: loanType,
+      loanProduct: loanProduct,
+      dedupe: dedupeData,
+      personalData: personlData,
+      addressData: addressData,
     );
     context.read<LeadSubmitBloc>().add(leadSubmitPushEvent);
   }
@@ -51,29 +48,60 @@ class LeadSubmitPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(title), automaticallyImplyLeading: false),
       body: BlocConsumer<LeadSubmitBloc, LeadSubmitState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state.leadSubmitStatus == SubmitStatus.success) {
+            showSuccessBottomSheet(
+              context,
+              "Submitted",
+              "Lead ID : LEAD/202526/00008213",
+              "Lead details successfully submitted",
+            );
+          }
+        },
         builder: (context, state) {
           final personalDetailsBloc = context.watch<PersonalDetailsBloc?>();
           final loanproductBloc = context.watch<LoanproductBloc?>();
           final addressBloc = context.watch<AddressDetailsBloc?>();
           final dedupeBloc = context.watch<DedupeBloc?>();
 
-          personalState = personalDetailsBloc?.state;
-          loanproductState = loanproductBloc?.state;
-          addressState = addressBloc?.state;
-          dedupeState = dedupeBloc?.state;
+          final personalState = personalDetailsBloc?.state;
+          final loanproductState = loanproductBloc?.state;
+          final addressState = addressBloc?.state;
+          final dedupeState = dedupeBloc?.state;
 
+          LoanType loanType = LoanType(
+            typeOfLoan: loanproductState?.selectedProductScheme?.optionValue,
+          );
+
+          LoanProduct loanProduct = LoanProduct(
+            mainCategory: loanproductState?.selectedMainCategory?.lsfFacId,
+            subCategory: loanproductState?.selectedSubCategoryList?.lsfFacId,
+            producrId: loanproductState?.selectedProduct?.prdCode,
+          );
+          Dedupe dedupeData = Dedupe(
+            existingCustomer: dedupeState?.isNewCustomer,
+            cifNumber: dedupeState?.cifResponse?.lldCbsid,
+            constitution: dedupeState?.constitution,
+          );
+          PersonalData? personalData = personalState?.personalData;
+          AddressData? addressData = addressState?.addressData;
           return ListView(
             padding: const EdgeInsets.all(16),
 
             children:
-                (personalState?.personalData != null &&
+                (personalData != null &&
                         loanproductState?.selectedProduct != null &&
-                        addressState?.addressData != null)
+                        addressData != null)
                     ? showLeadSubmitCard(
-                      personalState?.personalData,
-                      loanproductState?.selectedProduct,
-                      context,
+                      personalData: personalData,
+                      addressData: addressData,
+                      loanType: loanType,
+                      loanProduct: loanProduct,
+                      dedupeData: dedupeData,
+                      productMaster:
+                          loanproductBloc?.state.selectedProduct
+                              as ProductMaster,
+                      context: context,
                     )
                     : showNoDataCard(),
           );
@@ -82,11 +110,15 @@ class LeadSubmitPage extends StatelessWidget {
     );
   }
 
-  List<Widget> showLeadSubmitCard(
-    PersonalData? personalData,
-    ProductMaster? productMaster,
-    BuildContext context,
-  ) {
+  List<Widget> showLeadSubmitCard({
+    required PersonalData personalData,
+    required AddressData addressData,
+    required LoanProduct loanProduct,
+    required LoanType loanType,
+    required Dedupe dedupeData,
+    required ProductMaster productMaster,
+    required BuildContext context,
+  }) {
     return <Widget>[
       Card(
         elevation: 4,
@@ -99,7 +131,7 @@ class LeadSubmitPage extends StatelessWidget {
               SysmoTitle(
                 icon: Icons.face,
                 label: "Name",
-                value: '${personalData?.firstName} ${personalData?.lastName}',
+                value: '${personalData.firstName} ${personalData.lastName}',
               ),
               SysmoTitle(
                 icon: Icons.person,
@@ -109,13 +141,13 @@ class LeadSubmitPage extends StatelessWidget {
               SysmoTitle(
                 icon: Icons.badge,
                 label: "Product",
-                value: '${productMaster?.prdCode} - ${productMaster?.prdDesc}',
+                value: '${productMaster.prdCode} - ${productMaster.prdDesc}',
               ),
               SysmoTitle(icon: Icons.badge, label: "CIF ID", value: "121212"),
               SysmoTitle(
                 icon: Icons.currency_rupee,
                 label: "Loan Amount",
-                value: formatAmount('${personalData?.loanAmountRequested}'),
+                value: formatAmount('${personalData.loanAmountRequested}'),
               ),
               SysmoTitle(
                 icon: Icons.location_on,
@@ -130,7 +162,14 @@ class LeadSubmitPage extends StatelessWidget {
       Center(
         child: ElevatedButton.icon(
           onPressed: () {
-            submitLead(context: context);
+            submitLead(
+              personlData: personalData,
+              addressData: addressData,
+              loanProduct: loanProduct,
+              loanType: loanType,
+              dedupeData: dedupeData,
+              context: context,
+            );
             // show this success bottomsheet when leadsubmitstatus.success
             // showSuccessBottomSheet(
             //   context,
