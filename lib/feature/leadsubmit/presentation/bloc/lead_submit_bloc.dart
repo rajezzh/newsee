@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/address_data.dart';
@@ -53,26 +54,33 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
   }
 
   Future<void> onLeadPush(LeadSubmitPushEvent event, Emitter emit) async {
-    LeadSubmitRequest leadSubmitRequest = LeadSubmitRequest(
-      userid: "AGRI1124",
-      vertical: "7",
-      orgScode: "14356",
-      orgName: "BRAHMAMANGALAM",
-      orgLevel: "23",
-      token: "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3",
-      leadDetails: event.loanType,
-      chooseProduct: event.loanProduct,
-      dedupeSearch: event.dedupe,
-      individualNonIndividualDetails: event.personalData,
-      addressDetails: event.addressData!,
-    );
+    try {
+      LeadSubmitRequest leadSubmitRequest = LeadSubmitRequest(
+        userid: "AGRI1124",
+        vertical: "7",
+        orgScode: "14356",
+        orgName: "BRAHMAMANGALAM",
+        orgLevel: "23",
+        token:
+            "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3",
+        leadDetails: event.loanType,
+        chooseProduct: event.loanProduct,
+        dedupeSearch: event.dedupe,
+        individualNonIndividualDetails: event.personalData,
+        addressDetails: event.addressData!,
+      );
 
-    AsyncResponseHandler responseHandler = await LeadSubmitRepoImpl()
-        .submitLead(request: leadSubmitRequest);
-    if (responseHandler.isRight()) {
-      print('Lead Submit Success..');
-    } else {
-      print('Lead Submit Failure...');
+      AsyncResponseHandler responseHandler = await LeadSubmitRepoImpl()
+          .submitLead(request: leadSubmitRequest);
+      if (responseHandler.isRight()) {
+        print('Lead Submit Success..');
+        emit(state.copyWith(leadSubmitStatus: SubmitStatus.success));
+      } else {
+        print('Lead Submit Failure...');
+        emit(state.copyWith(leadSubmitStatus: SubmitStatus.success));
+      }
+    } on DioException catch (e) {
+      emit(state.copyWith(leadSubmitStatus: SubmitStatus.success));
     }
   }
 }
