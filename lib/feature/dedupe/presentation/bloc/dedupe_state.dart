@@ -16,7 +16,7 @@ class DedupeState extends Equatable {
   final DedupeResponse? dedupeResponse;
   final AadharvalidateResponse? aadharvalidateResponse;
   final CifResponse? cifResponse;
-  final String? isNewCustomer;
+  final bool? isNewCustomer;
   final String? constitution;
   final bool? dismissModal;
   DedupeState({
@@ -36,7 +36,7 @@ class DedupeState extends Equatable {
     DedupeResponse? dedupeResponse,
     AadharvalidateResponse? aadharvalidateResponse,
     CifResponse? cifResponse,
-    String? isNewCustomer,
+    bool? isNewCustomer,
     String? constitution,
     bool? dismissModal,
   }) {

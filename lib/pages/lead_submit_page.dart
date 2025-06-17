@@ -14,6 +14,7 @@ import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/pages/rupeeformatter.dart';
 import 'package:newsee/widgets/success_bottom_sheet.dart';
+import 'package:newsee/widgets/sysmo_notification_card.dart';
 import 'package:newsee/widgets/sysmo_title.dart';
 
 class LeadSubmitPage extends StatelessWidget {
@@ -99,7 +100,7 @@ class LeadSubmitPage extends StatelessWidget {
             producrId: loanproductState?.selectedProduct?.prdCode,
           );
           Dedupe dedupeData = Dedupe(
-            existingCustomer: dedupeState?.isNewCustomer,
+            existingCustomer: dedupeState?.isNewCustomer != null ? false : true,
             cifNumber: dedupeState?.cifResponse?.lldCbsid,
             constitution: dedupeState?.constitution,
           );
@@ -243,10 +244,11 @@ incase of incomplete dataentry show no data card
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SysmoTitle(
+              SysmoNotificationCard(
                 icon: Icons.close,
                 label: "No Data",
                 value: 'Please complete Personal and Address Details...!!',
+                infoicon: Icons.info,
               ),
             ],
           ),

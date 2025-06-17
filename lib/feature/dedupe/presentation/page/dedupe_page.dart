@@ -10,15 +10,15 @@ class DedupeView extends StatelessWidget {
   DedupeView({required this.title, super.key});
 
   final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
-  final cifForm = AppForms.CIF_DETAILS_FORM;  
+  final cifForm = AppForms.CIF_DETAILS_FORM;
   final customerTypeForm = AppForms.CUSTOMER_TYPE_FORM;
 
   void callOpenSheet(context, state) {
     print("customerTypeForm.value ${customerTypeForm.value}");
-    if (state.isNewCustomer == "N") {
-      _openModalSheet(context, true,dedupeForm);
+    if (state.isNewCustomer) {
+      _openModalSheet(context, true, dedupeForm);
     } else {
-      _openModalSheet(context, false,cifForm);
+      _openModalSheet(context, false, cifForm);
     }
   }
 
@@ -37,11 +37,15 @@ class DedupeView extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder:(BuildContext context) => 
-        BlocProvider.value(
-          value: dedupebloc,
-          child: BottomSheetContainer(isNewCustomer: isNewCustomer, form: form, tabController: tabController)
-        )
+      builder:
+          (BuildContext context) => BlocProvider.value(
+            value: dedupebloc,
+            child: BottomSheetContainer(
+              isNewCustomer: isNewCustomer,
+              form: form,
+              tabController: tabController,
+            ),
+          ),
     );
   }
 
@@ -53,11 +57,11 @@ class DedupeView extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       body: BlocConsumer<DedupeBloc, DedupeState>(
-        listener: (context, state) => {
-          if (state.status == DedupeFetchStatus.change) {
-            callOpenSheet(context, state)
-          }
-        },
+        listener:
+            (context, state) => {
+              if (state.status == DedupeFetchStatus.change)
+                {callOpenSheet(context, state)},
+            },
         builder: (context, state) {
           print("Current status => ${state.status}");
           print("Current state, => $state");
@@ -77,29 +81,30 @@ class DedupeView extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                         decoration: BoxDecoration(
                           color: Colors.indigo,
-                          borderRadius: BorderRadius.circular(10)
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           "Select Customer Constution",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            
-                            color: Colors.white
+
+                            color: Colors.white,
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       Container(
                         height: 130,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 0,
-                            color: Colors.grey
-                          ),
+                          border: Border.all(width: 0, color: Colors.grey),
                           borderRadius: BorderRadius.circular(15),
-                          boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey, blurStyle: BlurStyle.outer)]
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 5,
+                              color: Colors.grey,
+                              blurStyle: BlurStyle.outer,
+                            ),
+                          ],
                         ),
                         child: Column(
                           children: [
@@ -109,7 +114,11 @@ class DedupeView extends StatelessWidget {
                               formControlName: 'constitution',
                               onChanged: (control) {
                                 if (customerTypeForm.valid) {
-                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
                                 }
                               },
                             ),
@@ -123,69 +132,78 @@ class DedupeView extends StatelessWidget {
                               formControlName: 'constitution',
                               onChanged: (control) {
                                 if (customerTypeForm.valid) {
-                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
                                 }
                               },
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 50,
-                      ),
+                      SizedBox(height: 50),
                       Container(
                         padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
                         decoration: BoxDecoration(
                           color: Colors.indigo,
-                          borderRadius: BorderRadius.circular(10)
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           "Select Customer Type",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            
-                            color: Colors.white
+
+                            color: Colors.white,
                           ),
-                
                         ),
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
+                      SizedBox(height: 20),
                       Container(
                         height: 130,
                         decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 0,
-                            color: Colors.grey
-                          ),
+                          border: Border.all(width: 0, color: Colors.grey),
                           borderRadius: BorderRadius.circular(15),
-                          boxShadow: [BoxShadow(blurRadius: 5, color: Colors.grey, blurStyle: BlurStyle.outer)]
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 5,
+                              color: Colors.grey,
+                              blurStyle: BlurStyle.outer,
+                            ),
+                          ],
                         ),
                         child: Column(
                           children: [
-                            ReactiveRadioListTile<String>(
+                            ReactiveRadioListTile<bool>(
                               title: const Text('New Customer'),
-                              value: 'N',
+                              value: true,
                               formControlName: 'isNewCustomer',
                               onChanged: (control) {
                                 if (customerTypeForm.valid) {
-                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
                                 }
                               },
                             ),
                             Container(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: Divider(),
-                            )
-                            ,
-                            ReactiveRadioListTile<String>(
+                            ),
+                            ReactiveRadioListTile<bool>(
                               title: const Text('Existing Customer'),
-                              value: 'E',
+                              value: false,
                               formControlName: 'isNewCustomer',
                               onChanged: (control) {
                                 if (customerTypeForm.valid) {
-                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
                                 }
                               },
                             ),
@@ -193,12 +211,12 @@ class DedupeView extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ),
               ),
             ),
           );
-        }
+        },
       ),
     );
   }
