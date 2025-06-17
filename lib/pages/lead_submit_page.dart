@@ -33,11 +33,30 @@ class LeadSubmitPage extends StatelessWidget {
     required Dedupe dedupeData,
     required AddressData addressData,
   }) {
+    String? loanAmountFormatted = personlData.loanAmountRequested?.replaceAll(
+      ',',
+      '',
+    );
+    PersonalData updatedPersonalData = personlData.copyWith(
+      loanAmountRequested: loanAmountFormatted,
+      occupationType: '01',
+      agriculturistType: '1',
+      farmerCategory: '2',
+      religion: '3',
+      caste: 'CAS000001',
+      farmerType: '1',
+      passportNumber: '431241131',
+      residentialStatus: '4',
+      sourceid: 'AGRI1124',
+      sourcename: 'Meena',
+      subActivity: '1.3',
+    );
+
     LeadSubmitPushEvent leadSubmitPushEvent = LeadSubmitPushEvent(
       loanType: loanType,
       loanProduct: loanProduct,
       dedupe: dedupeData,
-      personalData: personlData,
+      personalData: updatedPersonalData,
       addressData: addressData,
     );
     context.read<LeadSubmitBloc>().add(leadSubmitPushEvent);
@@ -85,25 +104,6 @@ class LeadSubmitPage extends StatelessWidget {
             constitution: dedupeState?.constitution,
           );
           PersonalData? personalData = personalState?.personalData;
-          String? loanAmountFormatted = personalData?.loanAmountRequested
-              ?.replaceAll(',', '');
-          PersonalData updatedPersonalData =
-              personalData?.copyWith(
-                    loanAmountRequested: loanAmountFormatted,
-                    occupationType: '01',
-                    agriculturistType: '1',
-                    farmerCategory: '2',
-                    religion: '3',
-                    caste: 'CAS000001',
-                    farmerType: '1',
-                    passportNumber: '431241131',
-                    residentialStatus: '4',
-                    sourceid: 'AGRI1124',
-                    sourcename: 'Meena',
-                    subActivity: '1.3',
-                  )
-                  as PersonalData;
-
           AddressData? addressData = addressState?.addressData;
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -113,7 +113,7 @@ class LeadSubmitPage extends StatelessWidget {
                         loanproductState?.selectedProduct != null &&
                         addressData != null)
                     ? showLeadSubmitCard(
-                      personalData: updatedPersonalData,
+                      personalData: personalData,
                       addressData: addressData,
                       loanType: loanType,
                       loanProduct: loanProduct,
