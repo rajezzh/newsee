@@ -65,6 +65,7 @@ class LeadSubmitPage extends StatelessWidget {
           final dedupeBloc = context.watch<DedupeBloc?>();
 
           final personalState = personalDetailsBloc?.state;
+
           final loanproductState = loanproductBloc?.state;
           final addressState = addressBloc?.state;
           final dedupeState = dedupeBloc?.state;
@@ -84,6 +85,25 @@ class LeadSubmitPage extends StatelessWidget {
             constitution: dedupeState?.constitution,
           );
           PersonalData? personalData = personalState?.personalData;
+          String? loanAmountFormatted = personalData?.loanAmountRequested
+              ?.replaceAll(',', '');
+          PersonalData updatedPersonalData =
+              personalData?.copyWith(
+                    loanAmountRequested: loanAmountFormatted,
+                    occupationType: '01',
+                    agriculturistType: '1',
+                    farmerCategory: '2',
+                    religion: '3',
+                    caste: 'CAS000001',
+                    farmerType: '1',
+                    passportNumber: '431241131',
+                    residentialStatus: '4',
+                    sourceid: 'AGRI1124',
+                    sourcename: 'Meena',
+                    subActivity: '1.3',
+                  )
+                  as PersonalData;
+
           AddressData? addressData = addressState?.addressData;
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -93,7 +113,7 @@ class LeadSubmitPage extends StatelessWidget {
                         loanproductState?.selectedProduct != null &&
                         addressData != null)
                     ? showLeadSubmitCard(
-                      personalData: personalData,
+                      personalData: updatedPersonalData,
                       addressData: addressData,
                       loanType: loanType,
                       loanProduct: loanProduct,
