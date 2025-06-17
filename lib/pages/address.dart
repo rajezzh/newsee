@@ -22,13 +22,13 @@ class Address extends StatelessWidget {
   Address({required this.title, super.key});
 
   final form = FormGroup({
-    'addresstype': FormControl<String>(validators: [Validators.required]),
+    'addressType': FormControl<String>(validators: [Validators.required]),
     'address1': FormControl<String>(validators: [Validators.required]),
     'address2': FormControl<String>(validators: [Validators.required]),
     'address3': FormControl<String>(validators: [Validators.required]),
     'state': FormControl<String>(validators: [Validators.required]),
-    'city': FormControl<String>(validators: [Validators.required]),
-    'district': FormControl<String>(validators: [Validators.required]),
+    'cityDistrict': FormControl<String>(validators: [Validators.required]),
+    'area': FormControl<String>(validators: [Validators.required]),
     'pincode': FormControl<String>(
       validators: [Validators.required, Validators.minLength(6)],
     ),
@@ -129,16 +129,31 @@ class Address extends StatelessWidget {
                     child: Column(
                       children: [
                         SearchableDropdown(
-                          controlName: 'addresstype',
+                          controlName: 'addressType',
                           label: 'Address Type',
                           items:
                               state.lovList!
                                   .where((v) => v.Header == 'AddressType')
                                   .toList(),
                           onChangeListener:
-                              (Lov val) => form.controls['addresstype']
+                              (Lov val) => form.controls['addressType']
                                   ?.updateValue(val.optvalue),
-                          selItem: () => {},
+                          selItem: () {
+                            if (state.addressData != null) {
+                              Lov? lov = state.lovList?.firstWhere(
+                                (lov) =>
+                                    lov.Header == 'AddressType' &&
+                                    lov.optvalue ==
+                                        state.addressData?.addressType,
+                              );
+                              form.controls['addressType']?.updateValue(
+                                lov?.optvalue,
+                              );
+                              return lov;
+                            } else {
+                              return null;
+                            }
+                          },
                         ),
                         CustomTextField(
                           controlName: 'address1',
@@ -189,11 +204,13 @@ class Address extends StatelessWidget {
                           },
                         ),
                         SearchableDropdown(
-                          controlName: 'city',
+                          controlName: 'cityDistrict',
                           label: 'City',
                           items: state.cityMaster!,
                           onChangeListener: (GeographyMaster val) {
-                            form.controls['city']?.updateValue(val.code);
+                            form.controls['cityDistrict']?.updateValue(
+                              val.code,
+                            );
                             globalLoadingBloc.add(
                               ShowLoading(message: "Fetching district..."),
                             );
@@ -229,11 +246,11 @@ class Address extends StatelessWidget {
                           },
                         ),
                         SearchableDropdown(
-                          controlName: 'district',
+                          controlName: 'area',
                           label: 'District',
                           items: state.districtMaster!,
                           onChangeListener: (GeographyMaster val) {
-                            form.controls['district']?.updateValue(val.code);
+                            form.controls['area']?.updateValue(val.code);
                           },
                           selItem: () {
                             if (addressDetailsState.addressData != null) {
