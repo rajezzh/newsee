@@ -28,8 +28,8 @@ class Address extends StatelessWidget {
     'address2': FormControl<String>(validators: [Validators.required]),
     'address3': FormControl<String>(validators: [Validators.required]),
     'state': FormControl<String>(validators: [Validators.required]),
-    'city': FormControl<String>(validators: [Validators.required]),
-    'district': FormControl<String>(validators: [Validators.required]),
+    'cityDistrict': FormControl<String>(validators: [Validators.required]),
+    'area': FormControl<String>(validators: [Validators.required]),
     'pincode': FormControl<String>(
       validators: [Validators.required, Validators.minLength(6)],
     ),
@@ -217,11 +217,13 @@ class Address extends StatelessWidget {
                           },
                         ),
                         SearchableDropdown(
-                          controlName: 'city',
+                          controlName: 'cityDistrict',
                           label: 'City',
                           items: state.cityMaster!,
                           onChangeListener: (GeographyMaster val) {
-                            form.controls['city']?.updateValue(val.code);
+                            form.controls['cityDistrict']?.updateValue(
+                              val.code,
+                            );
                             globalLoadingBloc.add(
                               ShowLoading(message: "Fetching district..."),
                             );
@@ -236,14 +238,16 @@ class Address extends StatelessWidget {
                           selItem: () {
                             if (addressDetailsState.addressData != null) {
                               String? cityCode =
-                                  addressDetailsState.addressData?.city!;
+                                  addressDetailsState
+                                      .addressData
+                                      ?.cityDistrict!;
 
                               GeographyMaster? geographyMaster = state
                                   .cityMaster
                                   ?.firstWhere((val) => val.code == cityCode);
                               print(geographyMaster);
                               if (geographyMaster != null) {
-                                form.controls['city']?.updateValue(
+                                form.controls['cityDistrict']?.updateValue(
                                   geographyMaster.code,
                                 );
                                 return geographyMaster;
@@ -251,22 +255,22 @@ class Address extends StatelessWidget {
                                 return <GeographyMaster>[];
                               }
                             } else if (state.cityMaster!.isEmpty) {
-                              form.controls['city']?.updateValue("");
+                              form.controls['cityDistrict']?.updateValue("");
                               return <GeographyMaster>[];
                             }
                           },
                         ),
                         SearchableDropdown(
-                          controlName: 'district',
+                          controlName: 'area',
                           label: 'District',
                           items: state.districtMaster!,
                           onChangeListener: (GeographyMaster val) {
-                            form.controls['district']?.updateValue(val.code);
+                            form.controls['area']?.updateValue(val.code);
                           },
                           selItem: () {
                             if (addressDetailsState.addressData != null) {
                               String? districtCode =
-                                  addressDetailsState.addressData?.district!;
+                                  addressDetailsState.addressData?.area!;
 
                               GeographyMaster? geographyMaster = state
                                   .districtMaster
@@ -275,7 +279,7 @@ class Address extends StatelessWidget {
                                   );
                               print(geographyMaster);
                               if (geographyMaster != null) {
-                                form.controls['district']?.updateValue(
+                                form.controls['area']?.updateValue(
                                   geographyMaster.code,
                                 );
                                 return geographyMaster;
@@ -284,7 +288,7 @@ class Address extends StatelessWidget {
                               }
                             } else if (state.cityMaster!.isEmpty ||
                                 state.districtMaster!.isEmpty) {
-                              form.controls['district']?.updateValue("");
+                              form.controls['area']?.updateValue("");
                               return <GeographyMaster>[];
                             }
                           },

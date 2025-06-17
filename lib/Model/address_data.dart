@@ -9,8 +9,8 @@ class AddressData {
   final String? address2;
   final String? address3;
   final String? state;
-  final String? city;
-  final String? district;
+  final String? cityDistrict;
+  final String? area;
   final String? pincode;
   AddressData({
     this.addressType,
@@ -18,8 +18,8 @@ class AddressData {
     this.address2,
     this.address3,
     this.state,
-    this.city,
-    this.district,
+    this.cityDistrict,
+    this.area,
     this.pincode,
   });
 
@@ -29,8 +29,8 @@ class AddressData {
     ValueGetter<String?>? address2,
     ValueGetter<String?>? address3,
     ValueGetter<String?>? state,
-    ValueGetter<String?>? city,
-    ValueGetter<String?>? district,
+    ValueGetter<String?>? cityDistrict,
+    ValueGetter<String?>? area,
     ValueGetter<String?>? pincode,
   }) {
     return AddressData(
@@ -39,8 +39,8 @@ class AddressData {
       address2: address2 != null ? address2() : this.address2,
       address3: address3 != null ? address3() : this.address3,
       state: state != null ? state() : this.state,
-      city: city != null ? city() : this.city,
-      district: district != null ? district() : this.district,
+      cityDistrict: cityDistrict != null ? cityDistrict() : this.cityDistrict,
+      area: area != null ? area() : this.area,
       pincode: pincode != null ? pincode() : this.pincode,
     );
   }
@@ -52,8 +52,8 @@ class AddressData {
       'address2': address2,
       'address3': address3,
       'state': state,
-      'city': city,
-      'district': district,
+      'cityDistrict': cityDistrict,
+      'area': area,
       'pincode': pincode,
     };
   }
@@ -65,8 +65,8 @@ class AddressData {
       address2: map['address2'],
       address3: map['address3'],
       state: map['state'],
-      city: map['city'],
-      district: map['district'],
+      cityDistrict: map['cityDistrict'],
+      area: map['area'],
       pincode: map['pincode'],
     );
   }
@@ -78,7 +78,7 @@ class AddressData {
 
   @override
   String toString() {
-    return 'AddressData(addressType: $addressType, address1: $address1, address2: $address2, address3: $address3, state: $state, city: $city, district: $district, pincode: $pincode)';
+    return 'AddressData(addressType: $addressType, address1: $address1, address2: $address2, address3: $address3, state: $state, cityDistrict: $cityDistrict, area: $area, pincode: $pincode)';
   }
 
   @override
@@ -91,8 +91,8 @@ class AddressData {
         other.address2 == address2 &&
         other.address3 == address3 &&
         other.state == state &&
-        other.city == city &&
-        other.district == district &&
+        other.cityDistrict == cityDistrict &&
+        other.area == area &&
         other.pincode == pincode;
   }
 
@@ -103,8 +103,8 @@ class AddressData {
         address2.hashCode ^
         address3.hashCode ^
         state.hashCode ^
-        city.hashCode ^
-        district.hashCode ^
+        cityDistrict.hashCode ^
+        area.hashCode ^
         pincode.hashCode;
   }
 }
