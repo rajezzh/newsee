@@ -12,7 +12,7 @@ class LeadSubmitDatasource {
   @param      : http request payload
   @return     : Future<Response> Response - > HttpResponse
    */
-  submitLead(LeadSubmitRequest payload) async {
+  submitLead(Map<String, dynamic> payload) async {
     final res = await dio.post(
       ApiConfig.LEAD_SUBMIT_API_ENDPOINT,
       data: payload,
