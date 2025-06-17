@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/address_data.dart';
+import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
+import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
@@ -46,6 +48,43 @@ class Address extends StatelessWidget {
     }
   }
 
+  mapAadharResponse(AadharvalidateResponse? aadharResponse) {
+    try {
+      String address =
+          '${aadharResponse?.house} ${aadharResponse?.street} ${aadharResponse?.locality} ${aadharResponse?.vtcName} ${aadharResponse?.postOfficeName}';
+      String addressOne = addressSplit(address);
+      form.control('address1').updateValue(addressOne);
+      String remainingAddress = address.substring(addressOne.length).trim();
+      String addressTwo = addressSplit(remainingAddress);
+      form.control('address2').updateValue(addressTwo);
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  addressSplit(String str) {
+    try {
+      if (str.trim() == '') {
+        return str;
+      }
+      str = str.trim();
+
+      if (str.length <= 40) {
+        return str;
+      }
+
+      var lastSpaceIndex = str.substring(0, 40).lastIndexOf(' ');
+
+      if (lastSpaceIndex == -1) {
+        return str.substring(0, 40);
+      } else {
+        return str.substring(0, lastSpaceIndex).trim();
+      }
+    } catch (error) {
+      return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final globalLoadingBloc = context.read<GlobalLoadingBloc>();
@@ -68,8 +107,17 @@ class Address extends StatelessWidget {
           }
         },
         builder: (context, state) {
-          if (state.cityMaster != null && state.cityMaster!.isEmpty) {
-            form.controls['city']?.updateValue(null);
+          DedupeState? dedupeState;
+          AddressDetailsState addressDetailsState =
+              context.watch<AddressDetailsBloc>().state;
+          if (state.status == SaveStatus.init) {
+            dedupeState = context.watch<DedupeBloc>().state;
+            if (dedupeState.cifResponse != null) {
+              print('address cifresponse-------->$dedupeState["cifResponse"]');
+            } else if (dedupeState.aadharvalidateResponse != null) {
+              print(dedupeState.aadharvalidateResponse);
+              mapAadharResponse(dedupeState.aadharvalidateResponse);
+            }
           }
           return Stack(
             alignment: Alignment.topLeft,
@@ -120,7 +168,25 @@ class Address extends StatelessWidget {
                               OnStateCityChangeEvent(stateCode: val.code),
                             );
                           },
-                          selItem: () => {},
+                          selItem: () {
+                            if (addressDetailsState.addressData != null) {
+                              String? stateCode =
+                                  addressDetailsState.addressData?.state!;
+
+                              GeographyMaster? geographyMaster = state
+                                  .stateCityMaster
+                                  ?.firstWhere((val) => val.code == stateCode);
+                              print(geographyMaster);
+                              if (geographyMaster != null) {
+                                form.controls['state']?.updateValue(
+                                  geographyMaster.code,
+                                );
+                                return geographyMaster;
+                              } else {
+                                return null;
+                              }
+                            }
+                          },
                         ),
                         SearchableDropdown(
                           controlName: 'city',
@@ -139,7 +205,28 @@ class Address extends StatelessWidget {
                               ),
                             );
                           },
-                          selItem: () => {},
+                          selItem: () {
+                            if (addressDetailsState.addressData != null) {
+                              String? cityCode =
+                                  addressDetailsState.addressData?.city!;
+
+                              GeographyMaster? geographyMaster = state
+                                  .stateCityMaster
+                                  ?.firstWhere((val) => val.code == cityCode);
+                              print(geographyMaster);
+                              if (geographyMaster != null) {
+                                form.controls['city']?.updateValue(
+                                  geographyMaster.code,
+                                );
+                                return geographyMaster;
+                              } else {
+                                return <GeographyMaster>[];
+                              }
+                            } else if (state.cityMaster!.isEmpty) {
+                              form.controls['city']?.updateValue("");
+                              return <GeographyMaster>[];
+                            }
+                          },
                         ),
                         SearchableDropdown(
                           controlName: 'district',
@@ -148,7 +235,31 @@ class Address extends StatelessWidget {
                           onChangeListener: (GeographyMaster val) {
                             form.controls['district']?.updateValue(val.code);
                           },
-                          selItem: () => {},
+                          selItem: () {
+                            if (addressDetailsState.addressData != null) {
+                              String? districtCode =
+                                  addressDetailsState.addressData?.district!;
+
+                              GeographyMaster? geographyMaster = state
+                                  .districtMaster
+                                  ?.firstWhere(
+                                    (val) => val.code == districtCode,
+                                  );
+                              print(geographyMaster);
+                              if (geographyMaster != null) {
+                                form.controls['district']?.updateValue(
+                                  geographyMaster.code,
+                                );
+                                return geographyMaster;
+                              } else {
+                                return <GeographyMaster>[];
+                              }
+                            } else if (state.cityMaster!.isEmpty ||
+                                state.districtMaster!.isEmpty) {
+                              form.controls['district']?.updateValue("");
+                              return <GeographyMaster>[];
+                            }
+                          },
                         ),
                         IntegerTextField(
                           controlName: 'pincode',
