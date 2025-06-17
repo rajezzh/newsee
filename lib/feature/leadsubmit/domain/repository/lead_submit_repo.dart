@@ -4,6 +4,6 @@ import 'package:newsee/feature/leadsubmit/domain/modal/lead_submit_request.dart'
 
 abstract class LeadSubmitRepo {
   Future<AsyncResponseHandler<Failure, Map<String, dynamic>>> submitLead({
-    required LeadSubmitRequest request,
+    required Map<String, dynamic> request,
   });
 }

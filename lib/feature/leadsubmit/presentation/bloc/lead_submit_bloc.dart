@@ -55,20 +55,20 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
 
   Future<void> onLeadPush(LeadSubmitPushEvent event, Emitter emit) async {
     try {
-      LeadSubmitRequest leadSubmitRequest = LeadSubmitRequest(
-        userid: "AGRI1124",
-        vertical: "7",
-        orgScode: "14356",
-        orgName: "BRAHMAMANGALAM",
-        orgLevel: "23",
-        token:
+      Map<String, dynamic> leadSubmitRequest = {
+        "userid": "AGRI1124",
+        "vertical": "7",
+        "orgScode": "14356",
+        "orgName": "BRAHMAMANGALAM",
+        "orgLevel": "23",
+        "token":
             "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3",
-        leadDetails: event.loanType,
-        chooseProduct: event.loanProduct,
-        dedupeSearch: event.dedupe,
-        individualNonIndividualDetails: event.personalData,
-        addressDetails: event.addressData!,
-      );
+        "leadDetails": event.loanType.toMap(),
+        "chooseProduct": event.loanProduct.toMap(),
+        "dedupeSearch": event.dedupe.toMap(),
+        "individualNonIndividualDetails": event.personalData?.toMap(),
+        "addressDetails": [event.addressData?.toMap()],
+      };
 
       AsyncResponseHandler responseHandler = await LeadSubmitRepoImpl()
           .submitLead(request: leadSubmitRequest);
@@ -80,6 +80,8 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         emit(state.copyWith(leadSubmitStatus: SubmitStatus.success));
       }
     } on DioException catch (e) {
+      print('leadsubmit exception => $e');
+    } finally {
       emit(state.copyWith(leadSubmitStatus: SubmitStatus.success));
     }
   }

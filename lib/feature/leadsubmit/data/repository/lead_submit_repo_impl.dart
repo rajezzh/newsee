@@ -9,7 +9,7 @@ import 'package:newsee/feature/leadsubmit/domain/repository/lead_submit_repo.dar
 class LeadSubmitRepoImpl extends LeadSubmitRepo {
   @override
   Future<AsyncResponseHandler<Failure, Map<String, dynamic>>> submitLead({
-    required LeadSubmitRequest request,
+    required Map<String, dynamic> request,
   }) async {
     LeadSubmitDatasource leadSubmitDatasource = LeadSubmitDatasource(
       dio: ApiClient().getDio(),
