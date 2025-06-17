@@ -53,7 +53,10 @@ class SysmoTitle1 extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-         CircleAvatar(child: Icon(infoicon, color: Colors.blue, size: 20,),  backgroundColor: const Color.fromARGB(36, 0, 150, 135)),
+         CircleAvatar(
+          child: Icon(infoicon, color: Colors.blue, size: 20,), 
+          backgroundColor: const Color.fromARGB(36, 0, 150, 135)
+          ),
 
           Expanded(
             child: Padding(

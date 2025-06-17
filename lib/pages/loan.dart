@@ -240,14 +240,75 @@ class Loan extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          if (form.valid) {
-                            context.read<LoanproductBloc>().add(
-                              SaveLoanProduct(choosenProduct: form.value),
-                            );
-                          } else {
-                            form.markAllAsTouched();
-                          }
-                        },
+                            final selectedProduct = context.read<LoanproductBloc>().state.selectedProduct;
+
+                        if (form.valid) {
+                              final selectedProduct = form.value['loanProduct']; 
+
+                              if (selectedProduct == selectedProduct) {
+                                showDialog(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: Align(
+                                      child: Text(
+                                        'Conform',
+                                        style: TextStyle(color: Colors.teal),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    content: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Text(
+                                        'Are you sure you want to proceed to the next step?',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                    ),
+                                    actions: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                        TextButton(
+                                        onPressed: () => Navigator.of(ctx).pop(),
+                                        child: Text('Cancel', style: TextStyle(fontSize: 15),),
+                                      
+                                      ),
+                                       TextButton(
+                                        
+                                        child: Text('Ok',style: TextStyle(fontSize: 15)),
+                                        onPressed: () async{
+                                          if(form.valid){
+                                      context.read<LoanproductBloc>().add(
+                                       SaveLoanProduct(choosenProduct: form.value),
+                                             );
+                                          }
+                                          await{
+                                           Navigator.of(ctx).pop(), 
+
+                                          };
+
+                                        },
+
+                                        
+                                        
+                                      ),
+                                    
+
+                                        ],
+                                      )
+                                     
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                context.read<LoanproductBloc>().add(
+                                  SaveLoanProduct(choosenProduct: form.value),
+                                );
+                              }
+                            } else {
+                              form.markAllAsTouched();
+                            }
+
+                                                    },
                         child: Text('Next'),
                       ),
                     ),
