@@ -11,7 +11,6 @@ class AddressData {
   final String? state;
   final String? city;
   final String? district;
-  final String? area;
   final String? pincode;
   AddressData({
     this.addressType,
@@ -21,7 +20,6 @@ class AddressData {
     this.state,
     this.city,
     this.district,
-    this.area,
     this.pincode,
   });
 
@@ -33,7 +31,6 @@ class AddressData {
     ValueGetter<String?>? state,
     ValueGetter<String?>? city,
     ValueGetter<String?>? district,
-    ValueGetter<String?>? area,
     ValueGetter<String?>? pincode,
   }) {
     return AddressData(
@@ -44,7 +41,6 @@ class AddressData {
       state: state != null ? state() : this.state,
       city: city != null ? city() : this.city,
       district: district != null ? district() : this.district,
-      area: area != null ? area() : this.area,
       pincode: pincode != null ? pincode() : this.pincode,
     );
   }
@@ -58,7 +54,6 @@ class AddressData {
       'state': state,
       'city': city,
       'district': district,
-      'area': area,
       'pincode': pincode,
     };
   }
@@ -72,7 +67,6 @@ class AddressData {
       state: map['state'],
       city: map['city'],
       district: map['district'],
-      area: map['area'],
       pincode: map['pincode'],
     );
   }
@@ -84,7 +78,7 @@ class AddressData {
 
   @override
   String toString() {
-    return 'AddressData(addressType: $addressType, address1: $address1, address2: $address2, address3: $address3, state: $state, city: $city, district: $district, area: $area, pincode: $pincode)';
+    return 'AddressData(addressType: $addressType, address1: $address1, address2: $address2, address3: $address3, state: $state, city: $city, district: $district, pincode: $pincode)';
   }
 
   @override
@@ -99,7 +93,6 @@ class AddressData {
         other.state == state &&
         other.city == city &&
         other.district == district &&
-        other.area == area &&
         other.pincode == pincode;
   }
 
@@ -112,7 +105,6 @@ class AddressData {
         state.hashCode ^
         city.hashCode ^
         district.hashCode ^
-        area.hashCode ^
         pincode.hashCode;
   }
 }

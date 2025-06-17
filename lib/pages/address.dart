@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
+import 'package:newsee/feature/cif/domain/model/user/cif_response.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
@@ -27,8 +28,8 @@ class Address extends StatelessWidget {
     'address2': FormControl<String>(validators: [Validators.required]),
     'address3': FormControl<String>(validators: [Validators.required]),
     'state': FormControl<String>(validators: [Validators.required]),
-    'cityDistrict': FormControl<String>(validators: [Validators.required]),
-    'area': FormControl<String>(validators: [Validators.required]),
+    'city': FormControl<String>(validators: [Validators.required]),
+    'district': FormControl<String>(validators: [Validators.required]),
     'pincode': FormControl<String>(
       validators: [Validators.required, Validators.minLength(6)],
     ),
@@ -57,6 +58,16 @@ class Address extends StatelessWidget {
       String remainingAddress = address.substring(addressOne.length).trim();
       String addressTwo = addressSplit(remainingAddress);
       form.control('address2').updateValue(addressTwo);
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  mapCifResponse(CifResponse? cifResponse) {
+    try {
+      form.control('address1').updateValue(cifResponse?.lleadaddress);
+      form.control('address2').updateValue(cifResponse?.lleadaddresslane1);
+      form.control('address3').updateValue(cifResponse?.lleadaddresslane2);
     } catch (error) {
       print(error);
     }
@@ -107,6 +118,7 @@ class Address extends StatelessWidget {
           }
         },
         builder: (context, state) {
+          print('adressState----------------->${state.addressData}');
           DedupeState? dedupeState;
           AddressDetailsState addressDetailsState =
               context.watch<AddressDetailsBloc>().state;
@@ -114,6 +126,7 @@ class Address extends StatelessWidget {
             dedupeState = context.watch<DedupeBloc>().state;
             if (dedupeState.cifResponse != null) {
               print('address cifresponse-------->$dedupeState["cifResponse"]');
+              mapCifResponse(dedupeState.cifResponse);
             } else if (dedupeState.aadharvalidateResponse != null) {
               print(dedupeState.aadharvalidateResponse);
               mapAadharResponse(dedupeState.aadharvalidateResponse);
@@ -204,13 +217,11 @@ class Address extends StatelessWidget {
                           },
                         ),
                         SearchableDropdown(
-                          controlName: 'cityDistrict',
+                          controlName: 'city',
                           label: 'City',
                           items: state.cityMaster!,
                           onChangeListener: (GeographyMaster val) {
-                            form.controls['cityDistrict']?.updateValue(
-                              val.code,
-                            );
+                            form.controls['city']?.updateValue(val.code);
                             globalLoadingBloc.add(
                               ShowLoading(message: "Fetching district..."),
                             );
@@ -228,7 +239,7 @@ class Address extends StatelessWidget {
                                   addressDetailsState.addressData?.city!;
 
                               GeographyMaster? geographyMaster = state
-                                  .stateCityMaster
+                                  .cityMaster
                                   ?.firstWhere((val) => val.code == cityCode);
                               print(geographyMaster);
                               if (geographyMaster != null) {
@@ -246,11 +257,11 @@ class Address extends StatelessWidget {
                           },
                         ),
                         SearchableDropdown(
-                          controlName: 'area',
+                          controlName: 'district',
                           label: 'District',
                           items: state.districtMaster!,
                           onChangeListener: (GeographyMaster val) {
-                            form.controls['area']?.updateValue(val.code);
+                            form.controls['district']?.updateValue(val.code);
                           },
                           selItem: () {
                             if (addressDetailsState.addressData != null) {
