@@ -112,8 +112,8 @@ class LoginpageView extends StatelessWidget {
                                   'assets/Retail_loan.svg',
                                   // width: screenWidth * 0.02,
                                   // height: screenHeight,
-                                  width: screenWidth *0.06,
-                                  height: screenHeight *0.06,
+                                  width: screenWidth *0.05,
+                                  height: screenHeight *0.05,
                                 ),
                                 iconSize: screenWidth *0.08,
                                 color: Colors.amber,
@@ -137,8 +137,8 @@ class LoginpageView extends StatelessWidget {
                                 onPressed: () {},
                                 icon: SvgPicture.asset(
                                   'assets/Agri_Loan.svg',
-                                   width: screenWidth *0.06,
-                                  height: screenHeight *0.06
+                                  width: screenWidth *0.05,
+                                  height: screenHeight *0.05,
                                 ),
                                 iconSize:  screenWidth *0.08,
                                 color: Colors.blue,
@@ -159,8 +159,8 @@ class LoginpageView extends StatelessWidget {
                                 onPressed: () {},
                                 icon: SvgPicture.asset(
                                   'assets/MSME.svg',
-                                width: screenWidth *0.06,
-                                  height: screenHeight *0.06
+                               width: screenWidth *0.05,
+                                  height: screenHeight *0.05,
                                 ),
                                 iconSize:  screenWidth *0.07,
                                 color: Colors.pink,
@@ -202,7 +202,7 @@ class LoginpageView extends StatelessWidget {
                     ),
                   ),
                   style:  ElevatedButton.styleFrom(
-                     minimumSize: Size(double.infinity, screenHeight * 0.07),
+                     minimumSize: Size(double.infinity, screenHeight * 0.06),
 
                     backgroundColor: const Color.fromARGB(246, 4, 13, 95),
 
@@ -243,7 +243,7 @@ class LoginpageView extends StatelessWidget {
                 ),
               ],
             ),
-          SizedBox(height: screenHeight * 0.04),
+          SizedBox(height: screenHeight * 0.08),
 
             // Access to additional options like Maintenance, Reach Us, and More
             Padding(
