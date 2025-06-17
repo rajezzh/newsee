@@ -11,6 +11,16 @@ class DedupeView extends StatelessWidget {
 
   final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
   final cifForm = AppForms.CIF_DETAILS_FORM;  
+  final customerTypeForm = AppForms.CUSTOMER_TYPE_FORM;
+
+  void callOpenSheet(context, state) {
+    print("customerTypeForm.value ${customerTypeForm.value}");
+    if (state.isNewCustomer == "N") {
+      _openModalSheet(context, true,dedupeForm);
+    } else {
+      _openModalSheet(context, false,cifForm);
+    }
+  }
 
   /* 
     @author     : ganeshkumar.b  9/06/2025
@@ -21,7 +31,6 @@ class DedupeView extends StatelessWidget {
     BuildContext context,
     bool isNewCustomer,
     FormGroup form,
-    String customerConstitution,
   ) {
     final tabController = DefaultTabController.of(context);
     final dedupebloc = context.read<DedupeBloc>();
@@ -31,27 +40,38 @@ class DedupeView extends StatelessWidget {
       builder:(BuildContext context) => 
         BlocProvider.value(
           value: dedupebloc,
-          child: BottomSheetContainer(isNewCustomer: isNewCustomer, form: form, tabController: tabController, constitution: customerConstitution)
+          child: BottomSheetContainer(isNewCustomer: isNewCustomer, form: form, tabController: tabController)
         )
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    bool? selectedValue;
-    String? constitution;
-    // List<Map<String, dynamic>> dataList;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dedupe Details"),
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(20.0),
-            child: StatefulBuilder(
-              builder:
-                  (context, setState) => Column(
+      body: BlocConsumer<DedupeBloc, DedupeState>(
+        listener: (context, state) => {
+          if (state.status == DedupeFetchStatus.change) {
+            callOpenSheet(context, state)
+          }
+        },
+        builder: (context, state) {
+          print("Current status => ${state.status}");
+          print("Current state, => $state");
+          print("customerTypeForm ${customerTypeForm.value}");
+          if (state.status == null) {
+            customerTypeForm.reset();
+          }
+          return ReactiveForm(
+            formGroup: customerTypeForm,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
                     children: [
                       Container(
                         padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
@@ -66,7 +86,6 @@ class DedupeView extends StatelessWidget {
                             
                             color: Colors.white
                           ),
-
                         ),
                       ),
                       SizedBox(
@@ -84,35 +103,28 @@ class DedupeView extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            ListTile(
-                              title: const Text("Individual"),
-                              leading: Radio<String>(
-                                value: "I",
-                                groupValue: constitution,
-                                onChanged: (value) {
-                                  setState(() => constitution = value);
-                                },
-                              ),
-                              onTap: () {
-                                setState(() => constitution = "I");
+                            ReactiveRadioListTile<String>(
+                              title: const Text('Individual'),
+                              value: 'I',
+                              formControlName: 'constitution',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                }
                               },
                             ),
                             Container(
                               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                               child: Divider(),
-                            )
-                            ,
-                            ListTile(
-                              title: const Text("Non-Individual"),
-                              leading: Radio<String>(
-                                value: "N",
-                                groupValue: constitution,
-                                onChanged: (value) {
-                                  setState(() => constitution = value);
-                                },
-                              ),
-                              onTap: () {
-                                setState(() => constitution = "N");
+                            ),
+                            ReactiveRadioListTile<String>(
+                              title: const Text('Non-Individual'),
+                              value: 'NI',
+                              formControlName: 'constitution',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                }
                               },
                             ),
                           ],
@@ -134,7 +146,7 @@ class DedupeView extends StatelessWidget {
                             
                             color: Colors.white
                           ),
-
+                
                         ),
                       ),
                       SizedBox(
@@ -152,19 +164,14 @@ class DedupeView extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            ListTile(
-                              title: const Text("New Customer"),
-                              leading: Radio<bool>(
-                                value: true,
-                                groupValue: selectedValue,
-                                onChanged: (value) {
-                                  setState(() => selectedValue = value);
-                                  _openModalSheet(context, true, dedupeForm, constitution!);
-                                },
-                              ),
-                              onTap: () {
-                                setState(() => selectedValue = true);
-                                _openModalSheet(context, true, dedupeForm, constitution!);
+                            ReactiveRadioListTile<String>(
+                              title: const Text('New Customer'),
+                              value: 'N',
+                              formControlName: 'isNewCustomer',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                }
                               },
                             ),
                             Container(
@@ -172,28 +179,27 @@ class DedupeView extends StatelessWidget {
                               child: Divider(),
                             )
                             ,
-                            ListTile(
-                              title: const Text("Existing Customer"),
-                              leading: Radio<bool>(
-                                value: false,
-                                groupValue: selectedValue,
-                                onChanged: (value) {
-                                  setState(() => selectedValue = value);
-                                  _openModalSheet(context, false, cifForm, constitution!);
-                                },
-                              ),
-                              onTap: () {
-                                setState(() => selectedValue = false);
-                                _openModalSheet(context, false, cifForm, constitution!);
+                            ReactiveRadioListTile<String>(
+                              title: const Text('Existing Customer'),
+                              value: 'E',
+                              formControlName: 'isNewCustomer',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(OpenSheetEvent(request: customerTypeForm.value));
+                                }
                               },
                             ),
                           ],
                         ),
                       ),
-                    ]
-                  ),
+                    ],
+                  )
+                ),
+              ),
             ),
-          )
-      );
+          );
+        }
+      ),
+    );
   }
 }

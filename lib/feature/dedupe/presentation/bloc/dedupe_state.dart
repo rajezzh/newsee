@@ -8,7 +8,7 @@
 
 part of 'dedupe_bloc.dart';
 
-enum DedupeFetchStatus { init, loading, success, failure }
+enum DedupeFetchStatus { init, loading, change, success, failure }
 
 class DedupeState extends Equatable {
   final DedupeFetchStatus? status;
@@ -16,7 +16,7 @@ class DedupeState extends Equatable {
   final DedupeResponse? dedupeResponse;
   final AadharvalidateResponse? aadharvalidateResponse;
   final CifResponse? cifResponse;
-  final bool? isNewCustomer;
+  final String? isNewCustomer;
   final String? constitution;
   final bool? dismissModal;
   DedupeState({
@@ -36,7 +36,7 @@ class DedupeState extends Equatable {
     DedupeResponse? dedupeResponse,
     AadharvalidateResponse? aadharvalidateResponse,
     CifResponse? cifResponse,
-    bool? isNewCustomer,
+    String? isNewCustomer,
     String? constitution,
     bool? dismissModal,
   }) {
