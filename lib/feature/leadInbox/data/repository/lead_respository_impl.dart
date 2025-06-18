@@ -25,33 +25,37 @@ class LeadRepositoryImpl implements LeadRepository {
     LeadRequest req,
   ) async {
     try {
-      final payload = {
-        'userid': req.userid,
-        'token': ApiConfig.AUTH_TOKEN,
-      };
+      final payload = {'userid': req.userid, 'token': ApiConfig.AUTH_TOKEN};
 
-      final response = await LeadRemoteDatasource(dio: ApiClient().getDio())
-          .searchLead(payload);
+      final response = await LeadRemoteDatasource(
+        dio: ApiClient().getDio(),
+      ).searchLead(payload);
 
       final responseData = response.data;
-      final isSuccess = responseData[ApiConfig.API_RESPONSE_SUCCESS_KEY] == true;
+      final isSuccess =
+          responseData[ApiConfig.API_RESPONSE_SUCCESS_KEY] == true;
 
       if (isSuccess) {
-       final data = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY];
+        final data = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY];
 
-if (data is List) {
-  final leadResponse = data
-      .map((e) => LeadResponseModel.fromMap(e as Map<String, dynamic>))
-      .toList();
-  return AsyncResponseHandler.right(leadResponse);
-} else if (data is Map<String, dynamic>) {
-  final leadResponse = LeadResponseModel.fromMap(data);
-  return AsyncResponseHandler.right([leadResponse]);
-} else {
-  return AsyncResponseHandler.left(
-    HttpConnectionFailure(message: "Unexpected data format: ${data.runtimeType}"),
-  );
-}
+        if (data is List) {
+          final leadResponse =
+              data
+                  .map(
+                    (e) => LeadResponseModel.fromMap(e as Map<String, dynamic>),
+                  )
+                  .toList();
+          return AsyncResponseHandler.right(leadResponse);
+        } else if (data is Map<String, dynamic>) {
+          final leadResponse = LeadResponseModel.fromMap(data);
+          return AsyncResponseHandler.right([leadResponse]);
+        } else {
+          return AsyncResponseHandler.left(
+            HttpConnectionFailure(
+              message: "Unexpected data format: ${data.runtimeType}",
+            ),
+          );
+        }
       } else {
         final errorMessage = responseData['ErrorMessage'] ?? "Unknown error";
         return AsyncResponseHandler.left(AuthFailure(message: errorMessage));

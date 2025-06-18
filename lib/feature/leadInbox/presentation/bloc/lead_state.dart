@@ -1,4 +1,5 @@
 part of 'lead_bloc.dart';
+
 /* 
   @author     : gayathri.b 12/05/2025
   @desc       : Encapsulates the state used in the lead search BLoC.
@@ -36,9 +37,5 @@ class LeadState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
-        status,
-        leadResponseModel,
-        errorMessage,
-      ];
+  List<Object?> get props => [status, leadResponseModel, errorMessage];
 }
