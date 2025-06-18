@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class Dedupe {
-  final bool? existingCustomer;
+  final String? existingCustomer;
   final String? cifNumber;
   final String? constitution;
   Dedupe({
@@ -12,7 +12,7 @@ class Dedupe {
   });
 
   Dedupe copyWith({
-    bool? existingCustomer,
+    String? existingCustomer,
     String? cifNumber,
     String? constitution,
   }) {
@@ -33,7 +33,7 @@ class Dedupe {
 
   factory Dedupe.fromMap(Map<String, dynamic> map) {
     return Dedupe(
-      existingCustomer: map['existingCustomer'] as bool,
+      existingCustomer: map['existingCustomer'] as String,
       cifNumber: map['cifNumber'] as String,
       constitution: map['constitution'] as String,
     );
