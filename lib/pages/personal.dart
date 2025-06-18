@@ -49,6 +49,12 @@ class Personal extends StatelessWidget {
       validators: [Validators.required],
     ),
     'natureOfActivity': FormControl<String>(validators: [Validators.required]),
+    'occupationType': FormControl<String>(validators: [Validators.required]),
+    'agriculturistType': FormControl<String>(validators: [Validators.required]),
+    'farmerCategory': FormControl<String>(validators: [Validators.required]),
+    'farmerType': FormControl<String>(validators: [Validators.required]),
+    'religion': FormControl<String>(validators: [Validators.required]),
+    'caste': FormControl<String>(validators: [Validators.required]),
   });
 
   bool refAadhaar = false;
@@ -338,6 +344,168 @@ class Personal extends StatelessWidget {
                                     state.personalData?.natureOfActivity,
                           );
                           form.controls['natureOfActivity']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'occupationType',
+                      label: 'Occupation Type',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'OccupationType')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['occupationType']
+                              ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'OccupationType' &&
+                                lov.optvalue ==
+                                    state.personalData?.occupationType,
+                          );
+                          form.controls['occupationType']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'agriculturistType',
+                      label: 'Agriculturist Type',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'AgricultType')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['agriculturistType']
+                              ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'AgricultType' &&
+                                lov.optvalue ==
+                                    state.personalData?.agriculturistType,
+                          );
+                          form.controls['agriculturistType']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'farmerCategory',
+                      label: 'Farmer Category',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'FarmerCategory')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['farmerCategory']
+                              ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'FarmerCategory' &&
+                                lov.optvalue ==
+                                    state.personalData?.farmerCategory,
+                          );
+                          form.controls['farmerCategory']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'farmerType',
+                      label: 'Farmer Type',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'FarmerType')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['farmerType']
+                              ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'FarmerType' &&
+                                lov.optvalue ==
+                                    state.personalData?.farmerType,
+                          );
+                          form.controls['farmerType']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'religion',
+                      label: 'Religion',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'Religion')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['religion']
+                              ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'Religion' &&
+                                lov.optvalue ==
+                                    state.personalData?.religion,
+                          );
+                          form.controls['religion']?.updateValue(
+                            lov?.optvalue,
+                          );
+                          return lov;
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SearchableDropdown(
+                      controlName: 'caste',
+                      label: 'Caste',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'Caste')
+                              .toList(),
+                      onChangeListener:
+                          (Lov val) => form.controls['caste']
+                              ?.updateValue(val.optvalue),
+                      selItem: () {
+                        if (state.personalData != null) {
+                          Lov? lov = state.lovList?.firstWhere(
+                            (lov) =>
+                                lov.Header == 'Caste' &&
+                                lov.optvalue ==
+                                    state.personalData?.caste,
+                          );
+                          form.controls['caste']?.updateValue(
                             lov?.optvalue,
                           );
                           return lov;
