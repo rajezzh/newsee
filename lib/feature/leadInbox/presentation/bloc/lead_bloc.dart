@@ -8,6 +8,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:newsee/feature/leadInbox/data/repository/lead_respository_impl.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_responce_model.dart';
 import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart';

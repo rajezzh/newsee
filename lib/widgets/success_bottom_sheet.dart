@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
 
 /*
  @created on : june 3,2025
@@ -94,7 +95,9 @@ class _AnimatedSuccessContentState extends State<_AnimatedSuccessContent>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.check_circle, color: Colors.green, size: 60),
+              widget.headerTxt == ApiConstants.api_response_success
+                  ? Icon(Icons.check_circle, color: Colors.green, size: 60)
+                  : Icon(Icons.close_rounded, color: Colors.red, size: 60),
               SizedBox(height: 16),
               Text(
                 widget.headerTxt,

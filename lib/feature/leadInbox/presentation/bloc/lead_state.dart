@@ -13,7 +13,7 @@ enum LeadStatus { initial, loading, success, failure }
 
 class LeadState extends Equatable {
   final LeadStatus status;
-  final List<LeadResponseModel>? leadResponseModel;
+  final List<GroupLeadInbox>? leadResponseModel;
   final String? errorMessage;
 
   const LeadState({
@@ -26,7 +26,7 @@ class LeadState extends Equatable {
 
   LeadState copyWith({
     LeadStatus? status,
-    List<LeadResponseModel>? leadResponseModel,
+    List<GroupLeadInbox>? leadResponseModel,
     String? errorMessage,
   }) {
     return LeadState(

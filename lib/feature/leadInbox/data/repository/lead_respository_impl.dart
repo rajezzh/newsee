@@ -7,6 +7,7 @@ import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/api/http_connection_failure.dart';
 import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/feature/leadInbox/data/datasource/lead_remote_datasource.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_responce_model.dart';
 import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart';
@@ -21,7 +22,7 @@ import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart'
 
 class LeadRepositoryImpl implements LeadRepository {
   @override
-  Future<AsyncResponseHandler<Failure, List<LeadResponseModel>>> searchLead(
+  Future<AsyncResponseHandler<Failure, List<GroupLeadInbox>>> searchLead(
     LeadRequest req,
   ) async {
     try {
@@ -41,13 +42,11 @@ class LeadRepositoryImpl implements LeadRepository {
         if (data is List) {
           final leadResponse =
               data
-                  .map(
-                    (e) => LeadResponseModel.fromMap(e as Map<String, dynamic>),
-                  )
+                  .map((e) => GroupLeadInbox.fromMap(e as Map<String, dynamic>))
                   .toList();
           return AsyncResponseHandler.right(leadResponse);
         } else if (data is Map<String, dynamic>) {
-          final leadResponse = LeadResponseModel.fromMap(data);
+          final leadResponse = GroupLeadInbox.fromMap(data);
           return AsyncResponseHandler.right([leadResponse]);
         } else {
           return AsyncResponseHandler.left(

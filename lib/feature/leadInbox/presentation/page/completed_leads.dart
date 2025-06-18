@@ -53,7 +53,7 @@ class CompletedLeads extends StatelessWidget {
 
           final allLeads =
               state.leadResponseModel
-                  ?.expand((model) => model.leadlists)
+                  ?.expand((model) => model.finalList)
                   .toList();
 
           if (allLeads == null || allLeads.isEmpty) {
@@ -72,9 +72,9 @@ class CompletedLeads extends StatelessWidget {
                 icon: Icons.person,
                 color: Colors.teal,
                 type:
-                    lead['existingCustomer'] == true
-                        ? 'Existing Customer'
-                        : 'New Customer',
+                    lead['lleadexistingcustomer'] == "N"
+                        ? 'New Customer'
+                        : 'Existing Customer',
                 product: lead['lfProdId'] ?? 'N/A',
                 phone: lead['lleadmobno'] ?? 'N/A',
                 createdon: lead['lpdCreatedOn'] ?? 'N/A',
