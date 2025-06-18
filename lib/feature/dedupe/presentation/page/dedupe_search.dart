@@ -12,13 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 class DedupeSearch extends StatelessWidget {
   final FormGroup dedupeForm;
   final TabController tabController;
-  final String customerConstitution;
-  DedupeSearch({
-    super.key,
-    required this.dedupeForm,
-    required this.tabController,
-    required this.customerConstitution,
-  });
+  DedupeSearch({super.key, required this.dedupeForm, required this.tabController});
 
   disposeResponse(context, state) {
     print("Welcome here for you $state");
@@ -266,6 +260,11 @@ class DedupeSearch extends StatelessWidget {
                                 constitution: customerConstitution,
                               ),
                             );
+<<<<<<< HEAD
+=======
+                            
+                            context.read<DedupeBloc>().add(FetchDedupeEvent(request: request));
+>>>>>>> main
                           } else {
                             print(
                               "Click function passed go here, ${dedupeForm.valid}",

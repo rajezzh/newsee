@@ -133,7 +133,7 @@ class Personal extends StatelessWidget {
           if (state.status == SaveStatus.init && state.aadhaarData != null) {
             mapAadhaarData(state.aadhaarData);
           } else if (state.status == SaveStatus.init) {
-            dedupeState = context.read<DedupeBloc>().state;
+            dedupeState = context.watch<DedupeBloc>().state;
             if (dedupeState.cifResponse != null) {
               print(
                 'cif response title => ${dedupeState.cifResponse?.lleadtitle}',

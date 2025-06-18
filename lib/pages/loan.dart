@@ -151,14 +151,25 @@ class Loan extends StatelessWidget {
                         );
                       },
                       selItem: () {
-                        if (state.selectedProductScheme != null) {
-                          form.controls['typeofloan']?.updateValue(
-                            state.selectedProductScheme?.optionValue,
-                          );
-                          return state.selectedProductScheme;
-                        } else {
-                          return null;
-                        }
+                        final value = form.control('typeofloan').value;
+                        return state.productSchemeList.firstWhere(
+                          (element) => element.optionValue == value,
+                          orElse:
+                              () => ProductSchema(
+                                optionId: '',
+                                optionDesc: '',
+                                optionValue: '',
+                              ),
+                        );
+
+                        // if (state.selectedProductScheme != null) {
+                        //   form.controls['typeofloan']?.updateValue(
+                        //     state.selectedProductScheme?.optionValue,
+                        //   );
+                        //   return state.selectedProductScheme;
+                        // } else {
+                        //   return null;
+                        // }
                       },
                     ),
                     SearchableDropdown(
@@ -175,14 +186,27 @@ class Loan extends StatelessWidget {
                         );
                       },
                       selItem: () {
-                        if (state.selectedMainCategory != null) {
-                          form.controls['maincategory']?.updateValue(
-                            state.selectedMainCategory?.lsfFacId,
-                          );
-                          return state.selectedMainCategory;
-                        } else {
-                          return null;
-                        }
+                        final value = form.control('maincategory').value;
+                        return state.mainCategoryList.firstWhere(
+                          (element) => element.lsfFacId == value,
+                          orElse:
+                              () => Product(
+                                lsfFacId: '',
+                                lsfFacDesc: '',
+                                lsfFacType: '',
+                                lsfFacParentId: '',
+                                lsfBizVertical: '',
+                              ),
+                        );
+
+                        // if (state.selectedMainCategory != null) {
+                        //   form.controls['maincategory']?.updateValue(
+                        //     state.selectedMainCategory?.lsfFacId,
+                        //   );
+                        //   return state.selectedMainCategory;
+                        // } else {
+                        //   return null;
+                        // }
                       },
                     ),
                     SearchableDropdown(
@@ -197,14 +221,27 @@ class Loan extends StatelessWidget {
                         );
                       },
                       selItem: () {
-                        if (state.selectedSubCategoryList != null) {
-                          form.controls['subcategory']?.updateValue(
-                            state.selectedSubCategoryList?.lsfFacId,
-                          );
-                          return state.selectedSubCategoryList;
-                        } else {
-                          return null;
-                        }
+                        final value = form.control('subcategory').value;
+                        return state.subCategoryList.firstWhere(
+                          (element) => element.lsfFacId == value,
+                          orElse:
+                              () => Product(
+                                lsfFacId: '',
+                                lsfFacDesc: '',
+                                lsfFacType: '',
+                                lsfFacParentId: '',
+                                lsfBizVertical: '',
+                              ),
+                        );
+
+                        // if (state.selectedSubCategoryList != null) {
+                        //   form.controls['subcategory']?.updateValue(
+                        //     state.selectedSubCategoryList?.lsfFacId,
+                        //   );
+                        //   return state.selectedSubCategoryList;
+                        // } else {
+                        //   return null;
+                        // }
                       },
                     ),
 
@@ -265,48 +302,9 @@ class Loan extends StatelessWidget {
                               );
                               return;
                             }
-
-                            showDialog(
-                              context: context,
-                              builder:
-                                  (ctx) => AlertDialog(
-                                    title: Text(
-                                      'Confirm',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(color: Colors.teal),
-                                    ),
-                                    content: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Text(
-                                        'Are you sure you want to proceed to the next step?',
-                                        style: TextStyle(fontSize: 20),
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.of(ctx).pop(),
-                                        child: Text(
-                                          'Cancel',
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          context.read<LoanproductBloc>().add(
-                                            SaveLoanProduct(
-                                              choosenProduct: form.value,
-                                            ),
-                                          );
-                                          Navigator.of(ctx).pop();
-                                        },
-                                        child: Text(
-                                          'Ok',
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                            print('loan product form value => ${form.value}');
+                            context.read<LoanproductBloc>().add(
+                              SaveLoanProduct(choosenProduct: form.value),
                             );
                           } else {
                             form.markAllAsTouched();

@@ -7,14 +7,8 @@ class BottomSheetContainer extends StatelessWidget {
   final bool isNewCustomer;
   final FormGroup form;
   final TabController tabController;
-  final String constitution;
-  BottomSheetContainer({
-    required this.isNewCustomer,
-    required this.form,
-    required this.tabController,
-    required this.constitution,
-  });
-
+  BottomSheetContainer({required this.isNewCustomer, required this.form, required this.tabController});
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,6 +40,7 @@ class BottomSheetContainer extends StatelessWidget {
                 right: 16,
                 top: 20,
               ),
+<<<<<<< HEAD
               child: Column(
                 children: [
                   Container(
@@ -55,6 +50,21 @@ class BottomSheetContainer extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Color.fromARGB(255, 3, 9, 110),
                       borderRadius: BorderRadius.circular(10),
+=======
+              const SizedBox(height: 12),
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: isNewCustomer ? 
+                    DedupeSearch(
+                      dedupeForm: form,
+                      tabController: tabController,
+                    )
+                    : 
+                    CIFSearch(
+                      cifForm: form,
+                      tabController: tabController,
+>>>>>>> main
                     ),
                   ),
                   const SizedBox(height: 12),

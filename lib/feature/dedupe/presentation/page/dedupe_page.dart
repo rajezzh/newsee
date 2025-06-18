@@ -11,6 +11,19 @@ class DedupeView extends StatelessWidget {
 
   final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
   final cifForm = AppForms.CIF_DETAILS_FORM;
+<<<<<<< HEAD
+=======
+  final customerTypeForm = AppForms.CUSTOMER_TYPE_FORM;
+
+  void callOpenSheet(context, state) {
+    print("customerTypeForm.value ${customerTypeForm.value}");
+    if (state.isNewCustomer) {
+      _openModalSheet(context, true, dedupeForm);
+    } else {
+      _openModalSheet(context, false, cifForm);
+    }
+  }
+>>>>>>> main
 
   /* 
     @author     : ganeshkumar.b  9/06/2025
@@ -21,7 +34,6 @@ class DedupeView extends StatelessWidget {
     BuildContext context,
     bool isNewCustomer,
     FormGroup form,
-    String customerConstitution,
   ) {
     final tabController = DefaultTabController.of(context);
     final dedupebloc = context.read<DedupeBloc>();
@@ -35,7 +47,10 @@ class DedupeView extends StatelessWidget {
               isNewCustomer: isNewCustomer,
               form: form,
               tabController: tabController,
+<<<<<<< HEAD
               constitution: customerConstitution,
+=======
+>>>>>>> main
             ),
           ),
     );
@@ -43,177 +58,172 @@ class DedupeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool? selectedValue;
-    String? constitution;
-    // List<Map<String, dynamic>> dataList;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Dedupe Details"),
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: StatefulBuilder(
-          builder:
-              (context, setState) => Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-                    decoration: BoxDecoration(
-                      color: Colors.indigo,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "Select Customer Constution",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+      body: BlocConsumer<DedupeBloc, DedupeState>(
+        listener:
+            (context, state) => {
+              if (state.status == DedupeFetchStatus.change)
+                {callOpenSheet(context, state)},
+            },
+        builder: (context, state) {
+          print("Current status => ${state.status}");
+          print("Current state, => $state");
+          print("customerTypeForm ${customerTypeForm.value}");
+          if (state.status == null) {
+            customerTypeForm.reset();
+          }
+          return ReactiveForm(
+            formGroup: customerTypeForm,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          "Select Customer Constution",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
 
-                        color: Colors.white,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 130,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Colors.grey,
-                          blurStyle: BlurStyle.outer,
+                      SizedBox(height: 20),
+                      Container(
+                        height: 130,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 5,
+                              color: Colors.grey,
+                              blurStyle: BlurStyle.outer,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: const Text("Individual"),
-                          leading: Radio<String>(
-                            value: "I",
-                            groupValue: constitution,
-                            onChanged: (value) {
-                              setState(() => constitution = value);
-                            },
-                          ),
-                          onTap: () {
-                            setState(() => constitution = "I");
-                          },
+                        child: Column(
+                          children: [
+                            ReactiveRadioListTile<String>(
+                              title: const Text('Individual'),
+                              value: 'I',
+                              formControlName: 'constitution',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Divider(),
+                            ),
+                            ReactiveRadioListTile<String>(
+                              title: const Text('Non-Individual'),
+                              value: 'NI',
+                              formControlName: 'constitution',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Divider(),
+                      ),
+                      SizedBox(height: 50),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        ListTile(
-                          title: const Text("Non-Individual"),
-                          leading: Radio<String>(
-                            value: "N",
-                            groupValue: constitution,
-                            onChanged: (value) {
-                              setState(() => constitution = value);
-                            },
-                          ),
-                          onTap: () {
-                            setState(() => constitution = "N");
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-                    decoration: BoxDecoration(
-                      color: Colors.indigo,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(
-                      "Select Customer Type",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        child: Text(
+                          "Select Customer Type",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
 
-                        color: Colors.white,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 20),
+                      Container(
+                        height: 130,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 0, color: Colors.grey),
+                          borderRadius: BorderRadius.circular(15),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 5,
+                              color: Colors.grey,
+                              blurStyle: BlurStyle.outer,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            ReactiveRadioListTile<bool>(
+                              title: const Text('New Customer'),
+                              value: true,
+                              formControlName: 'isNewCustomer',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Divider(),
+                            ),
+                            ReactiveRadioListTile<bool>(
+                              title: const Text('Existing Customer'),
+                              value: false,
+                              formControlName: 'isNewCustomer',
+                              onChanged: (control) {
+                                if (customerTypeForm.valid) {
+                                  context.read<DedupeBloc>().add(
+                                    OpenSheetEvent(
+                                      request: customerTypeForm.value,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 130,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 0, color: Colors.grey),
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 5,
-                          color: Colors.grey,
-                          blurStyle: BlurStyle.outer,
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        ListTile(
-                          title: const Text("New Customer"),
-                          leading: Radio<bool>(
-                            value: true,
-                            groupValue: selectedValue,
-                            onChanged: (value) {
-                              setState(() => selectedValue = value);
-                              _openModalSheet(
-                                context,
-                                true,
-                                dedupeForm,
-                                constitution!,
-                              );
-                            },
-                          ),
-                          onTap: () {
-                            setState(() => selectedValue = true);
-                            _openModalSheet(
-                              context,
-                              true,
-                              dedupeForm,
-                              constitution!,
-                            );
-                          },
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Divider(),
-                        ),
-                        ListTile(
-                          title: const Text("Existing Customer"),
-                          leading: Radio<bool>(
-                            value: false,
-                            groupValue: selectedValue,
-                            onChanged: (value) {
-                              setState(() => selectedValue = value);
-                              _openModalSheet(
-                                context,
-                                false,
-                                cifForm,
-                                constitution!,
-                              );
-                            },
-                          ),
-                          onTap: () {
-                            setState(() => selectedValue = false);
-                            _openModalSheet(
-                              context,
-                              false,
-                              cifForm,
-                              constitution!,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -44,6 +44,7 @@ class AppForms {
   });
 
   static FormGroup CUSTOMER_TYPE_FORM = FormGroup({
+    'constitution': FormControl<String>(validators: [Validators.required]),
     'isNewCustomer': FormControl<bool>(validators: [Validators.required]),
   });
 }
