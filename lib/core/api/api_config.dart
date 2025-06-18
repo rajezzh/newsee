@@ -1,5 +1,4 @@
 class ApiConfig {
-  //static const String BASE_URL = "http://192.168.0.19:19084/lendperfect/";
   static const String BASE_URL = "http://192.168.0.19:19084/lendperfect/";
   // static const String BASE_URL = "http://192.168.7.79:9088/lendperfect/";
   static const String AUTH_TOKEN =
