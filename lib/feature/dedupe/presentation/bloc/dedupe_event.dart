@@ -11,7 +11,7 @@ class DedupeEvent {}
 class FetchDedupeEvent extends DedupeEvent {
   DedupeRequest request;
   final String constitution;
-  FetchDedupeEvent({required this.request, required this.constitution});    
+  FetchDedupeEvent({required this.request, required this.constitution});
 }
 
 class ValiateAadharEvent extends DedupeEvent {

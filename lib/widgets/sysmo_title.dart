@@ -22,8 +22,16 @@ class SysmoTitle extends StatelessWidget {
           Icon(icon, color: Colors.teal),
           const SizedBox(width: 12),
           Text("$label: ", style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value, style: const TextStyle(fontSize: 16,fontWeight:FontWeight.bold, color: Colors.teal,
-))),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.teal,
+              ),
+            ),
+          ),
         ],
       ),
     );

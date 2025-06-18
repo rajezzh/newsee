@@ -21,7 +21,6 @@ class SysmoTitle1 extends StatelessWidget {
       child: Column(
         // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          
           Container(
             padding: const EdgeInsets.only(bottom: 6),
             decoration: const BoxDecoration(
@@ -30,9 +29,12 @@ class SysmoTitle1 extends StatelessWidget {
               // ),
             ),
             child: Row(
-
               children: [
-                CircleAvatar(child: Icon(icon, color: Colors.red, size: 26,),backgroundColor: const Color.fromARGB(36, 0, 150, 135),radius: 20,),
+                CircleAvatar(
+                  child: Icon(icon, color: Colors.red, size: 26),
+                  backgroundColor: const Color.fromARGB(36, 0, 150, 135),
+                  radius: 20,
+                ),
                 const SizedBox(width: 10),
 
                 Padding(
@@ -41,8 +43,7 @@ class SysmoTitle1 extends StatelessWidget {
                     "$label",
                     style: const TextStyle(
                       fontSize: 18,
-                  fontWeight: FontWeight.bold
-                      
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -53,27 +54,25 @@ class SysmoTitle1 extends StatelessWidget {
           const SizedBox(height: 8),
           Row(
             children: [
-         CircleAvatar(
-          child: Icon(infoicon, color: Colors.blue, size: 20,), 
-          backgroundColor: const Color.fromARGB(36, 0, 150, 135)
-          ),
+              CircleAvatar(
+                child: Icon(infoicon, color: Colors.blue, size: 20),
+                backgroundColor: const Color.fromARGB(36, 0, 150, 135),
+              ),
 
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    value,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-
             ],
-          )
-        
+          ),
         ],
       ),
     );

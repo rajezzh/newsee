@@ -247,7 +247,7 @@ incase of incomplete dataentry show no data card
                 icon: Icons.close,
                 label: "No Data",
                 value: 'Please complete Personal and Address Details...!!',
-                infoicon:Icons.info
+                infoicon: Icons.info,
               ),
             ],
           ),

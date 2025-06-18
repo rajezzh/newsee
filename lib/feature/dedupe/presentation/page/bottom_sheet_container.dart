@@ -8,8 +8,13 @@ class BottomSheetContainer extends StatelessWidget {
   final FormGroup form;
   final TabController tabController;
   final String constitution;
-  BottomSheetContainer({required this.isNewCustomer, required this.form, required this.tabController, required this.constitution});
-  
+  BottomSheetContainer({
+    required this.isNewCustomer,
+    required this.form,
+    required this.tabController,
+    required this.constitution,
+  });
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -21,62 +26,58 @@ class BottomSheetContainer extends StatelessWidget {
         initialChildSize: isNewCustomer ? 0.9 : 0.7,
         minChildSize: 0.4,
         maxChildSize: 0.95,
-        builder: (_, scrollController) => Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(20),
-            ),
-            border: Border.all(
-              width: 3,
-              color: Color(0x00FFFFFF),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10,
-                offset: Offset(0, -3),
+        builder:
+            (_, scrollController) => Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                border: Border.all(width: 3, color: Color(0x00FFFFFF)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10,
+                    offset: Offset(0, -3),
+                  ),
+                ],
               ),
-            ],
-          ),
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            left: 16,
-            right: 16,
-            top: 20,
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 5,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 3, 9, 110),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                left: 16,
+                right: 16,
+                top: 20,
               ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: isNewCustomer ? 
-                    DedupeSearch(
-                      dedupeForm: form,
-                      tabController: tabController,
-                      customerConstitution: constitution
-                    )
-                    : 
-                    CIFSearch(
-                      cifForm: form,
-                      tabController: tabController,
-                      customerConstitution: constitution
+              child: Column(
+                children: [
+                  Container(
+                    width: 40,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 3, 9, 110),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                ),
+                  ),
+                  const SizedBox(height: 12),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: scrollController,
+                      child:
+                          isNewCustomer
+                              ? DedupeSearch(
+                                dedupeForm: form,
+                                tabController: tabController,
+                                customerConstitution: constitution,
+                              )
+                              : CIFSearch(
+                                cifForm: form,
+                                tabController: tabController,
+                                customerConstitution: constitution,
+                              ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
       ),
     );
   }

@@ -240,21 +240,40 @@ class Loan extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                            final selectedProduct = context.read<LoanproductBloc>().state.selectedProduct;
+                          final blocState =
+                              context.read<LoanproductBloc>().state;
+                          final selectedProduct = blocState.selectedProduct;
 
-                        if (form.valid) {
-                              final selectedProduct = form.value['loanProduct']; 
-
-                              if (selectedProduct == selectedProduct) {
-                                showDialog(
-                                  context: context,
-                                  builder: (ctx) => AlertDialog(
-                                    title: Align(
-                                      child: Text(
-                                        'Conform',
-                                        style: TextStyle(color: Colors.teal),
-                                        textAlign: TextAlign.center,
+                          if (form.valid) {
+                            if (selectedProduct == null) {
+                              showDialog(
+                                context: context,
+                                builder:
+                                    (ctx) => AlertDialog(
+                                      title: Text('Alert'),
+                                      content: Text(
+                                        'Please choose a product before proceeding.',
                                       ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () => Navigator.of(ctx).pop(),
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    ),
+                              );
+                              return;
+                            }
+
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (ctx) => AlertDialog(
+                                    title: Text(
+                                      'Confirm',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(color: Colors.teal),
                                     ),
                                     content: Padding(
                                       padding: const EdgeInsets.all(8),
@@ -264,51 +283,35 @@ class Loan extends StatelessWidget {
                                       ),
                                     ),
                                     actions: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                        TextButton(
-                                        onPressed: () => Navigator.of(ctx).pop(),
-                                        child: Text('Cancel', style: TextStyle(fontSize: 15),),
-                                      
+                                      TextButton(
+                                        onPressed:
+                                            () => Navigator.of(ctx).pop(),
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ),
-                                       TextButton(
-                                        
-                                        child: Text('Ok',style: TextStyle(fontSize: 15)),
-                                        onPressed: () async{
-                                          if(form.valid){
-                                      context.read<LoanproductBloc>().add(
-                                       SaveLoanProduct(choosenProduct: form.value),
-                                             );
-                                          }
-                                          await{
-                                           Navigator.of(ctx).pop(), 
-
-                                          };
-
+                                      TextButton(
+                                        onPressed: () {
+                                          context.read<LoanproductBloc>().add(
+                                            SaveLoanProduct(
+                                              choosenProduct: form.value,
+                                            ),
+                                          );
+                                          Navigator.of(ctx).pop();
                                         },
-
-                                        
-                                        
+                                        child: Text(
+                                          'Ok',
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ),
-                                    
-
-                                        ],
-                                      )
-                                     
                                     ],
                                   ),
-                                );
-                              } else {
-                                context.read<LoanproductBloc>().add(
-                                  SaveLoanProduct(choosenProduct: form.value),
-                                );
-                              }
-                            } else {
-                              form.markAllAsTouched();
-                            }
-
-                                                    },
+                            );
+                          } else {
+                            form.markAllAsTouched();
+                          }
+                        },
                         child: Text('Next'),
                       ),
                     ),
