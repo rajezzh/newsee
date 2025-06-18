@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/Utils/utils.dart';
@@ -72,9 +73,16 @@ class LeadSubmitPage extends StatelessWidget {
           if (state.leadSubmitStatus == SubmitStatus.success) {
             showSuccessBottomSheet(
               context,
-              "Submitted",
-              "Lead ID : LEAD/202526/00008213",
+              ApiConstants.api_response_success,
+              "Lead ID : ${state.leadId}",
               "Lead details successfully submitted",
+            );
+          } else if (state.leadSubmitStatus == SubmitStatus.failure) {
+            showSuccessBottomSheet(
+              context,
+              ApiConstants.api_response_failure,
+              "Lead ID Not Generated",
+              "Lead details submittion failed..!!",
             );
           }
         },
