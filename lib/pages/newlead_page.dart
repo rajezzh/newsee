@@ -38,6 +38,7 @@ class NewLeadPage extends StatelessWidget {
               (context) =>
                   AddressDetailsBloc()
                     ..add(AddressDetailsInitEvent(cifResponseModel: null)),
+          lazy: false,
         ),
         BlocProvider(create: (context) => DedupeBloc()),
         BlocProvider(create: (context) => LeadSubmitBloc()),
