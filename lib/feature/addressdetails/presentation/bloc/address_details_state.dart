@@ -9,7 +9,11 @@ class AddressDetailsState extends Equatable {
   final List<GeographyMaster>? cityMaster;
   final List<GeographyMaster>? districtMaster;
   final AddressData? addressData;
+  final List<GeographyMaster>? presentCityMaster;
+  final List<GeographyMaster>? presentDistrictMaster;
+  final AddressData? presentAddrData;
   final SaveStatus? status;
+  String? formname;
 
   AddressDetailsState({
     required this.addressData,
@@ -18,6 +22,10 @@ class AddressDetailsState extends Equatable {
     required this.cityMaster,
     required this.districtMaster,
     required this.status,
+    required this.presentAddrData,
+    required this.presentCityMaster,
+    required this.presentDistrictMaster,
+    this.formname,
   });
 
   factory AddressDetailsState.init() => AddressDetailsState(
@@ -27,6 +35,10 @@ class AddressDetailsState extends Equatable {
     stateCityMaster: [],
     cityMaster: [],
     districtMaster: [],
+    presentAddrData: null,
+    presentCityMaster: [],
+    presentDistrictMaster: [],
+    formname: null
   );
 
   @override
@@ -37,6 +49,10 @@ class AddressDetailsState extends Equatable {
     stateCityMaster,
     cityMaster,
     districtMaster,
+    presentAddrData,
+    presentCityMaster,
+    presentDistrictMaster,
+    formname
   ];
 
   AddressDetailsState copyWith({
@@ -46,6 +62,10 @@ class AddressDetailsState extends Equatable {
     List<GeographyMaster>? stateCityMaster,
     List<GeographyMaster>? cityMaster,
     List<GeographyMaster>? districtMaster,
+    AddressData? presentAddrData,
+    List<GeographyMaster>? presentCityMaster,
+    List<GeographyMaster>? presentDistrictMaster,
+    String? formname,
   }) {
     return AddressDetailsState(
       lovList: lovList ?? this.lovList,
@@ -54,6 +74,10 @@ class AddressDetailsState extends Equatable {
       stateCityMaster: stateCityMaster ?? this.stateCityMaster,
       cityMaster: cityMaster ?? this.cityMaster,
       districtMaster: districtMaster ?? this.districtMaster,
+      presentAddrData: presentAddrData ?? this.presentAddrData,
+      presentCityMaster: presentCityMaster ?? this.presentCityMaster,
+      presentDistrictMaster: presentDistrictMaster ?? this.presentDistrictMaster,
+      formname: formname ?? this.formname
     );
   }
 }

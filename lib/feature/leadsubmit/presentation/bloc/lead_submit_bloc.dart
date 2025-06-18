@@ -43,7 +43,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         producrId: '',
       ),
       dedupeSearch: Dedupe(
-        existingCustomer: '',
+        existingCustomer: false,
         cifNumber: '',
         constitution: '',
       ),
