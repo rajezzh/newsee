@@ -82,5 +82,4 @@ class BioMetricLogin {
       debugPrint(e.code);
     }
   }
-
 }

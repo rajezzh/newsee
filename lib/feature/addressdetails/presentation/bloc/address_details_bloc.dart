@@ -31,6 +31,7 @@ final class AddressDetailsBloc
     on<OnStateCityChangeEvent>(getCityListBasedOnState);
     on<OnPresentStateCityChangeEvent>(getPresentCityListBasedOnState);
     on<PresentAddressDetailsSaveEvent>(savePresentAddressDetails);
+    on<SameAsPermanentInPresentEvent>(sameAsPermanentFetch);
   }
 
   Future<void> initAddressDetails(
@@ -65,7 +66,7 @@ final class AddressDetailsBloc
     emit(
       state.copyWith(
         addressData: event.addressData,
-        status: SaveStatus.success,
+        status: SaveStatus.permanentsave,
       ),
     );
   }
@@ -305,6 +306,31 @@ First, it attempts to fetch the data from the local database.If no matching data
       } else {
         emit(state.copyWith(status: SaveStatus.failure));
       }
+    }
+  }
+
+  Future<void> sameAsPermanentFetch(
+    SameAsPermanentInPresentEvent event,
+    Emitter emit
+  ) async {
+    if (event.sameAspresent == true) {
+      emit(
+        state.copyWith(
+          status: SaveStatus.copy,
+          presentAddrData: state.addressData,
+          presentCityMaster: state.cityMaster,
+          presentDistrictMaster: state.districtMaster
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          status: SaveStatus.presenttreset,
+          presentAddrData: null,
+          presentCityMaster: [],
+          presentDistrictMaster: []
+        ),
+      );
     }
   }
 
