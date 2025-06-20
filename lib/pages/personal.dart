@@ -55,6 +55,7 @@ class Personal extends StatelessWidget {
     'farmerType': FormControl<String>(validators: [Validators.required]),
     'religion': FormControl<String>(validators: [Validators.required]),
     'caste': FormControl<String>(validators: [Validators.required]),
+    'residentialStatus': FormControl<String>(validators: [Validators.required]),
   });
 
   bool refAadhaar = false;
@@ -471,6 +472,27 @@ class Personal extends StatelessWidget {
                               (lov) => lov.optvalue == value,
                               orElse: () => Lov(
                                 Header: 'Caste', optvalue: '', optDesc: '', optCode: '',
+                              ),
+                            );
+                      },
+                    ), 
+                    SearchableDropdown<Lov>(
+                      controlName: 'residentialStatus',
+                      label: 'Residential Status',
+                      items: state.lovList!
+                          .where((v) => v.Header == 'ResidentialStatus')
+                          .toList(),
+                      onChangeListener: (Lov val) {
+                        form.controls['residentialStatus']?.updateValue(val.optvalue);
+                      },
+                      selItem: () {
+                        final value = form.control('residentialStatus').value;
+                        return state.lovList!
+                            .where((v) => v.Header == 'ResidentialStatus')
+                            .firstWhere(
+                              (lov) => lov.optvalue == value,
+                              orElse: () => Lov(
+                                Header: 'ResidentialStatus', optvalue: '', optDesc: '', optCode: '',
                               ),
                             );
                       },
