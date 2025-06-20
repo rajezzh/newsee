@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/cif/presentation/bloc/cif_bloc.dart';
+import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
+import 'package:newsee/feature/coapplicant/presentation/page/coapp_page.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/page/dedupe_page.dart';
 import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
@@ -26,12 +28,14 @@ class NewLeadPage extends StatelessWidget {
                     LoanproductInit(loanproductState: LoanproductState.init()),
                   ),
         ),
+        BlocProvider(create: (context) => DedupeBloc()),
+
         BlocProvider(
           create:
               (context) =>
                   PersonalDetailsBloc()
                     ..add(PersonalDetailsInitEvent(cifResponseModel: null)),
-                  lazy: false,
+          lazy: false,
         ),
         BlocProvider(
           create:
@@ -40,11 +44,15 @@ class NewLeadPage extends StatelessWidget {
                     ..add(AddressDetailsInitEvent(cifResponseModel: null)),
           lazy: false,
         ),
-        BlocProvider(create: (context) => DedupeBloc()),
+        BlocProvider(
+          create: (context) => CoappDetailsBloc()..add(CoAppDetailsInitEvent()),
+          lazy: false,
+        ),
+
         BlocProvider(create: (context) => LeadSubmitBloc()),
       ],
       child: DefaultTabController(
-        length: 5,
+        length: 6,
         child: Scaffold(
           appBar:
               Globalconfig.isInitialRoute
@@ -67,6 +75,9 @@ class NewLeadPage extends StatelessWidget {
                         Tab(
                           icon: Icon(Icons.location_city, color: Colors.white),
                         ),
+                        Tab(
+                          icon: Icon(Icons.add_reaction, color: Colors.white),
+                        ),
                         Tab(icon: Icon(Icons.done_all, color: Colors.white)),
                       ],
                     ),
@@ -78,6 +89,7 @@ class NewLeadPage extends StatelessWidget {
               DedupeView(title: 'dedupe'),
               Personal(title: 'personal'),
               Address(title: 'address'),
+              CoApplicantPage(title: 'Co Applicant Details'),
               LeadSubmitPage(title: 'Lead Details'),
             ],
           ),
