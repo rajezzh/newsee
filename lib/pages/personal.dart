@@ -479,28 +479,7 @@ class Personal extends StatelessWidget {
                                   ),
                             );
                       },
-                    ), 
-                    SearchableDropdown<Lov>(
-                      controlName: 'residentialStatus',
-                      label: 'Residential Status',
-                      items: state.lovList!
-                          .where((v) => v.Header == 'ResidentialStatus')
-                          .toList(),
-                      onChangeListener: (Lov val) {
-                        form.controls['residentialStatus']?.updateValue(val.optvalue);
-                      },
-                      selItem: () {
-                        final value = form.control('residentialStatus').value;
-                        return state.lovList!
-                            .where((v) => v.Header == 'ResidentialStatus')
-                            .firstWhere(
-                              (lov) => lov.optvalue == value,
-                              orElse: () => Lov(
-                                Header: 'ResidentialStatus', optvalue: '', optDesc: '', optCode: '',
-                              ),
-                            );
-                      },
-                    ), 
+                    ),
                     SizedBox(height: 20),
                     Center(
                       child: ElevatedButton(

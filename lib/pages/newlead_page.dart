@@ -68,72 +68,127 @@ class NewLeadPage extends StatelessWidget {
                     bottom: PreferredSize(
                       preferredSize: Size.fromHeight(60.0),
                       child: Builder(
-                            builder: (context) {
-                              final personalState = context.watch<PersonalDetailsBloc>().state;
-                              final addressState = context.watch<AddressDetailsBloc>().state;
-                              final dedupeState = context.watch<DedupeBloc>().state;
-                              final loanState = context.watch<LoanproductBloc>().state;
-                              return TabBar(
-                              indicatorColor: Colors.white,
-                              indicatorWeight: 3,
-                              tabs: <Widget>[
-                                Tab(
-                                  icon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(Icons.badge, color: Colors.white),
-                                      if (loanState.status?.name == SaveStatus.success.name)
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 4.0),
-                                          child: Icon(Icons.check_circle, size: 14, color: Colors.white),
+                        builder: (context) {
+                          final personalState =
+                              context.watch<PersonalDetailsBloc>().state;
+                          final addressState =
+                              context.watch<AddressDetailsBloc>().state;
+                          final dedupeState = context.watch<DedupeBloc>().state;
+                          final loanState =
+                              context.watch<LoanproductBloc>().state;
+                          final coappState =
+                              context.watch<CoappDetailsBloc>().state;
+
+                          return TabBar(
+                            indicatorColor: Colors.white,
+                            indicatorWeight: 3,
+                            tabs: <Widget>[
+                              Tab(
+                                icon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.badge,
+                                      color: Colors.white,
+                                    ),
+                                    if (loanState.status?.name ==
+                                        SaveStatus.success.name)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 4.0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          size: 14,
+                                          color: Colors.white,
                                         ),
-                                    ],
-                                  ),
+                                      ),
+                                  ],
                                 ),
-                                Tab(
-                                  icon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(Icons.file_copy, color: Colors.white),
-                                      if (dedupeState.status?.name == SaveStatus.success.name)
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 4.0),
-                                          child: Icon(Icons.check_circle, size: 14, color: Colors.white),
+                              ),
+                              Tab(
+                                icon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.file_copy,
+                                      color: Colors.white,
+                                    ),
+                                    if (dedupeState.status?.name ==
+                                        SaveStatus.success.name)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 4.0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          size: 14,
+                                          color: Colors.white,
                                         ),
-                                    ],
-                                  ),
+                                      ),
+                                  ],
                                 ),
-                                Tab(
-                                  icon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(Icons.face, color: Colors.white),
-                                      if (personalState.status?.name == SaveStatus.success.name)
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 4.0),
-                                          child: Icon(Icons.check_circle, size: 14, color: Colors.white),
+                              ),
+                              Tab(
+                                icon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.face, color: Colors.white),
+                                    if (personalState.status?.name ==
+                                        SaveStatus.success.name)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 4.0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          size: 14,
+                                          color: Colors.white,
                                         ),
-                                    ],
-                                  ),
+                                      ),
+                                  ],
                                 ),
-                                Tab(
-                                  icon: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      const Icon(Icons.location_city, color: Colors.white),
-                                      if (addressState.status == SaveStatus.success)
-                                        const Padding(
-                                          padding: EdgeInsets.only(left: 4.0),
-                                          child: Icon(Icons.check_circle, size: 14, color: Colors.white),
+                              ),
+                              Tab(
+                                icon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.location_city,
+                                      color: Colors.white,
+                                    ),
+                                    if (addressState.status ==
+                                        SaveStatus.success)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 4.0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          size: 14,
+                                          color: Colors.white,
                                         ),
-                                    ],
-                                  ),
+                                      ),
+                                  ],
                                 ),
-                                const Tab(
-                                  icon: Icon(Icons.done_all, color: Colors.white),
+                              ), // address tab
+                              Tab(
+                                icon: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.add_reaction,
+                                      color: Colors.white,
+                                    ),
+                                    if (coappState.status == SaveStatus.success)
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: 4.0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                  ],
                                 ),
-                              ],
-                            );
+                              ), // co applicant tab
+                              const Tab(
+                                icon: Icon(Icons.done_all, color: Colors.white),
+                              ),
+                            ],
+                          );
                         },
                       ),
                     ),

@@ -5,6 +5,8 @@ import 'package:newsee/AppData/app_forms.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/widgets/badge_fab.dart';
@@ -21,27 +23,33 @@ class CoApplicantPage extends StatelessWidget {
   CoApplicantPage({required this.title, super.key});
   @override
   Widget build(BuildContext context) {
+    final globalLoadingBloc = context.read<GlobalLoadingBloc>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text("CoApplicant Details"),
         automaticallyImplyLeading: false,
       ),
-      floatingActionButton: BadgeFab(
-        onPressed: () => {},
-        bgColor: Colors.white,
-        child: Icon(Icons.list, color: Colors.black),
-        badgeColor: Colors.red,
-        badgeChild: Center(
-          child: Text(
-            '5', // Replace with your count
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+
+      /// BadgeFab - reusable  widget with provision to customize
+      /// color , icon , badge test style
+
+      // floatingActionButton: BadgeFab(
+      //   onPressed: () => {},
+      //   bgColor: Colors.white,
+      //   child: Icon(Icons.list, color: Colors.black),
+      //   badgeColor: Colors.red,
+      //   badgeChild: Center(
+      //     child: Text(
+      //       '5', // Replace with your count
+      //       style: TextStyle(
+      //         color: Colors.white,
+      //         fontSize: 12,
+      //         fontWeight: FontWeight.bold,
+      //       ),
+      //     ),
+      //   ),
+      // ),
       body: BlocConsumer<CoappDetailsBloc, CoappDetailsState>(
         listener: (context, state) {
           print(
@@ -52,6 +60,11 @@ class CoApplicantPage extends StatelessWidget {
             goToNextTab(context: context);
           } else if (state.status == SaveStatus.failure) {
             showSnack(context, message: 'Failed to Save Personal Details');
+          }
+          if (state.status == SaveStatus.mastersucess ||
+              state.status == SaveStatus.failure) {
+            print('city list => ${state.cityMaster}');
+            globalLoadingBloc.add(HideLoading());
           }
         },
         builder: (context, state) {
@@ -265,6 +278,13 @@ class CoApplicantPage extends StatelessWidget {
                       items: state.stateCityMaster!,
                       onChangeListener: (GeographyMaster val) {
                         form.controls['state']?.updateValue(val.code);
+                        globalLoadingBloc.add(
+                          ShowLoading(message: "Fetching city..."),
+                        );
+
+                        context.read<CoappDetailsBloc>().add(
+                          OnStateCityChangeEvent(stateCode: val.code),
+                        );
                       },
                       selItem: () => null,
                     ),
@@ -288,30 +308,28 @@ class CoApplicantPage extends StatelessWidget {
                       controlName: 'loanLiabilityCount',
                       label: 'Loan Liability Count',
                       mantatory: true,
-                      maxlength: 6,
-                      minlength: 6,
+                      maxlength: 2,
+                      minlength: 1,
                     ),
                     IntegerTextField(
                       controlName: 'loanLiabilityAmount',
                       label: 'Loan Liability Amount',
                       mantatory: true,
-                      maxlength: 6,
-                      minlength: 6,
+                      isRupeeFormat: true,
                     ),
                     IntegerTextField(
                       controlName: 'depositCount',
                       label: 'DepositCount',
                       mantatory: true,
-                      maxlength: 6,
-                      minlength: 6,
+                      maxlength: 2,
+                      minlength: 1,
                     ),
 
                     IntegerTextField(
                       controlName: 'depositAmount',
                       label: 'Deposit Amount',
                       mantatory: true,
-                      maxlength: 6,
-                      minlength: 6,
+                      isRupeeFormat: true,
                     ),
 
                     SizedBox(height: 20),
@@ -330,11 +348,12 @@ class CoApplicantPage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          print("personal Details value ${form.value}");
+                          print("coapplicant Details value ${form.value}");
 
                           if (form.valid) {
                             CoapplicantData coapplicantData =
                                 CoapplicantData.fromMap(form.value);
+
                             context.read<CoappDetailsBloc>().add(
                               CoAppDetailsSaveEvent(
                                 coapplicantData: coapplicantData,

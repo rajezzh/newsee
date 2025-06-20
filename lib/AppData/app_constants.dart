@@ -26,4 +26,4 @@ class FilePickingOptionList {
   FilePickingOptionList({required this.icon, required this.title});
 }
 
-enum SaveStatus { init, loading, success, failure, update }
+enum SaveStatus { init, loading, success, failure, update, mastersucess }
