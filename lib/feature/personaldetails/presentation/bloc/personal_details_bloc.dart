@@ -55,15 +55,20 @@ final class PersonalDetailsBloc
     PersonalDetailsSaveEvent event,
     Emitter emit,
   ) async {
-    print('PersonalData => ${event.personalData}'); 
-    var loanamaount = event.personalData!.loanAmountRequested!.replaceAll(RegExp(r'[^\d]'), '');
+    print('PersonalData => ${event.personalData}');
+    var loanamaount = event.personalData!.loanAmountRequested!.replaceAll(
+      RegExp(r'[^\d]'),
+      '',
+    );
     emit(
       state.copyWith(
-        personalData: event.personalData ,
+        personalData: event.personalData,
         status: SaveStatus.success,
       ),
     );
-    state.copyWith(personalData: PersonalData(loanAmountRequested: loanamaount));
+    state.copyWith(
+      personalData: PersonalData(loanAmountRequested: loanamaount),
+    );
   }
 
   Future<void> validateAadaar(AadhaarValidateEvent event, Emitter emit) async {
