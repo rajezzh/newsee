@@ -229,7 +229,7 @@ class CoApplicantPage extends StatelessWidget {
                     IntegerTextField(
                       controlName: 'secondaryMobileNumber',
                       label: 'Secondary Mobile Number',
-                      mantatory: true,
+                      mantatory: false,
                       maxlength: 10,
                       minlength: 10,
                     ),

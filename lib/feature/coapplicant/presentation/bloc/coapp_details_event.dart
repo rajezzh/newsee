@@ -26,3 +26,9 @@ class CoAppDetailsSaveEvent extends CoappDetailsEvent {
   final CoapplicantData coapplicantData;
   CoAppDetailsSaveEvent({required this.coapplicantData});
 }
+
+class OnStateCityChangeEvent extends CoappDetailsEvent {
+  final String stateCode;
+  final String? cityCode;
+  OnStateCityChangeEvent({required this.stateCode, this.cityCode});
+}
