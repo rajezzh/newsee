@@ -59,10 +59,16 @@ class CoApplicantPage extends StatelessWidget {
             showSnack(context, message: 'Personal Details Saved Successfully');
             goToNextTab(context: context);
           } else if (state.status == SaveStatus.failure) {
+            globalLoadingBloc.add(HideLoading());
+
             showSnack(context, message: 'Failed to Save Personal Details');
           }
           if (state.status == SaveStatus.mastersucess ||
-              state.status == SaveStatus.failure) {
+              state.status == SaveStatus.masterfailure) {
+            if (state.status == SaveStatus.masterfailure) {
+              showSnack(context, message: 'Failed to Fetch Masters...');
+            }
+
             print('city list => ${state.cityMaster}');
             globalLoadingBloc.add(HideLoading());
           }
@@ -82,20 +88,19 @@ class CoApplicantPage extends StatelessWidget {
                               .where((v) => v.Header == 'CustType')
                               .toList(),
                       selItem: () {
-                        if (state.selectedCoApp != null) {
-                          Lov? lov = state.lovList?.firstWhere(
-                            (lov) =>
-                                lov.Header == 'customertype' &&
-                                lov.optvalue ==
-                                    state.selectedCoApp?.customertype,
-                          );
-                          form.controls['customertype']?.updateValue(
-                            lov?.optvalue,
-                          );
-                          return lov;
-                        } else {
-                          return null;
-                        }
+                        final value = form.control('customertype').value;
+                        return state.lovList!
+                            .where((v) => v.Header == 'CustType')
+                            .firstWhere(
+                              (lov) => lov.optvalue == value,
+                              orElse:
+                                  () => Lov(
+                                    Header: 'customertype',
+                                    optvalue: '',
+                                    optDesc: '',
+                                    optCode: '',
+                                  ),
+                            );
                       },
                       onChangeListener:
                           (Lov val) => form.controls['customertype']
@@ -109,20 +114,19 @@ class CoApplicantPage extends StatelessWidget {
                               .where((v) => v.Header == 'Constitution')
                               .toList(),
                       selItem: () {
-                        if (state.selectedCoApp != null) {
-                          Lov? lov = state.lovList?.firstWhere(
-                            (lov) =>
-                                lov.Header == 'Constitution' &&
-                                lov.optvalue ==
-                                    state.selectedCoApp?.constitution,
-                          );
-                          form.controls['constitution']?.updateValue(
-                            lov?.optvalue,
-                          );
-                          return lov;
-                        } else {
-                          return null;
-                        }
+                        final value = form.control('constitution').value;
+                        return state.lovList!
+                            .where((v) => v.Header == 'Constitution')
+                            .firstWhere(
+                              (lov) => lov.optvalue == value,
+                              orElse:
+                                  () => Lov(
+                                    Header: 'Constitution',
+                                    optvalue: '',
+                                    optDesc: '',
+                                    optCode: '',
+                                  ),
+                            );
                       },
                       onChangeListener:
                           (Lov val) => form.controls['constitution']

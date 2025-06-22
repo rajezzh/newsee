@@ -84,6 +84,7 @@ class AppForms {
     'farmerType': FormControl<String>(validators: [Validators.required]),
     'religion': FormControl<String>(validators: [Validators.required]),
     'caste': FormControl<String>(validators: [Validators.required]),
+    'residentialStatus': FormControl<String>(validators: [Validators.required]),
   });
 
   static final FormGroup COAPPLICANT_DETAILS_FORM = FormGroup({
@@ -96,7 +97,6 @@ class AppForms {
     'lastName': FormControl<String>(validators: [Validators.required]),
     'relationshipFirm': FormControl<String>(validators: [Validators.required]),
     'dob': FormControl<String>(validators: [Validators.required]),
-    'residentialStatus': FormControl<String>(validators: [Validators.required]),
     'primaryMobileNumber': FormControl<String>(
       validators: [Validators.required, Validators.minLength(10)],
     ),
