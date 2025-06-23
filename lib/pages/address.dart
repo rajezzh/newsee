@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
@@ -113,7 +114,7 @@ class Address extends StatelessWidget {
             goToNextTab(context);
           }
           if (state.status == SaveStatus.mastersucess ||
-              state.status == SaveStatus.failure) {
+              state.status == SaveStatus.masterfailure) {
             globalLoadingBloc.add(HideLoading());
           }
         },

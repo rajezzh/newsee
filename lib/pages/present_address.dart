@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
@@ -59,7 +60,7 @@ class PresentAddress extends StatelessWidget {
       //           padding: const EdgeInsets.only(top: 10,left: 5),
       //           // child: Text("Present Address"),
       //         ),
-            
+
       //       ],
       //     ),
       //   ),
@@ -73,7 +74,7 @@ class PresentAddress extends StatelessWidget {
             goToNextTab(context);
           }
           if (state.status == SaveStatus.mastersucess ||
-              state.status == SaveStatus.failure) {
+              state.status == SaveStatus.masterfailure) {
             globalLoadingBloc.add(HideLoading());
           }
         },
@@ -86,30 +87,32 @@ class PresentAddress extends StatelessWidget {
             children: [
               ReactiveForm(
                 formGroup: form,
-                
+
                 child: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 20,left: 05),
+                          padding: const EdgeInsets.only(top: 20, left: 05),
                           child: Row(
-                            
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
                                 child: ReactiveCheckbox(
                                   formControlName: 'sameAsPermanent',
                                 ),
-                              ),  
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
-                                child: Text('Present Address same as Permanent Address',style: TextStyle(fontSize: 15),),
-                              )
+                                child: Text(
+                                  'Present Address same as Permanent Address',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        
+
                         SearchableDropdown(
                           controlName: 'addressType',
                           label: 'Address Type',
@@ -137,7 +140,7 @@ class PresentAddress extends StatelessWidget {
                             }
                           },
                         ),
-                        
+
                         CustomTextField(
                           controlName: 'address1',
                           label: 'Address 1',

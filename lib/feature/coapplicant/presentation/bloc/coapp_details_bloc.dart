@@ -10,6 +10,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/DBConstants/table_key_geographymaster.dart';
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/db/db_config.dart';
@@ -99,37 +100,8 @@ final class CoappDetailsBloc
     AsyncResponseHandler response = await cityrepository.fetchCityList(
       citydistrictrequest,
     );
-    CoappDetailsState coappDetailsState = _mapResponse(state, response);
+    CoappDetailsState coappDetailsState =
+        mapGeographyMasterResponseForCoAppPage(state, response);
     emit(coappDetailsState);
-  }
-
-  CoappDetailsState _mapResponse(
-    CoappDetailsState state,
-    AsyncResponseHandler response,
-  ) {
-    if (response.isRight()) {
-      Map<String, dynamic> _resp = response.right as Map<String, dynamic>;
-
-      List<GeographyMaster> cityMaster =
-          _resp['cityMaster'] != null && _resp['cityMaster'].isNotEmpty
-              ? _resp['cityMaster'] as List<GeographyMaster>
-              : [];
-      List<GeographyMaster> districtMaster =
-          _resp['districtMaster'] != null && _resp['districtMaster'].isNotEmpty
-              ? _resp['districtMaster'] as List<GeographyMaster>
-              : [];
-      // map
-      return state.copyWith(
-        status: SaveStatus.mastersucess,
-        cityMaster: cityMaster,
-        districtMaster: districtMaster,
-      );
-    } else {
-      return state.copyWith(
-        status: SaveStatus.masterfailure,
-        cityMaster: [],
-        districtMaster: [],
-      );
-    }
   }
 }

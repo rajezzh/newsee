@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
@@ -15,7 +16,7 @@ class PermanentAddress extends StatelessWidget {
   final String title;
 
   PermanentAddress({required this.title, super.key});
-  
+
   final form = FormGroup({
     'addressType': FormControl<String>(validators: [Validators.required]),
     'address1': FormControl<String>(validators: [Validators.required]),
@@ -60,7 +61,7 @@ class PermanentAddress extends StatelessWidget {
             goToNextTab(context);
           }
           if (state.status == SaveStatus.mastersucess ||
-              state.status == SaveStatus.failure) {
+              state.status == SaveStatus.masterfailure) {
             globalLoadingBloc.add(HideLoading());
           }
         },
@@ -73,7 +74,7 @@ class PermanentAddress extends StatelessWidget {
             children: [
               ReactiveForm(
                 formGroup: form,
-                child: SafeArea(   
+                child: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [

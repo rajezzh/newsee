@@ -38,6 +38,8 @@ class CitylistRepoImpl implements Cityrepository {
         cityDistrictRequest,
       );
 
+      // checking the data in db
+
       if (dbResponse.isRight()) {
         return dbResponse;
       } else {
@@ -55,7 +57,7 @@ class CitylistRepoImpl implements Cityrepository {
           final response = await CityDatasource(
             dio: ApiClient().getDio(),
           ).fecthCityList(cityDistrictRequest.stateCode);
-          return _getCity(
+          geographyMasterResponse = await _getCity(
             response: response,
             cityDistrictRequest: cityDistrictRequest,
           );
@@ -114,17 +116,19 @@ Future<AsyncResponseHandler<Failure, dynamic>> _getCity({
     if (response.data[ApiConfig.API_RESPONSE_RESPONSE_KEY][ApiConfig
             .API_RESPONSE_RESPONSE_KEY] !=
         null) {
+      cityResponse =
+          response.data[ApiConfig.API_RESPONSE_RESPONSE_KEY][ApiConfig
+              .API_RESPONSE_RESPONSE_KEY];
       if (cityResponse.isNotEmpty) {
         List<GeographyMaster> cityList = [];
-        if (cityDistrictRequest.cityCode != null) {
-          // fetching district
-          cityList =
-              cityResponse.map((e) {
-                e['stateParentId'] = cityDistrictRequest.stateCode;
-                e['cityParentId'] = cityDistrictRequest.cityCode;
-                return GeographyMaster.fromMap(e);
-              }).toList();
-        }
+        // fetching district
+        cityList =
+            cityResponse.map((e) {
+              e['stateParentId'] = cityDistrictRequest.stateCode;
+              e['cityParentId'] = '0';
+              return GeographyMaster.fromMap(e);
+            }).toList();
+
         // response must be written in GeographyMaster table
         await saveGeographyMasterInDB(cityList);
         return _checkDataInDB(cityDistrictRequest);
@@ -154,7 +158,7 @@ Future<AsyncResponseHandler<Failure, dynamic>> _checkDataInDB(
       AsyncResponseHandler.left(
         HttpConnectionFailure(message: 'No data Found'),
       );
-  ;
+
   Database db = await DBConfig().database;
   List<String> columnNames = [
     TableKeysGeographyMaster.stateId,
