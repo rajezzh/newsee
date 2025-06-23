@@ -26,4 +26,8 @@ class AppRouteConstants {
     'name': 'landholdings',
     'path': '/landholdings',
   };
+  static const RouteProps DOCUMENT_PAGE = {
+    'name': 'document',
+    'path': '/document',
+  };
 }
