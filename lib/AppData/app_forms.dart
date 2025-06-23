@@ -132,4 +132,42 @@ class AppForms {
     'depositCount': FormControl<String>(validators: [Validators.required]),
     'depositAmount': FormControl<String>(validators: [Validators.required]),
   });
+
+  // Land Holding Form
+  static final FormGroup LAND_HOLDING_FORM = FormGroup({
+    'applicantName': FormControl<String>(validators: [Validators.required]),
+    'locationOfFarm': FormControl<String>(validators: [Validators.required]),
+    'state': FormControl<String>(validators: [Validators.required]),
+    'taluk': FormControl<String>(validators: [Validators.required]),
+    'firka': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'totalAcreage': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'irrigatedLand': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'compactBlocks': FormControl<bool>(validators: [Validators.required]),
+    'landOwnedByApplicant': FormControl<bool>(
+      validators: [Validators.required],
+    ),
+    'distanceFromBranch': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'district': FormControl<String>(validators: [Validators.required]),
+    'village': FormControl<String>(validators: [Validators.required]),
+    'surveyNo': FormControl<String>(
+      validators: [Validators.required, Validators.pattern(r'^\d+$')],
+    ),
+    'natureOfRight': FormControl<String>(validators: [Validators.required]),
+    'irrigationFacilities': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'affectedByCeiling': FormControl<bool>(validators: [Validators.required]),
+    'landAgriActive': FormControl<bool>(validators: [Validators.required]),
+    'villageOfficerCertified': FormControl<bool>(
+      validators: [Validators.required],
+    ),
+  });
 }

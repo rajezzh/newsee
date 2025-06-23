@@ -21,4 +21,9 @@ class AppRouteConstants {
     'path': '/masters',
   };
   static const RouteProps DEDUPE_PAGE = {'name': 'dedupe', 'path': '/dedupe'};
+
+  static const RouteProps LAND_HOLDING_PAGE = {
+    'name': 'landholdings',
+    'path': '/landholdings',
+  };
 }

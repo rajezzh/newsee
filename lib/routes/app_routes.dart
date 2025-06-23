@@ -21,6 +21,7 @@ import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart'
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:newsee/feature/landholding/presentation/page/land_holding_page.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
@@ -148,6 +149,39 @@ final routes = GoRouter(
                   (_) => GetIt.instance.get<CameraBloc>()..add(CameraOpen()),
               child: CameraView(),
             ),
+          ),
+    ),
+    GoRoute(
+      path: AppRouteConstants.LAND_HOLDING_PAGE['path']!,
+      name: AppRouteConstants.LAND_HOLDING_PAGE['name'],
+      builder:
+          (context, state) => PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didpop, data) async {
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: Text('Confirm'),
+                      content: Text('Do you want to Exit ?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    ),
+              );
+              if (shouldPop ?? false) {
+                Navigator.of(context).pop(false);
+                // context.go('/'); // Navigate back using GoRouter
+              }
+            },
+            child: LandHoldingPage(title: 'Land Holding Details'),
           ),
     ),
   ],
