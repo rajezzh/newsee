@@ -21,6 +21,8 @@ import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart'
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:newsee/feature/documentupload/presentation/bloc/document_bloc.dart';
+import 'package:newsee/feature/documentupload/presentation/pages/document_page.dart';
 import 'package:newsee/feature/landholding/presentation/page/land_holding_page.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
@@ -32,6 +34,8 @@ import 'package:newsee/pages/newlead_page.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
 import 'package:newsee/pages/profile_page.dart';
 import 'package:newsee/widgets/progress_bar.dart';
+
+import '../feature/documentupload/presentation/bloc/document_event.dart';
 
 final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
   dio: ApiClient().getDio(),
@@ -183,6 +187,19 @@ final routes = GoRouter(
             },
             child: LandHoldingPage(title: 'Land Holding Details'),
           ),
+    ),
+    GoRoute(
+      path: AppRouteConstants.DOCUMENT_PAGE['path']!,
+      name: AppRouteConstants.DOCUMENT_PAGE['name'],
+      // builder: (context, state) => DocumentPage(),
+      builder: (context, state) {
+        return BlocProvider(
+          create:
+              (_) =>
+                  GetIt.instance.get<DocumentBloc>()..add(FetchDocTypesEvent()),
+          child: DocumentPage(),
+        );
+      },
     ),
   ],
   redirect: (context, state) {
