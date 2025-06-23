@@ -17,6 +17,7 @@ import 'package:newsee/blocs/camera/camera_bloc.dart';
 import 'package:newsee/blocs/camera/camera_event.dart';
 import 'package:newsee/blocs/login/login_bloc.dart';
 import 'package:newsee/core/api/api_client.dart';
+import 'package:newsee/feature/CropDetails/presentation/page/cropdetailspage.dart';
 import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
@@ -234,6 +235,39 @@ final routes = GoRouter(
                         ..add(FetchDocTypesEvent()),
               child: const DocumentPage(),
             ),
+          ),
+    ),
+    GoRoute(
+      path: AppRouteConstants.CROP_DETAILS_PAGE['path']!,
+      name: AppRouteConstants.CROP_DETAILS_PAGE['name'],
+      builder:
+          (context, state) => PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didpop, data) async {
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: Text('Confirm'),
+                      content: Text('Do you want to Exit ?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    ),
+              );
+              if (shouldPop ?? false) {
+                Navigator.of(context).pop(false);
+                // context.go('/'); // Navigate back using GoRouter
+              }
+            },
+            child: CropDetailsPage(title: 'Crop Details'),
           ),
     ),
   ],

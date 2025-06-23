@@ -170,4 +170,18 @@ class AppForms {
       validators: [Validators.required],
     ),
   });
+
+  static FormGroup CROP_DETAILS_FORM = FormGroup({
+    'season': FormControl<String>(validators: [Validators.required]),
+    'nameOfCrop': FormControl<String>(validators: [Validators.required]),
+    'acrescultivated': FormControl<String>(validators: [Validators.required]),
+    'typeofland': FormControl<String>(validators: [Validators.required]),
+    'scaleoffincance': FormControl<String>(validators: [Validators.required]),
+    'reqasperscaleoffinace': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'notifiedcrop': FormControl<bool>(validators: [Validators.required]),
+    'premiumperacre': FormControl<String>(validators: [Validators.required]),
+    'premiumcollected': FormControl<String>(validators: [Validators.required]),
+  });
 }

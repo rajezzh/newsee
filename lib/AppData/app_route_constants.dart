@@ -30,4 +30,9 @@ class AppRouteConstants {
     'name': 'document',
     'path': '/document',
   };
+
+  static const RouteProps CROP_DETAILS_PAGE = {
+    'name': 'cropdetails',
+    'path': '/cropdetails',
+  };
 }
