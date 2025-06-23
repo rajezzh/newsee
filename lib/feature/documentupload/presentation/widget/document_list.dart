@@ -15,8 +15,24 @@ class DocumentList extends StatelessWidget {
       builder: (context, state) {
         final bloc = context.read<DocumentBloc>();
 
+        // if (state.borrowerDocs.isEmpty) {
+        //   return const Center(child: Text("No documents added yet."));
+        // }
+
         if (state.borrowerDocs.isEmpty) {
-          return const Center(child: Text("No documents added yet."));
+          return const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.insert_drive_file, size: 64, color: Colors.grey),
+                SizedBox(height: 12),
+                Text(
+                  "No documents added yet.",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ],
+            ),
+          );
         }
 
         return Column(

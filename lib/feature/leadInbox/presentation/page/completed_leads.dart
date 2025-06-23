@@ -124,6 +124,15 @@ class CompletedLeads extends StatelessWidget {
                             status: 'Pending',
                             onTap: () {},
                           ),
+                          OptionsSheet(
+                            icon: Icons.description,
+                            title: "Document Upload",
+                            subtitle: "Pre-Sanctioned Documents Upload",
+                            status: 'Pending',
+                            onTap: () {
+                              context.pushNamed('document');
+                            },
+                          ),
                         ],
                       ),
                     );

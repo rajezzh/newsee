@@ -192,14 +192,49 @@ final routes = GoRouter(
       path: AppRouteConstants.DOCUMENT_PAGE['path']!,
       name: AppRouteConstants.DOCUMENT_PAGE['name'],
       // builder: (context, state) => DocumentPage(),
-      builder: (context, state) {
-        return BlocProvider(
-          create:
-              (_) =>
-                  GetIt.instance.get<DocumentBloc>()..add(FetchDocTypesEvent()),
-          child: DocumentPage(),
-        );
-      },
+      // builder: (context, state) {
+      //   return BlocProvider(
+      //     create:
+      //         (_) =>
+      //             GetIt.instance.get<DocumentBloc>()..add(FetchDocTypesEvent()),
+      //     child: DocumentPage(),
+      //   );
+      builder:
+          (context, state) => PopScope(
+            canPop: false,
+            onPopInvokedWithResult: (didpop, data) async {
+              final shouldPop = await showDialog<bool>(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: Text('Confirm'),
+                      content: Text('Do you want to Exit ?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(true),
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    ),
+              );
+              if (shouldPop ?? false) {
+                Navigator.of(context).pop(false);
+                // context.go('/'); // Navigate back using GoRouter
+              }
+            },
+            // child: DocumentPage(),
+            child: BlocProvider(
+              create:
+                  (_) =>
+                      GetIt.instance.get<DocumentBloc>()
+                        ..add(FetchDocTypesEvent()),
+              child: const DocumentPage(),
+            ),
+          ),
     ),
   ],
   redirect: (context, state) {

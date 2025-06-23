@@ -13,7 +13,7 @@ class DocumentPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => context.read<DocumentBloc>()..add(FetchDocTypesEvent()),
       child: Scaffold(
-        appBar: AppBar(title: const Text('Document Details')),
+        appBar: AppBar(title: const Text('Documents Upload')),
         body: const SingleChildScrollView(
           padding: EdgeInsets.all(16),
           child: Column(children: [DocumentList()]),
