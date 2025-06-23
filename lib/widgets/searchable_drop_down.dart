@@ -106,6 +106,7 @@ class SearchableDropdown<T> extends StatelessWidget {
               ),
             ),
             onChanged: (val) {
+              field.didChange(val);
               if (val != null) {
                 print('field value => ${itemvalueMapper(val)}');
               }

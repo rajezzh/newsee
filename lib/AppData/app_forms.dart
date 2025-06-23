@@ -48,6 +48,92 @@ class AppForms {
     'isNewCustomer': FormControl<bool>(validators: [Validators.required]),
   });
 
+  static final FormGroup PERSONAL_DETAILS_FORM = FormGroup({
+    'title': FormControl<String>(validators: [Validators.required]),
+    'firstName': FormControl<String>(validators: [Validators.required]),
+    'middleName': FormControl<String>(validators: [Validators.required]),
+    'lastName': FormControl<String>(validators: [Validators.required]),
+    'dob': FormControl<String>(validators: [Validators.required]),
+    'residentialStatus': FormControl<String>(validators: [Validators.required]),
+    'primaryMobileNumber': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(10)],
+    ),
+    'secondaryMobileNumber': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(10)],
+    ),
+    'email': FormControl<String>(validators: [Validators.email]),
+    'aadhaar': FormControl<String>(validators: []),
+    'panNumber': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.PAN_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'aadharRefNo': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.AADHAAR_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'loanAmountRequested': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'natureOfActivity': FormControl<String>(validators: [Validators.required]),
+    'occupationType': FormControl<String>(validators: [Validators.required]),
+    'agriculturistType': FormControl<String>(validators: [Validators.required]),
+    'farmerCategory': FormControl<String>(validators: [Validators.required]),
+    'farmerType': FormControl<String>(validators: [Validators.required]),
+    'religion': FormControl<String>(validators: [Validators.required]),
+    'caste': FormControl<String>(validators: [Validators.required]),
+  });
+
+  static final FormGroup COAPPLICANT_DETAILS_FORM = FormGroup({
+    'customertype': FormControl<String>(validators: [Validators.required]),
+    'constitution': FormControl<String>(validators: [Validators.required]),
+    'cifNumber': FormControl<String>(validators: [Validators.required]),
+    'title': FormControl<String>(validators: [Validators.required]),
+    'firstName': FormControl<String>(validators: [Validators.required]),
+    'middleName': FormControl<String>(validators: [Validators.required]),
+    'lastName': FormControl<String>(validators: [Validators.required]),
+    'relationshipFirm': FormControl<String>(validators: [Validators.required]),
+    'dob': FormControl<String>(validators: [Validators.required]),
+    'residentialStatus': FormControl<String>(validators: [Validators.required]),
+    'primaryMobileNumber': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(10)],
+    ),
+    'secondaryMobileNumber': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(10)],
+    ),
+    'email': FormControl<String>(validators: [Validators.email]),
+    'aadhaar': FormControl<String>(validators: []),
+    'panNumber': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.PAN_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'aadharRefNo': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.AADHAAR_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'address1': FormControl<String>(validators: [Validators.required]),
+    'address2': FormControl<String>(validators: [Validators.required]),
+    'address3': FormControl<String>(validators: [Validators.required]),
+    'state': FormControl<String>(validators: [Validators.required]),
+    'cityDistrict': FormControl<String>(validators: [Validators.required]),
+    'pincode': FormControl<String>(validators: [Validators.required]),
+    'loanLiabilityCount': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'loanLiabilityAmount': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'depositCount': FormControl<String>(validators: [Validators.required]),
+    'depositAmount': FormControl<String>(validators: [Validators.required]),
+  });
+
   final FormGroup PERMANENT_ADDRESS_FORM = FormGroup({
     'addressType': FormControl<String>(validators: [Validators.required]),
     'address1': FormControl<String>(validators: [Validators.required]),
@@ -73,5 +159,17 @@ class AppForms {
     'pincode': FormControl<String>(
       validators: [Validators.required, Validators.minLength(6)],
     ),
+  });
+
+  static FormGroup CROP_DETAILS_FORM = FormGroup({
+    'season': FormControl<String>(validators: [Validators.required]),
+    'nameOfCrop': FormControl<String>(validators: [Validators.required]),
+    'acrescultivated': FormControl<String>(validators: [Validators.required]),
+    'typeofland': FormControl<String>(validators: [Validators.required]),
+    'scaleoffincance': FormControl<String>(validators: [Validators.required]),
+    'reqasperscaleoffinace': FormControl<String>(validators: [Validators.required]),
+    'notifiedcrop': FormControl<String>(validators: [Validators.required]),
+    'premiumperacre': FormControl<String>(validators: [Validators.required]),
+    'premiumcollected': FormControl<String>(validators: [Validators.required]),
   });
 }

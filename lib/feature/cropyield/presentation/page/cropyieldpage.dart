@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/cropyield/presentation/bloc/cropyieldpage_bloc.dart';
+import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
+import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -23,14 +25,14 @@ class CropYieldPage extends StatelessWidget{
     'village': FormControl<String>(validators: [Validators.required]),
     'firka': FormControl<String>(validators: [Validators.required]),
     'surveyNo': FormControl<String>(validators: [Validators.required]),
-    // 'natureOfRight': FormControl<String>(validators: [Validators.required]),
+    'natureOfRight': FormControl<String>(validators: [Validators.required]),
     'cropsDetails': FormArray<Map<String, dynamic>>([])
   });
 
-  FormGroup CropForm() {
+  FormGroup cropForm() {
     return FormGroup({
       'season': FormControl<String>(validators: [Validators.required]),
-      'cropname': FormControl<String>(validators: [Validators.required]),
+      'nameOfCrop': FormControl<String>(validators: [Validators.required]),
       'acrescultivated': FormControl<String>(validators: [Validators.required]),
       'typeofland': FormControl<String>(validators: [Validators.required]),
       'scaleoffincance': FormControl<String>(validators: [Validators.required]),
@@ -53,7 +55,7 @@ class CropYieldPage extends StatelessWidget{
       if(totNoOfcrops > cropsDetailslength) {
         final addressArray = form.control('cropsDetails') as FormArray;
         print("addressArray $addressArray");
-        addressArray.add(CropForm());
+        addressArray.add(cropForm());
         print('Addresses length: ${addressArray.controls.length}');
         print('Form value: ${form.value}');
         Future.delayed(Duration(milliseconds: 100), () {
@@ -80,25 +82,29 @@ class CropYieldPage extends StatelessWidget{
     
   }
 
-  removeCropDetails(index) {
+  removeCropDetails(context, int index) {
     final addressArray = form.control('cropsDetails') as FormArray;
-    print("addressArray $addressArray");
-    addressArray.removeAt(index);
-    print('Addresses length: ${addressArray.controls.length}');
-    print('Form value: ${form.value}');
-    Future.delayed(Duration(milliseconds: 100), () {
-      int newIndex = (_pageController.page ?? 0).round();
-      if (newIndex >= addressArray.controls.length) {
-        newIndex = addressArray.controls.length;
-      }
-      if (newIndex >= 0) {
-        _pageController.animateToPage(
-          newIndex + 1,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    });
+    if (addressArray.controls.isNotEmpty) {
+      print("Removing crop detail at index $index");
+      addressArray.removeAt(index);
+      print('Addresses length: ${addressArray.controls.length}');
+      print('Form value: ${form.value}');
+      form.markAsDirty(); // Trigger UI rebuild
+      Future.delayed(Duration(milliseconds: 100), () {
+        if (addressArray.controls.isNotEmpty) {
+          int newIndex = (_pageController.page ?? 0).round();
+          // If removing the last card or current index is beyond the new length, go to the previous card
+          if (newIndex >= addressArray.controls.length || newIndex == index) {
+            newIndex = (newIndex > 0) ? newIndex - 1 : 0;
+          }
+          _pageController.animateToPage(
+            newIndex,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      });
+    }
   }
 
   @override
@@ -107,7 +113,7 @@ class CropYieldPage extends StatelessWidget{
       body: ReactiveForm(
         formGroup: form,
         child: BlocProvider(
-          create: (_) => CropyieldpageBloc(),
+          create: (_) => CropyieldpageBloc()..add(CropPageInitialEvent()),
           child: BlocConsumer<CropyieldpageBloc, CropyieldpageState>(
             listener: (context, state) {
               if (state.status == CropPageStatus.success) {
@@ -201,38 +207,32 @@ class CropYieldPage extends StatelessWidget{
                         label: 'Survey Number',
                         mantatory: true,
                       ),
-                      // SearchableDropdown(
-                      //   controlName: 'natureOfRight',
-                      //   label: 'Nature of Right',
-                      //   items:
-                      //       state.lovList!
-                      //           .where((v) => v.Header == 'AddressType')
-                      //           .toList(),
-                      //   onChangeListener:
-                      //       (Lov val) => form.controls['natureOfRight']
-                      //           ?.updateValue(val.optvalue),
-                      //   selItem: () {
-                      //     if (state.status == SaveStatus.presenttreset) {
-                      //       form.controls['addressType']
-                      //           ?.updateValue(null);
-                      //       return null;
-                      //     }
-                      //     else if (state.presentAddrData != null) {
-                      //       Lov? lov = state.lovList?.firstWhere(
-                      //         (lov) =>
-                      //             lov.Header == 'AddressType' &&
-                      //             lov.optvalue ==
-                      //                 state.presentAddrData?.addressType,
-                      //       );
-                      //       form.controls['addressType']?.updateValue(
-                      //         lov?.optvalue,
-                      //       );
-                      //       return lov;
-                      //     } else {
-                      //       return null;
-                      //     }
-                      //   },
-                      // ),
+                      SearchableDropdown(
+                        controlName: 'natureOfRight',
+                        label: 'Nature of Right',
+                        items:
+                            state.lovList!
+                                .where((v) => v.Header == 'NatureOfRight')
+                                .toList(),
+                        onChangeListener:
+                            (Lov val) => form.controls['natureOfRight']
+                                ?.updateValue(val.optvalue),
+                        selItem: () {
+                          final value = form.control('natureOfRight').value;
+                          return state.lovList!
+                            .where((v) => v.Header == 'NatureOfRight')
+                            .firstWhere(
+                              (lov) => lov.optvalue == value,
+                              orElse:
+                                  () => Lov(
+                                    Header: 'NatureOfRight',
+                                    optDesc: '',
+                                    optvalue: '',
+                                    optCode: '',
+                                  ),
+                            );
+                        },
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -268,88 +268,170 @@ class CropYieldPage extends StatelessWidget{
                               Column(
                                 children: [
                                   SizedBox(
-                                    height: 1050,
+                                    height: 1060,
                                     child: PageView.builder(
                                       controller: _pageController,
                                       scrollDirection: Axis.horizontal,
                                       itemCount: cropsControls.length,
                                       itemBuilder: (context, index) {
+                                        final arrayFormGroup = cropsControls[index] as FormGroup;
                                         print("form-full fiedls ${form.value}");
-                                        return Card(
-                                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                                      child: Text('Crops Details - ${index + 1}')
-                                                    ),  
-                                                    Padding(
-                                                      padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                                      child: Ink(
-                                                        decoration: ShapeDecoration(
-                                                          color: Colors.lightBlue,
-                                                          shape: CircleBorder(),
+                                        return ReactiveForm(
+                                          formGroup: arrayFormGroup,
+                                          child: Card(
+                                            margin: const EdgeInsets.symmetric(vertical: 8.0),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(16.0),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                                        child: Text('Crops Details - ${index + 1}')
+                                                      ),  
+                                                      Padding(
+                                                        padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                                        child: Ink(
+                                                          decoration: ShapeDecoration(
+                                                            color: Colors.lightBlue,
+                                                            shape: CircleBorder(),
+                                                          ),
+                                                          child: IconButton(
+                                                            icon: Icon(Icons.cancel,),
+                                                            onPressed: () { removeCropDetails(context, index); },
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
-                                                        child: IconButton(
-                                                          icon: Icon(Icons.cancel,),
-                                                          onPressed: () { removeCropDetails(index); },
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.season',
-                                                  label: 'Seson',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.cropname',
-                                                  label: 'Crop name',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.acrescultivated',
-                                                  label: 'Acre of cultivated',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.typeofland',
-                                                  label: 'Type of Land',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.scaleoffincance',
-                                                  label: 'Scale of finance',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.reqasperscaleoffinace',
-                                                  label: 'Request as per scale of finance',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.notifiedcrop',
-                                                  label: 'Notified crop',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.premiumperacre',
-                                                  label: 'Premium per acre',
-                                                  mantatory: true,
-                                                ),
-                                                CustomTextField(
-                                                  controlName: '$index.premiumcollected',
-                                                  label: 'Premium Collected',
-                                                  mantatory: true,
-                                                ),
-                                              ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                  // CustomTextField(
+                                                  //   controlName: '$index.season',
+                                                  //   label: 'Seson',
+                                                  //   mantatory: true,
+                                                  // ),
+                                                  SearchableDropdown(
+                                                    controlName: 'season',
+                                                    label: 'Season',
+                                                    items:
+                                                        state.lovList!
+                                                            .where((v) => v.Header == 'Season')
+                                                            .toList(),
+                                                    onChangeListener:
+                                                        (Lov val) => arrayFormGroup.controls['season']
+                                                            ?.updateValue(val.optvalue),
+                                                    selItem: () {
+                                                      final value = arrayFormGroup.control('season').value;
+                                                      return state.lovList!
+                                                        .where((v) => v.Header == 'Season')
+                                                        .firstWhere(
+                                                          (lov) => lov.optvalue == value,
+                                                          orElse:
+                                                              () => Lov(
+                                                                Header: 'Season',
+                                                                optDesc: '',
+                                                                optvalue: '',
+                                                                optCode: '',
+                                                              ),
+                                                        );
+                                                    },
+                                                  ),
+                                                  // CustomTextField(
+                                                  //   controlName: '$index.nameOfCrop',
+                                                  //   label: 'Name of the Crop',
+                                                  //   mantatory: true,
+                                                  // ),
+                                                  SearchableDropdown(
+                                                    controlName: 'nameOfCrop',
+                                                    label: 'Name of the Crop',
+                                                    items:
+                                                        state.lovList!
+                                                            .where((v) => v.Header == 'NameOfTheCrop')
+                                                            .toList(),
+                                                    onChangeListener:
+                                                        (Lov val) => arrayFormGroup.controls['nameOfCrop']
+                                                            ?.updateValue(val.optvalue),
+                                                    selItem: () {
+                                                      final value = arrayFormGroup.control('nameOfCrop').value;
+                                                      return state.lovList!
+                                                        .where((v) => v.Header == 'NameOfTheCrop')
+                                                        .firstWhere(
+                                                          (lov) => lov.optvalue == value,
+                                                          orElse:
+                                                              () => Lov(
+                                                                Header: 'NameOfTheCrop',
+                                                                optDesc: '',
+                                                                optvalue: '',
+                                                                optCode: '',
+                                                              ),
+                                                        );
+                                                    },
+                                                  ),
+                                                  CustomTextField(
+                                                    controlName: 'acrescultivated',
+                                                    label: 'Acre of cultivated',
+                                                    mantatory: true,
+                                                  ),
+                                                  // CustomTextField(
+                                                  //   controlName: '$index.typeofland',
+                                                  //   label: 'Type of Land',
+                                                  //   mantatory: true,
+                                                  // ),
+                                                  SearchableDropdown(
+                                                    controlName: 'typeofland',
+                                                    label: 'Type of Land',
+                                                    items:
+                                                        state.lovList!
+                                                            .where((v) => v.Header == 'TypeOfLand')
+                                                            .toList(),
+                                                    onChangeListener:
+                                                        (Lov val) => arrayFormGroup.controls['typeofland']
+                                                            ?.updateValue(val.optvalue),
+                                                    selItem: () {
+                                                      final value = arrayFormGroup.control('typeofland').value;
+                                                      return state.lovList!
+                                                        .where((v) => v.Header == 'TypeOfLand')
+                                                        .firstWhere(
+                                                          (lov) => lov.optvalue == value,
+                                                          orElse:
+                                                              () => Lov(
+                                                                Header: 'TypeOfLand',
+                                                                optDesc: '',
+                                                                optvalue: '',
+                                                                optCode: '',
+                                                              ),
+                                                        );
+                                                    },
+                                                  ),
+                                                  CustomTextField(
+                                                    controlName: 'scaleoffincance',
+                                                    label: 'Scale of finance',
+                                                    mantatory: true,
+                                                  ),
+                                                  CustomTextField(
+                                                    controlName: 'reqasperscaleoffinace',
+                                                    label: 'Request as per scale of finance',
+                                                    mantatory: true,
+                                                  ),
+                                                  CustomTextField(
+                                                    controlName: 'notifiedcrop',
+                                                    label: 'Notified crop',
+                                                    mantatory: true,
+                                                  ),
+                                                  CustomTextField(
+                                                    controlName: 'premiumperacre',
+                                                    label: 'Premium per acre',
+                                                    mantatory: true,
+                                                  ),
+                                                  CustomTextField(
+                                                    controlName: 'premiumcollected',
+                                                    label: 'Premium Collected',
+                                                    mantatory: true,
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
