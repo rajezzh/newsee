@@ -48,7 +48,7 @@ class AppForms {
     'isNewCustomer': FormControl<bool>(validators: [Validators.required]),
   });
 
-  static FormGroup PERMANENT_ADDRESS_FORM = FormGroup({
+  final FormGroup PERMANENT_ADDRESS_FORM = FormGroup({
     'addressType': FormControl<String>(validators: [Validators.required]),
     'address1': FormControl<String>(validators: [Validators.required]),
     'address2': FormControl<String>(validators: [Validators.required]),

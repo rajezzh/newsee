@@ -80,39 +80,35 @@ class Loan extends StatelessWidget {
               0.7,
               0.5,
               0.9,
-              (context, scrollController) => Expanded(
-                child: ListView.builder(
-                  itemCount: state.productmasterList.length,
-                  itemBuilder: (context, index) {
-                    final product = state.productmasterList[index];
-                    return Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: InkWell(
-                        // card widget for showing products
-                        onTap: () {
-                          try {
-                            ProductMaster selectedProduct = product;
-                            ctxt.read<LoanproductBloc>().add(
-                              ResetShowBottomSheet(
-                                selectedProduct: selectedProduct,
-                              ),
-                            );
-                          } catch(error) {
-                            print("bottom sheet product select catch error $error");
-                          }
-                          
-                        },
-                        child: ProductCard(
-                          productId: product.prdCode,
-                          productDescription: product.prdDesc,
-                          amountFrom: formatAmount(product.prdamtFromRange),
-                          amountTo: formatAmount(product.prdamtToRange),
-                        ),
+              // (context, scrollController) => Expanded(
+              (context, scrollController) => ListView.builder(
+                controller: scrollController,
+                itemCount: state.productmasterList.length,
+                itemBuilder: (context, index) {
+                  final product = state.productmasterList[index];
+                  return Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: InkWell(
+                      // card widget for showing products
+                      onTap: () {
+                        ProductMaster selectedProduct = product;
+                        ctxt.read<LoanproductBloc>().add(
+                          ResetShowBottomSheet(
+                            selectedProduct: selectedProduct,
+                          ),
+                        );
+                      },
+                      child: ProductCard(
+                        productId: product.prdCode,
+                        productDescription: product.prdDesc,
+                        amountFrom: formatAmount(product.prdamtFromRange),
+                        amountTo: formatAmount(product.prdamtToRange),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
+              // ),
             );
           }
 

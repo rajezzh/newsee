@@ -19,11 +19,11 @@ class MediaService {
       LocationPermission permissionstatus;
       Position gelocationdata;
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const LoaderView(),
-      );
+      // showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (_) => const LoaderView(),
+      // );
 
       final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
@@ -52,9 +52,9 @@ class MediaService {
     } catch (error) {
       rethrow;
     } finally {
-      if (context.mounted) {
-        Navigator.of(context, rootNavigator: true).pop(); // Dismiss the loader
-      }
+      // if (context.mounted) {
+      //   Navigator.of(context, rootNavigator: true).pop(); // Dismiss the loader
+      // }
     }
   }
 

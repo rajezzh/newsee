@@ -18,7 +18,19 @@ class PresentAddress extends StatelessWidget {
   final BuildContext parentContext;
   PresentAddress({required this.title, required this.parentContext, super.key});
 
-  final form = AppForms.PRESENT_ADDRESS_FORM;
+  final form = FormGroup({
+    'sameAsPermanent': FormControl<bool>(validators: []),
+    'addressType': FormControl<String>(validators: [Validators.required]),
+    'address1': FormControl<String>(validators: [Validators.required]),
+    'address2': FormControl<String>(validators: [Validators.required]),
+    'address3': FormControl<String>(validators: [Validators.required]),
+    'state': FormControl<String>(validators: [Validators.required]),
+    'cityDistrict': FormControl<String>(validators: [Validators.required]),
+    'area': FormControl<String>(validators: [Validators.required]),
+    'pincode': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(6)],
+    ),
+  });
 
   void showSnack(BuildContext context, {required String message}) {
     ScaffoldMessenger.of(
@@ -85,6 +97,11 @@ class PresentAddress extends StatelessWidget {
           if (state.presentCityMaster != null && state.presentCityMaster!.isEmpty) {
             form.controls['city']?.updateValue(null);
           }
+          print("SaveStatus => ${state.status}");
+          print("presentAddrData => ${state.presentAddrData}");
+          print("addressdata => ${state.addressData}");
+          print("presentCityMaster => ${state.presentCityMaster}");
+          print("presentDistrictMaster => ${state.presentDistrictMaster}");
           if (state.status == SaveStatus.copy && state.presentAddrData != null) {
             mapPermanentAddress(state.addressData);
           } else if(state.status == SaveStatus.presenttreset) {
