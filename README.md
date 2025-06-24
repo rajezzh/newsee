@@ -33,3 +33,15 @@ which includes forms for sourcing details , personal details , address details ,
 flutter run -d RZ8TA0WL7KW
 
 git pull https://github.com/KarthickTechie/newsee.git download-progress-indicator
+
+## proposal workflow
+
+after a successful lead upload , bottom sheet will be open with leadId
+
+step 1 : there show two button left button - Goto LeadInbox Right - CreateProposal
+
+Step 2 : when CreateProposal is clicked show a bottom sheet with circular loader
+saying creating proposal for lead Id - Lead/xxxx/xxxxx
+Step 3 : once proposal creation is successful show success icon show two buttons
+left button - goto proposal Inbox
+Rightbutton - goto LandHolding Details
