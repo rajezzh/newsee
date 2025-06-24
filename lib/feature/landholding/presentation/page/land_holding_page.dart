@@ -9,6 +9,8 @@ import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
+import 'package:newsee/widgets/alpha_text_field.dart';
+import 'package:newsee/widgets/options_sheet.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
@@ -44,32 +46,70 @@ class LandHoldingPage extends StatelessWidget {
       ),
       builder:
           (_) => SizedBox(
-            height: 300,
-            child:
-                entries.isEmpty
-                    ? const Center(child: Text('No saved entries.'))
-                    : ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: entries.length,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (ctx, index) {
-                        final item = entries[index];
-                        return ListTile(
-                          title: Text(item.applicantName),
-                          subtitle: Text(item.locationOfFarm),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
+            height: 500,
+            child: Column(
+              children: [
+                Expanded(
+                  child:
+                      entries.isEmpty
+                          ? const Center(child: Text('No saved entries.'))
+                          : ListView.separated(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: entries.length,
+                            separatorBuilder: (_, __) => const Divider(),
+                            itemBuilder: (ctx, index) {
+                              final item = entries[index];
+                              return OptionsSheet(
+                                icon: Icons.grass,
+                                title: item.applicantName,
+                                subtitle: item.surveyNo,
+                                details: [item.village, item.totalAcreage],
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  context.read<LandHoldingBloc>().add(
+                                    LandDetailsLoadEvent(landData: item),
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          onTap: () {
-                            Navigator.pop(context);
-                            context.read<LandHoldingBloc>().add(
-                              LandDetailsLoadEvent(landData: item),
-                            );
-                          },
-                        );
-                      },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    label: RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        children: [
+                          TextSpan(text: 'Push to '),
+                          TextSpan(
+                            text: 'LEND',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          TextSpan(
+                            text: 'perfect',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 75, 33, 83),
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
     );
   }
@@ -107,6 +147,7 @@ class LandHoldingPage extends StatelessWidget {
                 child: Stack(
                   children: [
                     SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -192,12 +233,16 @@ class LandHoldingPage extends StatelessWidget {
                                   controlName: 'totalAcreage',
                                   label: 'Total Acreage (in Acres)',
                                   mantatory: true,
+                                  maxlength: 2,
+                                  minlength: 1,
                                 ),
                                 IntegerTextField(
                                   controlName: 'irrigatedLand',
                                   label:
                                       'Out of Total acreage, how much is the Irrigated Land (in Acres)',
                                   mantatory: true,
+                                  maxlength: 2,
+                                  minlength: 1,
                                 ),
                                 RadioButton(
                                   label: 'Lands situated in compact blocks',

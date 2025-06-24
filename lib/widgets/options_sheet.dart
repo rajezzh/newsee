@@ -1,4 +1,3 @@
-
 /*
   @author     : akshayaa.p
   @date       : 19/06/2025
@@ -10,7 +9,6 @@
                 - Tapping the tile triggers the onTap callback.
 */
 
-
 import 'package:flutter/material.dart';
 
 class OptionsSheet extends StatelessWidget {
@@ -19,6 +17,7 @@ class OptionsSheet extends StatelessWidget {
   final VoidCallback onTap;
   final String subtitle;
   final String? status;
+  final List<String>? details;
 
   const OptionsSheet({
     required this.icon,
@@ -26,6 +25,7 @@ class OptionsSheet extends StatelessWidget {
     required this.onTap,
     required this.subtitle,
     this.status,
+    this.details,
   });
 
   @override
@@ -49,36 +49,62 @@ class OptionsSheet extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.black,
+        ),
       ),
-      subtitle: Text(
-        subtitle,
-        style: const TextStyle(fontSize: 12),
-      ),
-      trailing: status != null
-          ? Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: isCompleted
-                    ? Colors.green.shade100
-                    : Colors.red.shade100,
-                borderRadius: BorderRadius.circular(20),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (subtitle.isNotEmpty)
+            Text(
+              subtitle,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
-              child: Text(
-                status!,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: isCompleted
-                      ? Colors.green.shade800
-                      : Colors.red.shade800,
+            ),
+          if (details != null && details!.isNotEmpty)
+            ...details!.map(
+              (detail) => Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  detail,
+                  style: const TextStyle(fontSize: 12, color: Colors.black),
                 ),
               ),
-            )
-          : null,
-      shape: Border(
-        bottom: BorderSide(color: Colors.grey.shade200),
+            ),
+        ],
       ),
+      trailing:
+          status != null
+              ? Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color:
+                      isCompleted ? Colors.green.shade100 : Colors.red.shade100,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  status!,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color:
+                        isCompleted
+                            ? Colors.green.shade800
+                            : Colors.red.shade800,
+                  ),
+                ),
+              )
+              : null,
+      shape: Border(bottom: BorderSide(color: Colors.grey.shade200)),
       tileColor: Colors.transparent,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     );

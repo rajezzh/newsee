@@ -89,6 +89,9 @@ class CoApplicantPage extends StatelessWidget {
                               .toList(),
                       selItem: () {
                         final value = form.control('customertype').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'CustType')
                             .firstWhere(
@@ -115,6 +118,9 @@ class CoApplicantPage extends StatelessWidget {
                               .toList(),
                       selItem: () {
                         final value = form.control('constitution').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'Constitution')
                             .firstWhere(
