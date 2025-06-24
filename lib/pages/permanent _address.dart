@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/app_forms.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
@@ -100,11 +101,11 @@ class PermanentAddress extends StatelessWidget {
           print(
             'permanentAddress::BlocConsumer:listen => ${state.lovList} ${state.addressData} ${state.status?.name}',
           );
-          if (state.status == SaveStatus.permanentsave && state.addressData != null) {
+          if (state.status == SaveStatus.success && state.addressData != null) {
             goToNextTab(context);
           }
           if (state.status == SaveStatus.mastersucess ||
-              state.status == SaveStatus.failure) {
+              state.status == SaveStatus.masterfailure) {
             globalLoadingBloc.add(HideLoading());
           }
         },
@@ -131,7 +132,7 @@ class PermanentAddress extends StatelessWidget {
             children: [
               ReactiveForm(
                 formGroup: form,
-                child: SafeArea(   
+                child: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [

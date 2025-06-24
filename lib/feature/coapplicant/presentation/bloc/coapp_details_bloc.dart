@@ -10,7 +10,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/DBConstants/table_key_geographymaster.dart';
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/Utils/utils.dart';
+import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/db/db_config.dart';
+import 'package:newsee/feature/addressdetails/data/repository/citylist_repo_impl.dart';
+import 'package:newsee/feature/addressdetails/domain/model/citydistrictrequest.dart';
+import 'package:newsee/feature/addressdetails/domain/repository/cityrepository.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -26,6 +31,7 @@ final class CoappDetailsBloc
   CoappDetailsBloc() : super(CoappDetailsState.initial()) {
     on<CoAppDetailsInitEvent>(initCoAppDetailsPage);
     on<CoAppDetailsSaveEvent>(saveCoAppDetailsPage);
+    on<OnStateCityChangeEvent>(getCityListBasedOnState);
   }
 
   Future<void> initCoAppDetailsPage(
@@ -53,5 +59,48 @@ final class CoappDetailsBloc
   Future<void> saveCoAppDetailsPage(
     CoAppDetailsSaveEvent event,
     Emitter emit,
-  ) async {}
+  ) async {
+    print('PersonalData => ${event.coapplicantData}');
+
+    emit(
+      state.copyWith(
+        selectedCoApp: event.coapplicantData,
+        status: SaveStatus.success,
+      ),
+    );
+  }
+
+  Future<void> getCityListBasedOnState(
+    OnStateCityChangeEvent event,
+    Emitter emit,
+  ) async {
+    /** 
+     * @modified    : karthick.d 22/06/2025
+     * 
+     * @reson       : geograhy master parsing logic should be kept as function 
+     *                so it the logic can be reused across various bLoC
+     * 
+     * @desc        : so geograpgy master fetching logic is reusable 
+                      encapsulate geography master datafetching in citylist_repo_impl 
+                      the desired statement definition as simple as calling the funtion 
+                      and set the state
+                      emit(state.copyWith(status:SaveStatus.loading));
+                      await cityrepository.fetchCityList(
+                              citydistrictrequest,
+                          );
+    */
+
+    emit(state.copyWith(status: SaveStatus.loading));
+    final CityDistrictRequest citydistrictrequest = CityDistrictRequest(
+      stateCode: event.stateCode,
+      cityCode: event.cityCode,
+    );
+    Cityrepository cityrepository = CitylistRepoImpl();
+    AsyncResponseHandler response = await cityrepository.fetchCityList(
+      citydistrictrequest,
+    );
+    CoappDetailsState coappDetailsState =
+        mapGeographyMasterResponseForCoAppPage(state, response);
+    emit(coappDetailsState);
+  }
 }

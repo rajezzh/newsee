@@ -8,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/leadInbox/presentation/bloc/lead_bloc.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
@@ -61,19 +62,20 @@ class CompletedLeads extends StatelessWidget {
                   ?.expand((model) => model.finalList)
                   .toList();
 
-          final filteredLeads = allLeads?.where((lead) {
-          final name = (lead['lleadfrstname'] ?? '').toLowerCase();
-          final id = (lead['lleadid'] ?? '').toLowerCase();
-          final phone = (lead['lleadmobno'] ?? '').toLowerCase();
-          final loan = (lead['lldLoanamtRequested'] ?? '').toString();
-          return name.contains(searchQuery.toLowerCase()) ||
-                 id.contains(searchQuery.toLowerCase()) ||
-                 phone.contains(searchQuery.toLowerCase()) ||
-                 loan.contains(searchQuery.toString());
-          }).toList();
+          final filteredLeads =
+              allLeads?.where((lead) {
+                final name = (lead['lleadfrstname'] ?? '').toLowerCase();
+                final id = (lead['lleadid'] ?? '').toLowerCase();
+                final phone = (lead['lleadmobno'] ?? '').toLowerCase();
+                final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+                return name.contains(searchQuery.toLowerCase()) ||
+                    id.contains(searchQuery.toLowerCase()) ||
+                    phone.contains(searchQuery.toLowerCase()) ||
+                    loan.contains(searchQuery.toString());
+              }).toList();
 
           if (filteredLeads == null || filteredLeads.isEmpty) {
-              return const Center(child: Text("No leads found."));
+            return const Center(child: Text("No leads found."));
           }
 
           print("final completed lead response $state");
@@ -97,51 +99,43 @@ class CompletedLeads extends StatelessWidget {
                 location: lead['lleadprefbrnch'] ?? 'N/A',
                 loanamount: lead['lldLoanamtRequested']?.toString() ?? '',
                 onTap: () {
-                    openBottomSheet(
-                      context,
-                      0.6,
-                      0.4,
-                      0.9,
-                      (context, scrollController) {
-                        return SingleChildScrollView(
-                          controller: scrollController,
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 12),
-                              // OptionsSheet(
-                              //   icon: Icons.visibility,
-                              //   title: "Lead Details",
-                              //   subtitle: "View your Lead Details here",
-                              //   onTap: () {
-                              //   }, 
-                              // ),
-                              OptionsSheet(
-                                icon: Icons.visibility,
-                                title: "Land Details",
-                                subtitle: "View your Land Details here",
-                                status: 'Completed', 
-                                onTap: () {
-                                }, 
-                              ),
-                              OptionsSheet(
-                                icon: Icons.visibility,
-                                title: "Crop Details",
-                                subtitle: "View your Crop Details here",
-                                status: 'Pending',
-                                onTap: () {
-                                }, 
-                              ),
-                            ],
+                  openBottomSheet(context, 0.6, 0.4, 0.9, (
+                    context,
+                    scrollController,
+                  ) {
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 12),
+                          OptionsSheet(
+                            icon: Icons.visibility,
+                            title: "Land Details",
+                            subtitle: "View your Land Details here",
+                            status: 'Completed',
+                            onTap: () {
+                              context.pushNamed('landholdings');
+                            },
                           ),
-                        );
-                      },
+                          OptionsSheet(
+                            icon: Icons.visibility,
+                            title: "Crop Details",
+                            subtitle: "View your Crop Details here",
+                            status: 'Pending',
+                            onTap: () {
+                              context.pushNamed('cropdetails');
+                            },
+                          ),
+                        ],
+                      ),
                     );
-                },       
-                  );
+                  });
                 },
               );
             },
-          ),
-      );
+          );
+        },
+      ),
+    );
   }
 }

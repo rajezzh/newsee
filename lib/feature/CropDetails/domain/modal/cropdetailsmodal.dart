@@ -3,17 +3,17 @@ import 'dart:convert';
 
 class CropDetailsModal {
   final String? season;
-  final String? cropname;
+  final String? nameOfCrop;
   final String? acrescultivated;
   final String? typeofland;
   final String? scaleoffincance;
   final String? reqasperscaleoffinace;
-  final String? notifiedcrop;
+  final bool? notifiedcrop;
   final String? premiumperacre;
   final String? premiumcollected;
   CropDetailsModal({
     this.season,
-    this.cropname,
+    this.nameOfCrop,
     this.acrescultivated,
     this.typeofland,
     this.scaleoffincance,
@@ -25,18 +25,18 @@ class CropDetailsModal {
 
   CropDetailsModal copyWith({
     String? season,
-    String? cropname,
+    String? nameOfCrop,
     String? acrescultivated,
     String? typeofland,
     String? scaleoffincance,
     String? reqasperscaleoffinace,
-    String? notifiedcrop,
+    bool? notifiedcrop,
     String? premiumperacre,
     String? premiumcollected,
   }) {
     return CropDetailsModal(
       season: season ?? this.season,
-      cropname: cropname ?? this.cropname,
+      nameOfCrop: nameOfCrop ?? this.nameOfCrop,
       acrescultivated: acrescultivated ?? this.acrescultivated,
       typeofland: typeofland ?? this.typeofland,
       scaleoffincance: scaleoffincance ?? this.scaleoffincance,
@@ -50,7 +50,7 @@ class CropDetailsModal {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'season': season,
-      'cropname': cropname,
+      'nameOfCrop': nameOfCrop,
       'acrescultivated': acrescultivated,
       'typeofland': typeofland,
       'scaleoffincance': scaleoffincance,
@@ -64,14 +64,28 @@ class CropDetailsModal {
   factory CropDetailsModal.fromMap(Map<String, dynamic> map) {
     return CropDetailsModal(
       season: map['season'] != null ? map['season'] as String : null,
-      cropname: map['cropname'] != null ? map['cropname'] as String : null,
+      nameOfCrop: map['nameOfCrop'] != null ? map['nameOfCrop'] as String : null,
       acrescultivated: map['acrescultivated'] != null ? map['acrescultivated'] as String : null,
       typeofland: map['typeofland'] != null ? map['typeofland'] as String : null,
       scaleoffincance: map['scaleoffincance'] != null ? map['scaleoffincance'] as String : null,
       reqasperscaleoffinace: map['reqasperscaleoffinace'] != null ? map['reqasperscaleoffinace'] as String : null,
-      notifiedcrop: map['notifiedcrop'] != null ? map['notifiedcrop'] as String : null,
+      notifiedcrop: map['notifiedcrop'] != null ? map['notifiedcrop'] as bool : null,
       premiumperacre: map['premiumperacre'] != null ? map['premiumperacre'] as String : null,
       premiumcollected: map['premiumcollected'] != null ? map['premiumcollected'] as String : null,
+    );
+  }
+
+  factory CropDetailsModal.fromForm(Map<String, dynamic> form) {
+    return CropDetailsModal(
+      season: form['season'] ?? '',
+      nameOfCrop: form['nameOfCrop'] ?? '',
+      acrescultivated: form['acrescultivated'] ?? '',
+      typeofland: form['typeofland'] ?? '',
+      scaleoffincance: form['scaleoffincance'] ?? '',
+      reqasperscaleoffinace: form['reqasperscaleoffinace'] ?? '',
+      notifiedcrop: form['notifiedcrop'] ?? false,
+      premiumperacre: form['premiumperacre'] ?? '',
+      premiumcollected: form['premiumcollected'] ?? '',
     );
   }
 
@@ -81,7 +95,7 @@ class CropDetailsModal {
 
   @override
   String toString() {
-    return 'CropDetailsModal(season: $season, cropname: $cropname, acrescultivated: $acrescultivated, typeofland: $typeofland, scaleoffincance: $scaleoffincance, reqasperscaleoffinace: $reqasperscaleoffinace, notifiedcrop: $notifiedcrop, premiumperacre: $premiumperacre, premiumcollected: $premiumcollected)';
+    return 'CropDetailsModal(season: $season, cropname: $nameOfCrop, acrescultivated: $acrescultivated, typeofland: $typeofland, scaleoffincance: $scaleoffincance, reqasperscaleoffinace: $reqasperscaleoffinace, notifiedcrop: $notifiedcrop, premiumperacre: $premiumperacre, premiumcollected: $premiumcollected)';
   }
 
   @override
@@ -90,7 +104,7 @@ class CropDetailsModal {
   
     return 
       other.season == season &&
-      other.cropname == cropname &&
+      other.nameOfCrop == nameOfCrop &&
       other.acrescultivated == acrescultivated &&
       other.typeofland == typeofland &&
       other.scaleoffincance == scaleoffincance &&
@@ -103,7 +117,7 @@ class CropDetailsModal {
   @override
   int get hashCode {
     return season.hashCode ^
-      cropname.hashCode ^
+      nameOfCrop.hashCode ^
       acrescultivated.hashCode ^
       typeofland.hashCode ^
       scaleoffincance.hashCode ^

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_forms.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
@@ -72,7 +73,7 @@ class PresentAddress extends StatelessWidget {
       //           padding: const EdgeInsets.only(top: 10,left: 5),
       //           // child: Text("Present Address"),
       //         ),
-            
+
       //       ],
       //     ),
       //   ),
@@ -86,7 +87,7 @@ class PresentAddress extends StatelessWidget {
             goToNextTab(context);
           }
           if (state.status == SaveStatus.mastersucess ||
-              state.status == SaveStatus.failure) {
+              state.status == SaveStatus.masterfailure) {
             globalLoadingBloc.add(HideLoading());
           }
         },
@@ -102,26 +103,26 @@ class PresentAddress extends StatelessWidget {
           print("addressdata => ${state.addressData}");
           print("presentCityMaster => ${state.presentCityMaster}");
           print("presentDistrictMaster => ${state.presentDistrictMaster}");
-          if (state.status == SaveStatus.copy && state.presentAddrData != null) {
+          if (state.status == SaveStatus.update && state.presentAddrData != null) {
             mapPermanentAddress(state.addressData);
-          } else if(state.status == SaveStatus.presenttreset) {
-            print("form try to reset here");
-            form.reset();
-          }
+          } 
+          // else if(state.status == SaveStatus.presenttreset) {
+          //   print("form try to reset here");
+          //   form.reset();
+          // }
           return Stack(
             alignment: Alignment.topLeft,
             children: [
               ReactiveForm(
                 formGroup: form,
-                
+
                 child: SafeArea(
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(top: 20,left: 05),
+                          padding: const EdgeInsets.only(top: 20, left: 05),
                           child: Row(
-                            
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
@@ -132,15 +133,18 @@ class PresentAddress extends StatelessWidget {
                                     context.read<AddressDetailsBloc>().add(SameAsPermanentInPresentEvent(sameAspresent: control.value));
                                   },
                                 ),
-                              ),  
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(bottom: 20),
-                                child: Text('Present Address same as Permanent Address',style: TextStyle(fontSize: 15),),
-                              )
+                                child: Text(
+                                  'Present Address same as Permanent Address',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        
+
                         SearchableDropdown(
                           controlName: 'addressType',
                           label: 'Address Type',
@@ -152,28 +156,28 @@ class PresentAddress extends StatelessWidget {
                               (Lov val) => form.controls['addressType']
                                   ?.updateValue(val.optvalue),
                           selItem: () {
-                            if (state.status == SaveStatus.presenttreset) {
-                              form.controls['addressType']
-                                  ?.updateValue(null);
-                              return null;
-                            }
-                            else if (state.presentAddrData != null) {
-                              Lov? lov = state.lovList?.firstWhere(
-                                (lov) =>
-                                    lov.Header == 'AddressType' &&
-                                    lov.optvalue ==
-                                        state.presentAddrData?.addressType,
-                              );
-                              form.controls['addressType']?.updateValue(
-                                lov?.optvalue,
-                              );
-                              return lov;
-                            } else {
-                              return null;
-                            }
+                            // if (state.status == SaveStatus.presenttreset) {
+                            //   form.controls['addressType']
+                            //       ?.updateValue(null);
+                            //   return null;
+                            // }
+                            // else if (state.presentAddrData != null) {
+                            //   Lov? lov = state.lovList?.firstWhere(
+                            //     (lov) =>
+                            //         lov.Header == 'AddressType' &&
+                            //         lov.optvalue ==
+                            //             state.presentAddrData?.addressType,
+                            //   );
+                            //   form.controls['addressType']?.updateValue(
+                            //     lov?.optvalue,
+                            //   );
+                            //   return lov;
+                            // } else {
+                            //   return null;
+                            // }
                           },
                         ),
-                        
+
                         CustomTextField(
                           controlName: 'address1',
                           label: 'Address 1',
@@ -203,26 +207,26 @@ class PresentAddress extends StatelessWidget {
                             );
                           },
                           selItem: () {
-                            if (state.status == SaveStatus.copy && state.presentAddrData != null) {
-                              var statename = state.presentAddrData?.state;
-                              print("statename is $statename");
-                              GeographyMaster? statedata = state.stateCityMaster?.firstWhere(
-                                (lov) =>
-                                    lov.code == statename
-                              );
-                              print("personalAddress-stateData => $statedata");
-                              form.controls['state']?.updateValue(
-                                statedata?.value,
-                              );
-                              return statedata;
-                            } else if (state.status == SaveStatus.presenttreset){
-                              form.controls['state']?.updateValue(
-                                null
-                              );
-                              return null;
-                            } else  {
-                              return null;
-                            }
+                            // if (state.status == SaveStatus.copy && state.presentAddrData != null) {
+                            //   var statename = state.presentAddrData?.state;
+                            //   print("statename is $statename");
+                            //   GeographyMaster? statedata = state.stateCityMaster?.firstWhere(
+                            //     (lov) =>
+                            //         lov.code == statename
+                            //   );
+                            //   print("personalAddress-stateData => $statedata");
+                            //   form.controls['state']?.updateValue(
+                            //     statedata?.value,
+                            //   );
+                            //   return statedata;
+                            // } else if (state.status == SaveStatus.presenttreset){
+                            //   form.controls['state']?.updateValue(
+                            //     null
+                            //   );
+                            //   return null;
+                            // } else  {
+                            //   return null;
+                            // }
                           },
                         ),
                         SearchableDropdown(
@@ -245,26 +249,26 @@ class PresentAddress extends StatelessWidget {
                             );
                           },
                           selItem: () {
-                            if (state.status == SaveStatus.copy && state.presentAddrData != null) {
-                              String? cityname = state.presentAddrData?.cityDistrict;
-                              print("cityname is $cityname");
-                              GeographyMaster? citydata = state.presentCityMaster?.firstWhere(
-                                (lov) =>
-                                    lov.code == cityname
-                              );
-                              print("personalAddress-citydata => $citydata");
-                              form.controls['cityDistrict']?.updateValue(
-                                citydata?.value as String
-                              );
-                              return citydata;
-                            } else if (state.status == SaveStatus.presenttreset){
-                              form.controls['cityDistrict']?.updateValue(
-                                null
-                              );
-                              return null;
-                            } else  {
-                              return null;
-                            }
+                            // if (state.status == SaveStatus.copy && state.presentAddrData != null) {
+                            //   String? cityname = state.presentAddrData?.cityDistrict;
+                            //   print("cityname is $cityname");
+                            //   GeographyMaster? citydata = state.presentCityMaster?.firstWhere(
+                            //     (lov) =>
+                            //         lov.code == cityname
+                            //   );
+                            //   print("personalAddress-citydata => $citydata");
+                            //   form.controls['cityDistrict']?.updateValue(
+                            //     citydata?.value as String
+                            //   );
+                            //   return citydata;
+                            // } else if (state.status == SaveStatus.presenttreset){
+                            //   form.controls['cityDistrict']?.updateValue(
+                            //     null
+                            //   );
+                            //   return null;
+                            // } else  {
+                            //   return null;
+                            // }
                           },
                         ),
                         SearchableDropdown(
@@ -275,23 +279,23 @@ class PresentAddress extends StatelessWidget {
                             form.controls['area']?.updateValue(val.code);
                           },
                           selItem: () {
-                            if (state.status == SaveStatus.copy && state.presentAddrData != null) {
-                              GeographyMaster? statedata = state.presentDistrictMaster?.firstWhere(
-                                (lov) =>
-                                    lov.code == state.presentAddrData?.area
-                              );
-                              form.controls['area']?.updateValue(
-                                statedata?.code,
-                              );
-                              return statedata;
-                            } else if (state.status == SaveStatus.presenttreset){
-                              form.controls['area']?.updateValue(
-                                null
-                              );
-                              return null;
-                            } else {
-                              return null;
-                            }
+                            // if (state.status == SaveStatus.copy && state.presentAddrData != null) {
+                            //   GeographyMaster? statedata = state.presentDistrictMaster?.firstWhere(
+                            //     (lov) =>
+                            //         lov.code == state.presentAddrData?.area
+                            //   );
+                            //   form.controls['area']?.updateValue(
+                            //     statedata?.code,
+                            //   );
+                            //   return statedata;
+                            // } else if (state.status == SaveStatus.presenttreset){
+                            //   form.controls['area']?.updateValue(
+                            //     null
+                            //   );
+                            //   return null;
+                            // } else {
+                            //   return null;
+                            // }
                           },
                         ),
                         IntegerTextField(

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/core/db/db_config.dart';
+import 'package:newsee/feature/CropDetails/domain/modal/cropdetailsmodal.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,6 +13,8 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
   CropyieldpageBloc(): super(CropyieldpageState.init()) {
     on<CropPageInitialEvent>(initCropYieldDetails);
     on<CropFormSaveEvent>(onSaveCropYieldPage);
+    on<CropDetailsSetEvent>(onDataSet);
+    on<CropDetailsResetEvent>(onResetForm);
   }
 
   Future<void> initCropYieldDetails(CropPageInitialEvent event, Emitter emit) async {
@@ -21,7 +24,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       print('listOfLov => $listOfLov');
       emit(
         state.copyWith(
-          lovList: listOfLov,
+          lovlist: listOfLov,
           status: CropPageStatus.init
         )
       );
@@ -30,16 +33,39 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
     }
   }
 
-  onSaveCropYieldPage(CropFormSaveEvent event, Emitter emit) {
-    try {
-      emit(
-        state.copyWith(
-          status: CropPageStatus.success,
-          cropdetails: event.request
-        )
-      );
-    } catch(error) {
-      print("onSaveCropYieldPage-error $error");
-    }
+  Future<void> onSaveCropYieldPage(
+      CropFormSaveEvent event,
+      Emitter<CropyieldpageState> emit,
+    ) async {
+    final newList = [...?state.cropData, event.cropData];
+    emit(
+      state.copyWith(
+        status: CropPageStatus.success,
+        cropData: newList,
+        selectedCropData: null,
+      ),
+    );
   }
+
+   // Load data into form for editing
+  void onDataSet(CropDetailsSetEvent event, Emitter<CropyieldpageState> emit) {
+    emit(
+      state.copyWith(
+        selectedCropData: event.cropData,
+        status: CropPageStatus.set
+      )
+    );
+  }
+
+  void onResetForm(CropDetailsResetEvent event, Emitter<CropyieldpageState> emit) {
+    emit(
+      state.copyWith(
+        selectedCropData: null,
+        status: CropPageStatus.reset
+      )
+    );
+  }
+
+
+
 }

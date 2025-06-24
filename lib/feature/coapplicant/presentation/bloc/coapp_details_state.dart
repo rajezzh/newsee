@@ -14,6 +14,7 @@ class CoappDetailsState extends Equatable {
   final CoapplicantData? selectedCoApp;
   final List<Lov>? lovList;
   final List<GeographyMaster>? stateCityMaster;
+  final List<GeographyMaster>? districtMaster;
   final List<GeographyMaster>? cityMaster;
 
   CoappDetailsState({
@@ -23,6 +24,7 @@ class CoappDetailsState extends Equatable {
     required this.selectedCoApp,
     required this.stateCityMaster,
     required this.cityMaster,
+    required this.districtMaster,
   });
 
   factory CoappDetailsState.initial() => CoappDetailsState(
@@ -31,6 +33,7 @@ class CoappDetailsState extends Equatable {
     selectedCoApp: null,
     stateCityMaster: [],
     cityMaster: [],
+    districtMaster: [],
   );
 
   CoappDetailsState copyWith({
@@ -40,6 +43,7 @@ class CoappDetailsState extends Equatable {
     CoapplicantData? selectedCoApp,
     List<GeographyMaster>? stateCityMaster,
     List<GeographyMaster>? cityMaster,
+    List<GeographyMaster>? districtMaster,
   }) {
     return CoappDetailsState(
       lovList: lovList ?? this.lovList,
@@ -48,6 +52,7 @@ class CoappDetailsState extends Equatable {
       selectedCoApp: selectedCoApp ?? this.selectedCoApp,
       stateCityMaster: stateCityMaster ?? this.stateCityMaster,
       cityMaster: cityMaster ?? this.cityMaster,
+      districtMaster: districtMaster ?? this.districtMaster,
     );
   }
 
@@ -59,5 +64,6 @@ class CoappDetailsState extends Equatable {
     lovList,
     stateCityMaster,
     cityMaster,
+    districtMaster,
   ];
 }
