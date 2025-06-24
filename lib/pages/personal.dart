@@ -304,6 +304,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('residentialStatus').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'ResidentialStatus')
                             .firstWhere(
@@ -333,6 +336,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('natureOfActivity').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'NatureOfActivity')
                             .firstWhere(
@@ -361,6 +367,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('occupationType').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'OccupationType')
                             .firstWhere(
@@ -389,6 +398,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('agriculturistType').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'AgricultType')
                             .firstWhere(
@@ -417,6 +429,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('farmerCategory').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'FarmerCategory')
                             .firstWhere(
@@ -443,6 +458,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('farmerType').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'FarmerType')
                             .firstWhere(
@@ -469,6 +487,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('religion').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'Religion')
                             .firstWhere(
@@ -495,6 +516,9 @@ class Personal extends StatelessWidget {
                       },
                       selItem: () {
                         final value = form.control('caste').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
                         return state.lovList!
                             .where((v) => v.Header == 'Caste')
                             .firstWhere(

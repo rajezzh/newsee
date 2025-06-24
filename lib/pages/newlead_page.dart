@@ -90,104 +90,134 @@ class NewLeadPage extends StatelessWidget {
                             indicatorWeight: 3,
                             tabs: <Widget>[
                               Tab(
-                                icon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.badge,
-                                      color: Colors.white,
-                                    ),
-                                    if (loanState.status?.name ==
-                                        SaveStatus.success.name)
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 4.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
+                                icon: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.badge,
+                                        color: Colors.white,
                                       ),
-                                  ],
+                                      if (loanState.status?.name ==
+                                          SaveStatus.success.name)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.0,
+                                          ),
+                                          child: Icon(
+                                            Icons.check_circle,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Tab(
-                                icon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.file_copy,
-                                      color: Colors.white,
-                                    ),
-                                    if (dedupeState.status?.name ==
-                                        SaveStatus.success.name)
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 4.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
+                                icon: FittedBox(
+                                  fit: BoxFit.scaleDown,
+
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.file_copy,
+                                        color: Colors.white,
                                       ),
-                                  ],
+                                      if (dedupeState.status?.name ==
+                                          SaveStatus.success.name)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.0,
+                                          ),
+                                          child: Icon(
+                                            Icons.check_circle,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Tab(
-                                icon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.face, color: Colors.white),
-                                    if (personalState.status?.name ==
-                                        SaveStatus.success.name)
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 4.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
+                                icon: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.face,
+                                        color: Colors.white,
                                       ),
-                                  ],
+                                      if (personalState.status?.name ==
+                                          SaveStatus.success.name)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.0,
+                                          ),
+                                          child: Icon(
+                                            Icons.check_circle,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Tab(
-                                icon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.location_city,
-                                      color: Colors.white,
-                                    ),
-                                    if (addressState.status ==
-                                        SaveStatus.success)
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 4.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
+                                icon: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.location_city,
+                                        color: Colors.white,
                                       ),
-                                  ],
+                                      if (addressState.status ==
+                                          SaveStatus.success)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.0,
+                                          ),
+                                          child: Icon(
+                                            Icons.check_circle,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ), // address tab
                               Tab(
-                                icon: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.add_reaction,
-                                      color: Colors.white,
-                                    ),
-                                    if (coappState.status == SaveStatus.success)
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: 4.0),
-                                        child: Icon(
-                                          Icons.check_circle,
-                                          size: 14,
-                                          color: Colors.white,
-                                        ),
+                                icon: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.add_reaction,
+                                        color: Colors.white,
                                       ),
-                                  ],
+                                      if (coappState.status ==
+                                          SaveStatus.success)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 4.0,
+                                          ),
+                                          child: Icon(
+                                            Icons.check_circle,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                                 ),
                               ), // co applicant tab
                               const Tab(

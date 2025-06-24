@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_forms.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/landholding/domain/modal/LandData.dart';
 import 'package:newsee/feature/landholding/presentation/bloc/land_holding_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
+import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
+import 'package:newsee/widgets/alpha_text_field.dart';
+import 'package:newsee/widgets/options_sheet.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
@@ -39,49 +46,98 @@ class LandHoldingPage extends StatelessWidget {
       ),
       builder:
           (_) => SizedBox(
-            height: 300,
-            child:
-                entries.isEmpty
-                    ? const Center(child: Text('No saved entries.'))
-                    : ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: entries.length,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (ctx, index) {
-                        final item = entries[index];
-                        return ListTile(
-                          title: Text(item.applicantName),
-                          subtitle: Text(item.locationOfFarm),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
+            height: 500,
+            child: Column(
+              children: [
+                Expanded(
+                  child:
+                      entries.isEmpty
+                          ? const Center(child: Text('No saved entries.'))
+                          : ListView.separated(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: entries.length,
+                            separatorBuilder: (_, __) => const Divider(),
+                            itemBuilder: (ctx, index) {
+                              final item = entries[index];
+                              return OptionsSheet(
+                                icon: Icons.grass,
+                                title: item.applicantName,
+                                subtitle: item.surveyNo,
+                                details: [item.village, item.totalAcreage],
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  context.read<LandHoldingBloc>().add(
+                                    LandDetailsLoadEvent(landData: item),
+                                  );
+                                },
+                              );
+                            },
                           ),
-                          onTap: () {
-                            Navigator.pop(context);
-                            context.read<LandHoldingBloc>().add(
-                              LandDetailsLoadEvent(landData: item),
-                            );
-                          },
-                        );
-                      },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.send, color: Colors.white),
+                    label: RichText(
+                      text: const TextSpan(
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                        children: [
+                          TextSpan(text: 'Push to '),
+                          TextSpan(
+                            text: 'LEND',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          TextSpan(
+                            text: 'perfect',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ),
                     ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 75, 33, 83),
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final globalLoadingBloc = context.read<GlobalLoadingBloc>();
+
     return Scaffold(
       appBar: AppBar(title: Text(title)),
       body: BlocProvider(
         create: (_) => LandHoldingBloc()..add(LandHoldingInitEvent()),
         child: BlocConsumer<LandHoldingBloc, LandHoldingState>(
           listener: (context, state) {
-            if (state.status == SaveState.success) {
+            if (state.status == SaveStatus.success) {
               form.reset();
             }
             if (state.selectedLandData != null) {
               form.patchValue(state.selectedLandData!.toMap());
+            }
+            if (state.status == SaveStatus.mastersucess ||
+                state.status == SaveStatus.masterfailure) {
+              if (state.status == SaveStatus.masterfailure) {
+                showSnack(context, message: 'Failed to Fetch Masters...');
+              }
+
+              print('city list => ${state.cityMaster}');
+              globalLoadingBloc.add(HideLoading());
             }
           },
           builder: (context, state) {
@@ -110,26 +166,64 @@ class LandHoldingPage extends StatelessWidget {
                                     'Vikram R',
                                   ],
                                 ),
-                                CustomTextField(
-                                  controlName: 'locationOfFarm',
-                                  label: 'Location of Farm',
-                                  mantatory: true,
-                                ),
-                                Dropdown(
+                                SearchableDropdown(
                                   controlName: 'state',
                                   label: 'State',
-                                  items: [
-                                    '--Select--',
-                                    'Tamil Nadu',
-                                    'Kerala',
-                                    'Karnataka',
-                                  ],
+                                  items: state.stateCityMaster!,
+                                  onChangeListener: (GeographyMaster val) {
+                                    form.controls['state']?.updateValue(
+                                      val.code,
+                                    );
+                                    globalLoadingBloc.add(
+                                      ShowLoading(message: "Fetching city..."),
+                                    );
+
+                                    context.read<LandHoldingBloc>().add(
+                                      OnStateCityChangeEvent(
+                                        stateCode: val.code,
+                                      ),
+                                    );
+                                  },
+                                  selItem: () => null,
+                                ),
+                                SearchableDropdown(
+                                  controlName: 'district',
+                                  label: 'District',
+                                  items: state.cityMaster!,
+                                  onChangeListener: (GeographyMaster val) {
+                                    form.controls['cityDistrict']?.updateValue(
+                                      val.code,
+                                    );
+                                  },
+                                  selItem: () => null,
+                                ),
+                                CustomTextField(
+                                  controlName: 'village',
+                                  label: 'Village',
+                                  mantatory: true,
                                 ),
                                 CustomTextField(
                                   controlName: 'taluk',
                                   label: 'Taluk',
                                   mantatory: true,
                                 ),
+                                CustomTextField(
+                                  controlName: 'locationOfFarm',
+                                  label: 'Location of Farm',
+                                  mantatory: true,
+                                ),
+                                IntegerTextField(
+                                  controlName: 'distanceFromBranch',
+                                  label: 'Distance from Branch (in Kms)',
+                                  mantatory: true,
+                                ),
+
+                                IntegerTextField(
+                                  controlName: 'surveyNo',
+                                  label: 'Survey No.',
+                                  mantatory: true,
+                                ),
+
                                 IntegerTextField(
                                   controlName: 'firka',
                                   label: 'Firka (as per Adangal/Chitta/Patta)',
@@ -139,12 +233,16 @@ class LandHoldingPage extends StatelessWidget {
                                   controlName: 'totalAcreage',
                                   label: 'Total Acreage (in Acres)',
                                   mantatory: true,
+                                  maxlength: 2,
+                                  minlength: 1,
                                 ),
                                 IntegerTextField(
                                   controlName: 'irrigatedLand',
                                   label:
                                       'Out of Total acreage, how much is the Irrigated Land (in Acres)',
                                   mantatory: true,
+                                  maxlength: 2,
+                                  minlength: 1,
                                 ),
                                 RadioButton(
                                   label: 'Lands situated in compact blocks',
@@ -164,31 +262,6 @@ class LandHoldingPage extends StatelessWidget {
                                   controlName: 'landOwnedByApplicant',
                                   optionOne: 'Yes',
                                   optionTwo: 'No',
-                                ),
-                                IntegerTextField(
-                                  controlName: 'distanceFromBranch',
-                                  label: 'Distance from Branch (in Kms)',
-                                  mantatory: true,
-                                ),
-                                Dropdown(
-                                  controlName: 'district',
-                                  label: 'District',
-                                  items: [
-                                    '--Select--',
-                                    'Chennai',
-                                    'Madurai',
-                                    'Coimbatore',
-                                  ],
-                                ),
-                                CustomTextField(
-                                  controlName: 'village',
-                                  label: 'Village',
-                                  mantatory: true,
-                                ),
-                                IntegerTextField(
-                                  controlName: 'surveyNo',
-                                  label: 'Survey No.',
-                                  mantatory: true,
                                 ),
                                 // Dropdown(
                                 //   controlName: '',

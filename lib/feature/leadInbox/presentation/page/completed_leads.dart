@@ -126,6 +126,15 @@ class CompletedLeads extends StatelessWidget {
                               context.pushNamed('cropdetails');
                             },
                           ),
+                          OptionsSheet(
+                            icon: Icons.description,
+                            title: "Document Upload",
+                            subtitle: "Pre-Sanctioned Documents Upload",
+                            status: 'Pending',
+                            onTap: () {
+                              context.pushNamed('document');
+                            },
+                          ),
                         ],
                       ),
                     );

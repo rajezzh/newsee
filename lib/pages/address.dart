@@ -237,6 +237,10 @@ class Address extends StatelessWidget {
                             );
                           },
                           selItem: () {
+                            final value = form.control('cityDistrict').value;
+                            if (value == null || value.toString().isEmpty) {
+                              return null;
+                            }
                             if (addressDetailsState.addressData != null) {
                               String? cityCode =
                                   addressDetailsState
@@ -269,6 +273,10 @@ class Address extends StatelessWidget {
                             form.controls['area']?.updateValue(val.code);
                           },
                           selItem: () {
+                            final value = form.control('area').value;
+                            if (value == null || value.toString().isEmpty) {
+                              return null;
+                            }
                             if (addressDetailsState.addressData != null) {
                               String? districtCode =
                                   addressDetailsState.addressData?.area!;
