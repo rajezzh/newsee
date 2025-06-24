@@ -191,7 +191,7 @@ class LandHoldingPage extends StatelessWidget {
                                   label: 'District',
                                   items: state.cityMaster!,
                                   onChangeListener: (GeographyMaster val) {
-                                    form.controls['cityDistrict']?.updateValue(
+                                    form.controls['district']?.updateValue(
                                       val.code,
                                     );
                                   },

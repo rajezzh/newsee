@@ -63,7 +63,7 @@ class OptionsSheet extends StatelessWidget {
               subtitle,
               style: const TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w300,
                 color: Colors.black,
               ),
             ),
