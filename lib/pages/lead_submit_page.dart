@@ -17,6 +17,7 @@ import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dar
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
+import 'package:newsee/widgets/application_card.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/productcard.dart';
 import 'package:newsee/widgets/success_bottom_sheet.dart';
@@ -85,68 +86,12 @@ class LeadSubmitPage extends StatelessWidget {
               leftButtonLabel: 'Go To Inbox',
               rightButtonLabel: 'Create Proposal',
               onPressedLeftButton: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                }
+                closeBottomSheetIfExists(context);
               },
               onPressedRightButton: () {
-                openBottomSheet(
-                  context,
-                  0.5,
-                  0.5,
-                  0.9,
-                  (context, ctrl) => Card(
-                    margin: const EdgeInsets.all(6.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Creating Propsal Please Wait...",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          Text(
-                            "Lead ID : ${state.leadId}",
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-
-                          const SizedBox(height: 10),
-                          SizedBox(width: MediaQuery.of(context).size.width),
-                          CircularProgressIndicator(
-                            constraints: BoxConstraints(
-                              minWidth: 50,
-                              minHeight: 50,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-                Future.delayed(
-                  const Duration(seconds: 1),
-
-                  () => context.read<LeadSubmitBloc>().add(
-                    CreateProposalEvent(
-                      proposalCreationRequest: ProposalCreationRequest(
-                        leadId: state.leadId,
-                      ),
-                    ),
-                  ),
-                );
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
               }, // OnPressedRightButton,
             );
           } else if (state.leadSubmitStatus == SubmitStatus.failure) {
@@ -158,16 +103,14 @@ class LeadSubmitPage extends StatelessWidget {
               leftButtonLabel: 'Cancel',
               rightButtonLabel: 'Ok',
               onPressedLeftButton: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                }
+                closeBottomSheetIfExists(context);
               },
               onPressedRightButton: () {
-                Navigator.pop(context);
+                closeBottomSheetIfExists(context);
               },
             );
-          } else if (state.proposalSubmitStatus == SaveStatus.success) {
+          }
+          if (state.proposalSubmitStatus == SaveStatus.success) {
             // close the last lead success bottomSheet
             closeBottomSheetIfExists(context);
 
@@ -189,6 +132,7 @@ class LeadSubmitPage extends StatelessWidget {
               rightButtonLabel: 'Go To LandHolding',
             );
           } else if (state.proposalSubmitStatus == SaveStatus.failure) {
+            print("state.proposalSubmitStatus == SaveStatus.failure");
             showSuccessBottomSheet(
               context: context,
               headerTxt: ApiConstants.api_response_failure,
@@ -202,7 +146,12 @@ class LeadSubmitPage extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              onPressedRightButton: () {},
+              onPressedRightButton: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
+              },
             );
           }
         },
@@ -235,27 +184,84 @@ class LeadSubmitPage extends StatelessWidget {
           PersonalData? personalData = personalState?.personalData;
           AddressData? addressData = addressState?.addressData;
           print('addressData-------------->$addressData');
-          return ListView(
-            padding: const EdgeInsets.all(16),
+          return state.leadId == null
+              ? ListView(
+                padding: const EdgeInsets.all(16),
 
-            children:
-                (personalData != null &&
-                        loanproductState?.selectedProduct != null &&
-                        addressData != null)
-                    ? showLeadSubmitCard(
-                      personalData: personalData,
-                      addressData: addressData,
-                      loanType: loanType,
-                      loanProduct: loanProduct,
-                      dedupeData: dedupeData,
-                      productMaster:
-                          loanproductBloc?.state.selectedProduct
-                              as ProductMaster,
-                      context: context,
-                    )
-                    : showNoDataCard(context),
-          );
+                children:
+                    (personalData != null &&
+                            loanproductState?.selectedProduct != null &&
+                            addressData != null)
+                        ? showLeadSubmitCard(
+                          personalData: personalData,
+                          addressData: addressData,
+                          loanType: loanType,
+                          loanProduct: loanProduct,
+                          dedupeData: dedupeData,
+                          productMaster:
+                              loanproductBloc?.state.selectedProduct
+                                  as ProductMaster,
+                          context: context,
+                        )
+                        : showNoDataCard(context),
+              )
+              : ApplicationCard(
+                onProceedPressed: () {
+                  createProposal(context, state);
+                },
+              );
         },
+      ),
+    );
+  }
+
+  void createProposal(BuildContext context, LeadSubmitState state) {
+    context.read<LeadSubmitBloc>().add(
+      CreateProposalEvent(
+        proposalCreationRequest: ProposalCreationRequest(leadId: state.leadId),
+      ),
+    );
+  }
+
+  void openProposalSheet(BuildContext context, LeadSubmitState state) {
+    return openBottomSheet(
+      context,
+      0.5,
+      0.5,
+      0.9,
+      (context, ctrl) => Card(
+        margin: const EdgeInsets.all(6.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "Creating Propsal Please Wait...",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Lead ID : ${state.leadId}",
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              const SizedBox(height: 10),
+              SizedBox(width: MediaQuery.of(context).size.width),
+              CircularProgressIndicator(
+                constraints: BoxConstraints(minWidth: 50, minHeight: 50),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
