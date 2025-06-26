@@ -45,3 +45,18 @@ saying creating proposal for lead Id - Lead/xxxx/xxxxx
 Step 3 : once proposal creation is successful show success icon show two buttons
 left button - goto proposal Inbox
 Rightbutton - goto LandHolding Details
+
+## Master Update
+
+step 1:
+to meticulously trace the logs to monitor master update lifecycle
+create a auditlog table when login is successful.
+id | log_date | time | feature | logdata | errorresponse
+
+---
+
+1 | 26-06-2025 | 10:44 | masterdowload | json string | api / runtime error
+
+logdata = { 'page':'masterdownload','request':'','action':'tabledelete-lovmaster' , data:''}
+logdata = { 'page':'masterdownload','request':'apirequest','action':'api-lovmaster' , data:''}
+logdata = { 'page':'masterdownload','request':'','action':'tableinsert-lovmaster' , data:''}
