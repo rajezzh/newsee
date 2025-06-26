@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_forms.dart';
 import 'package:newsee/Utils/utils.dart';
+import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
+import 'package:newsee/feature/cif/domain/model/user/cif_response.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
@@ -21,6 +24,17 @@ class CoApplicantPage extends StatelessWidget {
   bool refAadhaar = false;
 
   CoApplicantPage({required this.title, super.key});
+
+  mapCifResponse(CoapplicantData? data) {
+    try {
+      form.control('address1').updateValue(data?.address1);
+      form.control('address2').updateValue(data?.address2);
+      form.control('address3').updateValue(data?.address3);
+    } catch (error) {
+      print(error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final globalLoadingBloc = context.read<GlobalLoadingBloc>();
@@ -31,25 +45,6 @@ class CoApplicantPage extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
 
-      /// BadgeFab - reusable  widget with provision to customize
-      /// color , icon , badge test style
-
-      // floatingActionButton: BadgeFab(
-      //   onPressed: () => {},
-      //   bgColor: Colors.white,
-      //   child: Icon(Icons.list, color: Colors.black),
-      //   badgeColor: Colors.red,
-      //   badgeChild: Center(
-      //     child: Text(
-      //       '5', // Replace with your count
-      //       style: TextStyle(
-      //         color: Colors.white,
-      //         fontSize: 12,
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //     ),
-      //   ),
-      // ),
       body: BlocConsumer<CoappDetailsBloc, CoappDetailsState>(
         listener: (context, state) {
           print(
@@ -71,6 +66,21 @@ class CoApplicantPage extends StatelessWidget {
 
             print('city list => ${state.cityMaster}');
             globalLoadingBloc.add(HideLoading());
+          }
+
+          if (state.status == SaveStatus.dedupesuccess) {
+            final controls = form.controls.entries;
+            final cifresponse = state.selectedCoApp?.toMap();
+            for (final ctrl in controls) {
+              if (cifresponse?[ctrl.key] != null) {
+                print(
+                  'cifresponse?[ctrl.key]  => ${ctrl.key} == ${cifresponse?[ctrl.key]}',
+                );
+                form.controls[ctrl.key]?.updateValue(cifresponse?[ctrl.key]);
+              }
+            }
+          } else if (state.status == SaveStatus.dedupefailure) {
+            showSnack(context, message: 'Cif pulling failed...');
           }
         },
         builder: (context, state) {
@@ -138,10 +148,45 @@ class CoApplicantPage extends StatelessWidget {
                           (Lov val) => form.controls['constitution']
                               ?.updateValue(val.optvalue),
                     ),
-                    CustomTextField(
-                      controlName: 'cifNumber',
-                      label: 'Enter Cif Number',
-                      mantatory: true,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: IntegerTextField(
+                            controlName: 'cifNumber',
+                            label: 'Enter Cif Number',
+                            mantatory: true,
+                            maxlength: 12,
+                            minlength: 12,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              3,
+                              9,
+                              110,
+                            ),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 10,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () {
+                            cifSearch(context);
+                          },
+                          child:
+                              state.status == SaveStatus.loading
+                                  ? CircularProgressIndicator()
+                                  : const Text("Search"),
+                        ),
+                      ],
                     ),
                     SearchableDropdown(
                       controlName: 'title',
@@ -151,17 +196,22 @@ class CoApplicantPage extends StatelessWidget {
                               .where((v) => v.Header == 'Title')
                               .toList(),
                       selItem: () {
-                        if (state.selectedCoApp != null) {
-                          Lov? lov = state.lovList?.firstWhere(
-                            (lov) =>
-                                lov.Header == 'Title' &&
-                                lov.optvalue == state.selectedCoApp?.title,
-                          );
-                          form.controls['title']?.updateValue(lov?.optvalue);
-                          return lov;
-                        } else {
+                        final value = form.control('title').value;
+                        if (value == null || value.toString().isEmpty) {
                           return null;
                         }
+                        return state.lovList!
+                            .where((v) => v.Header == 'Title')
+                            .firstWhere(
+                              (lov) => lov.optvalue == value,
+                              orElse:
+                                  () => Lov(
+                                    Header: 'Title',
+                                    optvalue: '',
+                                    optDesc: '',
+                                    optCode: '',
+                                  ),
+                            );
                       },
                       onChangeListener:
                           (Lov val) =>
@@ -172,6 +222,7 @@ class CoApplicantPage extends StatelessWidget {
                       label: 'First Name',
                       mantatory: true,
                     ),
+
                     CustomTextField(
                       controlName: 'middleName',
                       label: 'Middle Name',
@@ -190,26 +241,27 @@ class CoApplicantPage extends StatelessWidget {
                               .where((v) => v.Header == 'CoAppRelationship')
                               .toList(),
                       selItem: () {
-                        if (state.selectedCoApp != null) {
-                          Lov? lov = state.lovList?.firstWhere(
-                            (lov) =>
-                                lov.Header == 'CoAppRelationship' &&
-                                lov.optvalue ==
-                                    state.selectedCoApp?.relationshipFirm,
-                          );
-                          form.controls['relationshipFirm']?.updateValue(
-                            lov?.optvalue,
-                          );
-                          return lov;
-                        } else {
+                        final value = form.control('relationshipFirm').value;
+                        if (value == null || value.toString().isEmpty) {
                           return null;
                         }
+                        return state.lovList!
+                            .where((v) => v.Header == 'CoAppRelationship')
+                            .firstWhere(
+                              (lov) => lov.optvalue == value,
+                              orElse:
+                                  () => Lov(
+                                    Header: 'CoAppRelationship',
+                                    optvalue: '',
+                                    optDesc: '',
+                                    optCode: '',
+                                  ),
+                            );
                       },
                       onChangeListener:
                           (Lov val) => form.controls['relationshipFirm']
                               ?.updateValue(val.optvalue),
                     ), // relationshipwithfirm
-
                     Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: ReactiveTextField<String>(
@@ -296,7 +348,31 @@ class CoApplicantPage extends StatelessWidget {
                           OnStateCityChangeEvent(stateCode: val.code),
                         );
                       },
-                      selItem: () => null,
+                      selItem: () {
+                        final value = form.control('state').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
+                        if (state.selectedCoApp != null) {
+                          String? stateCode = state.selectedCoApp?.state!;
+
+                          GeographyMaster? geographyMaster = state
+                              .stateCityMaster
+                              ?.firstWhere((val) => val.code == stateCode);
+                          print(geographyMaster);
+                          if (geographyMaster != null) {
+                            form.controls['state']?.updateValue(
+                              geographyMaster.code,
+                            );
+                            return geographyMaster;
+                          } else {
+                            return <GeographyMaster>[];
+                          }
+                        } else if (state.stateCityMaster!.isEmpty) {
+                          form.controls['state']?.updateValue("");
+                          return <GeographyMaster>[];
+                        }
+                      },
                     ),
                     SearchableDropdown(
                       controlName: 'cityDistrict',
@@ -305,7 +381,30 @@ class CoApplicantPage extends StatelessWidget {
                       onChangeListener: (GeographyMaster val) {
                         form.controls['cityDistrict']?.updateValue(val.code);
                       },
-                      selItem: () => null,
+                      selItem: () {
+                        final value = form.control('cityDistrict').value;
+                        if (value == null || value.toString().isEmpty) {
+                          return null;
+                        }
+                        if (state.selectedCoApp != null) {
+                          String? cityCode = state.selectedCoApp?.cityDistrict!;
+
+                          GeographyMaster? geographyMaster = state.cityMaster
+                              ?.firstWhere((val) => val.code == cityCode);
+                          print(geographyMaster);
+                          if (geographyMaster != null) {
+                            form.controls['cityDistrict']?.updateValue(
+                              geographyMaster.code,
+                            );
+                            return geographyMaster;
+                          } else {
+                            return <GeographyMaster>[];
+                          }
+                        } else if (state.cityMaster!.isEmpty) {
+                          form.controls['cityDistrict']?.updateValue("");
+                          return <GeographyMaster>[];
+                        }
+                      },
                     ),
                     IntegerTextField(
                       controlName: 'pincode',
@@ -341,7 +440,6 @@ class CoApplicantPage extends StatelessWidget {
                       mantatory: true,
                       isRupeeFormat: true,
                     ),
-
                     SizedBox(height: 20),
 
                     Center(
@@ -389,5 +487,23 @@ class CoApplicantPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  /* 
+  @author   : karthick.d 26/06/2025
+  @desc     : search cif function
+   */
+
+  void cifSearch(BuildContext context) {
+    if (form.control('cifNumber').valid) {
+      final CIFRequest req = CIFRequest(
+        cifId: form.control('cifNumber').value,
+        type: 'borrower',
+        token: ApiConstants.api_qa_token,
+      );
+      context.read<CoappDetailsBloc>().add(SearchCifEvent(request: req));
+    } else {
+      form.control('cifNumber').markAsTouched();
+    }
   }
 }

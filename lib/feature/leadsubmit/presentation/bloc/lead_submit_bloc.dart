@@ -7,6 +7,7 @@ import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/failure.dart';
+import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/leadsubmit/data/repository/lead_submit_repo_impl.dart';
 import 'package:newsee/feature/leadsubmit/data/repository/proposal_repo_impl.dart';
 import 'package:newsee/feature/leadsubmit/domain/modal/dedupe.dart';
@@ -68,6 +69,8 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         "orgScode": "14356",
         "orgName": "BRAHMAMANGALAM",
         "orgLevel": "23",
+        "coapplicantRequired": event.coapplicantData != null ? 'Y' : 'N',
+        "guarantorRequired": 'N',
         "token":
             "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3",
         "leadDetails": event.loanType.toMap(),
@@ -75,6 +78,9 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         "dedupeSearch": event.dedupe.toMap(),
         "individualNonIndividualDetails": event.personalData?.toMap(),
         "addressDetails": [event.addressData?.toMap()],
+        "coApplicantDetils":
+            event.coapplicantData != null ? event.coapplicantData?.toMap() : {},
+        "guarantorDetils": {},
       };
 
       AsyncResponseHandler<Failure, Map<String, dynamic>> responseHandler =

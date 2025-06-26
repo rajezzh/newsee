@@ -38,4 +38,6 @@ enum SaveStatus {
   update,
   mastersucess,
   masterfailure,
+  dedupesuccess,
+  dedupefailure,
 }
