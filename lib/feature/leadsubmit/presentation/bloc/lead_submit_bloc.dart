@@ -96,8 +96,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
       }
     } on DioException catch (e) {
       print('leadsubmit exception => $e');
-    } finally {
-      emit(state.copyWith(leadSubmitStatus: SubmitStatus.success));
+      emit(state.copyWith(leadSubmitStatus: SubmitStatus.failure));
     }
   }
 

@@ -48,14 +48,7 @@ class LeadSubmitPage extends StatelessWidget {
     );
     PersonalData updatedPersonalData = personlData.copyWith(
       loanAmountRequested: loanAmountFormatted,
-      occupationType: '01',
-      agriculturistType: '1',
-      farmerCategory: '2',
-      religion: '3',
-      caste: 'CAS000001',
-      farmerType: '1',
       passportNumber: '431241131',
-      residentialStatus: '4',
       sourceid: 'AGRI1124',
       sourcename: 'Meena',
       subActivity: '1.3',
@@ -86,7 +79,10 @@ class LeadSubmitPage extends StatelessWidget {
               leftButtonLabel: 'Go To Inbox',
               rightButtonLabel: 'Create Proposal',
               onPressedLeftButton: () {
-                closeBottomSheetIfExists(context);
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }
               },
               onPressedRightButton: () {
                 if (Navigator.of(context).canPop()) {
@@ -103,10 +99,14 @@ class LeadSubmitPage extends StatelessWidget {
               leftButtonLabel: 'Cancel',
               rightButtonLabel: 'Ok',
               onPressedLeftButton: () {
-                closeBottomSheetIfExists(context);
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
               },
               onPressedRightButton: () {
-                closeBottomSheetIfExists(context);
+                if (Navigator.of(context).canPop()) {
+                  Navigator.of(context).pop();
+                }
               },
             );
           }
@@ -137,7 +137,7 @@ class LeadSubmitPage extends StatelessWidget {
               context: context,
               headerTxt: ApiConstants.api_response_failure,
               lead: "Proposal Not Generated for ${state.leadId}",
-              message: "Lead details submittion failed..!!",
+              message: "Proposal submittion failed..!!",
               leftButtonLabel: 'Cancel',
               rightButtonLabel: 'Ok',
               onPressedLeftButton: () {
