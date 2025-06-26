@@ -16,7 +16,7 @@ import 'package:path/path.dart' as p;
 import 'package:reactive_forms/reactive_forms.dart';
 import 'document_event.dart';
 import 'document_state.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
   final getit = MediaService();
@@ -229,7 +229,7 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
   }
 
   Future<void> uploadImageToServer(DocumentImage image) async {
-    // Your HTTP upload logic here
-    await Future.delayed(Duration(seconds: 2)); // simulate upload
+    // upload img to api
+    // await Future.delayed(Duration(seconds: 2));
   }
 }
