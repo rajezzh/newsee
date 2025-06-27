@@ -199,17 +199,19 @@ class AppForms {
     ),
   });
 
-  static FormGroup CROP_DETAILS_FORM = FormGroup({
-    'season': FormControl<String>(validators: [Validators.required]),
-    'nameOfCrop': FormControl<String>(validators: [Validators.required]),
-    'acrescultivated': FormControl<String>(validators: [Validators.required]),
-    'typeofland': FormControl<String>(validators: [Validators.required]),
-    'scaleoffincance': FormControl<String>(validators: [Validators.required]),
-    'reqasperscaleoffinace': FormControl<String>(
-      validators: [Validators.required],
-    ),
-    'notifiedcrop': FormControl<bool>(validators: [Validators.required]),
-    'premiumperacre': FormControl<String>(validators: [Validators.required]),
-    'premiumcollected': FormControl<String>(validators: [Validators.required]),
-  });
+  static FormGroup buildCropDetailsForm() {
+    return FormGroup({
+      'lasSeason': FormControl<String>(validators: [Validators.required]),
+      'lasCrop': FormControl<String>(validators: [Validators.required]),
+      'lasAreaofculti': FormControl<String>(validators: [Validators.required]),
+      'lasTypOfLand': FormControl<String>(validators: [Validators.required]),
+      'lasScaloffin': FormControl<String>(validators: [Validators.required]),
+      'lasReqScaloffin': FormControl<String>(
+        validators: [Validators.required],
+      ),
+      'notifiedCropFlag': FormControl<bool>(validators: [Validators.required]),
+      'lasPrePerAcre': FormControl<String>(validators: [Validators.required]),
+      'lasPreToCollect': FormControl<String>(validators: [Validators.required]),
+    });
+  }
 }

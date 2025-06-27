@@ -25,7 +25,7 @@ class AddressTabBar extends StatelessWidget {
             child: TabBarView(
               children: [
                 PermanentAddress(title: 'permanent'),
-                PresentAddress(title: 'Present', parentContext: context),
+                // PresentAddress(title: 'Present', parentContext: context),
               ],
             ),
           ),

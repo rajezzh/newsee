@@ -62,9 +62,6 @@ class GeographymasterResponseMapper<S> {
           stateCityMaster: (state as AddressDetailsState).stateCityMaster,
           addressData: (state as AddressDetailsState).addressData,
           lovList: (state as AddressDetailsState).lovList,
-          presentAddrData: (state as AddressDetailsState).addressData,
-          presentCityMaster: cityMaster,
-          presentDistrictMaster: districtMaster
         ),
       );
     } else if (state is CoappDetailsState) {
