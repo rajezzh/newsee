@@ -71,7 +71,6 @@ dependencies:
   popover: ^0.3.1
   intl: ^0.19.0
   biometric_signature: ^6.2.0
-  smooth_page_indicator: ^1.2.1
 
 dev_dependencies:
   flutter_test:
