@@ -151,7 +151,7 @@ class CompletedLeads extends StatelessWidget {
                               subtitle: "View your Crop Details here",
                               status: 'Pending',
                               onTap: () {
-                                context.pushNamed('cropdetails');
+                                context.pushNamed('cropdetails', extra: '143560000000633');
                               },
                             ),
                             OptionsSheet(

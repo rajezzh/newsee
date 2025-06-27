@@ -241,34 +241,37 @@ final routes = GoRouter(
       path: AppRouteConstants.CROP_DETAILS_PAGE['path']!,
       name: AppRouteConstants.CROP_DETAILS_PAGE['name'],
       builder:
-          (context, state) => PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (didpop, data) async {
-              final shouldPop = await showDialog<bool>(
-                context: context,
-                builder:
-                    (context) => AlertDialog(
-                      title: Text('Confirm'),
-                      content: Text('Do you want to Exit ?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          child: Text('Yes'),
-                        ),
-                      ],
-                    ),
-              );
-              if (shouldPop ?? false) {
-                Navigator.of(context).pop(false);
-                // context.go('/'); // Navigate back using GoRouter
-              }
-            },
-            child: CropDetailsPage(title: 'Crop Details'),
-          ),
+          (context, state) {
+            final proposalNumber = state.extra as String;
+            return PopScope(
+              canPop: false,
+              onPopInvokedWithResult: (didpop, data) async {
+                final shouldPop = await showDialog<bool>(
+                  context: context,
+                  builder:
+                      (context) => AlertDialog(
+                        title: Text('Confirm'),
+                        content: Text('Do you want to Exit ?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text('Yes'),
+                          ),
+                        ],
+                      ),
+                );
+                if (shouldPop ?? false) {
+                  Navigator.of(context).pop(false);
+                }
+              },
+              child: CropDetailsPage(title: 'Crop Details', proposalnumber: proposalNumber),
+            );
+          }
+          
     ),
   ],
   redirect: (context, state) {

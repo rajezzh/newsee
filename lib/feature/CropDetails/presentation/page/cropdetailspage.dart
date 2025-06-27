@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_forms.dart';
+import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/cropdetailsmodal.dart';
 import 'package:newsee/feature/CropDetails/presentation/bloc/cropyieldpage_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -11,14 +15,18 @@ import 'package:newsee/widgets/integer_text_field.dart';
 
 class CropDetailsPage extends StatelessWidget {
   final String title;
-
-  final form = AppForms.CROP_DETAILS_FORM;
+  final String proposalnumber;
+  final form = AppForms.buildCropDetailsForm();
 
   final TextEditingController irrigatedController = TextEditingController();
   final TextEditingController rainfedController = TextEditingController();
   final ValueNotifier<int> totalNotifier = ValueNotifier<int>(0);
 
-  CropDetailsPage({super.key, required this.title}) {
+  final ValueNotifier<int> currentIndex = ValueNotifier<int>(0);
+
+  final ValueNotifier<bool> formEdit = ValueNotifier<bool>(false);
+
+  CropDetailsPage({super.key, required this.title, required this.proposalnumber}) {
     irrigatedController.addListener(_updateTotal);
     rainfedController.addListener(_updateTotal);
   }
@@ -29,25 +37,67 @@ class CropDetailsPage extends StatelessWidget {
     totalNotifier.value = irrigated + rainfed;
   }
 
-  void handleSubmit(BuildContext context, CropyieldpageState state) {
-    if (form.valid) {
-      final cropFormData = CropDetailsModal.fromForm(form.value);
-      context.read<CropyieldpageBloc>().add(
-        CropFormSaveEvent(cropData: cropFormData),
-      );
+  bool isFormCompletelyEmpty(FormGroup form) {
+    return form.rawValue.values.every((value) {
+      return value == null || value.toString().trim().isEmpty;
+    });
+  }
+
+  void handleSave(BuildContext context, CropyieldpageState state) {
+    if (irrigatedController.text.isNotEmpty && rainfedController.text.isNotEmpty) {
+      if (form.valid) {
+        final cropFormData = CropDetailsModal.fromForm(form.value);
+        context.read<CropyieldpageBloc>().add(
+          CropFormSaveEvent(cropData: cropFormData),
+        );
+      } else {
+        form.markAllAsTouched();
+      }
     } else {
-      form.markAllAsTouched();
+      showSnack(
+        context,
+        message: 'Please Enter Irrigated and Rainfed fields',
+      );
     }
+  }
+
+  void handleSubmit(BuildContext context) {
+    final globalLoadingBloc = context.read<GlobalLoadingBloc>();
+    globalLoadingBloc.add(
+      ShowLoading(message: "Crop Details Submitting..."),
+    );
+    final irrigated = int.tryParse(irrigatedController.text) ?? 0;
+    final rainfed = int.tryParse(rainfedController.text) ?? 0;
+    context.read<CropyieldpageBloc>().add(
+      CropDetailsSubmitEvent(
+        proposalNumber: proposalnumber, 
+        userid: 'AGRI1124', 
+        irrigated: irrigated,
+        rainfed: rainfed,
+        total: totalNotifier.value,
+      ),
+    );
   }
 
   void handleReset(BuildContext context, CropyieldpageState state) {
     context.read<CropyieldpageBloc>().add(CropDetailsResetEvent());
   }
 
+  void handleUpdate(BuildContext context, CropyieldpageState state) {
+    if (form.valid) {
+      final cropFormData = CropDetailsModal.fromForm(form.value);
+      context.read<CropyieldpageBloc>().add(
+        CropDetailsUpdateEvent(cropData: cropFormData, index: currentIndex.value),
+      );
+    } else {
+      form.markAllAsTouched();
+    }
+  }
+
   void showBottomSheet(BuildContext context, CropyieldpageState state) {
     print("CropyieldpageState-showBottomSheet $state");
     final entries = state.cropData ?? [];
-
+    final lovlist = state.lovlist;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -55,26 +105,38 @@ class CropDetailsPage extends StatelessWidget {
       ),
       builder:
           (_) => SizedBox(
-            height: 300,
-            child:
-                entries.isEmpty
-                    ? const Center(child: Text('No saved entries.'))
-                    : ListView.separated(
+            height: 400,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: entries.isEmpty
+                    ? const Center(child: Text('No saved entries.')) :
+                    ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: entries.length,
                       separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (ctx, index) {
                         final item = entries[index];
+                        print("full item data $item");
+                        final landname = lovlist!.firstWhere((v) =>v.Header == 'TypeOfLand' && v.optvalue == item.lasTypOfLand);
+                        print("landname $landname");
+                        final cropname = lovlist.firstWhere((v) =>v.Header == 'NameOfTheCrop' && v.optvalue == item.lasCrop);
+                        print("cropname $cropname");
                         return ListTile(
-                          title: Text('LandType - ${item.typeofland!}'),
-                          subtitle: Text(
-                            'Name of the Crop - ${item.nameOfCrop!}',
+                          leading: Icon(
+                            Icons.agriculture,
+                            size: 30,
+                            color: Colors.teal,
                           ),
+                          title: Text('LandType - ${landname.optDesc}'),
+                          subtitle: Text('Name of the Crop - ${cropname.optDesc}'),
                           trailing: const Icon(
                             Icons.arrow_forward_ios,
                             size: 16,
                           ),
                           onTap: () {
+                            currentIndex.value = index;
                             Navigator.pop(context);
                             context.read<CropyieldpageBloc>().add(
                               CropDetailsSetEvent(cropData: item),
@@ -83,27 +145,83 @@ class CropDetailsPage extends StatelessWidget {
                         );
                       },
                     ),
+                  ),
+                  entries.isEmpty ? SizedBox.shrink() : Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        handleSubmit(context);
+                      },
+                      icon: Icon(Icons.send, color: Colors.white),
+                      label: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                          children: [
+                            TextSpan(text: 'Push to '),
+                            TextSpan(text: 'LEND', style: TextStyle(color: Colors.white)),
+                            TextSpan(
+                              text: 'perfect',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
+                        backgroundColor: MaterialStateProperty.all(
+                          const Color.fromARGB(255, 75, 33, 83),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            )        
           ),
     );
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
+    final globalLoadingBloc = context.read<GlobalLoadingBloc>();
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: MediaQuery.of(context).size.height * 0.15,
         automaticallyImplyLeading: false,
-        flexibleSpace: Container(decoration: BoxDecoration(color: Colors.teal)),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(color: Colors.teal),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 10),
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => {
+                    context.pop()
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  )
+                )
+                
+              ],
             ),
             SizedBox(height: 10),
             // Text(
@@ -119,7 +237,10 @@ class CropDetailsPage extends StatelessWidget {
                 children: [
                   const Text(
                     "Irrigated: ",
-                    style: TextStyle(fontSize: 14, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white
+                    )
                   ),
                   SizedBox(
                     width: 60,
@@ -127,6 +248,9 @@ class CropDetailsPage extends StatelessWidget {
                     child: TextField(
                       controller: irrigatedController,
                       keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 8),
                         border: OutlineInputBorder(),
@@ -138,7 +262,10 @@ class CropDetailsPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   const Text(
                     "Rainfed: ",
-                    style: TextStyle(fontSize: 14, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white
+                    )
                   ),
                   SizedBox(
                     width: 60,
@@ -146,6 +273,9 @@ class CropDetailsPage extends StatelessWidget {
                     child: TextField(
                       controller: rainfedController,
                       keyboardType: TextInputType.number,
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 8),
                         border: OutlineInputBorder(),
@@ -157,11 +287,13 @@ class CropDetailsPage extends StatelessWidget {
                   const SizedBox(width: 12),
                   ValueListenableBuilder<int>(
                     valueListenable: totalNotifier,
-                    builder:
-                        (context, value, _) => Text(
-                          "Total: $value",
-                          style: TextStyle(fontSize: 14, color: Colors.white),
-                        ),
+                    builder: (context, value, _) => Text(
+                      "Total: $value",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white,
+                      )
+                    ),
                   ),
                 ],
               ),
@@ -170,22 +302,57 @@ class CropDetailsPage extends StatelessWidget {
         ),
       ),
       body: BlocProvider(
-        create: (_) => CropyieldpageBloc()..add(CropPageInitialEvent()),
+        create: (_) => CropyieldpageBloc()..add(
+          CropPageInitialEvent(proposalNumber: proposalnumber)
+        ),
+        lazy: true,
         child: BlocConsumer<CropyieldpageBloc, CropyieldpageState>(
           listener: (context, state) {
-            if (state.status == CropPageStatus.success) {
-              print("CropyieldpageState ${state.cropData}");
+            if (state.status == CropPageStatus.init) {
+              globalLoadingBloc.add(
+                HideLoading(),
+              );
+              if ((state.cropData != null && state.cropData!.isNotEmpty) && (state.landDetails != null && state.landDetails!.isNotEmpty)) {
+                irrigatedController.text = state.landDetails!['lpAgriPcIrrigated'].toString();
+                rainfedController.text = state.landDetails!['lpAgriPcRainfed'].toString();
+              }
+            } else if (state.status == CropPageStatus.save) {
               form.reset();
             } else if (state.status == CropPageStatus.reset) {
-              print("CropyieldpageState ${state.cropData}");
               form.reset();
+            } else if (state.status == CropPageStatus.success) {
+              form.reset();
+              context.pop();
+              globalLoadingBloc.add(
+                HideLoading(),
+              );
+              showSnack(
+                context,
+                message:
+                    'Crop Details Submitted Successfully',
+              );
             }
           },
           builder: (context, state) {
-            if (state.status == CropPageStatus.set &&
-                state.selectedCropData != null) {
-              form.patchValue(state.selectedCropData!.toMap());
+            // globalLoadingBloc.add(
+            //   ShowLoading(message: 'Fetching Crop Details...'),
+            // );
+            if (state.status == CropPageStatus.set && state.selectedCropData != null) {
+              print("currently current selected cropdetails index is ${currentIndex.value}");
+              form.patchValue(state.selectedCropData!.toForm());
+              if (state.selectedCropData!.notifiedCropFlag!) {
+                form.control('lasPrePerAcre').markAsEnabled();
+                form.control('lasPreToCollect').markAsEnabled();
+                form.control('lasPrePerAcre').setValidators([Validators.required]);
+                form.control('lasPreToCollect').setValidators([Validators.required]);
+              } else {
+                form.control('lasPrePerAcre').markAsDisabled();
+                form.control('lasPreToCollect').markAsDisabled();
+                form.control('lasPrePerAcre').clearValidators();
+                form.control('lasPreToCollect').clearValidators();
+              }
             }
+            
             return ReactiveForm(
               formGroup: form,
               child: SafeArea(
@@ -207,20 +374,19 @@ class CropDetailsPage extends StatelessWidget {
                               child: Column(
                                 children: [
                                   SearchableDropdown<Lov>(
-                                    controlName: 'season',
+                                    controlName: 'lasSeason',
                                     label: 'Season',
                                     items:
                                         state.lovlist!
                                             .where((v) => v.Header == 'Season')
                                             .toList(),
                                     onChangeListener: (Lov val) {
-                                      form.controls['season']?.updateValue(
-                                        val.optvalue,
-                                      );
+                                      form.controls['lasSeason']
+                                          ?.updateValue(val.optvalue);
                                     },
                                     selItem: () {
                                       final value =
-                                          form.control('season').value;
+                                          form.control('lasSeason').value;
                                       return state.lovlist!
                                           .where((v) => v.Header == 'Season')
                                           .firstWhere(
@@ -236,7 +402,7 @@ class CropDetailsPage extends StatelessWidget {
                                     },
                                   ),
                                   SearchableDropdown<Lov>(
-                                    controlName: 'nameOfCrop',
+                                    controlName: 'lasCrop',
                                     label: 'Name of the Crop',
                                     items:
                                         state.lovlist!
@@ -246,13 +412,12 @@ class CropDetailsPage extends StatelessWidget {
                                             )
                                             .toList(),
                                     onChangeListener: (Lov val) {
-                                      form.controls['nameOfCrop']?.updateValue(
-                                        val.optvalue,
-                                      );
+                                      form.controls['lasCrop']
+                                          ?.updateValue(val.optvalue);
                                     },
                                     selItem: () {
                                       final value =
-                                          form.control('nameOfCrop').value;
+                                          form.control('lasCrop').value;
                                       return state.lovlist!
                                           .where(
                                             (v) => v.Header == 'NameOfTheCrop',
@@ -270,12 +435,12 @@ class CropDetailsPage extends StatelessWidget {
                                     },
                                   ),
                                   IntegerTextField(
-                                    controlName: 'acrescultivated',
+                                    controlName: 'lasAreaofculti',
                                     label: 'Acres Cultivated',
                                     mantatory: true,
                                   ),
                                   SearchableDropdown<Lov>(
-                                    controlName: 'typeofland',
+                                    controlName: 'lasTypOfLand',
                                     label: 'Type of Land',
                                     items:
                                         state.lovlist!
@@ -284,13 +449,12 @@ class CropDetailsPage extends StatelessWidget {
                                             )
                                             .toList(),
                                     onChangeListener: (Lov val) {
-                                      form.controls['typeofland']?.updateValue(
-                                        val.optvalue,
-                                      );
+                                      form.controls['lasTypOfLand']
+                                          ?.updateValue(val.optvalue);
                                     },
                                     selItem: () {
                                       final value =
-                                          form.control('typeofland').value;
+                                          form.control('lasTypOfLand').value;
                                       return state.lovlist!
                                           .where(
                                             (v) => v.Header == 'TypeOfLand',
@@ -308,30 +472,46 @@ class CropDetailsPage extends StatelessWidget {
                                     },
                                   ),
                                   IntegerTextField(
-                                    controlName: 'scaleoffincance',
-                                    label:
-                                        'Scale of Finance (including crop insurance)',
+                                    controlName: 'lasScaloffin',
+                                    label: 'Scale of Finance (including crop insurance)',
                                     mantatory: true,
                                   ),
                                   IntegerTextField(
-                                    controlName: 'reqasperscaleoffinace',
-                                    label:
-                                        'Requirement as per Scale of Finance',
+                                    controlName: 'lasReqScaloffin',
+                                    label: 'Requirement as per Scale of Finance',
                                     mantatory: true,
                                   ),
                                   RadioButton(
-                                    label: 'Notified Crop',
-                                    controlName: 'notifiedcrop',
+                                    label:'Notified Crop',
+                                    controlName: 'notifiedCropFlag',
                                     optionOne: 'Yes',
                                     optionTwo: 'No',
+                                    onChangeListener: (bool val) {
+                                      print("Radiobutton onchangedata $val");
+                                      if (val) {
+                                        form.control('lasPrePerAcre').updateValue('');
+                                        form.control('lasPreToCollect').updateValue('');
+                                        form.control('lasPrePerAcre').markAsEnabled();
+                                        form.control('lasPreToCollect').markAsEnabled();
+                                        form.control('lasPrePerAcre').setValidators([Validators.required]);
+                                        form.control('lasPreToCollect').setValidators([Validators.required]);
+                                      } else {
+                                        form.control('lasPrePerAcre').updateValue('');
+                                        form.control('lasPreToCollect').updateValue('');
+                                        form.control('lasPrePerAcre').markAsDisabled();
+                                        form.control('lasPreToCollect').markAsDisabled();
+                                        form.control('lasPrePerAcre').clearValidators();
+                                        form.control('lasPreToCollect').clearValidators();
+                                      }
+                                    },
                                   ),
                                   IntegerTextField(
-                                    controlName: 'premiumperacre',
+                                    controlName: 'lasPrePerAcre',
                                     label: 'Premium Per Acre',
                                     mantatory: true,
                                   ),
                                   IntegerTextField(
-                                    controlName: 'premiumcollected',
+                                    controlName: 'lasPreToCollect',
                                     label: 'Premium to be collected',
                                     mantatory: true,
                                   ),
@@ -346,67 +526,65 @@ class CropDetailsPage extends StatelessWidget {
                       bottom: 5,
                       left: 0,
                       right: 0,
-                      child: Center(
-                        child:
-                            state.status == CropPageStatus.set
-                                ? ElevatedButton.icon(
-                                  onPressed: () => handleReset(context, state),
-                                  icon: const Icon(
-                                    Icons.save,
-                                    color: Colors.white,
-                                  ),
-                                  label: const Text(
-                                    'Reset',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                      212,
-                                      5,
-                                      8,
-                                      205,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 32,
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
-                                )
-                                : ElevatedButton.icon(
-                                  onPressed: () => handleSubmit(context, state),
-                                  icon: const Icon(
-                                    Icons.save,
-                                    color: Colors.white,
-                                  ),
-                                  label: const Text(
-                                    'Save',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                      212,
-                                      5,
-                                      8,
-                                      205,
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 32,
-                                      vertical: 14,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                  ),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: 
+                            state.status == CropPageStatus.set ?
+                            ElevatedButton.icon(
+                              onPressed: () => handleUpdate(context, state),
+                              icon: const Icon(Icons.save, color: Colors.white),
+                              label: const Text(
+                                'Update',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                  212,
+                                  5,
+                                  8,
+                                  205,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ) :
+                            ElevatedButton.icon(
+                              onPressed: () => handleSave(context, state),
+                              icon: const Icon(Icons.save, color: Colors.white),
+                              label: const Text(
+                                'Save',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color.fromARGB(
+                                  212,
+                                  5,
+                                  8,
+                                  205,
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     // FAB with badge on top
