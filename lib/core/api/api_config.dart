@@ -26,6 +26,10 @@ class ApiConfig {
   static const String LEAD_SUBMIT_API_ENDPOINT =
       'MobileService/saveLeadDetails';
 
+  static const String LAND_HOLDING_ENDPOINT = 'MobileService/saveLandHold';
+
+  static const String LAND_HOLDING_GET_API_ENDPOINT = 'MobileService/getLandHoldingDetails';
+
   static const String CROP_SUBMIT_API_ENDPOINT =
       'MobileService/saveProposedCrops';
 
