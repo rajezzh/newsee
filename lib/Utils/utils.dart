@@ -46,6 +46,27 @@ String getCorrectDateFormat(dynamic value) {
   }
 }
 
+/// @desc   : converts date by provided arguments
+/// @param  : {from} - date to be formated , {to} will be retured formatted string
+/// @return : {String} - formatted date
+
+String getDateFormatedByProvided(
+  dynamic value, {
+  required String from,
+  required String to,
+}) {
+  try {
+    DateFormat parser = DateFormat(from);
+    DateTime date = parser.parse(value);
+    DateFormat formatter = DateFormat(to);
+    String convertedDateString = formatter.format(date);
+    return convertedDateString;
+  } catch (error) {
+    print("getCorrectDateFormat-string $error");
+    return "";
+  }
+}
+
 void showSnack(BuildContext context, {required String message}) {
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }
