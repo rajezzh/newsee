@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'lead_submit_bloc.dart';
 
 /* 
@@ -22,12 +23,18 @@ class LeadSubmitPushEvent extends LeadSubmitEvent {
   final Dedupe dedupe;
   final PersonalData? personalData;
   final AddressData? addressData;
-
+  final CoapplicantData? coapplicantData;
   LeadSubmitPushEvent({
     required this.loanType,
     required this.loanProduct,
     required this.dedupe,
     required this.personalData,
     required this.addressData,
+    required this.coapplicantData,
   });
+}
+
+class CreateProposalEvent extends LeadSubmitEvent {
+  final ProposalCreationRequest proposalCreationRequest;
+  CreateProposalEvent({required this.proposalCreationRequest});
 }

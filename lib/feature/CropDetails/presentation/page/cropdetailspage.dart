@@ -15,7 +15,7 @@ import 'package:newsee/widgets/integer_text_field.dart';
 
 class CropDetailsPage extends StatelessWidget {
   final String title;
-
+  final String proposalnumber;
   final form = AppForms.buildCropDetailsForm();
 
   final TextEditingController irrigatedController = TextEditingController();
@@ -26,7 +26,7 @@ class CropDetailsPage extends StatelessWidget {
 
   final ValueNotifier<bool> formEdit = ValueNotifier<bool>(false);
 
-  CropDetailsPage({super.key, required this.title}) {
+  CropDetailsPage({super.key, required this.title, required this.proposalnumber}) {
     irrigatedController.addListener(_updateTotal);
     rainfedController.addListener(_updateTotal);
   }
@@ -70,7 +70,7 @@ class CropDetailsPage extends StatelessWidget {
     final rainfed = int.tryParse(rainfedController.text) ?? 0;
     context.read<CropyieldpageBloc>().add(
       CropDetailsSubmitEvent(
-        proposalNumber: '143560000000666', 
+        proposalNumber: proposalnumber, 
         userid: 'AGRI1124', 
         irrigated: irrigated,
         rainfed: rainfed,
@@ -80,9 +80,7 @@ class CropDetailsPage extends StatelessWidget {
   }
 
   void handleReset(BuildContext context, CropyieldpageState state) {
-    context.read<CropyieldpageBloc>().add(
-      CropDetailsResetEvent(),
-    );
+    context.read<CropyieldpageBloc>().add(CropDetailsResetEvent());
   }
 
   void handleUpdate(BuildContext context, CropyieldpageState state) {
@@ -193,7 +191,7 @@ class CropDetailsPage extends StatelessWidget {
     final globalLoadingBloc = context.read<GlobalLoadingBloc>();
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 120,
+        toolbarHeight: MediaQuery.of(context).size.height * 0.15,
         automaticallyImplyLeading: false,
         flexibleSpace: Container(
           decoration: BoxDecoration(color: Colors.teal),
@@ -299,14 +297,13 @@ class CropDetailsPage extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
           ],
-        )
-        
+        ),
       ),
       body: BlocProvider(
         create: (_) => CropyieldpageBloc()..add(
-          CropPageInitialEvent(proposalNumber: '143560000000632')
+          CropPageInitialEvent(proposalNumber: proposalnumber)
         ),
         lazy: true,
         child: BlocConsumer<CropyieldpageBloc, CropyieldpageState>(
@@ -315,7 +312,7 @@ class CropDetailsPage extends StatelessWidget {
               globalLoadingBloc.add(
                 HideLoading(),
               );
-              if (state.cropData!.isNotEmpty && state.landDetails!.isNotEmpty) {
+              if ((state.cropData != null && state.cropData!.isNotEmpty) && (state.landDetails != null && state.landDetails!.isNotEmpty)) {
                 irrigatedController.text = state.landDetails!['lpAgriPcIrrigated'].toString();
                 rainfedController.text = state.landDetails!['lpAgriPcRainfed'].toString();
               }
@@ -381,10 +378,7 @@ class CropDetailsPage extends StatelessWidget {
                                     label: 'Season',
                                     items:
                                         state.lovlist!
-                                            .where(
-                                              (v) =>
-                                                  v.Header == 'Season',
-                                            )
+                                            .where((v) => v.Header == 'Season')
                                             .toList(),
                                     onChangeListener: (Lov val) {
                                       form.controls['lasSeason']
@@ -394,9 +388,7 @@ class CropDetailsPage extends StatelessWidget {
                                       final value =
                                           form.control('lasSeason').value;
                                       return state.lovlist!
-                                          .where(
-                                            (v) => v.Header == 'Season',
-                                          )
+                                          .where((v) => v.Header == 'Season')
                                           .firstWhere(
                                             (lov) => lov.optvalue == value,
                                             orElse:
@@ -453,8 +445,7 @@ class CropDetailsPage extends StatelessWidget {
                                     items:
                                         state.lovlist!
                                             .where(
-                                              (v) =>
-                                                  v.Header == 'TypeOfLand',
+                                              (v) => v.Header == 'TypeOfLand',
                                             )
                                             .toList(),
                                     onChangeListener: (Lov val) {

@@ -10,6 +10,8 @@ import 'package:newsee/feature/CropDetails/domain/modal/cropdetailsmodal.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/cropmodel.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/croprequestmodel.dart';
 import 'package:newsee/feature/CropDetails/domain/repository/cropdetails_repository.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/repository/lov_crud_repo.dart';
 import 'package:sqflite/sqflite.dart';
@@ -85,6 +87,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       Database _db = await DBConfig().database;
       List<Lov> listOfLov = await LovCrudRepo(_db).getAll();
       print('listOfLov => $listOfLov');
+      GlobalLoadingBloc().add(ShowLoading(message: 'Fetching Crop Details'));
       CropDetailsRepository cropRepository = CropDetailsRepositoryImpl();
       AsyncResponseHandler<Failure, CropGetResponse> response = await cropRepository.getCrop(
         event.proposalNumber

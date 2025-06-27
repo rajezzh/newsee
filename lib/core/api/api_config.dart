@@ -31,4 +31,5 @@ class ApiConfig {
 
   static const String CROP_GET_API_ENDPOINT = 
   'MobileService/getProposedCrops';
+  static const String CREATE_PROPOSAL = 'MobileService/getProposalCreation';
 }
