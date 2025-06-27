@@ -60,3 +60,15 @@ id | log_date | time | feature | logdata | errorresponse
 logdata = { 'page':'masterdownload','request':'','action':'tabledelete-lovmaster' , data:''}
 logdata = { 'page':'masterdownload','request':'apirequest','action':'api-lovmaster' , data:''}
 logdata = { 'page':'masterdownload','request':'','action':'tableinsert-lovmaster' , data:''}
+
+step 2 :
+create audit log page , have provision to choose date and time window and feature
+query auditlog table and show reault as list
+on click listtile , show a logdata in table , keep logdata json key to the left of the table
+and value to the right column
+
+this way user can see the auditlog data and can identify the rootcause at ease
+
+further download logdata provision and upload to lendperfect server backend to be added
+
+---
