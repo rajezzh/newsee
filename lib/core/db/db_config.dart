@@ -7,7 +7,6 @@
 
 import 'package:newsee/AppData/DBConstants/dbconstants.dart';
 import 'package:newsee/AppData/DBConstants/table_key_geographymaster.dart';
-import 'package:newsee/AppData/DBConstants/table_key_localbiometric.dart';
 import 'package:newsee/AppData/DBConstants/table_key_products.dart';
 import 'package:newsee/AppData/DBConstants/table_key_productschema.dart';
 import 'package:newsee/AppData/DBConstants/table_key_statecitymaster.dart';
@@ -59,8 +58,6 @@ class DBConfig {
       printTableCreateSuccess(TableKeyMasterversion.tableName);
       await db.execute(TableKeysGeographyMaster.createTableQuery);
       printTableCreateSuccess(TableKeysGeographyMaster.tableName);
-      await db.execute(TableKeyLocalBiometric.createTableQuery);
-      printTableCreateSuccess(TableKeyLocalBiometric.tableName);
     } catch (e) {
       // db creation failure - > log u r exception
 
