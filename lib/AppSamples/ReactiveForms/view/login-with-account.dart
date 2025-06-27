@@ -8,12 +8,9 @@ import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart'
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/Utils/masterversioncheck.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
-import 'package:newsee/core/db/db_config.dart';
-import 'package:newsee/feature/auth/domain/model/local_auth_model.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:sqflite/sqlite_api.dart';
 
 /*
 

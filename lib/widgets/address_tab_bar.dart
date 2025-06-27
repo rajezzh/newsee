@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:newsee/pages/permanent%20_address.dart';
-import 'package:newsee/pages/present_address.dart';
+// import 'package:newsee/pages/permanent%20_address.dart';
+// import 'package:newsee/pages/present_address.dart';
 
 class AddressTabBar extends StatelessWidget {
   final String? title;
@@ -24,7 +24,7 @@ class AddressTabBar extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                PermanentAddress(title: 'permanent'),
+                // PermanentAddress(title: 'permanent'),
                 // PresentAddress(title: 'Present', parentContext: context),
               ],
             ),

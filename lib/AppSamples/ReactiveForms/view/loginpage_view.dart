@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
-import 'package:newsee/Utils/local_biometric.dart';
-import 'package:newsee/core/db/db_config.dart';
 import 'forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';

@@ -123,13 +123,13 @@ CoappDetailsState mapGeographyMasterResponseForCoAppPage(
             : [];
     // map
     return state.copyWith(
-      // status: SaveStatus.mastersucess,
+      status: SaveStatus.mastersucess,
       cityMaster: cityMaster,
       districtMaster: districtMaster,
     );
   } else {
     return state.copyWith(
-      // status: SaveStatus.masterfailure,
+      status: SaveStatus.masterfailure,
       cityMaster: [],
       districtMaster: [],
     );
@@ -153,13 +153,13 @@ AddressDetailsState mapGeographyMasterResponseForAddressPage(
             : state.districtMaster;
     // map
     return state.copyWith(
-      // status: SaveStatus.mastersucess,
+      status: SaveStatus.mastersucess,
       cityMaster: cityMaster,
       districtMaster: districtMaster,
     );
   } else {
     return state.copyWith(
-      // status: SaveStatus.masterfailure,
+      status: SaveStatus.masterfailure,
       cityMaster: [],
       districtMaster: [],
     );
