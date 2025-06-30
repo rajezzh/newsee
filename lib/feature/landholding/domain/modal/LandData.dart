@@ -122,24 +122,25 @@ class LandData extends Equatable {
 
   Map<String, dynamic> mapForm() {
     return {
-      'applicantName': lslLandApplicantName,
-      'locationOfFarm': lslLandFarmLoc,
-      'state': lslLandState,
-      'taluk': lslLandTaluk,
-      'firka': lslLandFirka,
-      'totalAcreage': lslLandTotAcre,
-      'irrigatedLand': lslLandIrriLand,
-      'compactBlocks': lslLandCompact,
-      'landOwnedByApplicant': lslLandApplicant,
-      'distanceFromBranch': lslLandFarmDistance,
-      'district': lslLandDistrict,
-      'village': lslLandVillage,
-      'surveyNo': lslLandSurveyNo,
-      'natureOfRight': lslLandNature,
-      'irrigationFacilities': lslLandIrriFaci,
-      'affectedByCeiling': lslLandCeilingEnact,
-      'landAgriActive': lslAgriActive,
-      'villageOfficerCertified': lslLandOfficeCerti,
+       'applicantName': lslLandApplicantName,
+    'locationOfFarm': lslLandFarmLoc,
+    'state': lslLandState,
+    'taluk': lslLandTaluk,
+    'firka': lslLandFirka,
+    'totalAcreage': lslLandTotAcre,
+    'irrigatedLand': lslLandIrriLand,
+    'compactBlocks': lslLandCompact == '1' ? 'Yes' : 'No',
+    'landOwnedByApplicant': lslLandApplicant == 'Y' ? 'Yes' : 'No',
+    'distanceFromBranch': lslLandFarmDistance,
+    'district': lslLandDistrict,
+    'village': lslLandVillage,
+    'surveyNo': lslLandSurveyNo,
+    'natureOfRight': lslLandNature,
+    'irrigationFacilities': lslLandIrriFaci,
+    'affectedByCeiling': lslLandCeilingEnact == '1' ? 'Yes' : 'No',
+    'landAgriActive': lslAgriActive == '1' ? 'Yes' : 'No',
+    'villageOfficerCertified': lslLandOfficeCerti == '1' ? 'Yes':'No',
+
     };
   }
 
