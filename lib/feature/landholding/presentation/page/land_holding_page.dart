@@ -450,6 +450,7 @@ class LandHoldingPage extends StatelessWidget {
                                     ),
                                   ],
                                 ),
+
                               ),
                             ),
                           ],
