@@ -243,13 +243,14 @@ class CropDetailsPage extends StatelessWidget {
                     )
                   ),
                   SizedBox(
-                    width: 60,
+                    width: 50,
                     height: 30,
                     child: TextField(
                       controller: irrigatedController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                        fontSize: 14
                       ),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 8),
@@ -259,7 +260,7 @@ class CropDetailsPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   const Text(
                     "Rainfed: ",
                     style: TextStyle(
@@ -268,13 +269,14 @@ class CropDetailsPage extends StatelessWidget {
                     )
                   ),
                   SizedBox(
-                    width: 60,
+                    width: 50,
                     height: 30,
                     child: TextField(
                       controller: rainfedController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                        fontSize: 14
                       ),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 8),
@@ -284,11 +286,11 @@ class CropDetailsPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   ValueListenableBuilder<int>(
                     valueListenable: totalNotifier,
                     builder: (context, value, _) => Text(
-                      "Total: $value",
+                      "Total: $value (Acres)",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,
