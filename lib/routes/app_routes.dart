@@ -160,7 +160,9 @@ final routes = GoRouter(
       path: AppRouteConstants.LAND_HOLDING_PAGE['path']!,
       name: AppRouteConstants.LAND_HOLDING_PAGE['name'],
       builder:
-          (context, state) => PopScope(
+        (context, state) {
+          final proposalnumber = state.extra as String;
+          return PopScope(
             canPop: false,
             onPopInvokedWithResult: (didpop, data) async {
               final shouldPop = await showDialog<bool>(
@@ -186,8 +188,9 @@ final routes = GoRouter(
                 // context.go('/'); // Navigate back using GoRouter
               }
             },
-            child: LandHoldingPage(title: 'Land Holding Details'),
-          ),
+            child: LandHoldingPage(title: 'Land Holding Details', proposalNumber: proposalnumber),
+          );
+        }
     ),
     GoRoute(
       path: AppRouteConstants.DOCUMENT_PAGE['path']!,

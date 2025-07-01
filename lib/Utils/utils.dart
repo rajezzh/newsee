@@ -12,7 +12,9 @@ String formatAmount(String amount) {
   try {
     final num value = num.parse(amount);
     final formatter = NumberFormat.decimalPattern('en_IN');
-    return formatter.format(value);
+    return '₹${formatter.format(value)}';
+    // final formatter = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
+    // return formatter.format(value);
   } catch (e) {
     return amount;
   }
@@ -221,4 +223,17 @@ CoapplicantData mapCoapplicantDataFromCif(CifResponse response) {
 
   print('mapCoapplicantDataFromCif => $data');
   return data;
+}
+
+/// @desc   : Remove rupee seperator from form value
+/// @param  : {from} - String value from form , {to} will be retured removed comma from string value
+/// @return : {String} - string data
+String? removeSpecialCharacters(String formval) {
+  try {
+    String raw = formval.replaceAll(RegExp(r'[^\d]'), '');
+    return raw;
+  } catch (error) {
+    print('removeSpecialCharacters-utilspage => $error');
+  }
+   
 }

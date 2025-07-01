@@ -50,13 +50,36 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
       columnValues: ['0', '0'],
     );
 
-    emit(
-      state.copyWith(
-        lovlist: listOfLov,
-        status: SaveStatus.init,
-        stateCityMaster: stateCityMaster,
-      ),
-    );
+    final LandHoldingRepository landHoldingRepository =
+          LandHoldingRespositoryImpl();
+
+    final response = await landHoldingRepository.getLandholding('143560000000633');
+    List<LandData> landData =
+          response.right.agriLandHoldingsList
+              .map((e) => LandData.fromMap(e))
+              .toList();
+
+    print("LandData from response at get=> $landData");
+
+    if(response.isRight()) {
+      emit(
+        state.copyWith(
+          lovlist: listOfLov,
+          status: SaveStatus.init,
+          stateCityMaster: stateCityMaster,
+          landData: landData,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          lovlist: listOfLov,
+          status: SaveStatus.init,
+          stateCityMaster: stateCityMaster,
+        ),
+      );
+    }
+    
   }
 
   // Save new land data
@@ -73,10 +96,7 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
       LandHoldingRequest req = LandHoldingRequest(
         proposalNumber: '143560000000633',
         applicantName: event.landData['applicantName'] ?? '',
-        LandOwnedByApplicant:
-            event.landData['landOwnedByApplicant'].toString() == 'true'
-                ? 'Y'
-                : 'N',
+        LandOwnedByApplicant: event.landData['landOwnedByApplicant'] ? 'Y' : 'N',
         LocationOfFarm: event.landData['locationOfFarm'] ?? '',
         DistanceFromBranch: event.landData['distanceFromBranch'] ?? '',
         State: event.landData['state'] ?? '',
@@ -89,22 +109,10 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
         NatureOfRight: event.landData['natureOfRight'] ?? '',
         OutOfTotalAcreage: event.landData['irrigatedLand'] ?? '',
         NatureOfIrrigation: event.landData['irrigationFacilities'] ?? '',
-        LandsSituatedCompactBlocks:
-            event.landData['landsSituatedCompactBlocks'].toString() == 'true'
-                ? '1'
-                : '2',
-        landCeilingEnactments:
-            event.landData['landCeilingEnactments'].toString() == 'true'
-                ? '1'
-                : '2',
-        villageOfficersCertificate:
-            event.landData['villageOfficersCertificate'].toString() == 'true'
-                ? '1'
-                : '2',
-        LandAgriculturellyActive:
-            event.landData['landAgricultureActive'].toString() == 'true'
-                ? '1'
-                : '2',
+        LandsSituatedCompactBlocks: event.landData['compactBlocks'] ? '1' : '2',
+        landCeilingEnactments: event.landData['affectedByCeiling'] ? '1' : '2',
+        villageOfficersCertificate: event.landData['villageOfficerCertified'] ? '1' : '2',
+        LandAgriculturellyActive: event.landData['landAgriActive'] ? '1' : '2',
         token: ApiConstants.api_qa_token,
       );
 

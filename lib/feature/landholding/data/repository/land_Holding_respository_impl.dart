@@ -20,10 +20,50 @@ class LandHoldingRespositoryImpl implements LandHoldingRepository {
 
       final payload = request.toJson();
       print("payload-LandHoldingRespositoryImpl => $payload");
-
+      final endPoint = ApiConfig.LAND_HOLDING_ENDPOINT;
       final response = await LandHoldingRemoteDatasource(
         dio: ApiClient().getDio(),
-      ).submitLandHolding(payload);
+      ).submitLandHolding(payload, endPoint);
+
+      if (response.data[ApiConfig.API_RESPONSE_SUCCESS_KEY]) {
+        var landholdingResponse = LandHoldingResponceModel.fromJson(
+          response.data[ApiConfig.API_RESPONSE_RESPONSE_KEY],
+        );
+        print('LandHoldingResponseModel => $landholdingResponse');
+        return AsyncResponseHandler.right(landholdingResponse);
+      } else {
+        var errorMessage = response.data['ErrorMessage'] ?? "Unknown error";
+        print('Land Holding error => $errorMessage');
+        return AsyncResponseHandler.left(AuthFailure(message: errorMessage));
+      }
+    } on DioException catch (e) {
+      HttpConnectionFailure failure =
+          DioHttpExceptionParser(exception: e).parse();
+      return AsyncResponseHandler.left(failure);
+    } catch (error) {
+      print("LandHoldingResponseHandler-> $error");
+      return AsyncResponseHandler.left(
+        HttpConnectionFailure(
+          message: "Unexpected Failure during Land Holding Details",
+        ),
+      );
+    }
+  }
+
+  Future<AsyncResponseHandler<Failure, LandHoldingResponceModel>> getLandholding(
+    String proposalNumber
+  ) async {
+    try {
+      final req = {
+        "proposalNumber": proposalNumber,
+        "token": ApiConfig.AUTH_TOKEN
+      };
+      final payload = req;
+      print('Land Holging get payload => $payload');
+      final endPoint = ApiConfig.LAND_HOLDING_GET_API_ENDPOINT;
+      final response = await LandHoldingRemoteDatasource(
+        dio: ApiClient().getDio(),
+      ).submitLandHolding(payload, endPoint);
 
       if (response.data[ApiConfig.API_RESPONSE_SUCCESS_KEY]) {
         var landholdingResponse = LandHoldingResponceModel.fromJson(
