@@ -48,7 +48,7 @@ class NewLeadPage extends StatelessWidget {
               (context) =>
                   AddressDetailsBloc()
                     ..add(AddressDetailsInitEvent(cifResponseModel: null)),
-                  lazy: false,
+          lazy: false,
         ),
         BlocProvider(
           create: (context) => CoappDetailsBloc()..add(CoAppDetailsInitEvent()),
@@ -235,7 +235,7 @@ class NewLeadPage extends StatelessWidget {
               Loan(title: 'loan'),
               DedupeView(title: 'dedupe'),
               Personal(title: 'personal'),
-              AddressTabBar(title: 'address',),
+              Address(title: 'address'),
               CoApplicantPage(title: 'Co Applicant Details'),
               LeadSubmitPage(title: 'Lead Details'),
             ],
