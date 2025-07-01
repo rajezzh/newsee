@@ -68,10 +68,11 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
       // final newList = [...?state.landData, event.landData as LandData];
       print("event.landData not a map => ${event.landData}");
       final landdata = event.landData;
+      final proposalNo = event.proposalNumber;
       print("event.landData => $landdata");
 
       LandHoldingRequest req = LandHoldingRequest(
-        proposalNumber: '143560000000633',
+        proposalNumber: proposalNo,
         applicantName: event.landData['applicantName'] ?? '',
         LandOwnedByApplicant:
             event.landData['landOwnedByApplicant'].toString() == 'true'

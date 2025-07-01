@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/feature/qrscanner/presentation/page/qr_scanner_page.dart';
+import 'package:xml2json/xml2json.dart';
 
 void showScannerOptions(BuildContext context) {
+  BuildContext ctx = context;
   showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
@@ -18,7 +24,7 @@ void showScannerOptions(BuildContext context) {
               title: Text('QR Scanner'),
               onTap: () {
                 Navigator.pop(context); // Close bottom sheet
-                _navigateToQRScanner(context);
+                _navigateToQRScanner(ctx);
               },
             ),
             ListTile(
@@ -41,13 +47,15 @@ void showScannerOptions(BuildContext context) {
 
 // Navigate to QR Scanner page
 void _navigateToQRScanner(BuildContext context) {
+  BuildContext ctx = context;
+
   Navigator.push(
     context,
     MaterialPageRoute(
       builder:
           (context) => QRScannerPage(
             onQRScanned: (result) {
-              _showResultDialog(context, result); // Show result in AlertDialog
+              _showResultDialog(ctx, result); // Show result in AlertDialog
             },
           ),
     ),
@@ -56,16 +64,36 @@ void _navigateToQRScanner(BuildContext context) {
 
 // Show AlertDialog with QR scan result
 void _showResultDialog(BuildContext context, String result) {
+  BuildContext ctx = context;
+
   Navigator.pop(context);
+
+  final xml2json = Xml2Json();
+  xml2json.parse(result);
+  final jsonString = xml2json.toBadgerfish();
+  final jsonObject = jsonDecode(jsonString);
+  final aadharResp =
+      jsonObject['PrintLetterBarcodeData'] as Map<String, dynamic>;
+  aadharResp.entries.forEach((v) => print(v));
+  final aadhaarId = aadharResp['@uid'];
+  print("jsonObject => $aadhaarId");
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('QR Scan Result'),
-        content: Text(result),
+        content: Text(aadhaarId),
+
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              ctx.read<PersonalDetailsBloc>().add(
+                ScannerResponseEvent(
+                  scannerResponse: {'aadhaarResponse': aadharResp},
+                ),
+              );
+            },
             child: Text('OK'),
           ),
         ],

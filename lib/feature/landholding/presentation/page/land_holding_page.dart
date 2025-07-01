@@ -31,7 +31,10 @@ class LandHoldingPage extends StatelessWidget {
     if (form.valid) {
       // final landFormData = LandData.fromForm(form.value);
       context.read<LandHoldingBloc>().add(
-        LandDetailsSaveEvent(landData: form.value),
+        LandDetailsSaveEvent(
+          landData: form.value,
+          proposalNumber: proposalNumber,
+        ),
       );
     } else {
       form.markAllAsTouched();
@@ -145,7 +148,9 @@ class LandHoldingPage extends StatelessWidget {
         appBar: AppBar(
           toolbarHeight: MediaQuery.of(context).size.height * 0.15,
           automaticallyImplyLeading: false,
-          flexibleSpace: Container(decoration: BoxDecoration(color: Colors.teal)),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(color: Colors.teal),
+          ),
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -158,7 +163,7 @@ class LandHoldingPage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 10),
-      
+
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -205,7 +210,7 @@ class LandHoldingPage extends StatelessWidget {
                 if (state.status == SaveStatus.masterfailure) {
                   showSnack(context, message: 'Failed to Fetch Masters...');
                 }
-      
+
                 print('city list => ${state.cityMaster}');
                 globalLoadingBloc.add(HideLoading());
               }
@@ -250,7 +255,7 @@ class LandHoldingPage extends StatelessWidget {
                                             message: "Fetching city...",
                                           ),
                                         );
-      
+
                                         context.read<LandHoldingBloc>().add(
                                           OnStateCityChangeEvent(
                                             stateCode: val.code,
@@ -292,13 +297,13 @@ class LandHoldingPage extends StatelessWidget {
                                       minlength: 1,
                                       maxlength: 3,
                                     ),
-      
+
                                     IntegerTextField(
                                       controlName: 'surveyNo',
                                       label: 'Survey No.',
                                       mantatory: true,
                                     ),
-      
+
                                     IntegerTextField(
                                       controlName: 'firka',
                                       label:
@@ -372,7 +377,8 @@ class LandHoldingPage extends StatelessWidget {
                                         }
                                         return state.lovlist!
                                             .where(
-                                              (v) => v.Header == 'NatureOfRight',
+                                              (v) =>
+                                                  v.Header == 'NatureOfRight',
                                             )
                                             .firstWhere(
                                               (lov) => lov.optvalue == value,
@@ -403,7 +409,8 @@ class LandHoldingPage extends StatelessWidget {
                                           state.lovlist!
                                               .where(
                                                 (v) =>
-                                                    v.Header == 'NatureOfIrrFac',
+                                                    v.Header ==
+                                                    'NatureOfIrrFac',
                                               )
                                               .toList(),
                                       onChangeListener: (Lov val) {
@@ -421,7 +428,8 @@ class LandHoldingPage extends StatelessWidget {
                                         }
                                         return state.lovlist!
                                             .where(
-                                              (v) => v.Header == 'NatureOfIrrFac',
+                                              (v) =>
+                                                  v.Header == 'NatureOfIrrFac',
                                             )
                                             .firstWhere(
                                               (lov) => lov.optvalue == value,
@@ -443,14 +451,14 @@ class LandHoldingPage extends StatelessWidget {
                                       optionTwo: 'No',
                                     ),
                                     RadioButton(
-                                      label: 'Whether Land Agriculturally Active',
+                                      label:
+                                          'Whether Land Agriculturally Active',
                                       controlName: 'landAgriActive',
                                       optionOne: 'Yes',
                                       optionTwo: 'No',
                                     ),
                                   ],
                                 ),
-
                               ),
                             ),
                           ],
