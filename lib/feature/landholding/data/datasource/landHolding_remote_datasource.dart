@@ -7,10 +7,10 @@ class LandHoldingRemoteDatasource {
 
   LandHoldingRemoteDatasource({required this.dio});
 
-  Future<Response> submitLandHolding(request) async {
+  Future<Response> submitLandHolding(request, endpoint) async {
     try {
       final response = await dio.post(
-        ApiConfig.LAND_HOLDING_ENDPOINT,
+        endpoint,
         data: request,
         options: Options(
           headers: {

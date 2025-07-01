@@ -127,46 +127,49 @@ class CompletedLeads extends StatelessWidget {
                   location: lead['lleadprefbrnch'] ?? 'N/A',
                   loanamount: lead['lldLoanamtRequested']?.toString() ?? '',
                   onTap: () {
-                    // openBottomSheet(context, 0.6, 0.4, 0.9, (
-                    //   context,
-                    //   scrollController,
-                    // ) {
-                    //   return SingleChildScrollView(
-                    //     controller: scrollController,
-                    //     child: Column(
-                    //       children: [
-                    //         const SizedBox(height: 12),
-                    //         OptionsSheet(
-                    //           icon: Icons.visibility,
-                    //           title: "Land Details",
-                    //           subtitle: "View your Land Details here",
-                    //           status: 'Completed',
-                    //           onTap: () {
-                    //             context.pushNamed('landholdings');
-                    //           },
-                    //         ),
-                    //         OptionsSheet(
-                    //           icon: Icons.visibility,
-                    //           title: "Crop Details",
-                    //           subtitle: "View your Crop Details here",
-                    //           status: 'Pending',
-                    //           onTap: () {
-                    //             context.pushNamed('cropdetails', extra: '143560000000633');
-                    //           },
-                    //         ),
-                    //         OptionsSheet(
-                    //           icon: Icons.description,
-                    //           title: "Document Upload",
-                    //           subtitle: "Pre-Sanctioned Documents Upload",
-                    //           status: 'Pending',
-                    //           onTap: () {
-                    //             context.pushNamed('document');
-                    //           },
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   );
-                    // });
+                    openBottomSheet(context, 0.6, 0.4, 0.9, (
+                      context,
+                      scrollController,
+                    ) {
+                      return SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 12),
+                            OptionsSheet(
+                              icon: Icons.visibility,
+                              title: "Land Details",
+                              subtitle: "View your Land Details here",
+                              status: 'Completed',
+                              onTap: () {
+                                context.pushNamed('landholdings');
+                              },
+                            ),
+                            OptionsSheet(
+                              icon: Icons.visibility,
+                              title: "Crop Details",
+                              subtitle: "View your Crop Details here",
+                              status: 'Pending',
+                              onTap: () {
+                                context.pushNamed(
+                                  'cropdetails',
+                                  extra: '143560000000633',
+                                );
+                              },
+                            ),
+                            OptionsSheet(
+                              icon: Icons.description,
+                              title: "Document Upload",
+                              subtitle: "Pre-Sanctioned Documents Upload",
+                              status: 'Pending',
+                              onTap: () {
+                                context.pushNamed('document');
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    });
                   },
                 );
               },
