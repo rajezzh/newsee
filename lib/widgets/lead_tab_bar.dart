@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:newsee/feature/leadInbox/presentation/page/completed_leads.dart';
+import 'package:newsee/feature/proposal_inbox/presentation/page/proposal_inbox_leads.dart';
 import 'pending_leads.dart';
 import '../feature/leadInbox/presentation/page/completed_leads.dart';
 
@@ -30,7 +31,7 @@ class LeadTabBar extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: TabBarView(children: [ CompletedLeads(searchQuery: searchQuery),PendingLeads(),]),
+            child: TabBarView(children: [ CompletedLeads(searchQuery: searchQuery),PendingLeads(searchQuery: searchQuery),]),
           ),
         ],
       ),

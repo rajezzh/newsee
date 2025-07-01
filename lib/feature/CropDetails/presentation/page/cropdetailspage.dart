@@ -46,6 +46,18 @@ class CropDetailsPage extends StatelessWidget {
   void handleSave(BuildContext context, CropyieldpageState state) {
     if (irrigatedController.text.isNotEmpty && rainfedController.text.isNotEmpty) {
       if (form.valid) {
+        var scaleOfFinance = removeSpecialCharacters(form.control('lasScaloffin').value);
+        var reqScaleOfFinance = removeSpecialCharacters(form.control('lasReqScaloffin').value);
+        var prePerAcre = removeSpecialCharacters(form.control('lasPrePerAcre').value);
+        var premiumCollecte = removeSpecialCharacters(form.control('lasPreToCollect').value);
+        
+        form.control('lasScaloffin').updateValue(scaleOfFinance);
+        form.control('lasReqScaloffin').updateValue(reqScaleOfFinance);
+        form.control('lasPrePerAcre').updateValue(prePerAcre);
+        form.control('lasPreToCollect').updateValue(premiumCollecte);
+
+        print("handleSave =>  ${form.value}");
+
         final cropFormData = CropDetailsModal.fromForm(form.value);
         context.read<CropyieldpageBloc>().add(
           CropFormSaveEvent(cropData: cropFormData),
@@ -85,6 +97,16 @@ class CropDetailsPage extends StatelessWidget {
 
   void handleUpdate(BuildContext context, CropyieldpageState state) {
     if (form.valid) {
+      var scaleOfFinance = removeSpecialCharacters(form.control('lasScaloffin').value);
+      var reqScaleOfFinance = removeSpecialCharacters(form.control('lasReqScaloffin').value);
+      var prePerAcre = removeSpecialCharacters(form.control('lasPrePerAcre').value);
+      var premiumCollecte = removeSpecialCharacters(form.control('lasPreToCollect').value);
+      
+      form.control('lasScaloffin').updateValue(scaleOfFinance);
+      form.control('lasReqScaloffin').updateValue(reqScaleOfFinance);
+      form.control('lasPrePerAcre').updateValue(prePerAcre);
+      form.control('lasPreToCollect').updateValue(premiumCollecte);
+
       final cropFormData = CropDetailsModal.fromForm(form.value);
       context.read<CropyieldpageBloc>().add(
         CropDetailsUpdateEvent(cropData: cropFormData, index: currentIndex.value),
@@ -243,13 +265,14 @@ class CropDetailsPage extends StatelessWidget {
                     )
                   ),
                   SizedBox(
-                    width: 60,
+                    width: 50,
                     height: 30,
                     child: TextField(
                       controller: irrigatedController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                        fontSize: 14
                       ),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 8),
@@ -259,7 +282,7 @@ class CropDetailsPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   const Text(
                     "Rainfed: ",
                     style: TextStyle(
@@ -268,13 +291,14 @@ class CropDetailsPage extends StatelessWidget {
                     )
                   ),
                   SizedBox(
-                    width: 60,
+                    width: 50,
                     height: 30,
                     child: TextField(
                       controller: rainfedController,
                       keyboardType: TextInputType.number,
                       style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                        fontSize: 14
                       ),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.symmetric(horizontal: 8),
@@ -284,11 +308,11 @@ class CropDetailsPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   ValueListenableBuilder<int>(
                     valueListenable: totalNotifier,
                     builder: (context, value, _) => Text(
-                      "Total: $value",
+                      "Total: $value (Acres)",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.white,
@@ -339,6 +363,7 @@ class CropDetailsPage extends StatelessWidget {
             // );
             if (state.status == CropPageStatus.set && state.selectedCropData != null) {
               print("currently current selected cropdetails index is ${currentIndex.value}");
+              print("state.selectedCropData is => ${state.selectedCropData}");
               form.patchValue(state.selectedCropData!.toForm());
               if (state.selectedCropData!.notifiedCropFlag!) {
                 form.control('lasPrePerAcre').markAsEnabled();
@@ -351,6 +376,7 @@ class CropDetailsPage extends StatelessWidget {
                 form.control('lasPrePerAcre').clearValidators();
                 form.control('lasPreToCollect').clearValidators();
               }
+              form.updateValueAndValidity();
             }
             
             return ReactiveForm(
@@ -373,6 +399,18 @@ class CropDetailsPage extends StatelessWidget {
                               padding: const EdgeInsets.all(16),
                               child: Column(
                                 children: [
+                                  Row(
+                                    children: [
+                                      Text('Proposal Number: '),
+                                      SizedBox(width: 20,),
+                                      Text(
+                                        proposalnumber,
+                                        style: TextStyle(
+                                          color: Colors.teal
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   SearchableDropdown<Lov>(
                                     controlName: 'lasSeason',
                                     label: 'Season',
@@ -436,7 +474,7 @@ class CropDetailsPage extends StatelessWidget {
                                   ),
                                   IntegerTextField(
                                     controlName: 'lasAreaofculti',
-                                    label: 'Acres Cultivated',
+                                    label: 'Acres Cultivated ',
                                     mantatory: true,
                                   ),
                                   SearchableDropdown<Lov>(
@@ -475,11 +513,13 @@ class CropDetailsPage extends StatelessWidget {
                                     controlName: 'lasScaloffin',
                                     label: 'Scale of Finance (including crop insurance)',
                                     mantatory: true,
+                                    isRupeeFormat: true,
                                   ),
                                   IntegerTextField(
                                     controlName: 'lasReqScaloffin',
                                     label: 'Requirement as per Scale of Finance',
                                     mantatory: true,
+                                    isRupeeFormat: true,
                                   ),
                                   RadioButton(
                                     label:'Notified Crop',
@@ -509,12 +549,72 @@ class CropDetailsPage extends StatelessWidget {
                                     controlName: 'lasPrePerAcre',
                                     label: 'Premium Per Acre',
                                     mantatory: true,
+                                    isRupeeFormat: true,
                                   ),
                                   IntegerTextField(
                                     controlName: 'lasPreToCollect',
                                     label: 'Premium to be collected',
                                     mantatory: true,
+                                    isRupeeFormat: true,
                                   ),
+                                  Center(
+                                    child: 
+                                    state.status == CropPageStatus.set ?
+                                    ElevatedButton.icon(
+                                      onPressed: () => handleUpdate(context, state),
+                                      icon: const Icon(Icons.save, color: Colors.white),
+                                      label: const Text(
+                                        'Update',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        // backgroundColor: const Color.fromARGB(
+                                        //   212,
+                                        //   5,
+                                        //   8,
+                                        //   205,
+                                        // ),
+                                        backgroundColor: Colors.teal,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 32,
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ) :
+                                    ElevatedButton.icon(
+                                      onPressed: () => handleSave(context, state),
+                                      icon: const Icon(Icons.save, color: Colors.white),
+                                      label: const Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        // backgroundColor: const Color.fromARGB(
+                                        //   212,
+                                        //   5,
+                                        //   8,
+                                        //   205,
+                                        // ),
+                                        backgroundColor: Colors.teal,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 32,
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -522,71 +622,71 @@ class CropDetailsPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Positioned(
-                      bottom: 5,
-                      left: 0,
-                      right: 0,
-                      child: Column(
-                        children: [
-                          Center(
-                            child: 
-                            state.status == CropPageStatus.set ?
-                            ElevatedButton.icon(
-                              onPressed: () => handleUpdate(context, state),
-                              icon: const Icon(Icons.save, color: Colors.white),
-                              label: const Text(
-                                'Update',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(
-                                  212,
-                                  5,
-                                  8,
-                                  205,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 32,
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ) :
-                            ElevatedButton.icon(
-                              onPressed: () => handleSave(context, state),
-                              icon: const Icon(Icons.save, color: Colors.white),
-                              label: const Text(
-                                'Save',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(
-                                  212,
-                                  5,
-                                  8,
-                                  205,
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 32,
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                  //   Positioned(
+                  //     bottom: 5,
+                  //     left: 0,
+                  //     right: 0,
+                  //     child: Column(
+                  //       children: [
+                  //         Center(
+                  //           child: 
+                  //           state.status == CropPageStatus.set ?
+                  //           ElevatedButton.icon(
+                  //             onPressed: () => handleUpdate(context, state),
+                  //             icon: const Icon(Icons.save, color: Colors.white),
+                  //             label: const Text(
+                  //               'Update',
+                  //               style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 color: Colors.white,
+                  //               ),
+                  //             ),
+                  //             style: ElevatedButton.styleFrom(
+                  //               backgroundColor: const Color.fromARGB(
+                  //                 212,
+                  //                 5,
+                  //                 8,
+                  //                 205,
+                  //               ),
+                  //               padding: const EdgeInsets.symmetric(
+                  //                 horizontal: 32,
+                  //                 vertical: 14,
+                  //               ),
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(8),
+                  //               ),
+                  //             ),
+                  //           ) :
+                  //           ElevatedButton.icon(
+                  //             onPressed: () => handleSave(context, state),
+                  //             icon: const Icon(Icons.save, color: Colors.white),
+                  //             label: const Text(
+                  //               'Save',
+                  //               style: TextStyle(
+                  //                 fontWeight: FontWeight.bold,
+                  //                 color: Colors.white,
+                  //               ),
+                  //             ),
+                  //             style: ElevatedButton.styleFrom(
+                  //               backgroundColor: const Color.fromARGB(
+                  //                 212,
+                  //                 5,
+                  //                 8,
+                  //                 205,
+                  //               ),
+                  //               padding: const EdgeInsets.symmetric(
+                  //                 horizontal: 32,
+                  //                 vertical: 14,
+                  //               ),
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(8),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         )
+                  //       ],
+                  //     ),
+                  //   ),
                     // FAB with badge on top
                     Positioned(
                       bottom: 10,

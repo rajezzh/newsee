@@ -16,7 +16,7 @@ class RadioButton extends StatelessWidget {
     this.onChangeListener,
   });
 
-    _onChangeListener(bool? val) => onChangeListener!(val);
+    _onChangeListener(bool val) => onChangeListener!(val);
 
   @override
   Widget build(BuildContext context) {

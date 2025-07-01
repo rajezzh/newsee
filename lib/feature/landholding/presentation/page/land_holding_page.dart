@@ -23,7 +23,7 @@ class LandHoldingPage extends StatelessWidget {
   final String? proposalNumber;
   final String title;
 
-  final form = AppForms.LAND_HOLDING_FORM;
+  final form = AppForms.buildLandHoldingDetailsForm();
 
   LandHoldingPage({super.key, required this.title, this.proposalNumber});
 
@@ -197,8 +197,10 @@ class LandHoldingPage extends StatelessWidget {
                 form.reset();
               }
               if (state.selectedLandData != null &&
-                  state.status == SaveStatus.update) {
-                form.patchValue(state.selectedLandData!.mapForm());
+                state.status == SaveStatus.update) {
+                var selectedFormArrayData = state.selectedLandData!.mapForm();
+                print("selectedFormArrayData $selectedFormArrayData");
+                form.patchValue(selectedFormArrayData);
               }
               if (state.status == SaveStatus.mastersucess ||
                   state.status == SaveStatus.masterfailure) {
