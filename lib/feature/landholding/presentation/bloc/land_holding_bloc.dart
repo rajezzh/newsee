@@ -53,15 +53,15 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
     final LandHoldingRepository landHoldingRepository =
           LandHoldingRespositoryImpl();
 
-    final response = await landHoldingRepository.getLandholding('143560000000633');
-    List<LandData> landData =
+    final response = await landHoldingRepository.getLandholding(event.proposalNumber);
+    
+    if(response.isRight()) {
+      List<LandData> landData =
           response.right.agriLandHoldingsList
               .map((e) => LandData.fromMap(e))
               .toList();
+      print("LandData from response at get=> $landData");
 
-    print("LandData from response at get=> $landData");
-
-    if(response.isRight()) {
       emit(
         state.copyWith(
           lovlist: listOfLov,
@@ -94,7 +94,7 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
       print("event.landData => $landdata");
 
       LandHoldingRequest req = LandHoldingRequest(
-        proposalNumber: '143560000000633',
+        proposalNumber: event.proposalNumber,
         applicantName: event.landData['applicantName'] ?? '',
         LandOwnedByApplicant: event.landData['landOwnedByApplicant'] ? 'Y' : 'N',
         LocationOfFarm: event.landData['locationOfFarm'] ?? '',

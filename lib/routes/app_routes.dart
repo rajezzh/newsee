@@ -161,7 +161,8 @@ final routes = GoRouter(
       name: AppRouteConstants.LAND_HOLDING_PAGE['name'],
       builder:
         (context, state) {
-          final proposalnumber = state.extra as String;
+          final proposalnumber = (state.extra as Map<String, dynamic>?)? ['proposalNumber'] as String;
+          final applicantname = (state.extra as Map<String, dynamic>?)? ['applicantName'] as String;
           return PopScope(
             canPop: false,
             onPopInvokedWithResult: (didpop, data) async {
@@ -188,7 +189,11 @@ final routes = GoRouter(
                 // context.go('/'); // Navigate back using GoRouter
               }
             },
-            child: LandHoldingPage(title: 'Land Holding Details', proposalNumber: proposalnumber),
+            child: LandHoldingPage(
+              title: 'Land Holding Details', 
+              proposalNumber: proposalnumber,
+              applicantName: applicantname,
+            ),
           );
         }
     ),
