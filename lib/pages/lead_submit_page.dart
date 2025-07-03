@@ -131,7 +131,17 @@ class LeadSubmitPage extends StatelessWidget {
                 }
               },
               onPressedRightButton: () {
-                context.pushNamed(AppRouteConstants.LAND_HOLDING_PAGE['name']!);
+                final applicantData =
+                    state.leadSubmitRequest?.individualNonIndividualDetails;
+                final applicantName =
+                    '${applicantData?.firstName} ${applicantData?.lastName}';
+                context.pushNamed(
+                  AppRouteConstants.LAND_HOLDING_PAGE['name']!,
+                  extra: {
+                    'proposalNumber': state.proposalNo,
+                    'applicantName': applicantName,
+                  },
+                );
               },
               leftButtonLabel: 'Go To Inbox',
               rightButtonLabel: 'Go To LandHolding',
