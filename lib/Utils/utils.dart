@@ -12,7 +12,9 @@ String formatAmount(String amount) {
   try {
     final num value = num.parse(amount);
     final formatter = NumberFormat.decimalPattern('en_IN');
-    return formatter.format(value);
+    return '₹${formatter.format(value)}';
+    // final formatter = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
+    // return formatter.format(value);
   } catch (e) {
     return amount;
   }
@@ -38,6 +40,56 @@ String getCorrectDateFormat(dynamic value) {
     DateFormat parser = DateFormat('yyyy-MM-dd');
     DateTime date = parser.parse(value);
     DateFormat formatter = DateFormat('dd-MM-yyyy');
+    String convertedDateString = formatter.format(date);
+    return convertedDateString;
+  } catch (error) {
+    print("getCorrectDateFormat-string $error");
+    return "";
+  }
+}
+
+// Split Aadhaar Address String more than 40 digit and return string data
+String? addressSplit(String str) {
+  try {
+    if (str == "") {
+      return str;
+    } else {
+      if (str[0] == " ") {
+        str = str.trim();
+      }
+      // let first = str.substring(0, 40).lastIndexOf(',')
+      String? line1;
+      if (str.length < 40) {
+        line1 = str;
+      } else {
+        final first = str.substring(0, 40).lastIndexOf(' ');
+        if (first < 0) {
+          line1 = str.substring(0);
+        } else {
+          line1 = str.substring(0, first + 1);
+        }
+      }
+      return line1;
+    }
+  } catch (error) {
+    print("error catching $error");
+    return null;
+  }
+}
+
+/// @desc   : converts date by provided arguments
+/// @param  : {from} - date to be formated , {to} will be retured formatted string
+/// @return : {String} - formatted date
+
+String getDateFormatedByProvided(
+  dynamic value, {
+  required String from,
+  required String to,
+}) {
+  try {
+    DateFormat parser = DateFormat(from);
+    DateTime date = parser.parse(value);
+    DateFormat formatter = DateFormat(to);
     String convertedDateString = formatter.format(date);
     return convertedDateString;
   } catch (error) {
@@ -172,4 +224,17 @@ CoapplicantData mapCoapplicantDataFromCif(CifResponse response) {
 
   print('mapCoapplicantDataFromCif => $data');
   return data;
+}
+
+/// @desc   : Remove rupee seperator from form value
+/// @param  : {from} - String value from form , {to} will be retured removed comma from string value
+/// @return : {String} - string data
+String? removeSpecialCharacters(String formval) {
+  try {
+    String raw = formval.replaceAll(RegExp(r'[^\d]'), '');
+    return raw;
+  } catch (error) {
+    print('removeSpecialCharacters-utilspage => $error');
+  }
+   
 }

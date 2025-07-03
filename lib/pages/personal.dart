@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_forms.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/qr_nav_utils.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_request.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
@@ -19,7 +20,7 @@ class Personal extends StatelessWidget {
   Personal({required this.title, super.key});
 
   final FormGroup form = AppForms.PERSONAL_DETAILS_FORM;
-  bool refAadhaar = false;
+  bool refAadhaar = true;
 
   /* 
     @author     : ganeshkumar.b  13/06/2025
@@ -46,9 +47,14 @@ class Personal extends StatelessWidget {
             form.control('firstName').updateValue(getNameArray[0]);
           }
         }
-        form
-            .control('dob')
-            .updateValue(getCorrectDateFormat(val?.dateOfBirth!));
+        final formattedDate = getDateFormatedByProvided(
+          val?.dateOfBirth!,
+          from: AppConstants.Format_dd_MM_yyyy,
+          to: AppConstants.Format_yyyy_MM_dd,
+        );
+        print('formattedDate in personal page => $formattedDate');
+
+        form.control('dob').updateValue(formattedDate);
         // form.control('primaryMobileNumber').updateValue(val?.mobile!);
         form.control('email').updateValue(val?.email!);
       }
@@ -195,9 +201,9 @@ class Personal extends StatelessWidget {
                           );
                           if (pickedDate != null) {
                             final formatted =
-                                "${pickedDate.day.toString().padLeft(2, '0')}/"
-                                "${pickedDate.month.toString().padLeft(2, '0')}/"
-                                "${pickedDate.year}";
+                                "${pickedDate.year}-"
+                                "${pickedDate.month.toString().padLeft(2, '0')}-"
+                                "${pickedDate.day.toString().padLeft(2, '0')}";
                             form.control('dob').value = formatted;
                           }
                         },
@@ -229,12 +235,24 @@ class Personal extends StatelessWidget {
                       autoCapitalize: true,
                     ),
                     refAadhaar
-                        ? IntegerTextField(
-                          controlName: 'aadharRefNo',
-                          label: 'Aadhaar No',
-                          mantatory: true,
-                          maxlength: 12,
-                          minlength: 12,
+                        ? Row(
+                          children: [
+                            Expanded(
+                              child: IntegerTextField(
+                                controlName: 'aadharRefNo',
+                                label: 'Aadhaar No',
+                                mantatory: true,
+                                maxlength: 12,
+                                minlength: 12,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton.icon(
+                              icon: Icon(Icons.qr_code_scanner),
+                              label: Text('Scan'),
+                              onPressed: () => showScannerOptions(context),
+                            ),
+                          ],
                         )
                         : Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -554,9 +572,18 @@ class Personal extends StatelessWidget {
                             PersonalData personalData = PersonalData.fromMap(
                               form.value,
                             );
+                            PersonalData personalDataFormatted = personalData
+                                .copyWith(
+                                  dob: getDateFormatedByProvided(
+                                    personalData.dob,
+                                    from: AppConstants.Format_dd_MM_yyyy,
+                                    to: AppConstants.Format_yyyy_MM_dd,
+                                  ),
+                                );
+
                             context.read<PersonalDetailsBloc>().add(
                               PersonalDetailsSaveEvent(
-                                personalData: personalData,
+                                personalData: personalDataFormatted,
                               ),
                             );
                           } else {

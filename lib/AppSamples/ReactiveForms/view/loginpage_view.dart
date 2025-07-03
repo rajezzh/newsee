@@ -20,8 +20,18 @@ description : A stateless widget that serves as the main login screen for the ap
  */
 
 class LoginpageView extends StatelessWidget {
-  void fingerPrintScanner() {
+  Future fingerPrintScanner(context) async {
     print('clicked finger print');
+    
+    // var biometricResponse = await BioMetricLogin().biometricAuthentication();
+    // print("biometricResponse ${biometricResponse.status}");
+    // if (biometricResponse.status) {
+
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text(biometricResponse.message)),
+    //   );
+    // }
   }
 
   @override
@@ -71,7 +81,7 @@ class LoginpageView extends StatelessWidget {
                           //Login using fingerprint (biometric authentication)
                           IconButton(
                             onPressed: () {
-                              fingerPrintScanner();
+                              fingerPrintScanner(context);
                             },
                             icon: Icon(Icons.fingerprint),
                             iconSize: screenWidth * 0.18,

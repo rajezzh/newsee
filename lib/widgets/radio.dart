@@ -6,13 +6,17 @@ class RadioButton extends StatelessWidget {
   String controlName;
   String optionOne;
   String optionTwo;
+  final Function? onChangeListener;
 
   RadioButton({
     required this.label,
     required this.controlName,
     required this.optionOne,
     required this.optionTwo,
+    this.onChangeListener,
   });
+
+    _onChangeListener(bool val) => onChangeListener!(val);
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,7 @@ class RadioButton extends StatelessWidget {
                   formControlName: controlName,
                   title: Text(optionOne),
                   value: true,
+                  onChanged: (val) => _onChangeListener(true),
                 ),
               ),
               Expanded(
@@ -36,6 +41,7 @@ class RadioButton extends StatelessWidget {
                   formControlName: controlName,
                   title: Text(optionTwo),
                   value: false,
+                  onChanged: (val) => _onChangeListener(false),
                 ),
               ),
             ],
@@ -45,3 +51,4 @@ class RadioButton extends StatelessWidget {
     );
   }
 }
+

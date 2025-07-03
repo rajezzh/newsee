@@ -41,6 +41,13 @@ class GeographymasterCrudRepo extends SimpleCrudRepo<GeographyMaster>
   }
 
   @override
+  Future<int> deleteAll() {
+    return _db.transaction((txn) async {
+      return await txn.delete(TableKeysGeographyMaster.tableName);
+    });
+  }
+
+  @override
   Future<int> update(GeographyMaster o) {
     // TODO: implement update
     throw UnimplementedError();

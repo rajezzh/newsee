@@ -20,20 +20,55 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 class CoApplicantPage extends StatelessWidget {
   final String title;
-  final FormGroup form = AppForms.COAPPLICANT_DETAILS_FORM;
+  final FormGroup form = FormGroup({
+    'customertype': FormControl<String>(validators: [Validators.required]),
+    'constitution': FormControl<String>(validators: [Validators.required]),
+    'cifNumber': FormControl<String>(validators: [Validators.required]),
+    'title': FormControl<String>(validators: [Validators.required]),
+    'firstName': FormControl<String>(validators: [Validators.required]),
+    'middleName': FormControl<String>(validators: [Validators.required]),
+    'lastName': FormControl<String>(validators: [Validators.required]),
+    'relationshipFirm': FormControl<String>(validators: [Validators.required]),
+    'dob': FormControl<String>(validators: [Validators.required]),
+    'primaryMobileNumber': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(10)],
+    ),
+    'secondaryMobileNumber': FormControl<String>(
+      validators: [Validators.required, Validators.minLength(10)],
+    ),
+    'email': FormControl<String>(validators: [Validators.email]),
+    'aadhaar': FormControl<String>(validators: []),
+    'panNumber': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.PAN_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'aadharRefNo': FormControl<String>(
+      validators: [
+        Validators.pattern(AppConstants.AADHAAR_PATTERN),
+        Validators.minLength(10),
+      ],
+    ),
+    'address1': FormControl<String>(validators: [Validators.required]),
+    'address2': FormControl<String>(validators: [Validators.required]),
+    'address3': FormControl<String>(validators: [Validators.required]),
+    'state': FormControl<String>(validators: [Validators.required]),
+    'cityDistrict': FormControl<String>(validators: [Validators.required]),
+    'pincode': FormControl<String>(validators: [Validators.required]),
+    'loanLiabilityCount': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'loanLiabilityAmount': FormControl<String>(
+      validators: [Validators.required],
+    ),
+    'depositCount': FormControl<String>(validators: [Validators.required]),
+    'depositAmount': FormControl<String>(validators: [Validators.required]),
+  });
+
   bool refAadhaar = false;
 
   CoApplicantPage({required this.title, super.key});
-
-  mapCifResponse(CoapplicantData? data) {
-    try {
-      form.control('address1').updateValue(data?.address1);
-      form.control('address2').updateValue(data?.address2);
-      form.control('address3').updateValue(data?.address3);
-    } catch (error) {
-      print(error);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +108,18 @@ class CoApplicantPage extends StatelessWidget {
             final cifresponse = state.selectedCoApp?.toMap();
             for (final ctrl in controls) {
               if (cifresponse?[ctrl.key] != null) {
-                print(
-                  'cifresponse?[ctrl.key]  => ${ctrl.key} == ${cifresponse?[ctrl.key]}',
-                );
+                if (ctrl.key == 'dob') {
+                  final formattedDate = getDateFormatedByProvided(
+                    cifresponse?[ctrl.key],
+                    from: AppConstants.Format_dd_MM_yyyy,
+                    to: AppConstants.Format_yyyy_MM_dd,
+                  );
+                  print('formattedDate in coapppage => $formattedDate');
+                  form.controls[ctrl.key]?.updateValue(formattedDate);
+                }
+                if (ctrl.key == 'state' || ctrl.key == 'cityDistrict') {
+                  form.controls[ctrl.key]?.updateValue("");
+                }
                 form.controls[ctrl.key]?.updateValue(cifresponse?[ctrl.key]);
               }
             }
@@ -286,9 +330,9 @@ class CoApplicantPage extends StatelessWidget {
                           );
                           if (pickedDate != null) {
                             final formatted =
-                                "${pickedDate.day.toString().padLeft(2, '0')}/"
-                                "${pickedDate.month.toString().padLeft(2, '0')}/"
-                                "${pickedDate.year}";
+                                "${pickedDate.year}-"
+                                "${pickedDate.month.toString().padLeft(2, '0')}-"
+                                "${pickedDate.day.toString().padLeft(2, '0')}";
                             form.control('dob').value = formatted;
                           }
                         },
@@ -353,8 +397,8 @@ class CoApplicantPage extends StatelessWidget {
                         if (value == null || value.toString().isEmpty) {
                           return null;
                         }
-                        if (state.selectedCoApp != null) {
-                          String? stateCode = state.selectedCoApp?.state!;
+                        if (state.selectedCoApp?.state != null) {
+                          String? stateCode = state.selectedCoApp?.state;
 
                           GeographyMaster? geographyMaster = state
                               .stateCityMaster
@@ -385,12 +429,9 @@ class CoApplicantPage extends StatelessWidget {
                         final value = form.control('cityDistrict').value;
                         if (value == null || value.toString().isEmpty) {
                           return null;
-                        }
-                        if (state.selectedCoApp != null) {
-                          String? cityCode = state.selectedCoApp?.cityDistrict!;
-
+                        } else {
                           GeographyMaster? geographyMaster = state.cityMaster
-                              ?.firstWhere((val) => val.code == cityCode);
+                              ?.firstWhere((val) => val.code == value);
                           print(geographyMaster);
                           if (geographyMaster != null) {
                             form.controls['cityDistrict']?.updateValue(
@@ -400,9 +441,6 @@ class CoApplicantPage extends StatelessWidget {
                           } else {
                             return <GeographyMaster>[];
                           }
-                        } else if (state.cityMaster!.isEmpty) {
-                          form.controls['cityDistrict']?.updateValue("");
-                          return <GeographyMaster>[];
                         }
                       },
                     ),
@@ -461,10 +499,17 @@ class CoApplicantPage extends StatelessWidget {
                           if (form.valid) {
                             CoapplicantData coapplicantData =
                                 CoapplicantData.fromMap(form.value);
-
+                            CoapplicantData coapplicantDataFormatted =
+                                coapplicantData.copyWith(
+                                  dob: getDateFormatedByProvided(
+                                    coapplicantData.dob,
+                                    from: AppConstants.Format_dd_MM_yyyy,
+                                    to: AppConstants.Format_yyyy_MM_dd,
+                                  ),
+                                );
                             context.read<CoappDetailsBloc>().add(
                               CoAppDetailsSaveEvent(
-                                coapplicantData: coapplicantData,
+                                coapplicantData: coapplicantDataFormatted,
                               ),
                             );
                           } else {

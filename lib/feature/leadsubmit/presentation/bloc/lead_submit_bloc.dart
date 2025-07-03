@@ -62,6 +62,8 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
   }
 
   Future<void> onLeadPush(LeadSubmitPushEvent event, Emitter emit) async {
+    final coappdataMap = event.coapplicantData?.toMap();
+    coappdataMap?.addAll({"residentialStatus": "4"});
     try {
       Map<String, dynamic> leadSubmitRequest = {
         "userid": "AGRI1124",
@@ -78,8 +80,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         "dedupeSearch": event.dedupe.toMap(),
         "individualNonIndividualDetails": event.personalData?.toMap(),
         "addressDetails": [event.addressData?.toMap()],
-        "coApplicantDetils":
-            event.coapplicantData != null ? event.coapplicantData?.toMap() : {},
+        "coApplicantDetils": event.coapplicantData != null ? coappdataMap : {},
         "guarantorDetils": {},
       };
 

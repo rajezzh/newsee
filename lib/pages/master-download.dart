@@ -38,6 +38,7 @@ class MasterDownload extends StatelessWidget {
             builder: (context, state) {
               return DownloadProgressWidget(
                 downloadProgress: state.downloadProgress,
+                // mastername: 
               );
             },
           ),

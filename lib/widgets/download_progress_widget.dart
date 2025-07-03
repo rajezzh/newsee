@@ -7,6 +7,7 @@ class DownloadProgressWidget extends StatelessWidget {
 
   final double downloadProgress;
 
+
   @override
   Widget build(BuildContext context) {
     return Center(

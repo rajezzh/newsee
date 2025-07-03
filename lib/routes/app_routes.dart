@@ -27,6 +27,7 @@ import 'package:newsee/feature/documentupload/presentation/pages/document_page.d
 import 'package:newsee/feature/documentupload/presentation/widget/image_view.dart';
 import 'package:newsee/feature/landholding/presentation/page/land_holding_page.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
 import 'package:newsee/feature/masters/presentation/page/masters_page.dart';
@@ -137,7 +138,7 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.MASTERS_PAGE['path']!,
       name: AppRouteConstants.MASTERS_PAGE['name'],
-      builder: (context, state) => MastersPage(),
+      builder: (context, state) => MastersPage()
     ),
     GoRoute(
       path: AppRouteConstants.PROFILE_PAGE['path']!,
@@ -162,7 +163,10 @@ final routes = GoRouter(
       path: AppRouteConstants.LAND_HOLDING_PAGE['path']!,
       name: AppRouteConstants.LAND_HOLDING_PAGE['name'],
       builder:
-          (context, state) => PopScope(
+        (context, state) {
+          final proposalnumber = (state.extra as Map<String, dynamic>?)? ['proposalNumber'] as String;
+          final applicantname = (state.extra as Map<String, dynamic>?)? ['applicantName'] as String;
+          return PopScope(
             canPop: false,
             onPopInvokedWithResult: (didpop, data) async {
               final shouldPop = await showDialog<bool>(
@@ -188,8 +192,13 @@ final routes = GoRouter(
                 // context.go('/'); // Navigate back using GoRouter
               }
             },
-            child: LandHoldingPage(title: 'Land Holding Details'),
-          ),
+            child: LandHoldingPage(
+              title: 'Land Holding Details', 
+              proposalNumber: proposalnumber,
+              applicantName: applicantname,
+            ),
+          );
+        }
     ),
     GoRoute(
       path: AppRouteConstants.DOCUMENT_PAGE['path']!,
@@ -237,35 +246,39 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.CROP_DETAILS_PAGE['path']!,
       name: AppRouteConstants.CROP_DETAILS_PAGE['name'],
-      builder:
-          (context, state) => PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (didpop, data) async {
-              final shouldPop = await showDialog<bool>(
-                context: context,
-                builder:
-                    (context) => AlertDialog(
-                      title: Text('Confirm'),
-                      content: Text('Do you want to Exit ?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: Text('Cancel'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          child: Text('Yes'),
-                        ),
-                      ],
-                    ),
-              );
-              if (shouldPop ?? false) {
-                Navigator.of(context).pop(false);
-                // context.go('/'); // Navigate back using GoRouter
-              }
-            },
-            child: CropDetailsPage(title: 'Crop Details'),
+      builder: (context, state) {
+        final proposalNumber = state.extra as String;
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didpop, data) async {
+            final shouldPop = await showDialog<bool>(
+              context: context,
+              builder:
+                  (context) => AlertDialog(
+                    title: Text('Confirm'),
+                    content: Text('Do you want to Exit ?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  ),
+            );
+            if (shouldPop ?? false) {
+              Navigator.of(context).pop(false);
+            }
+          },
+          child: CropDetailsPage(
+            title: 'Crop Details',
+            proposalnumber: proposalNumber,
           ),
+        );
+      },
     ),
     GoRoute(
       path: AppRouteConstants.IMAGE_VIEW_PAGE['path']!,

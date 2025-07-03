@@ -54,6 +54,7 @@ class AppForms {
     'middleName': FormControl<String>(validators: [Validators.required]),
     'lastName': FormControl<String>(validators: [Validators.required]),
     'dob': FormControl<String>(validators: [Validators.required]),
+    'residentialStatus': FormControl<String>(validators: [Validators.required]),
     'primaryMobileNumber': FormControl<String>(
       validators: [Validators.required, Validators.minLength(10)],
     ),
@@ -134,54 +135,58 @@ class AppForms {
   });
 
   // Land Holding Form
-  static final FormGroup LAND_HOLDING_FORM = FormGroup({
-    'applicantName': FormControl<String>(validators: [Validators.required]),
-    'locationOfFarm': FormControl<String>(validators: [Validators.required]),
-    'state': FormControl<String>(validators: [Validators.required]),
-    'taluk': FormControl<String>(validators: [Validators.required]),
-    'firka': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'totalAcreage': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'irrigatedLand': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'compactBlocks': FormControl<bool>(validators: [Validators.required]),
-    'landOwnedByApplicant': FormControl<bool>(
-      validators: [Validators.required],
-    ),
-    'distanceFromBranch': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'district': FormControl<String>(validators: [Validators.required]),
-    'village': FormControl<String>(validators: [Validators.required]),
-    'surveyNo': FormControl<String>(
-      validators: [Validators.required, Validators.pattern(r'^\d+$')],
-    ),
-    'natureOfRight': FormControl<String>(validators: [Validators.required]),
-    'irrigationFacilities': FormControl<String>(
-      validators: [Validators.required],
-    ),
-    'affectedByCeiling': FormControl<bool>(validators: [Validators.required]),
-    'landAgriActive': FormControl<bool>(validators: [Validators.required]),
-    'villageOfficerCertified': FormControl<bool>(
-      validators: [Validators.required],
-    ),
-  });
+  static FormGroup buildLandHoldingDetailsForm() {
+    return FormGroup({
+      'applicantName': FormControl<String>(validators: [Validators.required]),
+      'locationOfFarm': FormControl<String>(validators: [Validators.required]),
+      'state': FormControl<String>(validators: [Validators.required]),
+      'taluk': FormControl<String>(validators: [Validators.required]),
+      'firka': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'totalAcreage': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'irrigatedLand': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'compactBlocks': FormControl<bool>(validators: [Validators.required]),
+      'landOwnedByApplicant': FormControl<bool>(
+        validators: [Validators.required],
+      ),
+      'distanceFromBranch': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'district': FormControl<String>(validators: [Validators.required]),
+      'village': FormControl<String>(validators: [Validators.required]),
+      'surveyNo': FormControl<String>(
+        validators: [Validators.required, Validators.pattern(r'^\d+$')],
+      ),
+      'natureOfRight': FormControl<String>(validators: [Validators.required]),
+      'irrigationFacilities': FormControl<String>(
+        validators: [Validators.required],
+      ),
+      'affectedByCeiling': FormControl<bool>(validators: [Validators.required]),
+      'landAgriActive': FormControl<bool>(validators: [Validators.required]),
+      'villageOfficerCertified': FormControl<bool>(
+        validators: [Validators.required],
+      ),
+    });
+  }
 
-  static FormGroup CROP_DETAILS_FORM = FormGroup({
-    'season': FormControl<String>(validators: [Validators.required]),
-    'nameOfCrop': FormControl<String>(validators: [Validators.required]),
-    'acrescultivated': FormControl<String>(validators: [Validators.required]),
-    'typeofland': FormControl<String>(validators: [Validators.required]),
-    'scaleoffincance': FormControl<String>(validators: [Validators.required]),
-    'reqasperscaleoffinace': FormControl<String>(
-      validators: [Validators.required],
-    ),
-    'notifiedcrop': FormControl<bool>(validators: [Validators.required]),
-    'premiumperacre': FormControl<String>(validators: [Validators.required]),
-    'premiumcollected': FormControl<String>(validators: [Validators.required]),
-  });
+  static FormGroup buildCropDetailsForm() {
+    return FormGroup({
+      'lasSeason': FormControl<String>(validators: [Validators.required]),
+      'lasCrop': FormControl<String>(validators: [Validators.required]),
+      'lasAreaofculti': FormControl<String>(validators: [Validators.required]),
+      'lasTypOfLand': FormControl<String>(validators: [Validators.required]),
+      'lasScaloffin': FormControl<String>(validators: [Validators.required]),
+      'lasReqScaloffin': FormControl<String>(
+        validators: [Validators.required],
+      ),
+      'notifiedCropFlag': FormControl<bool>(validators: [Validators.required]),
+      'lasPrePerAcre': FormControl<String>(validators: [Validators.required]),
+      'lasPreToCollect': FormControl<String>(validators: [Validators.required]),
+    });
+  }
 }

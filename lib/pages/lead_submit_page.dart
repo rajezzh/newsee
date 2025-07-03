@@ -74,7 +74,8 @@ class LeadSubmitPage extends StatelessWidget {
       appBar: AppBar(title: Text(title), automaticallyImplyLeading: false),
       body: BlocConsumer<LeadSubmitBloc, LeadSubmitState>(
         listener: (context, state) {
-          if (state.leadSubmitStatus == SubmitStatus.success) {
+          if (state.leadSubmitStatus == SubmitStatus.success &&
+              state.proposalSubmitStatus == SaveStatus.init) {
             showSuccessBottomSheet(
               context: context,
               headerTxt: ApiConstants.api_response_success,
@@ -215,6 +216,7 @@ class LeadSubmitPage extends StatelessWidget {
                         : showNoDataCard(context),
               )
               : ApplicationCard(
+                leadId: state.leadId!,
                 onProceedPressed: () {
                   createProposal(context, state);
                 },

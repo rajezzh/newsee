@@ -40,6 +40,7 @@ Future<AsyncResponseHandler<bool, List<MasterVersion>>> compareVersions(
   // list to store all the masters which versio are not equal to the targetMasterList
   // hence this
   List<MasterVersion> differredMasters = [];
+  List<MasterVersion> fulldifferentMaster = [];
 
   if (masterversionsList.isNotEmpty) {
     // master version having values which means masters already downloaded
@@ -52,8 +53,12 @@ Future<AsyncResponseHandler<bool, List<MasterVersion>>> compareVersions(
                     (v.mastername == e.mastername) && (v.version != e.version),
               )
               .toList();
+      print("differredMasters $differredMasters");
+      if (differredMasters.isNotEmpty) {
+        fulldifferentMaster.addAll(differredMasters);
+      }
     });
-    return Future.value(AsyncResponseHandler.right(differredMasters));
+    return Future.value(AsyncResponseHandler.right(fulldifferentMaster));
   } else {
     // if left is returned which tells there is no masters downloaded yet
     // first time hence masters should download
