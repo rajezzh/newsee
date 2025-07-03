@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/feature/leadsubmit/domain/modal/dedupe.dart';
@@ -18,7 +20,7 @@ class LeadSubmitRequest {
   final LoanProduct chooseProduct;
   final Dedupe dedupeSearch;
   final PersonalData? individualNonIndividualDetails;
-  final AddressData addressDetails;
+  final List<AddressData> addressDetails;
   LeadSubmitRequest({
     required this.userid,
     required this.vertical,
@@ -44,7 +46,7 @@ class LeadSubmitRequest {
     LoanProduct? chooseProduct,
     Dedupe? dedupeSearch,
     PersonalData? individualNonIndividualDetails,
-    AddressData? addressDetails,
+    List<AddressData>? addressDetails,
   }) {
     return LeadSubmitRequest(
       userid: userid ?? this.userid,
@@ -74,7 +76,7 @@ class LeadSubmitRequest {
       'chooseProduct': chooseProduct.toMap(),
       'dedupeSearch': dedupeSearch.toMap(),
       'individualNonIndividualDetails': individualNonIndividualDetails?.toMap(),
-      'addressDetails': addressDetails.toMap(),
+      'addressDetails': addressDetails.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -97,8 +99,10 @@ class LeadSubmitRequest {
                 map['individualNonIndividualDetails'] as Map<String, dynamic>,
               )
               : null,
-      addressDetails: AddressData.fromMap(
-        map['addressDetails'] as Map<String, dynamic>,
+      addressDetails: List<AddressData>.from(
+        (map['addressDetails'] as List<dynamic>).map<AddressData>(
+          (x) => AddressData.fromMap(x as Map<String, dynamic>),
+        ),
       ),
     );
   }
@@ -128,7 +132,7 @@ class LeadSubmitRequest {
         other.dedupeSearch == dedupeSearch &&
         other.individualNonIndividualDetails ==
             individualNonIndividualDetails &&
-        other.addressDetails == addressDetails;
+        listEquals(other.addressDetails, addressDetails);
   }
 
   @override

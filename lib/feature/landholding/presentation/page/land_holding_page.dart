@@ -26,14 +26,17 @@ class LandHoldingPage extends StatelessWidget {
 
   final form = AppForms.buildLandHoldingDetailsForm();
 
-  LandHoldingPage({super.key, required this.title, required this.applicantName, required this.proposalNumber});
+  LandHoldingPage({
+    super.key,
+    required this.title,
+    required this.applicantName,
+    required this.proposalNumber,
+  });
 
   void handleSubmit(BuildContext context, LandHoldingState state) {
     if (form.valid) {
       final globalLoadingBloc = context.read<GlobalLoadingBloc>();
-      globalLoadingBloc.add(
-        ShowLoading(message: "Crop Details Submitting..."),
-      );
+      globalLoadingBloc.add(ShowLoading(message: "Crop Details Submitting..."));
       context.read<LandHoldingBloc>().add(
         LandDetailsSaveEvent(
           landData: form.value,
@@ -169,41 +172,47 @@ class LandHoldingPage extends StatelessWidget {
               SizedBox(height: 10),
 
               Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        bottom: 20,
-                        top: 10,
+                
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                      padding: const EdgeInsets.all(8),
+
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.10),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                   child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Proposal Id: ",
+                              style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold) ,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                proposalNumber ?? 'N/A',
+                                style: TextStyle(color: Colors.white, fontSize: 14,  fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis, 
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text(
-                        "Proposal ID: ",
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                      height: 30,
-                      child: Text(
-                        proposalNumber ?? 'N/A',
-                        style: TextStyle(
-                          color: Colors.white, 
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                                 ),
               ),
             ],
           ),
         ),
         body: BlocProvider(
-          create: (_) => LandHoldingBloc()..add(LandHoldingInitEvent(proposalNumber: proposalNumber)),
+          create:
+              (_) =>
+                  LandHoldingBloc()
+                    ..add(LandHoldingInitEvent(proposalNumber: proposalNumber)),
           child: BlocConsumer<LandHoldingBloc, LandHoldingState>(
             listener: (context, state) {
               if (state.status == SaveStatus.success) {
@@ -211,7 +220,7 @@ class LandHoldingPage extends StatelessWidget {
                 form.reset();
               }
               if (state.selectedLandData != null &&
-                state.status == SaveStatus.update) {
+                  state.status == SaveStatus.update) {
                 var selectedFormArrayData = state.selectedLandData!.mapForm();
                 print("selectedFormArrayData $selectedFormArrayData");
                 form.patchValue(selectedFormArrayData);
@@ -227,7 +236,7 @@ class LandHoldingPage extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              if(state.status == SaveStatus.init) {
+              if (state.status == SaveStatus.init) {
                 form.control('applicantName').updateValue(applicantName);
               }
               return ReactiveForm(
@@ -249,9 +258,7 @@ class LandHoldingPage extends StatelessWidget {
                                     Dropdown(
                                       controlName: 'applicantName',
                                       label: 'Applicant Name / Guarantor',
-                                      items: [
-                                        applicantName
-                                      ],
+                                      items: [applicantName],
                                     ),
                                     SearchableDropdown(
                                       controlName: 'state',
@@ -330,8 +337,7 @@ class LandHoldingPage extends StatelessWidget {
                                     ),
                                     IntegerTextField(
                                       controlName: 'irrigatedLand',
-                                      label:
-                                          'Out of Total acreage, how much is the Irrigated Land (in Acres)',
+                                      label: 'Total Irrigated Land (in Acres)',
                                       mantatory: true,
                                       maxlength: 2,
                                       minlength: 1,
@@ -469,8 +475,12 @@ class LandHoldingPage extends StatelessWidget {
                                       optionTwo: 'No',
                                     ),
                                     ElevatedButton.icon(
-                                      onPressed: () => handleSubmit(context, state),
-                                      icon: const Icon(Icons.save, color: Colors.white),
+                                      onPressed:
+                                          () => handleSubmit(context, state),
+                                      icon: const Icon(
+                                        Icons.save,
+                                        color: Colors.white,
+                                      ),
                                       label: const Text(
                                         'Save',
                                         style: TextStyle(
@@ -490,7 +500,9 @@ class LandHoldingPage extends StatelessWidget {
                                           vertical: 14,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                       ),
                                     ),

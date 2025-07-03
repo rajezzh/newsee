@@ -19,7 +19,7 @@ class Personal extends StatelessWidget {
 
   Personal({required this.title, super.key});
 
-  final FormGroup form = AppForms.PERSONAL_DETAILS_FORM;
+  final FormGroup form = AppForms.GET_PERSONAL_DETAILS_FORM();
   bool refAadhaar = true;
 
   /* 
