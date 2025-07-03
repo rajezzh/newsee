@@ -205,30 +205,33 @@ class CoApplicantPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(
-                              255,
-                              3,
-                              9,
-                              110,
+                        Padding(
+                          padding: const EdgeInsets.only(right: 15),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color.fromARGB(
+                                255,
+                                3,
+                                9,
+                                110,
+                              ),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 10,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
+                            onPressed: () {
+                              cifSearch(context);
+                            },
+                            child:
+                                state.status == SaveStatus.loading
+                                    ? CircularProgressIndicator()
+                                    : const Text("Search"),
                           ),
-                          onPressed: () {
-                            cifSearch(context);
-                          },
-                          child:
-                              state.status == SaveStatus.loading
-                                  ? CircularProgressIndicator()
-                                  : const Text("Search"),
                         ),
                       ],
                     ),
