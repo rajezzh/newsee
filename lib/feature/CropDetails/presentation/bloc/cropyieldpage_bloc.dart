@@ -10,6 +10,9 @@ import 'package:newsee/feature/CropDetails/domain/modal/cropdetailsmodal.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/cropmodel.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/croprequestmodel.dart';
 import 'package:newsee/feature/CropDetails/domain/repository/cropdetails_repository.dart';
+import 'package:newsee/feature/landholding/data/repository/land_Holding_respository_impl.dart';
+import 'package:newsee/feature/landholding/domain/modal/LandData.dart';
+import 'package:newsee/feature/landholding/domain/repository/landHolding_repository.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -87,19 +90,40 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       Database _db = await DBConfig().database;
       List<Lov> listOfLov = await LovCrudRepo(_db).getAll();
       print('listOfLov => $listOfLov');
+      
       GlobalLoadingBloc().add(ShowLoading(message: 'Fetching Crop Details'));
+
+      //Get Crop Details
       CropDetailsRepository cropRepository = CropDetailsRepositoryImpl();
-      AsyncResponseHandler<Failure, CropGetResponse> response = await cropRepository.getCrop(
+      AsyncResponseHandler<Failure, CropGetResponse> cropResponse = await cropRepository.getCrop(
         event.proposalNumber
       );
-       print("get responseHandler value is => $response");
-      if (response.isRight()) {
+
+      //Get Land Details
+      final LandHoldingRepository landHoldingRepository =
+          LandHoldingRespositoryImpl();
+      final landresponse = await landHoldingRepository.getLandholding(event.proposalNumber);
+      print("get responseHandler value is => $cropResponse");
+
+      //Emit init state
+      if (cropResponse.isRight() && landresponse.isRight()) {
+        List<LandData> landData = landresponse.right.agriLandHoldingsList.map((e) => LandData.fromMap(e)).toList();
         emit(
           state.copyWith(
             lovlist: listOfLov,
             status: CropPageStatus.init,
-            cropData: response.right.agriCropDetails,
-            landDetails: response.right.agriLandDetails
+            cropData: cropResponse.right.agriCropDetails,
+            landDetails: cropResponse.right.agriLandDetails,
+            landData: landData
+          )
+        );
+      } else if (landresponse.isRight()) {
+        List<LandData> landData = landresponse.right.agriLandHoldingsList.map((e) => LandData.fromMap(e)).toList();
+        emit(
+          state.copyWith(
+            lovlist: listOfLov,
+            status: CropPageStatus.init,
+            landData: landData
           )
         );
       } else {

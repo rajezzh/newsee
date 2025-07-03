@@ -17,6 +17,14 @@ class ProductsCrudRepo extends SimpleCrudRepo<Product>
   }
 
   @override
+  Future<int> deleteAll() {
+    return _db.transaction((txn) async {
+      return await txn.delete(TableKeysProducts.tableName);
+    });
+  }
+
+
+  @override
   Future<List<Product>> getAll() async {
     final List<Map<String, dynamic>> data = await _db.query(
       TableKeysProducts.tableName,

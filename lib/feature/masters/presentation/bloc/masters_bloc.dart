@@ -5,6 +5,7 @@ import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 
 part './masters_event.dart';

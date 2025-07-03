@@ -6,6 +6,7 @@ import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
 import 'package:newsee/widgets/download_progress_widget.dart';
 
@@ -79,7 +80,7 @@ class MastersPage extends StatelessWidget {
                         setupVersion: '9',
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_products,
-                      ),
+                      )
                     ),
                   );
 
@@ -95,7 +96,7 @@ class MastersPage extends StatelessWidget {
                         setupmodule: 'AGRI',
                         setupTypeOfMaster:
                             ApiConstants.master_key_productschema,
-                      ),
+                      )
                     ),
                   );
 
@@ -111,7 +112,7 @@ class MastersPage extends StatelessWidget {
                         setupVersion: '9',
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_statecity,
-                      ),
+                      )
                     ),
                   );
                 case MasterTypes.success:
@@ -128,7 +129,9 @@ class MastersPage extends StatelessWidget {
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
               return SafeArea(
-                child: DownloadProgressWidget(downloadProgress: progress),
+                child: DownloadProgressWidget(
+                  downloadProgress: progress,
+                ),
               );
             },
           ),
