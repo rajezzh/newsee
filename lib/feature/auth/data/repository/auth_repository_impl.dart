@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
@@ -57,19 +56,7 @@ class AuthRepositoryImpl implements AuthRepository {
             response.data['responseData']['MasterDetails'];
         Globalconfig.masterVersionMapper = masterdetail;
 
-         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('token', authResponse.token);
-        await prefs.setString(
-            'username', authResponse.UserName);
-        await prefs.setString(
-            'Orgscode', authResponse.Orgscode);
-
-
-
-
-        print('Stored token: ${prefs.getString('token')}');
-        print('Stored username: ${prefs.getString('username')}');
-        print('Stored Orgscode: ${prefs.getString('Orgscode')}');
+        
 
 
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
