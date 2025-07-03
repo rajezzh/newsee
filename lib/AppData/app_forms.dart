@@ -48,7 +48,7 @@ class AppForms {
     'isNewCustomer': FormControl<bool>(validators: [Validators.required]),
   });
 
-  static final FormGroup PERSONAL_DETAILS_FORM = FormGroup({
+  static FormGroup GET_PERSONAL_DETAILS_FORM() => FormGroup({
     'title': FormControl<String>(validators: [Validators.required]),
     'firstName': FormControl<String>(validators: [Validators.required]),
     'middleName': FormControl<String>(validators: [Validators.required]),
@@ -181,9 +181,7 @@ class AppForms {
       'lasAreaofculti': FormControl<String>(validators: [Validators.required]),
       'lasTypOfLand': FormControl<String>(validators: [Validators.required]),
       'lasScaloffin': FormControl<String>(validators: [Validators.required]),
-      'lasReqScaloffin': FormControl<String>(
-        validators: [Validators.required],
-      ),
+      'lasReqScaloffin': FormControl<String>(validators: [Validators.required]),
       'notifiedCropFlag': FormControl<bool>(validators: [Validators.required]),
       'lasPrePerAcre': FormControl<String>(validators: [Validators.required]),
       'lasPreToCollect': FormControl<String>(validators: [Validators.required]),

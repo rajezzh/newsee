@@ -60,7 +60,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         constitution: '',
       ),
       individualNonIndividualDetails: personalData ?? null,
-      addressDetails: AddressData(),
+      addressDetails: [AddressData()],
     );
     emit(state.copyWith(leadSubmitRequest: leadSubmitRequest));
   }
@@ -103,6 +103,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
           state.copyWith(
             leadSubmitStatus: SubmitStatus.success,
             leadId: leadId,
+            leadSubmitRequest: LeadSubmitRequest.fromMap(leadSubmitRequest),
           ),
         );
       } else {

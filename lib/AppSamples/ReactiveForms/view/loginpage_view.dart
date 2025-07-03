@@ -22,7 +22,7 @@ description : A stateless widget that serves as the main login screen for the ap
 class LoginpageView extends StatelessWidget {
   Future fingerPrintScanner(context) async {
     print('clicked finger print');
-    
+
     // var biometricResponse = await BioMetricLogin().biometricAuthentication();
     // print("biometricResponse ${biometricResponse.status}");
     // if (biometricResponse.status) {
@@ -255,7 +255,7 @@ class LoginpageView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: screenHeight * 0.08),
+                  SizedBox(height: screenHeight * 0.05),
 
                   // Access to additional options like Maintenance, Reach Us, and More
                   Padding(

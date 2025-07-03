@@ -236,5 +236,4 @@ String? removeSpecialCharacters(String formval) {
   } catch (error) {
     print('removeSpecialCharacters-utilspage => $error');
   }
-   
 }
