@@ -26,7 +26,11 @@ class LeadRepositoryImpl implements LeadRepository {
     LeadRequest req,
   ) async {
     try {
-      final payload = {'userid': req.userid, 'token': ApiConfig.AUTH_TOKEN};
+      final payload = {
+        'userid': req.userid,
+        'token': ApiConfig.AUTH_TOKEN,
+        'pageNo': '0',
+      };
 
       final response = await LeadRemoteDatasource(
         dio: ApiClient().getDio(),
