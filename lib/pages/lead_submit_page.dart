@@ -304,14 +304,22 @@ class LeadSubmitPage extends StatelessWidget {
               SysmoTitle(
                 icon: Icons.person,
                 label: "Type",
-                value: "Applicant | Existing Customer",
+                value:
+                    dedupeData.cifNumber != null ||
+                            dedupeData.cifNumber!.isNotEmpty
+                        ? "Applicant | Existing Customer"
+                        : "Applicant | New Customer",
               ),
               SysmoTitle(
                 icon: Icons.badge,
                 label: "Product",
                 value: '${productMaster.prdCode} - ${productMaster.prdDesc}',
               ),
-              SysmoTitle(icon: Icons.details, label: "CIF ID", value: "121212"),
+              SysmoTitle(
+                icon: Icons.details,
+                label: "CIF ID",
+                value: dedupeData.cifNumber!,
+              ),
               SysmoTitle(
                 icon: Icons.currency_rupee,
                 label: "Loan Amount",
@@ -320,7 +328,7 @@ class LeadSubmitPage extends StatelessWidget {
               SysmoTitle(
                 icon: Icons.location_on,
                 label: "Location",
-                value: "Chennai",
+                value: addressData.cityDistrict!,
               ),
             ],
           ),

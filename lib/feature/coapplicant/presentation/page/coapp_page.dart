@@ -215,7 +215,7 @@ class CoApplicantPage extends StatelessWidget {
                             ),
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
+                              horizontal: 4,
                               vertical: 10,
                             ),
                             shape: RoundedRectangleBorder(
