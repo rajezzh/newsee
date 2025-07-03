@@ -51,285 +51,356 @@ class MasterRepoImpl extends MasterRepo {
       master: [],
       masterType: masterTypes,
     );
+    MasterResponse partialResponse = MasterResponse(
+      masterType: masterTypes,
+      master: [],
+      skipMaster: false
+    );
+    // MasterResponse partiallResponse = MasterPartialDownload(
+    //   master;
+    //   masterType;
+    //   bool
+    // );
     AuthFailure failure = AuthFailure(message: "");
 
     try {
+      print("Globalconfig.diffListOfMaster-in master page ${Globalconfig.diffListOfMaster}");
+      var listofmaster = Globalconfig.diffListOfMaster;
+
+      bool getMaster(String name) {
+        var getlist = listofmaster.where(
+          (val) => val.mastername == name
+        );
+        if (getlist.isNotEmpty) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      bool? lovlist = getMaster("Listofvalues");
+      bool? productmasterlist = getMaster("ProductMaster");
+      bool? productschemalist = getMaster("ProductScheme");
+      bool? statecitylist = getMaster("StateCityMaster");
+
       switch (request.setupTypeOfMaster) {
         case ApiConstants.master_key_lov:
           /* Lov Master fetch from API and Save in respective table */
           masterTypes = MasterTypes.lov;
-          Response response = await MastersRemoteDatasource(
-            dio: ApiClient().getDio(),
-          ).downloadMaster(request);
+          if (listofmaster.isEmpty || lovlist) {
+            Response response = await MastersRemoteDatasource(
+              dio: ApiClient().getDio(),
+            ).downloadMaster(request);
 
-          final String versionFromResponse = response.data['version'];
-          final String masterNameFromResponse = ApiConstants.master_key_lov;
+            final String versionFromResponse = response.data['version'];
+            final String masterNameFromResponse = ApiConstants.master_key_lov;
 
-          List<Lov> lovList = LovParserImpl().parseResponse(response);
-          if (lovList.isNotEmpty) {
-            /* Listofvalue master downloaded and saved in table */
+            List<Lov> lovList = LovParserImpl().parseResponse(response);
+            if (lovList.isNotEmpty) {
+              /* Listofvalue master downloaded and saved in table */
 
-            Iterator<Lov> it = lovList.iterator;
-            LovCrudRepo lovCrudRepo = LovCrudRepo(db);
-            while (it.moveNext()) {
-              lovCrudRepo.save(it.current);
+              Iterator<Lov> it = lovList.iterator;
+              LovCrudRepo lovCrudRepo = LovCrudRepo(db);
+              lovCrudRepo.deleteAll();
+              while (it.moveNext()) {
+                lovCrudRepo.save(it.current);
+              }
+
+              List<Lov> lovs = await lovCrudRepo.getAll();
+              print('lovCrudRepo.getAll() => ${lovs.length}');
+
+              // Save the updated master version into the db
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'success',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+              );
+
+              masterResponse = MasterResponse(
+                master: lovList,
+                masterType: MasterTypes.products,
+              );
+            } else {
+              // api response success : false , process error message
+              var errorMessage = response.data['errorDesc'];
+              print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'failure',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+              );
+
+              failure = AuthFailure(message: errorMessage);
             }
-
-            List<Lov> lovs = await lovCrudRepo.getAll();
-            print('lovCrudRepo.getAll() => ${lovs.length}');
-
-            // Save the updated master version into the db
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'success',
-            );
-
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
-            );
-
-            masterResponse = MasterResponse(
-              master: lovList,
+          } else {
+            partialResponse = MasterResponse(
               masterType: MasterTypes.products,
-            );
-          } else {
-            // api response success : false , process error message
-            var errorMessage = response.data['errorDesc'];
-            print('on Error request.data["ErrorMessage"] => $errorMessage');
-
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'failure',
+              master: [],
+              skipMaster: true
             );
 
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
-            );
-
-            failure = AuthFailure(message: errorMessage);
           }
-
         case ApiConstants.master_key_products:
+
           masterTypes = MasterTypes.products;
-          Response response = await MastersRemoteDatasource(
-            dio: ApiClient().getDio(),
-          ).downloadMaster(request);
+          if (listofmaster.isEmpty || productmasterlist) {
+            Response response = await MastersRemoteDatasource(
+              dio: ApiClient().getDio(),
+            ).downloadMaster(request);
 
-          final String versionFromResponse = response.data['version'];
-          final String masterNameFromResponse =
-              ApiConstants.master_key_products;
+            final String versionFromResponse = response.data['version'];
+            final String masterNameFromResponse =
+                ApiConstants.master_key_products;
 
-          List<Product> productsList = ProductParserImpl().parseResponse(
-            response,
-          );
-          List<ProductMaster> productmasterList = ProductMasterParserImpl()
-              .parseResponse(response);
-          print("productmasterList is printing here => $productmasterList");
-          if (productsList.isNotEmpty) {
-            // insert products in to products table
-            Iterator<Product> it = productsList.iterator;
-            ProductsCrudRepo productsCrudRepo = ProductsCrudRepo(db);
-            while (it.moveNext()) {
-              productsCrudRepo.save(it.current);
-            }
-            print('Products saved in db successfully... ');
-            List<Product> p = await productsCrudRepo.getAll();
-            print('productCrudRepo.getAll() => ${p.length}');
-            // masterResponse = MasterResponse(
-            //   master: productsList,
-            //   masterType: MasterTypes.productschema,
-            // );
-          } else {
-            var errorMessage = response.data['errorDesc'];
-            print('on Error request.data["ErrorMessage"] => $errorMessage');
-            failure = AuthFailure(message: errorMessage);
-          }
-
-          if (productmasterList.isNotEmpty) {
-            // insert products in to products table
-
-            Iterator<ProductMaster> it = productmasterList.iterator;
-            print("fucntion passing here for product master list => $it");
-            ProductMasterCrudRepo productsMasterCrudRepo =
-                ProductMasterCrudRepo(db);
-            while (it.moveNext()) {
-              productsMasterCrudRepo.save(it.current);
-            }
-            print('Products saved in db successfully... ');
-            List<ProductMaster> p = await productsMasterCrudRepo.getAll();
-            print('productCrudRepo.getAll() => ${p.length}');
-          } else {
-            var errorMessage = response.data['errorDesc'];
-            print('on Error request.data["ErrorMessage"] => $errorMessage');
-            failure = AuthFailure(message: errorMessage);
-          }
-
-          if (productmasterList.isNotEmpty) {
-            // insert products in to products table
-
-            Iterator<ProductMaster> it = productmasterList.iterator;
-            print("fucntion passing here for product master list => $it");
-            ProductMasterCrudRepo productsMasterCrudRepo =
-                ProductMasterCrudRepo(db);
-            while (it.moveNext()) {
-              productsMasterCrudRepo.save(it.current);
-            }
-            print('Products saved in db successfully... ');
-            List<ProductMaster> p = await productsMasterCrudRepo.getAll();
-            print('productCrudRepo.getAll() => ${p.length}');
-
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'success',
+            List<Product> productsList = ProductParserImpl().parseResponse(
+              response,
             );
+            List<ProductMaster> productmasterList = ProductMasterParserImpl()
+                .parseResponse(response);
+            print("productmasterList is printing here => $productmasterList");
+            if (productsList.isNotEmpty) {
+              // insert products in to products table
+              Iterator<Product> it = productsList.iterator;
+              ProductsCrudRepo productsCrudRepo = ProductsCrudRepo(db);
+              productsCrudRepo.deleteAll();
+              while (it.moveNext()) {
+                productsCrudRepo.save(it.current);
+              }
+              print('Products saved in db successfully... ');
+              List<Product> p = await productsCrudRepo.getAll();
+              print('productCrudRepo.getAll() => ${p.length}');
+              // masterResponse = MasterResponse(
+              //   master: productsList,
+              //   masterType: MasterTypes.productschema,
+              // );
+            } else {
+              var errorMessage = response.data['errorDesc'];
+              print('on Error request.data["ErrorMessage"] => $errorMessage');
+              failure = AuthFailure(message: errorMessage);
+            }
 
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
-            );
+            if (productmasterList.isNotEmpty) {
+              // insert products in to products table
 
-            masterResponse = MasterResponse(
-              master: productmasterList,
+              Iterator<ProductMaster> it = productmasterList.iterator;
+              print("fucntion passing here for product master list => $it");
+              ProductMasterCrudRepo productsMasterCrudRepo =
+                  ProductMasterCrudRepo(db);
+              productsMasterCrudRepo.deleteAll();
+              while (it.moveNext()) {
+                productsMasterCrudRepo.save(it.current);
+              }
+              print('Products saved in db successfully... ');
+              List<ProductMaster> p = await productsMasterCrudRepo.getAll();
+              print('productCrudRepo.getAll() => ${p.length}');
+            } else {
+              var errorMessage = response.data['errorDesc'];
+              print('on Error request.data["ErrorMessage"] => $errorMessage');
+              failure = AuthFailure(message: errorMessage);
+            }
+
+            if (productmasterList.isNotEmpty) {
+              // insert products in to products table
+
+              Iterator<ProductMaster> it = productmasterList.iterator;
+              print("fucntion passing here for product master list => $it");
+              ProductMasterCrudRepo productsMasterCrudRepo =
+                  ProductMasterCrudRepo(db);
+              productsMasterCrudRepo.deleteAll();
+              while (it.moveNext()) {
+                productsMasterCrudRepo.save(it.current);
+              }
+              print('Products saved in db successfully... ');
+              List<ProductMaster> p = await productsMasterCrudRepo.getAll();
+              print('productCrudRepo.getAll() => ${p.length}');
+
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'success',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+              );
+
+              masterResponse = MasterResponse(
+                master: productmasterList,
+                masterType: MasterTypes.productschema,
+              );
+            } else {
+              var errorMessage = response.data['errorDesc'];
+              print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'failure',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+              );
+
+              failure = AuthFailure(message: errorMessage);
+            }
+          } else {
+            partialResponse = MasterResponse(
               masterType: MasterTypes.productschema,
-            );
-          } else {
-            var errorMessage = response.data['errorDesc'];
-            print('on Error request.data["ErrorMessage"] => $errorMessage');
-
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'failure',
+              master: [],
+              skipMaster: true
             );
 
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
-            );
-
-            failure = AuthFailure(message: errorMessage);
           }
 
         case ApiConstants.master_key_productschema:
           masterTypes = MasterTypes.productschema;
-          Response response = await MastersRemoteDatasource(
-            dio: ApiClient().getDio(),
-          ).downloadMaster(request);
-          List<ProductSchema> productSchemaList = ProductSchemaParserImpl()
-              .parseResponse(response);
+          if (listofmaster.isEmpty || productschemalist) {
 
-          final String versionFromResponse = response.data['version'];
-          final String masterNameFromResponse =
-              ApiConstants.master_key_productschema;
+            Response response = await MastersRemoteDatasource(
+              dio: ApiClient().getDio(),
+            ).downloadMaster(request);
+            List<ProductSchema> productSchemaList = ProductSchemaParserImpl()
+                .parseResponse(response);
 
-          if (productSchemaList.isNotEmpty) {
-            Iterator<ProductSchema> it = productSchemaList.iterator;
-            ProductSchemaCrudRepo productSchemaCrudRepo = ProductSchemaCrudRepo(
-              db,
-            );
-            while (it.moveNext()) {
-              productSchemaCrudRepo.save(it.current);
+            final String versionFromResponse = response.data['version'];
+            final String masterNameFromResponse =
+                ApiConstants.master_key_productschema;
+
+            if (productSchemaList.isNotEmpty) {
+              Iterator<ProductSchema> it = productSchemaList.iterator;
+              ProductSchemaCrudRepo productSchemaCrudRepo = ProductSchemaCrudRepo(
+                db,
+              );
+              productSchemaCrudRepo.deleteAll();
+              while (it.moveNext()) {
+                productSchemaCrudRepo.save(it.current);
+              }
+              print('Products Schema saved in db successfully... ');
+              List<ProductSchema> p = await productSchemaCrudRepo.getAll();
+
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'success',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+              );
+
+              print('productSchemaCrudRepo.getAll() => ${p.length}');
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+              );
+              masterResponse = MasterResponse(
+                master: productSchemaList,
+                masterType: MasterTypes.statecitymaster,
+              );
+            } else {
+              var errorMessage = response.data['errorDesc'];
+              print('on Error request.data["ErrorMessage"] => $errorMessage');
+
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'failure',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+              );
+
+              failure = AuthFailure(message: errorMessage);
             }
-            print('Products Schema saved in db successfully... ');
-            List<ProductSchema> p = await productSchemaCrudRepo.getAll();
-
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'success',
-            );
-
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
-            );
-
-            print('productSchemaCrudRepo.getAll() => ${p.length}');
-
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
-            );
-            masterResponse = MasterResponse(
-              master: productSchemaList,
-              masterType: MasterTypes.statecitymaster,
-            );
           } else {
-            var errorMessage = response.data['errorDesc'];
-            print('on Error request.data["ErrorMessage"] => $errorMessage');
-
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'failure',
+            partialResponse = MasterResponse(
+              masterType: MasterTypes.statecitymaster,
+              master: [],
+              skipMaster: true
             );
 
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
-            );
-
-            failure = AuthFailure(message: errorMessage);
           }
 
         case ApiConstants.master_key_statecity:
           masterTypes = MasterTypes.statecitymaster;
-          Response response = await MastersRemoteDatasource(
-            dio: ApiClient().getDio(),
-          ).downloadMaster(request);
+          if (listofmaster.isEmpty || statecitylist) {
+            Response response = await MastersRemoteDatasource(
+              dio: ApiClient().getDio(),
+            ).downloadMaster(request);
 
-          final String versionFromResponse = response.data['version'];
-          final String masterNameFromResponse =
-              ApiConstants.master_key_statecity;
+            final String versionFromResponse = response.data['version'];
+            final String masterNameFromResponse =
+                ApiConstants.master_key_statecity;
 
-          List<GeographyMaster> statecityList = GeographyParserImpl()
-              .parseResponse(response);
-          print("GeographyMaster is printing here => $statecityList");
-          if (statecityList.isNotEmpty) {
-            Iterator<GeographyMaster> it = statecityList.iterator;
-            GeographymasterCrudRepo statecityMasterCrudRepo =
-                GeographymasterCrudRepo(db);
-            while (it.moveNext()) {
-              statecityMasterCrudRepo.save(it.current);
-            }
-            print('State city list saved in db successfully... ');
-            List<GeographyMaster> p = await statecityMasterCrudRepo.getAll();
+            List<GeographyMaster> statecityList = GeographyParserImpl()
+                .parseResponse(response);
+            print("GeographyMaster is printing here => $statecityList");
+            if (statecityList.isNotEmpty) {
+              Iterator<GeographyMaster> it = statecityList.iterator;
+              GeographymasterCrudRepo statecityMasterCrudRepo =
+                  GeographymasterCrudRepo(db);
+              statecityMasterCrudRepo.deleteAll();
+              while (it.moveNext()) {
+                statecityMasterCrudRepo.save(it.current);
+              }
+              print('State city list saved in db successfully... ');
+              List<GeographyMaster> p = await statecityMasterCrudRepo.getAll();
 
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'success',
-            );
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'success',
+              );
 
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
-            );
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Success",
+              );
 
-            print('GeographyMaster.getAll() => ${p.length}');
+              print('GeographyMaster.getAll() => ${p.length}');
 
-            masterResponse = MasterResponse(
-              master: statecityList,
-              masterType: MasterTypes.success,
-            );
+              masterResponse = MasterResponse(
+                master: statecityList,
+                masterType: MasterTypes.success,
+              );
+            } else {
+              var errorMessage = response.data['errorDesc'];
+              print('on Error request.data["ErrorMessage"] => $errorMessage');
+              await updateMasterVersion(
+                db,
+                masterNameFromResponse,
+                versionFromResponse,
+                'failure',
+              );
+
+              print(
+                "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
+              );
+              failure = AuthFailure(message: errorMessage);
+            } 
           } else {
-            var errorMessage = response.data['errorDesc'];
-            print('on Error request.data["ErrorMessage"] => $errorMessage');
-            await updateMasterVersion(
-              db,
-              masterNameFromResponse,
-              versionFromResponse,
-              'failure',
+            partialResponse = MasterResponse(
+              masterType: MasterTypes.success,
+              master: [],
+              skipMaster: true
             );
-
-            print(
-              "Master Name: $masterNameFromResponse, Version: $versionFromResponse, Failure",
-            );
-            failure = AuthFailure(message: errorMessage);
           }
 
         default:
@@ -340,12 +411,17 @@ class MasterRepoImpl extends MasterRepo {
 
       if (masterResponse.master.isNotEmpty) {
         return AsyncResponseHandler.right(masterResponse);
+      } else if (partialResponse.skipMaster == true) {
+        return AsyncResponseHandler.right(partialResponse);
       } else {
         return AsyncResponseHandler.left(failure);
       }
     } on DioException catch (e) {
       HttpConnectionFailure failure =
           DioHttpExceptionParser(exception: e).parse();
+      return AsyncResponseHandler.left(failure);
+    } catch (error) {
+      print("downloadMaster-impl page $error");
       return AsyncResponseHandler.left(failure);
     }
   }
@@ -359,17 +435,29 @@ class MasterRepoImpl extends MasterRepo {
     try {
       final masterVersionCrudRepo = MasterversionCrudRepo(db);
 
-      await masterVersionCrudRepo.save(
-        MasterVersion(
-          mastername: masterNameFromResponse,
-          version: versionFromResponse,
-          status: isMasterDownloadSuccess,
-        ),
+      var dblength =  await masterVersionCrudRepo.getByColumnName(columnName: 'mastername', columnValue: masterNameFromResponse);
+
+      if (dblength.isEmpty) {
+        await masterVersionCrudRepo.save(
+          MasterVersion(
+            mastername: masterNameFromResponse,
+            version: versionFromResponse,
+            status: isMasterDownloadSuccess,
+          ),
+        );
+      } else {
+        await masterVersionCrudRepo.update(
+          MasterVersion(
+            mastername: masterNameFromResponse,
+            version: versionFromResponse,
+            status: isMasterDownloadSuccess,
+          ),
       );
+      }
+
+      
     } catch (e) {
       print("Error inserting masterversion : $e");
     }
-  }
-
-  // now lov is a List contains Map<String,dynamic>
+  }  // now lov is a List contains Map<String,dynamic>
 }

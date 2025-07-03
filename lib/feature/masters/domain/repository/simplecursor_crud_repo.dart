@@ -8,4 +8,6 @@ mixin SimplecursorCrudRepo<T> {
     required List<String> columnNames,
     required List<String> columnValues,
   });
+
+  Future<int> deleteAll();
 }

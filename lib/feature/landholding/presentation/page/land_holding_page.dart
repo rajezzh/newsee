@@ -20,16 +20,20 @@ import 'package:newsee/widgets/radio.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 
 class LandHoldingPage extends StatelessWidget {
-  final String? proposalNumber;
+  final String proposalNumber;
+  final String applicantName;
   final String title;
 
   final form = AppForms.buildLandHoldingDetailsForm();
 
-  LandHoldingPage({super.key, required this.title, this.proposalNumber});
+  LandHoldingPage({super.key, required this.title, required this.applicantName, required this.proposalNumber});
 
   void handleSubmit(BuildContext context, LandHoldingState state) {
     if (form.valid) {
-      // final landFormData = LandData.fromForm(form.value);
+      final globalLoadingBloc = context.read<GlobalLoadingBloc>();
+      globalLoadingBloc.add(
+        ShowLoading(message: "Crop Details Submitting..."),
+      );
       context.read<LandHoldingBloc>().add(
         LandDetailsSaveEvent(
           landData: form.value,
@@ -67,10 +71,10 @@ class LandHoldingPage extends StatelessWidget {
                                 final item = entries[index];
                                 return OptionsSheet(
                                   icon: Icons.grass,
-                                  title: item.lslLandApplicantName!,
+                                  title: item.lslLandApplicantName.toString(),
                                   details: [
-                                    item.lslLandSurveyNo!,
-                                    item.lslLandVillage!,
+                                    item.lslLandSurveyNo.toString(),
+                                    item.lslLandVillage.toString(),
                                     item.lslLandTotAcre.toString(),
                                   ],
                                   detailsName: [
@@ -176,7 +180,7 @@ class LandHoldingPage extends StatelessWidget {
                         top: 10,
                       ),
                       child: const Text(
-                        "proposalId: ",
+                        "Proposal ID: ",
                         style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ),
@@ -185,7 +189,11 @@ class LandHoldingPage extends StatelessWidget {
                       height: 30,
                       child: Text(
                         proposalNumber ?? 'N/A',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
+                        style: TextStyle(
+                          color: Colors.white, 
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold
+                        ),
                       ),
                     ),
                   ],
@@ -195,10 +203,11 @@ class LandHoldingPage extends StatelessWidget {
           ),
         ),
         body: BlocProvider(
-          create: (_) => LandHoldingBloc()..add(LandHoldingInitEvent()),
+          create: (_) => LandHoldingBloc()..add(LandHoldingInitEvent(proposalNumber: proposalNumber)),
           child: BlocConsumer<LandHoldingBloc, LandHoldingState>(
             listener: (context, state) {
               if (state.status == SaveStatus.success) {
+                globalLoadingBloc.add(HideLoading());
                 form.reset();
               }
               if (state.selectedLandData != null &&
@@ -218,6 +227,9 @@ class LandHoldingPage extends StatelessWidget {
               }
             },
             builder: (context, state) {
+              if(state.status == SaveStatus.init) {
+                form.control('applicantName').updateValue(applicantName);
+              }
               return ReactiveForm(
                 formGroup: form,
                 child: SafeArea(
@@ -238,10 +250,7 @@ class LandHoldingPage extends StatelessWidget {
                                       controlName: 'applicantName',
                                       label: 'Applicant Name / Guarantor',
                                       items: [
-                                        '--Select--',
-                                        'Ravi Kumar',
-                                        'Sita Devi',
-                                        'Vikram R',
+                                        applicantName
                                       ],
                                     ),
                                     SearchableDropdown(
@@ -459,6 +468,32 @@ class LandHoldingPage extends StatelessWidget {
                                       optionOne: 'Yes',
                                       optionTwo: 'No',
                                     ),
+                                    ElevatedButton.icon(
+                                      onPressed: () => handleSubmit(context, state),
+                                      icon: const Icon(Icons.save, color: Colors.white),
+                                      label: const Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                          212,
+                                          5,
+                                          8,
+                                          205,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 32,
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -466,39 +501,39 @@ class LandHoldingPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Positioned(
-                        bottom: 5,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () => handleSubmit(context, state),
-                            icon: const Icon(Icons.save, color: Colors.white),
-                            label: const Text(
-                              'Save',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                212,
-                                5,
-                                8,
-                                205,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32,
-                                vertical: 14,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   bottom: 5,
+                      //   left: 0,
+                      //   right: 0,
+                      //   child: Center(
+                      //     child: ElevatedButton.icon(
+                      //       onPressed: () => handleSubmit(context, state),
+                      //       icon: const Icon(Icons.save, color: Colors.white),
+                      //       label: const Text(
+                      //         'Save',
+                      //         style: TextStyle(
+                      //           fontWeight: FontWeight.bold,
+                      //           color: Colors.white,
+                      //         ),
+                      //       ),
+                      //       style: ElevatedButton.styleFrom(
+                      //         backgroundColor: const Color.fromARGB(
+                      //           212,
+                      //           5,
+                      //           8,
+                      //           205,
+                      //         ),
+                      //         padding: const EdgeInsets.symmetric(
+                      //           horizontal: 32,
+                      //           vertical: 14,
+                      //         ),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(8),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       // FAB with badge on top
                       Positioned(
                         bottom: 10,
@@ -512,7 +547,7 @@ class LandHoldingPage extends StatelessWidget {
                               tooltip: 'View Saved Data',
                               onPressed: () => showBottomSheet(context, state),
                               child: const Icon(
-                                Icons.remove_red_eye,
+                                Icons.menu,
                                 color: Colors.blue,
                                 size: 28,
                               ),

@@ -42,6 +42,13 @@ class ProductMasterCrudRepo extends SimpleCrudRepo<ProductMaster>
   }
 
   @override
+  Future<int> deleteAll() {
+    return _db.transaction((txn) async {
+      return await txn.delete(TableKeysProductMaster.tableName);
+    });
+  }
+
+  @override
   Future<int> update(ProductMaster o) {
     // TODO: implement update
     throw UnimplementedError();

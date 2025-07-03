@@ -111,6 +111,8 @@ class LoginpageWithAC extends StatelessWidget {
               context.goNamed('masters');
             } else if (masterVersionCheckResponseHandler.isRight()) {
               if (masterVersionCheckResponseHandler.right.isNotEmpty) {
+                Globalconfig.diffListOfMaster =  masterVersionCheckResponseHandler.right;
+                print("Globalconfig.diffListOfMaster ${Globalconfig.diffListOfMaster}");
                 context.goNamed('masters');
               } else {
                 context.goNamed('home');

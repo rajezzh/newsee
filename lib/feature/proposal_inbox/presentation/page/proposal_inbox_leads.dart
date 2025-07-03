@@ -137,7 +137,13 @@ class PendingLeads extends StatelessWidget {
                                 subtitle: "View your Land Details here",
                                 status: 'Completed',
                                 onTap: () {
-                                  context.pushNamed('landholdings', extra: proposal['propNo']);
+                                  context.pushNamed(
+                                    'landholdings', 
+                                    extra: {
+                                      'applicantName': proposal['applicantName'],
+                                      'proposalNumber': proposal['propNo']
+                                    } 
+                                  );
                                 },
                               ),
                               OptionsSheet(
