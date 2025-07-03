@@ -263,17 +263,16 @@ class CropDetailsPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  ElevatedButton(
+                  TextButton(
                     onPressed: () => {
                       backHandler(context)
                     },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll<Color>(Colors.blue)
-                    ),
                     child: Text(
                       'Back',
                       style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16
                       )
                     )
                   )
