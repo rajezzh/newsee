@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/AppData/globalconfig.dart';
@@ -54,6 +55,9 @@ class AuthRepositoryImpl implements AuthRepository {
         final Map<String, dynamic> masterdetail =
             response.data['responseData']['MasterDetails'];
         Globalconfig.masterVersionMapper = masterdetail;
+
+        
+
 
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
         print("Auth Response from login: => $response");

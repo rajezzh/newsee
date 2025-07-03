@@ -172,35 +172,38 @@ class LandHoldingPage extends StatelessWidget {
               SizedBox(height: 10),
 
               Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        bottom: 20,
-                        top: 10,
+                
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                      padding: const EdgeInsets.all(8),
+
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.10),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                   child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Proposal Id: ",
+                              style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold) ,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                proposalNumber ?? 'N/A',
+                                style: TextStyle(color: Colors.white, fontSize: 14,  fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis, 
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text(
-                        "Proposal ID: ",
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                      height: 30,
-                      child: Text(
-                        proposalNumber ?? 'N/A',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                                 ),
               ),
             ],
           ),
