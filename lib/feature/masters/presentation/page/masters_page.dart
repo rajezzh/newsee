@@ -56,8 +56,7 @@ class MastersPage extends StatelessWidget {
             )..add(
               MasterFetch(
                 request: MasterRequest(
-                  // setupVersion: Globalconfig.masterVersionMapper['Listofvalues'],
-                  setupVersion: '9',
+                  setupVersion: Globalconfig.masterVersionMapper['Listofvalues'],
                   setupmodule: 'AGRI',
                   setupTypeOfMaster: ApiConstants.master_key_lov,
                 ),
@@ -84,8 +83,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        // setupVersion: Globalconfig.masterVersionMapper['ProductMaster'],
-                        setupVersion: '9',
+                        setupVersion: Globalconfig.masterVersionMapper['ProductMaster'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_products,
                       )
@@ -100,8 +98,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        // setupVersion: Globalconfig.masterVersionMapper['ProductScheme'],
-                        setupVersion: '9',
+                        setupVersion: Globalconfig.masterVersionMapper['ProductScheme'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster:
                             ApiConstants.master_key_productschema,
@@ -118,8 +115,7 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        // setupVersion: Globalconfig.masterVersionMapper['StateCityMaster'],
-                        setupVersion: '9',
+                        setupVersion: Globalconfig.masterVersionMapper['StateCityMaster'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_statecity,
                       )
