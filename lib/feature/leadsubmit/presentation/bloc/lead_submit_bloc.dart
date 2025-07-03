@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +9,7 @@ import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/failure.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/leadsubmit/data/repository/lead_submit_repo_impl.dart';
 import 'package:newsee/feature/leadsubmit/data/repository/proposal_repo_impl.dart';
@@ -17,6 +20,7 @@ import 'package:newsee/feature/leadsubmit/domain/modal/loan_type.dart';
 import 'package:newsee/feature/leadsubmit/domain/modal/proposal_creation_request.dart';
 import 'package:newsee/feature/leadsubmit/domain/repository/lead_submit_repo.dart';
 import 'package:newsee/feature/leadsubmit/domain/repository/proposal_submit_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part './lead_submit_event.dart';
 part './lead_submit_state.dart';
@@ -64,13 +68,17 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
   Future<void> onLeadPush(LeadSubmitPushEvent event, Emitter emit) async {
     final coappdataMap = event.coapplicantData?.toMap();
     coappdataMap?.addAll({"residentialStatus": "4"});
+
+    final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+    String? getString = await asyncPrefs.getString('userdetails');
+    UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!)); 
     try {
       Map<String, dynamic> leadSubmitRequest = {
-        "userid": "AGRI1124",
+        "userid": userdetails.LPuserID,
         "vertical": "7",
-        "orgScode": "14356",
-        "orgName": "BRAHMAMANGALAM",
-        "orgLevel": "23",
+        "orgScode": userdetails.Orgscode,
+        "orgName": userdetails.OrgName,
+        "orgLevel": userdetails.OrgLevel,
         "coapplicantRequired": event.coapplicantData != null ? 'Y' : 'N',
         "guarantorRequired": 'N',
         "token":
@@ -104,6 +112,9 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
     } on DioException catch (e) {
       print('leadsubmit exception => $e');
       emit(state.copyWith(leadSubmitStatus: SubmitStatus.failure));
+    } catch (error) {
+      print('leadsubmit catch error => $error');
+      emit(state.copyWith(leadSubmitStatus: SubmitStatus.failure));
     }
   }
 
@@ -112,10 +123,13 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
     Emitter emit,
   ) async {
     try {
+      final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+      String? getString = await asyncPrefs.getString('userdetails');
+      UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!)); 
+
       ProposalCreationRequest proposalCreationRequest = ProposalCreationRequest(
         leadId: event.proposalCreationRequest.leadId ?? state.leadId,
-        userid:
-            event.proposalCreationRequest.userid ?? ApiConstants.api_qa_userid,
+        userid: userdetails.LPuserID,
         token: event.proposalCreationRequest.token ?? ApiConstants.api_qa_token,
       );
       print('proposalCreationRequest => $proposalCreationRequest');

@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/AppData/globalconfig.dart';
@@ -13,7 +15,9 @@ import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:newsee/feature/auth/domain/model/user/auth_response_model.dart';
 import 'package:newsee/feature/auth/domain/model/user/user_model.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource authRemoteDatasource;
@@ -40,7 +44,7 @@ class AuthRepositoryImpl implements AuthRepository {
         "Version": "0.0.20.5_lmsinbox_freeze",
         "Brach_code": "",
         "PdTab": "N",
-        "Module": "HL",
+        "Module": "AGRI",
       };
 
       print('auth request payload => $payload');
@@ -57,10 +61,27 @@ class AuthRepositoryImpl implements AuthRepository {
 
         print('AuthResponseModel.fromJson() => ${authResponse.toString()}');
         print("Auth Response from login: => $response");
+
         print(
           "masterResponse response from login, => ${Globalconfig.masterVersionMapper}",
         );
 
+        var loginDetails = UserDetails.fromJson(
+          response.data['responseData'],
+        );
+
+        print('loginDetails.fromJson() => $loginDetails');
+
+        String jsonString = jsonEncode(loginDetails);
+
+        print('jsonString => $jsonString');
+
+        final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+        await asyncPrefs.setString(
+          "userdetails", jsonString
+        );
+
+        
         return AsyncResponseHandler.right(authResponse);
       } else {
         // api response success : false , process error message
