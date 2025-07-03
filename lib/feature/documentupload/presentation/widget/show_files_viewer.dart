@@ -47,44 +47,55 @@ void showFilesViewerBottomSheet(
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        IconButton(
-                          icon: const Icon(
-                            Icons.upload_rounded,
-                            color: Colors.blue,
-                          ),
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Uploading ${file.name}...'),
-                              ),
-                            );
-                            bloc.add(
-                              UploadDocumentsEvent(
-                                context: context,
-                                docIndex: index,
-                                imgIndex: [imgIndex],
-                              ),
-                            );
-                          },
-                        ),
+                        // IconButton(
+                        //   icon: const Icon(
+                        //     Icons.upload_rounded,
+                        //     color: Colors.blue,
+                        //   ),
+                        //   onPressed: () {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(
+                        //         content: Text('Uploading ${file.name}...'),
+                        //       ),
+                        //     );
+                        //     bloc.add(
+                        //       UploadDocumentByIndexEvent(
+                        //         docIndex: index,
+                        //         imgIndexes: [imgIndex],
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
                         IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
                           onPressed:
-                              bloc.disableBtn || doc.imgs.isEmpty
+                              doc.imgs.isEmpty
                                   ? null
-                                  : () => {
-                                    confirmAndDeleteImage(
+                                  : () async {
+                                    final result = await confirmAndDeleteImage(
                                       context,
                                       index,
                                       imgIndex: imgIndex,
                                       checkFrom: 'FileViewer',
-                                    ),
-                                    context.read<DocumentBloc>().add(
-                                      DeleteDocEvent(
-                                        docIndex: index,
-                                        imgIndex: imgIndex,
-                                      ),
-                                    ), // trigger delete
+                                    );
+                                    print("fhghgh $result");
+                                    if (result != null &&
+                                        result == 'FileViewer') {
+                                      print("fhghgh $result");
+                                      bloc.add(
+                                        DeleteDocumentImageEvent(
+                                          docIndex: index,
+                                          imgIndex: imgIndex,
+                                        ),
+                                      );
+                                      Navigator.pop(context);
+                                    }
+                                    // context.read<DocumentBloc>().add(
+                                    //   DeleteDocEvent(
+                                    //     docIndex: index,
+                                    //     imgIndex: imgIndex,
+                                    //   ),
+                                    // ), // trigger delete
                                   },
                         ),
                       ],

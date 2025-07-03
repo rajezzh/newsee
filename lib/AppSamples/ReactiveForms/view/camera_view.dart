@@ -62,28 +62,30 @@ class CameraView extends StatelessWidget {
             final cropdata = await mediaService.cropper(context, imagePath);
 
             if (cropdata != null && context.mounted) {
-              final result = await context.push('/imageview', extra: cropdata);
-              if (result != null && context.mounted) {
-                if (result == 'close') {
-                  context.pop();
-                } else {
-                  context.pop(result);
-                }
-              }
+              context.pop(cropdata);
+              // final result = await context.push('/imageview', extra: cropdata);
+              // if (result != null && context.mounted) {
+              //   if (result == 'close') {
+              //     context.pop();
+              //   } else {
+              //     context.pop(result);
+              //   }
+              // }
             }
             // If crop canceled
             else if (context.mounted) {
-              final result = await context.push(
-                '/imageview',
-                extra: originalBytes,
-              );
-              if (result != null && context.mounted) {
-                if (result == 'close') {
-                  context.pop();
-                } else {
-                  context.pop(result);
-                }
-              }
+              context.pop(originalBytes);
+              // final result = await context.push(
+              //   '/imageview',
+              //   extra: originalBytes,
+              // );
+              // if (result != null && context.mounted) {
+              //   if (result == 'close') {
+              //     context.pop();
+              //   } else {
+              //     context.pop(result);
+              //   }
+              // }
             }
           }
         } catch (e) {

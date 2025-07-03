@@ -81,7 +81,7 @@ class MediaService {
   @return data     :   bytes(Unit8List) data return;
   */
 
-  Future<Uint8List?> pickimagefromgallery(context) async {
+  Future<Uint8List?> pickimagefromgallery(context, {int? docIndex}) async {
     try {
       final imagepicker = ImagePicker();
       final pickedFile = await imagepicker.pickImage(
@@ -91,17 +91,19 @@ class MediaService {
         final cropperdata = await cropper(context, pickedFile.path);
         print("croppedFileData: $cropperdata");
         final Uint8List croppedFileData = cropperdata!;
-
-        final result = GoRouter.of(
-          context,
-        ).push<Uint8List>('/imageview', extra: croppedFileData);
-        if (result != null && context.mounted) {
-          return result == 'close' ? null : result;
-        }
-
-        // return croppedFileData;
-        // final imagePath = await saveBytesToFile(croppedFileData);
-        // context.read<CameraBloc>().add(CroppExit(imagePath));
+        return croppedFileData;
+        // if (croppedFileData != null) {
+        //   final result = await GoRouter.of(context).push<Uint8List>(
+        //     '/imageview',
+        //     extra: {
+        //       'imageBytes': croppedFileData,
+        //       if (docIndex != null) 'docIndex': docIndex,
+        //     },
+        //   );
+        //   if (result != null && context.mounted) {
+        //     return result == 'close' ? null : result;
+        //   }
+        // }
       }
       ScaffoldMessenger.of(
         context,
@@ -122,12 +124,24 @@ class MediaService {
   @return data     :   return FilePickerResult object data
   */
   Future<FilePickerResult?> filePicker() async {
-    FilePickerResult? pdfBytes = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (pdfBytes != null) {
-      return pdfBytes;
+    // FilePickerResult? pdfBytes = await FilePicker.platform.pickFiles(
+    //   type: FileType.custom,
+    //   allowedExtensions: ['pdf'],
+    // );
+    // if (pdfBytes != null) {
+    //   return pdfBytes;
+    // }
+    // return null;
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+      if (result != null && result.files.isNotEmpty) {
+        return result;
+      }
+    } catch (e) {
+      debugPrint("File picker error: $e");
     }
     return null;
   }
@@ -180,10 +194,9 @@ class MediaService {
     }
   }
 
-  Future<String> saveBytesToFile(Uint8List bytes) async {
+  Future<String> saveBytesToFile(Uint8List bytes, filename, count) async {
     final dir = await getTemporaryDirectory();
-    final path =
-        '${dir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final path = '${dir.path}/${filename}_$count.jpg';
     final file = File(path);
     await file.writeAsBytes(bytes);
     return file.path;

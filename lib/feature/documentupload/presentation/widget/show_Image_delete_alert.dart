@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_bloc.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_event.dart';
 
-void confirmAndDeleteImage(
+Future<dynamic> confirmAndDeleteImage(
   BuildContext context,
   int docIndex, {
   int? imgIndex,
   String? checkFrom,
-}) {
+}) async {
   try {
     // final bloc = context.read<DocumentBloc>();
-    showDialog(
+    return showDialog(
       context: context,
       builder:
           (ctx) => AlertDialog(
@@ -29,12 +30,17 @@ void confirmAndDeleteImage(
               ElevatedButton(
                 onPressed: () {
                   if (checkFrom != null) {
-                    Navigator.of(ctx).pop();
+                    context.pop(checkFrom);
                   } else {
-                    Navigator.of(ctx).pop();
+                    // Navigator.of(ctx).pop();
+
                     context.read<DocumentBloc>().add(
-                      DeleteDocEvent(docIndex: docIndex, imgIndex: imgIndex),
+                      DeleteDocumentImageEvent(
+                        docIndex: docIndex,
+                        imgIndex: imgIndex,
+                      ),
                     );
+                    Navigator.pop(ctx);
                   }
                 },
                 child: const Text('Delete'),

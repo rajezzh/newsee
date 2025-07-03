@@ -1,5 +1,6 @@
 class ApiConfig {
   static const String BASE_URL = "http://192.168.0.19:19084/lendperfect/";
+
   //static const String BASE_URL = "http://192.168.7.79:9088/lendperfect/";
   static const String AUTH_TOKEN =
       'U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3';
@@ -28,15 +29,19 @@ class ApiConfig {
 
   static const String LAND_HOLDING_ENDPOINT = 'MobileService/saveLandHold';
 
-  static const String LAND_HOLDING_GET_API_ENDPOINT = 'MobileService/getLandHoldingDetails';
+  static const String LAND_HOLDING_GET_API_ENDPOINT =
+      'MobileService/getLandHoldingDetails';
 
   static const String CROP_SUBMIT_API_ENDPOINT =
       'MobileService/saveProposedCrops';
 
-  static const String CROP_GET_API_ENDPOINT = 
-  'MobileService/getProposedCrops';
+  static const String CROP_GET_API_ENDPOINT = 'MobileService/getProposedCrops';
   static const String CREATE_PROPOSAL = 'MobileService/getProposalCreation';
 
   static const String PROPOSAL_INBOX_API_ENDPOINT =
       '/MobileService/getProposalInboxDetails';
+  static const String GET_DOCUMENTS = 'MobileService/getDocumentDetails';
+  static const String UPLOAD_DOCUMENT = 'MobileService/getDocumentUpload';
+  static const String FETCH_UPLOAD_DOCUMENT = 'MobileService/getUploadDocument';
+  static const String DELETE_UPLOAD_DOCUMENT = 'MobileService/deleteUploadFile';
 }
