@@ -34,3 +34,8 @@ class AadhaarValidateEvent extends PersonalDetailsEvent {
   final AadharvalidateRequest request;
   AadhaarValidateEvent({required this.request});
 }
+
+class ScannerResponseEvent extends PersonalDetailsEvent {
+  final Map<String, dynamic> scannerResponse;
+  ScannerResponseEvent({required this.scannerResponse});
+}

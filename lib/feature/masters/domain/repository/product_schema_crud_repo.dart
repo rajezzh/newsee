@@ -25,6 +25,13 @@ class ProductSchemaCrudRepo extends SimpleCrudRepo<ProductSchema>
   }
 
   @override
+  Future<int> deleteAll() {
+    return _db.transaction((txn) async {
+      return await txn.delete(TableKeysProductSchema.tableName);
+    });
+  }
+
+  @override
   Future<int> delete(ProductSchema o) {
     throw UnimplementedError();
   }

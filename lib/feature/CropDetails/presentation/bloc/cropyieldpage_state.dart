@@ -9,6 +9,7 @@ class CropyieldpageState extends Equatable {
     final String? errorMessage;
     final CropDetailsModal? selectedCropData;
     final Map<String,dynamic>? landDetails;
+    final List<LandData>? landData;
 
   const CropyieldpageState({
     this.status,
@@ -17,6 +18,7 @@ class CropyieldpageState extends Equatable {
     this.errorMessage,
     this.selectedCropData,
     this.landDetails,
+    this.landData,
   });
 
    factory CropyieldpageState.init() => CropyieldpageState(
@@ -34,6 +36,7 @@ class CropyieldpageState extends Equatable {
     String? errorMessage,
     CropDetailsModal? selectedCropData,
     Map<String,dynamic>? landDetails,
+    List<LandData>? landData,
   }) {
     return CropyieldpageState(
       status: status ?? this.status,
@@ -42,6 +45,7 @@ class CropyieldpageState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       selectedCropData: selectedCropData ?? this.selectedCropData,
       landDetails: landDetails ?? this.landDetails,
+      landData: landData ?? this.landData,
     );
   }
 
@@ -53,6 +57,7 @@ class CropyieldpageState extends Equatable {
       'errorMessage': errorMessage,
       'selectedCropData': selectedCropData?.toMap(),
       'landDetails': landDetails,
+      'landData': landData?.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -65,6 +70,7 @@ class CropyieldpageState extends Equatable {
       errorMessage,
       selectedCropData,
       landDetails,
+      landData,
     ];
   }
 
@@ -76,6 +82,25 @@ class CropyieldpageState extends Equatable {
   //     errorMessage: map['errorMessage'] != null ? map['errorMessage'] as String : null,
   //     selectedCropData: map['selectedCropData'] != null ? CropDetailsModal.fromMap(map['selectedCropData'] as Map<String,dynamic>) : null,
   //     landDetails: map['landDetails'] != null ? Map<String,dynamic>.from((map['landDetails'] as Map<String,dynamic>)) : null,
+  //   );
+  // }
+
+  // String toJson() => json.encode(toMap());
+
+  // factory CropyieldpageState.fromJson(String source) => CropyieldpageState.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  // @override
+  // bool get stringify => true;
+
+  // factory CropyieldpageState.fromMap(Map<String, dynamic> map) {
+  //   return CropyieldpageState(
+  //     status: map['status'] != null ? map['status'] as enum : null,
+  //     lovlist: map['lovlist'] != null ? List<Lov>.from((map['lovlist'] as List<int>).map<Lov?>((x) => Lov.fromMap(x as Map<String,dynamic>),),) : null,
+  //     cropData: map['cropData'] != null ? List<CropDetailsModal>.from((map['cropData'] as List<int>).map<CropDetailsModal?>((x) => CropDetailsModal.fromMap(x as Map<String,dynamic>),),) : null,
+  //     errorMessage: map['errorMessage'] != null ? map['errorMessage'] as String : null,
+  //     selectedCropData: map['selectedCropData'] != null ? CropDetailsModal.fromMap(map['selectedCropData'] as Map<String,dynamic>) : null,
+  //     landDetails: map['landDetails'] != null ? Map<String,dynamic>.from((map['landDetails'] as Map<String,dynamic>) : null,
+  //     landData: map['landData'] != null ? List<LandData>.from((map['landData'] as List<int>).map<LandData?>((x) => LandData.fromMap(x as Map<String,dynamic>),),) : null,
   //   );
   // }
 

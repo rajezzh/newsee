@@ -8,6 +8,7 @@ import 'package:newsee/feature/CropDetails/presentation/bloc/cropyieldpage_bloc.
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
+import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/k_willpopscope.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -444,6 +445,11 @@ class CropDetailsPage extends StatelessWidget {
                                         ),
                                       ],
                                     ),
+                                    // Dropdown(
+                                    //   controlName: 'serveynumber',
+                                    //   label: 'Survey Number',
+                                    //   items: state.landData.lslLandSurveyNo
+                                    // ),
                                     SearchableDropdown<Lov>(
                                       controlName: 'lasSeason',
                                       label: 'Season',

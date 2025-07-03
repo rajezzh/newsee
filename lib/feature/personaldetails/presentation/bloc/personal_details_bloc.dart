@@ -27,6 +27,7 @@ final class PersonalDetailsBloc
     on<PersonalDetailsInitEvent>(initPersonalDetails);
     on<PersonalDetailsSaveEvent>(savePersonalDetails);
     on<AadhaarValidateEvent>(validateAadaar);
+    on<ScannerResponseEvent>(onScannerSuccess);
   }
 
   /*
@@ -93,5 +94,17 @@ final class PersonalDetailsBloc
         ),
       );
     }
+  }
+
+  Future<void> onScannerSuccess(
+    ScannerResponseEvent event,
+    Emitter emit,
+  ) async {
+    String aadhaarId = event.scannerResponse['aadhaarResponse']['@uid'];
+    emit(
+      state.copyWith(
+        aadhaarData: AadharvalidateResponse(referenceId: aadhaarId),
+      ),
+    );
   }
 }

@@ -23,6 +23,7 @@ class PersonalDetailsState extends Equatable {
   final AadharvalidateResponse? aadhaarData;
   final PersonalData? personalData;
   final SaveStatus? status;
+
   PersonalDetailsState({
     required this.lovList,
     this.aadhaarData,
