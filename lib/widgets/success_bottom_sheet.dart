@@ -36,8 +36,6 @@ void showSuccessBottomSheet({
       onPressedRightButton: onPressedRightButton,
       leftButtonLabel: leftButtonLabel,
       rightButtonLabel: rightButtonLabel,
-      status: status,
-      loader: false
     ),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -53,8 +51,6 @@ class _AnimatedSuccessContent extends StatefulWidget {
   final VoidCallback? onPressedRightButton;
   final String? leftButtonLabel;
   final String? rightButtonLabel;
-  final SaveStatus? status;
-  bool? loader;
 
   _AnimatedSuccessContent({
     required this.headerTxt,
@@ -64,8 +60,6 @@ class _AnimatedSuccessContent extends StatefulWidget {
     required this.onPressedRightButton,
     required this.leftButtonLabel,
     required this.rightButtonLabel,
-    this.status,
-    this.loader
   });
 
   @override
@@ -163,18 +157,7 @@ class _AnimatedSuccessContentState extends State<_AnimatedSuccessContent>
                     flex: 4,
                     child: ElevatedButton(
                       onPressed: 
-                      () async {
-                        setState(() {
-                          widget.loader = true;
-                        });
-                        await Future.delayed(Duration(seconds: 3));
-                        setState(() {
-                          widget.loader = false;
-                        });
-                        if (widget.status != SaveStatus.loading && widget.onPressedRightButton != null) {
-                          widget.onPressedRightButton!();
-                        }
-                      },
+                                               widget.onPressedRightButton,
                       
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.all(8),
@@ -185,26 +168,7 @@ class _AnimatedSuccessContentState extends State<_AnimatedSuccessContent>
                         backgroundColor: Color.fromARGB(255, 3, 9, 110),
                         foregroundColor: Colors.white,
                       ),
-                      child: (widget.loader == true || widget.status == SaveStatus.loading)
-                          ?  Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                SizedBox(
-                                  width: 18,
-                                  height: 18,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor:
-                                        AlwaysStoppedAnimation<Color>(
-                                            Colors.white),
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Text(widget.rightButtonLabel ?? "Ok"),
-                              ],
-                            )
-                          : Text(widget.rightButtonLabel ?? "Ok"),
+                      child: Text(widget.rightButtonLabel ?? "Ok"),
                     ),
                   ),
                 ],

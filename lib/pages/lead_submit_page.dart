@@ -229,6 +229,7 @@ class LeadSubmitPage extends StatelessWidget {
               )
               : ApplicationCard(
                 leadId: state.leadId != null ? state.leadId! : '',
+                status: state.proposalSubmitStatus,
                 onProceedPressed: () {
                   createProposal(context, state);
                 },
@@ -353,9 +354,6 @@ class LeadSubmitPage extends StatelessWidget {
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 75, 33, 83),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
                 ),
                 child: const SizedBox(
                   width: 24,
