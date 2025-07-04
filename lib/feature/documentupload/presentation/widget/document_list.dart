@@ -63,8 +63,8 @@ class DocumentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isSubmitted = doc.lpdDocAction == 'P';
-    final bool canEdit = !isSubmitted && (doc.lpdDocAction == 's');
+    // final bool isSubmitted = doc.lpdDocAction == 'P';
+    // final bool canEdit = !isSubmitted && (doc.lpdDocAction == 's');
     final bool hasImages = doc.imgs.isNotEmpty;
 
     return Column(

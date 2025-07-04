@@ -370,11 +370,6 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
           uploadMessage: "Upload error: $e",
         ),
       );
-      // if (event.context.mounted) {
-      //   ScaffoldMessenger.of(event.context).showSnackBar(
-      //     const SnackBar(content: Text("Upload failed. Please try again.")),
-      //   );
-      // }
     }
   }
 
