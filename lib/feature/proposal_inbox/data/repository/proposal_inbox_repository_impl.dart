@@ -39,13 +39,16 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
           final proposalInboxResponse =
               data
                   .map(
-                    (e) =>
-                        ProposalInboxResponseModel.fromMap(e as Map<String, dynamic>),
+                    (e) => ProposalInboxResponseModel.fromMap(
+                      e as Map<String, dynamic>,
+                    ),
                   )
                   .toList();
           return AsyncResponseHandler.right(proposalInboxResponse);
         } else if (data is Map<String, dynamic>) {
-          final proposalInboxResponse = ProposalInboxResponseModel.fromMap(data);
+          final proposalInboxResponse = ProposalInboxResponseModel.fromMap(
+            data,
+          );
           return AsyncResponseHandler.right([proposalInboxResponse]);
         } else {
           return AsyncResponseHandler.left(
