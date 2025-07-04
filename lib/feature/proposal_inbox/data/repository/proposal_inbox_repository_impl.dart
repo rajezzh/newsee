@@ -17,7 +17,11 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
   Future<AsyncResponseHandler<Failure, List<ProposalInboxResponseModel>>>
   searchProposalInbox(ProposalInboxRequest req) async {
     try {
-      final payload = {'userid': req.userid, 'token': ApiConfig.AUTH_TOKEN};
+      final payload = {
+        'userid': req.userid,
+        'token': ApiConfig.AUTH_TOKEN,
+        'pageNo': '0',
+      };
 
       final response = await ProposalInboxRemoteDatasource(
         dio: ApiClient().getDio(),
@@ -34,13 +38,16 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
           final proposalInboxResponse =
               data
                   .map(
-                    (e) =>
-                        ProposalInboxResponseModel.fromMap(e as Map<String, dynamic>),
+                    (e) => ProposalInboxResponseModel.fromMap(
+                      e as Map<String, dynamic>,
+                    ),
                   )
                   .toList();
           return AsyncResponseHandler.right(proposalInboxResponse);
         } else if (data is Map<String, dynamic>) {
-          final proposalInboxResponse = ProposalInboxResponseModel.fromMap(data);
+          final proposalInboxResponse = ProposalInboxResponseModel.fromMap(
+            data,
+          );
           return AsyncResponseHandler.right([proposalInboxResponse]);
         } else {
           return AsyncResponseHandler.left(

@@ -1,4 +1,5 @@
 import 'package:newsee/feature/auth/domain/model/user/auth_response_model.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 
 class Globalconfig {
   static final bool isInitialRoute = false;
@@ -7,6 +8,8 @@ class Globalconfig {
   //recieved from the server during login activity.
 
   static Map<String, dynamic> masterVersionMapper = {};
+
+  static List<MasterVersion> diffListOfMaster = [];
 }
 
 /* 

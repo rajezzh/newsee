@@ -24,8 +24,14 @@ class LovCrudRepo extends SimpleCrudRepo<Lov> with SimplecursorCrudRepo<Lov> {
 
   @override
   Future<int> delete(Lov o) {
-    // TODO: implement deleteTask
     throw UnimplementedError();
+  }
+
+  @override
+  Future<int> deleteAll() {
+    return _db.transaction((txn) async {
+      return await txn.delete(TableKeysLov.tableName);
+    });
   }
 
   @override

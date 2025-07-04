@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_request.dart';
 import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
+import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
 import 'package:newsee/widgets/download_progress_widget.dart';
 
@@ -19,6 +21,10 @@ class MastersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+      "Globalconfig.masterVersionMapper['Listofvalues'], => ${Globalconfig.masterVersionMapper['Listofvalues']}",
+    );
+
     final double scrwidth = MediaQuery.of(context).size.width;
     final double scrheight = MediaQuery.of(context).size.height;
     double totalMaster = MasterTypes.values.length.toDouble();
@@ -49,7 +55,8 @@ class MastersPage extends StatelessWidget {
             )..add(
               MasterFetch(
                 request: MasterRequest(
-                  setupVersion: '9',
+                  setupVersion:
+                      Globalconfig.masterVersionMapper['Listofvalues'],
                   setupmodule: 'AGRI',
                   setupTypeOfMaster: ApiConstants.master_key_lov,
                 ),
@@ -76,7 +83,8 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '9',
+                        setupVersion:
+                            Globalconfig.masterVersionMapper['ProductMaster'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_products,
                       ),
@@ -91,7 +99,8 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '9',
+                        setupVersion:
+                            Globalconfig.masterVersionMapper['ProductScheme'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster:
                             ApiConstants.master_key_productschema,
@@ -108,7 +117,8 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: '9',
+                        setupVersion:
+                            Globalconfig.masterVersionMapper['StateCityMaster'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_statecity,
                       ),

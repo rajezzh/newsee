@@ -20,16 +20,23 @@ import 'package:newsee/widgets/radio.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 
 class LandHoldingPage extends StatelessWidget {
-  final String? proposalNumber;
+  final String proposalNumber;
+  final String applicantName;
   final String title;
 
   final form = AppForms.buildLandHoldingDetailsForm();
 
-  LandHoldingPage({super.key, required this.title, this.proposalNumber});
+  LandHoldingPage({
+    super.key,
+    required this.title,
+    required this.applicantName,
+    required this.proposalNumber,
+  });
 
   void handleSubmit(BuildContext context, LandHoldingState state) {
     if (form.valid) {
-      // final landFormData = LandData.fromForm(form.value);
+      final globalLoadingBloc = context.read<GlobalLoadingBloc>();
+      globalLoadingBloc.add(ShowLoading(message: "Crop Details Submitting..."));
       context.read<LandHoldingBloc>().add(
         LandDetailsSaveEvent(
           landData: form.value,
@@ -67,10 +74,10 @@ class LandHoldingPage extends StatelessWidget {
                                 final item = entries[index];
                                 return OptionsSheet(
                                   icon: Icons.grass,
-                                  title: item.lslLandApplicantName!,
+                                  title: item.lslLandApplicantName.toString(),
                                   details: [
-                                    item.lslLandSurveyNo!,
-                                    item.lslLandVillage!,
+                                    item.lslLandSurveyNo.toString(),
+                                    item.lslLandVillage.toString(),
                                     item.lslLandTotAcre.toString(),
                                   ],
                                   detailsName: [
@@ -165,44 +172,55 @@ class LandHoldingPage extends StatelessWidget {
               SizedBox(height: 10),
 
               Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8,
-                        right: 8,
-                        bottom: 20,
-                        top: 10,
+                
+                child: Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                      padding: const EdgeInsets.all(8),
+
+                        decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.10),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                   child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Proposal Id: ",
+                              style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold) ,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                proposalNumber ?? 'N/A',
+                                style: TextStyle(color: Colors.white, fontSize: 14,  fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis, 
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const Text(
-                        "proposalId: ",
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 200,
-                      height: 30,
-                      child: Text(
-                        proposalNumber ?? 'N/A',
-                        style: TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ),
-                  ],
-                ),
+                                 ),
               ),
             ],
           ),
         ),
         body: BlocProvider(
-          create: (_) => LandHoldingBloc()..add(LandHoldingInitEvent()),
+          create:
+              (_) =>
+                  LandHoldingBloc()
+                    ..add(LandHoldingInitEvent(proposalNumber: proposalNumber)),
           child: BlocConsumer<LandHoldingBloc, LandHoldingState>(
             listener: (context, state) {
               if (state.status == SaveStatus.success) {
+                globalLoadingBloc.add(HideLoading());
                 form.reset();
               }
               if (state.selectedLandData != null &&
-                state.status == SaveStatus.update) {
+                  state.status == SaveStatus.update) {
                 var selectedFormArrayData = state.selectedLandData!.mapForm();
                 print("selectedFormArrayData $selectedFormArrayData");
                 form.patchValue(selectedFormArrayData);
@@ -218,6 +236,9 @@ class LandHoldingPage extends StatelessWidget {
               }
             },
             builder: (context, state) {
+              if (state.status == SaveStatus.init) {
+                form.control('applicantName').updateValue(applicantName);
+              }
               return ReactiveForm(
                 formGroup: form,
                 child: SafeArea(
@@ -237,12 +258,7 @@ class LandHoldingPage extends StatelessWidget {
                                     Dropdown(
                                       controlName: 'applicantName',
                                       label: 'Applicant Name / Guarantor',
-                                      items: [
-                                        '--Select--',
-                                        'Ravi Kumar',
-                                        'Sita Devi',
-                                        'Vikram R',
-                                      ],
+                                      items: [applicantName],
                                     ),
                                     SearchableDropdown(
                                       controlName: 'state',
@@ -321,8 +337,7 @@ class LandHoldingPage extends StatelessWidget {
                                     ),
                                     IntegerTextField(
                                       controlName: 'irrigatedLand',
-                                      label:
-                                          'Out of Total acreage, how much is the Irrigated Land (in Acres)',
+                                      label: 'Total Irrigated Land (in Acres)',
                                       mantatory: true,
                                       maxlength: 2,
                                       minlength: 1,
@@ -459,6 +474,38 @@ class LandHoldingPage extends StatelessWidget {
                                       optionOne: 'Yes',
                                       optionTwo: 'No',
                                     ),
+                                    ElevatedButton.icon(
+                                      onPressed:
+                                          () => handleSubmit(context, state),
+                                      icon: const Icon(
+                                        Icons.save,
+                                        color: Colors.white,
+                                      ),
+                                      label: const Text(
+                                        'Save',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                          212,
+                                          5,
+                                          8,
+                                          205,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 32,
+                                          vertical: 14,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -466,39 +513,39 @@ class LandHoldingPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Positioned(
-                        bottom: 5,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () => handleSubmit(context, state),
-                            icon: const Icon(Icons.save, color: Colors.white),
-                            label: const Text(
-                              'Save',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                212,
-                                5,
-                                8,
-                                205,
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32,
-                                vertical: 14,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Positioned(
+                      //   bottom: 5,
+                      //   left: 0,
+                      //   right: 0,
+                      //   child: Center(
+                      //     child: ElevatedButton.icon(
+                      //       onPressed: () => handleSubmit(context, state),
+                      //       icon: const Icon(Icons.save, color: Colors.white),
+                      //       label: const Text(
+                      //         'Save',
+                      //         style: TextStyle(
+                      //           fontWeight: FontWeight.bold,
+                      //           color: Colors.white,
+                      //         ),
+                      //       ),
+                      //       style: ElevatedButton.styleFrom(
+                      //         backgroundColor: const Color.fromARGB(
+                      //           212,
+                      //           5,
+                      //           8,
+                      //           205,
+                      //         ),
+                      //         padding: const EdgeInsets.symmetric(
+                      //           horizontal: 32,
+                      //           vertical: 14,
+                      //         ),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(8),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       // FAB with badge on top
                       Positioned(
                         bottom: 10,
@@ -512,7 +559,7 @@ class LandHoldingPage extends StatelessWidget {
                               tooltip: 'View Saved Data',
                               onPressed: () => showBottomSheet(context, state),
                               child: const Icon(
-                                Icons.remove_red_eye,
+                                Icons.menu,
                                 color: Colors.blue,
                                 size: 28,
                               ),

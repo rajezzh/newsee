@@ -45,13 +45,14 @@ Future<AsyncResponseHandler<bool, List<MasterVersion>>> compareVersions(
     // master version having values which means masters already downloaded
     // and version are outdated and collected for master update
     masterversionsList.forEach((e) {
-      differredMasters =
-          targetMasterList
-              .where(
-                (v) =>
-                    (v.mastername == e.mastername) && (v.version != e.version),
-              )
-              .toList();
+      differredMasters.addAll(
+        targetMasterList
+            .where(
+              (v) => (v.mastername == e.mastername) && (v.version != e.version),
+            )
+            .toList(),
+      );
+      print("differredMasters $differredMasters");
     });
     return Future.value(AsyncResponseHandler.right(differredMasters));
   } else {

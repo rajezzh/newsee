@@ -12,9 +12,9 @@ String formatAmount(String amount) {
   try {
     final num value = num.parse(amount);
     final formatter = NumberFormat.decimalPattern('en_IN');
-    return '₹${formatter.format(value)}';
+    // return '₹${formatter.format(value)}';
     // final formatter = NumberFormat.currency(locale: 'en_IN', symbol: '₹');
-    // return formatter.format(value);
+    return formatter.format(value);
   } catch (e) {
     return amount;
   }
@@ -236,5 +236,4 @@ String? removeSpecialCharacters(String formval) {
   } catch (error) {
     print('removeSpecialCharacters-utilspage => $error');
   }
-   
 }

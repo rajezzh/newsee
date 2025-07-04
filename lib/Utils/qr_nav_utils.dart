@@ -17,7 +17,7 @@ void showScannerOptions(BuildContext context) {
     builder: (BuildContext context) {
       return Container(
         padding: EdgeInsets.all(16),
-        height: 150,
+        height: 180,
         child: Column(
           children: [
             ListTile(

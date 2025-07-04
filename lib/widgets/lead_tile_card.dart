@@ -100,7 +100,7 @@ class LeadTileCard extends StatelessWidget {
                         }
                         Navigator.pop(context);
                       },
-                      child: iconWithLabel(Icons.phone_outlined, phone),
+                      child: iconWithLabel(Icons.chrome_reader_mode_outlined, phone),
                     ),
                   ),
                   Expanded(
