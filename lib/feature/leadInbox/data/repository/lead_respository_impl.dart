@@ -29,11 +29,7 @@ class LeadRepositoryImpl implements LeadRepository {
       final payload = {
         'userid': req.userid,
         'pageNo': '0',
-<<<<<<< HEAD
         'pageCount':'10',
-=======
-        'pagePage': '20',
->>>>>>> 59a3f57172373e6f22814e74dc484beae657cfe4
         'token': ApiConfig.AUTH_TOKEN,
       };
 
