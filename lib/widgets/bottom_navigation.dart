@@ -40,6 +40,7 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.update_outlined),
           label: "Masters Update",
+          
         ),
       ],
     );

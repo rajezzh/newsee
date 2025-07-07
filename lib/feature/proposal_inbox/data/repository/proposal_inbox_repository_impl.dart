@@ -20,7 +20,7 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
       final payload = {
         'userid': req.userid,
         'pageNo': '0',
-        'pagePage': '5',
+        'pageCount':'10',
         'token': ApiConfig.AUTH_TOKEN,
       };
 
