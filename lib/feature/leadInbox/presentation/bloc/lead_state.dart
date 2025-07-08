@@ -15,11 +15,14 @@ class LeadState extends Equatable {
   final LeadStatus status;
   final List<GroupLeadInbox>? leadResponseModel;
   final String? errorMessage;
+  final int currentPage ;
 
   const LeadState({
     this.status = LeadStatus.initial,
     this.leadResponseModel,
     this.errorMessage,
+    this.currentPage = 1  ,
+
   });
 
   factory LeadState.init() => const LeadState();
@@ -28,14 +31,17 @@ class LeadState extends Equatable {
     LeadStatus? status,
     List<GroupLeadInbox>? leadResponseModel,
     String? errorMessage,
+    int? currentPage,
+
   }) {
     return LeadState(
       status: status ?? this.status,
       leadResponseModel: leadResponseModel ?? this.leadResponseModel,
       errorMessage: errorMessage ?? this.errorMessage,
+      currentPage:currentPage ?? this.currentPage
     );
   }
 
   @override
-  List<Object?> get props => [status, leadResponseModel, errorMessage];
+  List<Object?> get props => [status, leadResponseModel, errorMessage,currentPage];
 }
