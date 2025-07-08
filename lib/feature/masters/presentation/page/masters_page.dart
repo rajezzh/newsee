@@ -23,8 +23,8 @@ class MastersPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(
-          "Globalconfig.masterVersionMapper['Listofvalues'], => ${Globalconfig.masterVersionMapper['Listofvalues']}",
-        );
+      "Globalconfig.masterVersionMapper['Listofvalues'], => ${Globalconfig.masterVersionMapper['Listofvalues']}",
+    );
 
     final double scrwidth = MediaQuery.of(context).size.width;
     final double scrheight = MediaQuery.of(context).size.height;
@@ -40,7 +40,6 @@ class MastersPage extends StatelessWidget {
     goTo(String name) {
       context.goNamed('home');
     }
-    
 
     return Scaffold(
       body: BlocProvider(
@@ -57,7 +56,8 @@ class MastersPage extends StatelessWidget {
             )..add(
               MasterFetch(
                 request: MasterRequest(
-                  setupVersion: Globalconfig.masterVersionMapper['Listofvalues'],
+                  setupVersion:
+                      Globalconfig.masterVersionMapper['Listofvalues'],
                   setupmodule: 'AGRI',
                   setupTypeOfMaster: ApiConstants.master_key_lov,
                 ),
@@ -84,10 +84,11 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: Globalconfig.masterVersionMapper['ProductMaster'],
+                        setupVersion:
+                            Globalconfig.masterVersionMapper['ProductMaster'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_products,
-                      )
+                      ),
                     ),
                   );
 
@@ -99,11 +100,12 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: Globalconfig.masterVersionMapper['ProductScheme'],
+                        setupVersion:
+                            Globalconfig.masterVersionMapper['ProductScheme'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster:
                             ApiConstants.master_key_productschema,
-                      )
+                      ),
                     ),
                   );
 
@@ -116,10 +118,11 @@ class MastersPage extends StatelessWidget {
                   context.read<MastersBloc>().add(
                     MasterFetch(
                       request: MasterRequest(
-                        setupVersion: Globalconfig.masterVersionMapper['StateCityMaster'],
+                        setupVersion:
+                            Globalconfig.masterVersionMapper['StateCityMaster'],
                         setupmodule: 'AGRI',
                         setupTypeOfMaster: ApiConstants.master_key_statecity,
-                      )
+                      ),
                     ),
                   );
                 case MasterTypes.success:
@@ -142,9 +145,7 @@ class MastersPage extends StatelessWidget {
           child: BlocBuilder<MastersBloc, MastersState>(
             builder: (context, state) {
               return SafeArea(
-                child: DownloadProgressWidget(
-                  downloadProgress: progress,
-                ),
+                child: DownloadProgressWidget(downloadProgress: progress),
               );
             },
           ),

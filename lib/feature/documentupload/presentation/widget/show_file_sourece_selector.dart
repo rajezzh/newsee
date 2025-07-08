@@ -19,7 +19,12 @@ void showFileSourceSelector(BuildContext context, int index, String docName) {
               onTap: () {
                 Navigator.pop(context);
                 context.read<DocumentBloc>().add(
-                  AttachFileEvent(index, docName, source: FileSource.camera),
+                  AttachImageEvent(
+                    context: context,
+                    docIndex: index,
+                    docName: docName,
+                    source: FileSource.camera,
+                  ),
                 );
               },
             ),
@@ -29,7 +34,12 @@ void showFileSourceSelector(BuildContext context, int index, String docName) {
               onTap: () {
                 Navigator.pop(context);
                 context.read<DocumentBloc>().add(
-                  AttachFileEvent(index, docName, source: FileSource.gallery),
+                  AttachImageEvent(
+                    context: context,
+                    docIndex: index,
+                    docName: docName,
+                    source: FileSource.gallery,
+                  ),
                 );
               },
             ),
@@ -39,7 +49,12 @@ void showFileSourceSelector(BuildContext context, int index, String docName) {
               onTap: () {
                 Navigator.pop(context);
                 context.read<DocumentBloc>().add(
-                  AttachFileEvent(index, docName, source: FileSource.pdf),
+                  AttachImageEvent(
+                    context: context,
+                    docIndex: index,
+                    docName: docName,
+                    source: FileSource.pdf,
+                  ),
                 );
               },
             ),

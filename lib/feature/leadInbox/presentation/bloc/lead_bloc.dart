@@ -23,6 +23,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     : leadRepository = repository ?? LeadRepositoryImpl(),
       super(LeadState()) {
     on<SearchLeadEvent>(onSearchLead);
+    on<PageChangedEvent>(onPageChanged);
   }
 
   Future<void> onSearchLead(
@@ -51,4 +52,30 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
       );
     }
   }
+
+ Future<void> onPageChanged(
+  PageChangedEvent event , 
+  Emitter<LeadState> emit,
+
+ )async{
+
+  final newPage = event.newPage;
+
+  emit(state.copyWith(currentPage: newPage));
+
+  add(SearchLeadEvent(
+      request: event.previousRequest.copyWith(page: newPage),
+    ));
+
+  
+
+
+  }
+
+
+
+
+
+
 }
+

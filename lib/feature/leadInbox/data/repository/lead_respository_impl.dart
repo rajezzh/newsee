@@ -27,10 +27,10 @@ class LeadRepositoryImpl implements LeadRepository {
   ) async {
     try {
       final payload = {
-        'userid': req.userid, 
-        "pageNo": "0",
-        "pageCount": "10",
-        'token': ApiConfig.AUTH_TOKEN
+        'userid': req.userid,
+        'pageNo': '0',
+        'token': ApiConfig.AUTH_TOKEN,
+        'pageCount': '20',
       };
 
       final response = await LeadRemoteDatasource(

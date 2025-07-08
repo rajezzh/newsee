@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/feature/ocr/presentation/page/ocr_page.dart';
+import 'package:newsee/feature/ocr/presentation/page/text_detector_view.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/feature/qrscanner/presentation/page/qr_scanner_page.dart';
 import 'package:xml2json/xml2json.dart';
@@ -32,10 +34,7 @@ void showScannerOptions(BuildContext context) {
               title: Text('OCR'),
               onTap: () {
                 Navigator.pop(context); // Close bottom sheet
-                // TODO: Implement OCR functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('OCR feature not implemented yet')),
-                );
+                _navigateToOCRScanner(context);
               },
             ),
           ],
@@ -56,6 +55,24 @@ void _navigateToQRScanner(BuildContext context) {
           (context) => QRScannerPage(
             onQRScanned: (result) {
               _showResultDialog(ctx, result); // Show result in AlertDialog
+            },
+          ),
+    ),
+  );
+}
+
+// route to OCR page
+
+void _navigateToOCRScanner(BuildContext context) {
+  BuildContext ctx = context;
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder:
+          (context) => OCRScannerPage(
+            onTextDetected: (p0) {
+              print('ocr result => $p0');
             },
           ),
     ),

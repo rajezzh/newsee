@@ -102,90 +102,90 @@ class LoginpageView extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: screenWidth * 0.035),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
+                          SizedBox(height: screenHeight * 0.06),
 
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: screenHeight * 0.02,
-                            ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(
+                          //     bottom: screenHeight * 0.02,
+                          //   ),
 
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: SvgPicture.asset(
-                                        'assets/Retail_loan.svg',
-                                        // width: screenWidth * 0.02,
-                                        // height: screenHeight,
-                                        width: screenWidth * 0.05,
-                                        height: screenHeight * 0.05,
-                                      ),
-                                      iconSize: screenWidth * 0.08,
-                                      color: Colors.amber,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 0),
-                                      child: Text(
-                                        'Retail Loan',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: screenWidth * 0.04,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: SvgPicture.asset(
-                                        'assets/Agri_Loan.svg',
-                                        width: screenWidth * 0.05,
-                                        height: screenHeight * 0.05,
-                                      ),
-                                      iconSize: screenWidth * 0.08,
-                                      color: Colors.blue,
-                                    ),
-                                    Text(
-                                      'Agri Loan',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: screenWidth * 0.04,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {},
-                                      icon: SvgPicture.asset(
-                                        'assets/MSME.svg',
-                                        width: screenWidth * 0.05,
-                                        height: screenHeight * 0.05,
-                                      ),
-                                      iconSize: screenWidth * 0.07,
-                                      color: Colors.pink,
-                                    ),
-                                    Text(
-                                      'MSME Loan',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: screenWidth * 0.04,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          //     children: [
+                          //       Column(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           IconButton(
+                          //             onPressed: () {},
+                          //             icon: SvgPicture.asset(
+                          //               'assets/Retail_loan.svg',
+                          //               // width: screenWidth * 0.02,
+                          //               // height: screenHeight,
+                          //               width: screenWidth * 0.05,
+                          //               height: screenHeight * 0.05,
+                          //             ),
+                          //             iconSize: screenWidth * 0.08,
+                          //             color: Colors.amber,
+                          //           ),
+                          //           Padding(
+                          //             padding: const EdgeInsets.only(top: 0),
+                          //             child: Text(
+                          //               'Retail Loan',
+                          //               style: TextStyle(
+                          //                 color: Colors.black,
+                          //                 fontSize: screenWidth * 0.04,
+                          //               ),
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       Column(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           IconButton(
+                          //             onPressed: () {},
+                          //             icon: SvgPicture.asset(
+                          //               'assets/Agri_Loan.svg',
+                          //               width: screenWidth * 0.05,
+                          //               height: screenHeight * 0.05,
+                          //             ),
+                          //             iconSize: screenWidth * 0.08,
+                          //             color: Colors.blue,
+                          //           ),
+                          //           Text(
+                          //             'Agri Loan',
+                          //             style: TextStyle(
+                          //               color: Colors.black,
+                          //               fontSize: screenWidth * 0.04,
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       Column(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           IconButton(
+                          //             onPressed: () {},
+                          //             icon: SvgPicture.asset(
+                          //               'assets/MSME.svg',
+                          //               width: screenWidth * 0.05,
+                          //               height: screenHeight * 0.05,
+                          //             ),
+                          //             iconSize: screenWidth * 0.07,
+                          //             color: Colors.pink,
+                          //           ),
+                          //           Text(
+                          //             'MSME Loan',
+                          //             style: TextStyle(
+                          //               color: Colors.black,
+                          //               fontSize: screenWidth * 0.04,
+                          //             ),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -255,7 +255,7 @@ class LoginpageView extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: screenHeight * 0.05),
+                  SizedBox(height: screenHeight * 0.1),
 
                   // Access to additional options like Maintenance, Reach Us, and More
                   Padding(

@@ -9,6 +9,7 @@ import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_requ
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
+import 'package:newsee/widgets/SearchableMultiSelectDropdown.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
@@ -549,6 +550,36 @@ class Personal extends StatelessWidget {
                                     optCode: '',
                                   ),
                             );
+                      },
+                    ),
+                    SearchableMultiSelectDropdown<Lov>(
+                      controlName: 'subActivity',
+                      label: 'Sub Activity',
+                      items:
+                          state.lovList!
+                              .where((v) => v.Header == 'SubActivity')
+                              .toList(),
+                      selItems: () {
+                        final currentValues = form.control('subActivity').value;
+                        if (currentValues == null || currentValues.isEmpty) {
+                          return <Lov>[];
+                        }
+                        return state.lovList!
+                            .where(
+                              (v) =>
+                                  v.Header == 'SubActivity' &&
+                                  currentValues.contains(v.optvalue),
+                            )
+                            .toList();
+                      },
+                      onChangeListener: (List<Lov>? selectedItems) {
+                        final selectedValues =
+                            selectedItems?.map((e) => e.optvalue).toList() ??
+                            [];
+                        String subactivities = selectedValues.join(',');
+                        form.controls['subActivity']?.updateValue(
+                          subactivities,
+                        );
                       },
                     ),
                     SizedBox(height: 20),
