@@ -8,13 +8,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/leadInbox/presentation/bloc/lead_bloc.dart';
-import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/lead_tile_card-shimmer.dart';
-import 'package:newsee/widgets/options_sheet.dart';
-import '../../../../widgets/lead_tile_card.dart';
+import 'package:newsee/widgets/lead_tile_card.dart';
 
 class CompletedLeads extends StatelessWidget {
   final String searchQuery;
@@ -24,37 +22,33 @@ class CompletedLeads extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) =>
-              LeadBloc()..add(
-                SearchLeadEvent(request: LeadRequest(userid: "AGRI1124")),
-              ),
+      create: (context) => LeadBloc()
+        ..add(SearchLeadEvent(request: LeadRequest(userid: "AGRI1124", page: 1))),
       child: BlocBuilder<LeadBloc, LeadState>(
         builder: (context, state) {
+          final request = LeadRequest(userid: "AGRI1124");
+
           Future<void> onRefresh() async {
-            context.read<LeadBloc>().add(
-              SearchLeadEvent(request: LeadRequest(userid: "AGRI1124")),
-            );
+            context.read<LeadBloc>().add(SearchLeadEvent(request: request));
           }
 
           if (state.status == LeadStatus.loading) {
-            // return const Center(child: ShimmerLoader(cardHeight: 120,itemCount: 5));
             return RefreshIndicator(
               onRefresh: onRefresh,
               child: ListView.builder(
                 itemCount: 4,
                 itemBuilder: (context, index) {
                   return LeadTileCardShimmer(
-                    title: 'dfsdfsfdsfsd',
-                    subtitle: 'dfsdfsfdsfsd',
+                    title: 'Loading...',
+                    subtitle: 'Loading...',
                     icon: Icons.person,
                     color: Colors.teal,
-                    type: 'dfsdfsfdsfsd',
-                    product: 'dfsdfsfdsfsd',
-                    phone: 'dfsdfsfdsfsd',
-                    createdon: 'dfsdfsfdsfsd',
-                    location: 'dfsdfsfdsfsd',
-                    loanamount: 'dfsdfsfdsfsd',
+                    type: 'Loading...',
+                    product: 'Loading...',
+                    phone: 'Loading...',
+                    createdon: 'Loading...',
+                    location: 'Loading...',
+                    loanamount: 'Loading...',
                   );
                 },
               ),
@@ -66,10 +60,10 @@ class CompletedLeads extends StatelessWidget {
               onRefresh: onRefresh,
               child: ListView(
                 children: [
-                  SizedBox(height: 200),
+                  const SizedBox(height: 200),
                   Center(
                     child: Text(
-                      " ${state.errorMessage ?? 'Something went wrong'}",
+                      state.errorMessage ?? 'Something went wrong',
                     ),
                   ),
                 ],
@@ -77,22 +71,20 @@ class CompletedLeads extends StatelessWidget {
             );
           }
 
-          final allLeads =
-              state.leadResponseModel
-                  ?.expand((model) => model.finalList)
-                  .toList();
+          final allLeads = state.leadResponseModel
+              ?.expand((model) => model.finalList)
+              .toList();
 
-          final filteredLeads =
-              allLeads?.where((lead) {
-                final name = (lead['lleadfrstname'] ?? '').toLowerCase();
-                final id = (lead['lleadid'] ?? '').toLowerCase();
-                final phone = (lead['lleadmobno'] ?? '').toLowerCase();
-                final loan = (lead['lldLoanamtRequested'] ?? '').toString();
-                return name.contains(searchQuery.toLowerCase()) ||
-                    id.contains(searchQuery.toLowerCase()) ||
-                    phone.contains(searchQuery.toLowerCase()) ||
-                    loan.contains(searchQuery.toString());
-              }).toList();
+          final filteredLeads = allLeads?.where((lead) {
+            final name = (lead['lleadfrstname'] ?? '').toLowerCase();
+            final id = (lead['lleadid'] ?? '').toLowerCase();
+            final phone = (lead['lleadmobno'] ?? '').toLowerCase();
+            final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+            return name.contains(searchQuery.toLowerCase()) ||
+                id.contains(searchQuery.toLowerCase()) ||
+                phone.contains(searchQuery.toLowerCase()) ||
+                loan.contains(searchQuery.toLowerCase());
+          }).toList();
 
           if (filteredLeads == null || filteredLeads.isEmpty) {
             return RefreshIndicator(
@@ -106,70 +98,67 @@ class CompletedLeads extends StatelessWidget {
             );
           }
 
+          final itemsPerPage = 1;
+          // final totalPages = (filteredLeads.length / itemsPerPage).ceil();
+          final totalPages = (filteredLeads.length);
+          final currentPage = state.currentPage - 1;
+
+          final startIndex = currentPage * itemsPerPage;
+          final endIndex =
+              ((currentPage + filteredLeads.length) * itemsPerPage).clamp(0, filteredLeads.length);
+          final paginatedLeads = filteredLeads.sublist(startIndex, endIndex > filteredLeads.length ? filteredLeads.length : endIndex);
+
           return RefreshIndicator(
             onRefresh: onRefresh,
-            child: ListView.builder(
-              itemCount: filteredLeads.length,
-              itemBuilder: (context, index) {
-                final lead = filteredLeads[index];
-                return LeadTileCard(
-                  title: lead['lleadfrstname'] ?? 'N/A',
-                  subtitle: lead['lleadid'] ?? 'N/A',
-                  icon: Icons.person,
-                  color: Colors.teal,
-                  type:
-                      lead['lleadexistingcustomer'] == "N"
-                          ? 'New Customer'
-                          : 'Existing Customer',
-                  product: lead['lfProdId'] ?? 'N/A',
-                  phone: lead['lleadmobno'] ?? 'N/A',
-                  createdon: lead['lpdCreatedOn'] ?? 'N/A',
-                  location: lead['lleadprefbrnch'] ?? 'N/A',
-                  loanamount: lead['lldLoanamtRequested']?.toString() ?? '',
-                  onTap: () {
-                    // openBottomSheet(context, 0.6, 0.4, 0.9, (
-                    //   context,
-                    //   scrollController,
-                    // ) {
-                    //   return SingleChildScrollView(
-                    //     controller: scrollController,
-                    //     child: Column(
-                    //       children: [
-                    //         const SizedBox(height: 12),
-                    //         OptionsSheet(
-                    //           icon: Icons.visibility,
-                    //           title: "Land Details",
-                    //           subtitle: "View your Land Details here",
-                    //           status: 'Completed',
-                    //           onTap: () {
-                    //             context.pushNamed('landholdings');
-                    //           },
-                    //         ),
-                    //         OptionsSheet(
-                    //           icon: Icons.visibility,
-                    //           title: "Crop Details",
-                    //           subtitle: "View your Crop Details here",
-                    //           status: 'Pending',
-                    //           onTap: () {
-                    //             context.pushNamed('cropdetails', extra: '143560000000633');
-                    //           },
-                    //         ),
-                    //         OptionsSheet(
-                    //           icon: Icons.description,
-                    //           title: "Document Upload",
-                    //           subtitle: "Pre-Sanctioned Documents Upload",
-                    //           status: 'Pending',
-                    //           onTap: () {
-                    //             context.pushNamed('document');
-                    //           },
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   );
-                    // });
-                  },
-                );
-              },
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: paginatedLeads.length,
+                    itemBuilder: (context, index) {
+                      final lead = paginatedLeads[index];
+                      return LeadTileCard(
+                        title: lead['lleadfrstname'] ?? 'N/A',
+                        subtitle: lead['lleadid'] ?? 'N/A',
+                        icon: Icons.person,
+                        color: Colors.teal,
+                        type: lead['lleadexistingcustomer'] == "N"
+                            ? 'New Customer'
+                            : 'Existing Customer',
+                        product: lead['lfProdId'] ?? 'N/A',
+                        phone: lead['lleadmobno'] ?? 'N/A',
+                        createdon: lead['lpdCreatedOn'] ?? 'N/A',
+                        location: lead['lleadprefbrnch'] ?? 'N/A',
+                        loanamount:
+                            lead['lldLoanamtRequested']?.toString() ?? '',
+                        onTap: () {},
+                      );
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: NumberPaginator(
+                    numberPages: totalPages,
+                    initialPage: currentPage,
+                    onPageChange: (int index) {
+                      context.read<LeadBloc>().add(
+                            PageChangedEvent(index + 1, request),
+                          );
+                    },
+                    child: const SizedBox(
+                      height: 48,
+                      child: Row(
+                        children: [
+                          PrevButton(),
+                          Expanded(child: NumberContent()),
+                          NextButton(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },
