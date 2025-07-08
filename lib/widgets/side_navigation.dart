@@ -3,14 +3,25 @@
  @author : Akshayaa 
  Description : Drawer at the side for navigation between pages
 */
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/pages/home_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Sidenavigationbar extends StatelessWidget {
   final Function(int)? onTabSelected;
 
   const Sidenavigationbar({this.onTabSelected, super.key});
 
+  Future<UserDetails?> loadUser() async {
+    final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+    String? getString = await asyncPrefs.getString('userdetails');
+    UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!)); 
+    return userdetails;
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -19,9 +30,27 @@ class Sidenavigationbar extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(color: Colors.teal),
-            child: Text(
-              "Menu",
-              style: TextStyle(color: Colors.white, fontSize: 24),
+            child: FutureBuilder<UserDetails?>(
+              future: loadUser(),
+              builder: (context, snapshot) {
+                final user = snapshot.data;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'User : ${user?.UserName} | ${user?.LPuserID}',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Branch : ${user?.Orgscode} | ${user?.OrgName}',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                );
+              },
             ),
           ),
           ListTile(
