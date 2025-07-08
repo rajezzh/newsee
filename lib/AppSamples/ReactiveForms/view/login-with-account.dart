@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/create_mpin.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/Utils/masterversioncheck.dart';
@@ -117,7 +118,9 @@ class LoginpageWithAC extends StatelessWidget {
                 );
                 context.goNamed('masters');
               } else {
-                context.goNamed('home');
+                context.pop(loginActionSheet);
+                 createMpin(context);
+               
               }
             }
           case AuthStatus.loading:

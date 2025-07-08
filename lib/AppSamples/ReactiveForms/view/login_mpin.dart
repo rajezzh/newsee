@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /*
 @author : Gayathri B    09/05/2025
@@ -94,6 +95,28 @@ mpin(BuildContext context) {
               ),
 
               SizedBox(height: 50),
+                 ElevatedButton(
+                            style: const ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll<Color>(
+                                Color.fromARGB(255, 2, 59, 105),
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                Colors.white,
+                              ),
+                              minimumSize: WidgetStatePropertyAll(
+                                Size(230, 40),
+                              ),
+                            ),
+                            onPressed:(){
+                              context.goNamed('home');
+                            },
+                                
+                                    
+                            child:
+                               
+                                  Text("Login"),
+                                  
+                          ),
             ],
           ),
         ),

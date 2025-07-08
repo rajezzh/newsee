@@ -19,9 +19,9 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
     try {
       final payload = {
         'userid': req.userid,
-        'token': ApiConfig.AUTH_TOKEN,
         'pageNo': '0',
-        'pagePage': '20',
+        'token': ApiConfig.AUTH_TOKEN,
+        'pageCount': '20',
       };
 
       final response = await ProposalInboxRemoteDatasource(

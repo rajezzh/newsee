@@ -6,8 +6,10 @@ import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_route_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/shared_preference_handler.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
@@ -44,17 +46,22 @@ class LeadSubmitPage extends StatelessWidget {
     required Dedupe dedupeData,
     required AddressData addressData,
     required CoapplicantData coapplicantData,
-  }) {
+  }) async {
     String? loanAmountFormatted = personlData.loanAmountRequested?.replaceAll(
       ',',
       '',
     );
+    SharedPreferenceHandler<UserDetails> userDetail =
+        SharedPreferenceHandler<UserDetails>.getFromKey('userdetails');
+    UserDetails ud = await userDetail.setObj();
+    print('sourceid => ${ud.LPuserID}');
+    print('sourcename => ${ud.UserName}');
+
     PersonalData updatedPersonalData = personlData.copyWith(
       loanAmountRequested: loanAmountFormatted,
       passportNumber: '431241131',
       sourceid: 'AGRI1124',
       sourcename: 'Meena',
-      subActivity: '1.3',
     );
 
     LeadSubmitPushEvent leadSubmitPushEvent = LeadSubmitPushEvent(
@@ -83,6 +90,7 @@ class LeadSubmitPage extends StatelessWidget {
               message: "Lead details successfully submitted",
               leftButtonLabel: 'Go To Inbox',
               rightButtonLabel: 'Create Proposal',
+              status: state.proposalSubmitStatus,
               onPressedLeftButton: () {
                 if (Navigator.of(context).canPop()) {
                   Navigator.of(context).pop();
@@ -136,7 +144,7 @@ class LeadSubmitPage extends StatelessWidget {
                 final applicantName =
                     '${applicantData?.firstName} ${applicantData?.lastName}';
                 context.pushNamed(
-                  AppRouteConstants.LAND_HOLDING_PAGE['name']!,
+                  'landholdings',
                   extra: {
                     'proposalNumber': state.proposalNo,
                     'applicantName': applicantName,
@@ -222,11 +230,13 @@ class LeadSubmitPage extends StatelessWidget {
                                   as ProductMaster,
                           coappData: coappData,
                           context: context,
+                          status: state.leadSubmitStatus
                         )
                         : showNoDataCard(context),
               )
               : ApplicationCard(
-                leadId: state.leadId!,
+                leadId: state.leadId != null ? state.leadId! : '',
+                status: state.proposalSubmitStatus,
                 onProceedPressed: () {
                   createProposal(context, state);
                 },
@@ -296,6 +306,7 @@ class LeadSubmitPage extends StatelessWidget {
     required ProductMaster productMaster,
     required CoapplicantData? coappData,
     required BuildContext context,
+    required status
   }) {
     return <Widget>[
       Card(
@@ -345,7 +356,24 @@ class LeadSubmitPage extends StatelessWidget {
         ),
       ),
       SizedBox(height: 20),
-      Center(
+      status == SubmitStatus.loading ? 
+                      ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 75, 33, 83),
+                ),
+                child: const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2.5,
+                  ),
+                ),
+              )
+
+              :  
+        Center(
         child: ElevatedButton.icon(
           onPressed: () {
             submitLead(
@@ -392,7 +420,6 @@ class LeadSubmitPage extends StatelessWidget {
 incase of incomplete dataentry show no data card
 
 */
-
   List<Widget> showNoDataCard(BuildContext context) {
     return <Widget>[
       Card(

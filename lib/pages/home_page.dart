@@ -51,7 +51,7 @@ class HomePageState extends State<HomePage> {
         return LeadTabBar(searchQuery: searchQuery);
       case 1:
         return Center(
-          child: Text("Application Inbox", style: TextStyle(fontSize: 24)),
+          child: Text("Field Visit Inbox", style: TextStyle(fontSize: 24)),
         );
       case 2:
         return Center(
@@ -87,7 +87,9 @@ class HomePageState extends State<HomePage> {
         currentIndex: selectedIndex,
         onTap: onItemTapped,
       ),
-      floatingActionButton: FloatingActionBarWidget(),
+      floatingActionButton: selectedIndex !=3
+      ?FloatingActionBarWidget()
+      :null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
