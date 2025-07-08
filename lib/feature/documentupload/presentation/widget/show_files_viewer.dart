@@ -1,141 +1,120 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:newsee/feature/documentupload/domain/modal/document_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_bloc.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_event.dart';
+import 'package:newsee/feature/documentupload/presentation/bloc/document_state.dart';
+import 'package:newsee/feature/documentupload/presentation/widget/image_view.dart';
 import 'package:newsee/feature/documentupload/presentation/widget/show_Image_delete_alert.dart';
-import 'package:provider/provider.dart';
 
-void showFilesViewerBottomSheet(
-  BuildContext context,
-  // List<DocumentImage> images,
-  int index,
-  DocumentModel doc,
-) {
-  final bloc = context.read<DocumentBloc>();
-  // final state = bloc.state;
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-    ),
-    builder: (cxt) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Attached Files',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: doc.imgs.length,
-                itemBuilder: (context, imgIndex) {
-                  final file = doc.imgs[imgIndex];
-                  final isImage = isImageFile(file.fileName);
+class ShowFilesViewer extends StatelessWidget {
+  final int docIndex;
 
-                  return ListTile(
-                    leading: Icon(isImage ? Icons.image : Icons.picture_as_pdf),
-                    title: Text(file.fileName),
-                    // subtitle: Text('${file.size.toStringAsFixed(1)} MB'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // IconButton(
-                        //   icon: const Icon(
-                        //     Icons.upload_rounded,
-                        //     color: Colors.blue,
-                        //   ),
-                        //   onPressed: () {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(
-                        //         content: Text('Uploading ${file.name}...'),
-                        //       ),
-                        //     );
-                        //     bloc.add(
-                        //       UploadDocumentByIndexEvent(
-                        //         docIndex: index,
-                        //         imgIndexes: [imgIndex],
-                        //       ),
-                        //     );
-                        //   },
-                        // ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed:
-                              doc.imgs.isEmpty
-                                  ? null
-                                  : () async {
-                                    final result = await confirmAndDeleteImage(
-                                      context,
-                                      index,
-                                      imgIndex: imgIndex,
-                                      checkFrom: 'FileViewer',
-                                    );
-                                    print("fhghgh $result");
-                                    if (result != null &&
-                                        result == 'FileViewer') {
-                                      print("fhghgh $result");
-                                      bloc.add(
-                                        DeleteDocumentImageEvent(
-                                          docIndex: index,
-                                          imgIndex: imgIndex,
-                                        ),
-                                      );
-                                      Navigator.pop(context);
-                                    }
-                                    // context.read<DocumentBloc>().add(
-                                    //   DeleteDocEvent(
-                                    //     docIndex: index,
-                                    //     imgIndex: imgIndex,
-                                    //   ),
-                                    // ), // trigger delete
-                                  },
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
+  const ShowFilesViewer({super.key, required this.docIndex});
 
-                      if (isImage) {
-                        showDialog(
-                          context: context,
-                          builder:
-                              (_) => Dialog(
-                                child: Image.file(File(file.fileLocation)),
-                              ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('PDF preview not implemented'),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<DocumentBloc, DocumentState>(
+      builder: (context, state) {
+        if (state.documentsList.length <= docIndex) {
+          return const Center(child: Text("Invalid document"));
+        }
+
+        final doc = state.documentsList[docIndex];
+
+        if (doc.imgs.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(24.0),
+              child: Text(
+                'No images available.',
+                style: TextStyle(color: Colors.grey),
               ),
             ),
-            const SizedBox(height: 12),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+          );
+        }
 
-bool isImageFile(String fileName) {
-  final ext = fileName.toLowerCase();
-  return ext.endsWith('.png') || ext.endsWith('.jpg') || ext.endsWith('.jpeg');
+        return ListView.builder(
+          itemCount: doc.imgs.length,
+          itemBuilder: (context, imgIndex) {
+            final image = doc.imgs[imgIndex];
+            return ListTile(
+              leading: const Icon(Icons.image),
+              title: Text(image.fileName),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete, color: Colors.blueGrey),
+                onPressed: () async {
+                  final confirmed = await confirmAndDeleteImage(context);
+                  if (confirmed == true) {
+                    context.read<DocumentBloc>().add(
+                      DeleteDocumentImageEvent(
+                        docIndex: docIndex,
+                        imgIndex: imgIndex,
+                      ),
+                    );
+                  }
+                },
+              ),
+              onTap: () async {
+                final bloc = context.read<DocumentBloc>();
+
+                bloc.add(
+                  FetchDocumentImagesEvent(
+                    docIndex: docIndex,
+                    imgIndex: imgIndex,
+                  ),
+                );
+
+                final updatedDoc =
+                    await bloc.stream
+                        .where((state) {
+                          final isLoaded =
+                              state.fetchStatus == SubmitStatus.success;
+                          final isValidDoc =
+                              state.documentsList.length > docIndex;
+                          final isValidImg =
+                              isValidDoc &&
+                              state.documentsList[docIndex].imgs.length >
+                                  imgIndex;
+
+                          if (!isLoaded || !isValidImg) return false;
+
+                          final filePath =
+                              state
+                                  .documentsList[docIndex]
+                                  .imgs[imgIndex]
+                                  .fileLocation;
+                          return filePath.isNotEmpty &&
+                              File(filePath).existsSync();
+                        })
+                        .map((state) => state.documentsList[docIndex])
+                        .first;
+
+                final filePath = updatedDoc.imgs[imgIndex].fileLocation;
+                final imageBytes = await File(filePath).readAsBytes();
+
+                if (context.mounted) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder:
+                          (_) => BlocProvider.value(
+                            value: bloc,
+                            child: ImageView(
+                              imageBytes: imageBytes,
+                              docIndex: docIndex,
+                              isUploaded: true,
+                              imgIndex: imgIndex,
+                            ),
+                          ),
+                    ),
+                  );
+                }
+              },
+            );
+          },
+        );
+      },
+    );
+  }
 }
