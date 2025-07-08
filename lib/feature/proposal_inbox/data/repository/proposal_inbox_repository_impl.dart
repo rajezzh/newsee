@@ -17,7 +17,12 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
   Future<AsyncResponseHandler<Failure, List<ProposalInboxResponseModel>>>
   searchProposalInbox(ProposalInboxRequest req) async {
     try {
-      final payload = {'userid': req.userid, 'token': ApiConfig.AUTH_TOKEN};
+      final payload = {
+        'userid': req.userid, 
+        "pageNo": "0",
+        "pageCount": "10",
+        'token': ApiConfig.AUTH_TOKEN
+      };
 
       final response = await ProposalInboxRemoteDatasource(
         dio: ApiClient().getDio(),

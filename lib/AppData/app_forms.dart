@@ -137,6 +137,7 @@ class AppForms {
   // Land Holding Form
   static FormGroup buildLandHoldingDetailsForm() {
     return FormGroup({
+      'lslLandRowid': FormControl<String>(validators: []),
       'applicantName': FormControl<String>(validators: [Validators.required]),
       'locationOfFarm': FormControl<String>(validators: [Validators.required]),
       'state': FormControl<String>(validators: [Validators.required]),
@@ -176,6 +177,7 @@ class AppForms {
 
   static FormGroup buildCropDetailsForm() {
     return FormGroup({
+      'lasSeqno':FormControl<String>(validators: []),
       'lasSeason': FormControl<String>(validators: [Validators.required]),
       'lasCrop': FormControl<String>(validators: [Validators.required]),
       'lasAreaofculti': FormControl<String>(validators: [Validators.required]),

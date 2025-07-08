@@ -9,6 +9,7 @@ import 'package:newsee/feature/masters/domain/modal/master_response.dart';
 import 'package:newsee/feature/masters/domain/modal/master_types.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
+import 'package:newsee/pages/home_page.dart';
 import 'package:newsee/widgets/download_progress_widget.dart';
 
 class MastersPage extends StatelessWidget {
@@ -125,8 +126,14 @@ class MastersPage extends StatelessWidget {
                   updateDownloadProgress(4);
                   print('progress completed => $progress');
                   await Future.delayed(const Duration(seconds: 2));
-                  goTo('home');
-
+                  if(Globalconfig.masterUpdate) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage(tabdata: 3)),
+                    );
+                  } else {
+                    goTo('home');
+                  }
                 default:
                   break;
               }

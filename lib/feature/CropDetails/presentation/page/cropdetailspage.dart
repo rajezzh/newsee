@@ -147,6 +147,7 @@ class CropDetailsPage extends StatelessWidget {
     print("CropyieldpageState-showBottomSheet $state");
     final entries = state.cropData ?? [];
     final lovlist = state.lovlist;
+    final submitButtonshow = state.status == CropPageStatus.save ? true : false;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -195,37 +196,40 @@ class CropDetailsPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  entries.isEmpty ? SizedBox.shrink() : Center(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        handleSubmit(context);
-                      },
-                      icon: Icon(Icons.send, color: Colors.white),
-                      label: RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                          children: [
-                            TextSpan(text: 'Push to '),
-                            TextSpan(text: 'LEND', style: TextStyle(color: Colors.white)),
-                            TextSpan(
-                              text: 'perfect',
-                              style: TextStyle(fontStyle: FontStyle.italic),
+                  (entries.isNotEmpty && submitButtonshow == true) ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          handleSubmit(context);
+                        },
+                        icon: Icon(Icons.send, color: Colors.white),
+                        label: RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
-                          ],
+                            children: [
+                              TextSpan(text: 'Push to '),
+                              TextSpan(text: 'LEND', style: TextStyle(color: Colors.white)),
+                              TextSpan(
+                                text: 'perfect',
+                                style: TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-                        backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 75, 33, 83),
+                        style: ButtonStyle(
+                          minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
+                          backgroundColor: MaterialStateProperty.all(
+                            const Color.fromARGB(255, 75, 33, 83),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ) : SizedBox.shrink(),
                 ],
               )
             )        

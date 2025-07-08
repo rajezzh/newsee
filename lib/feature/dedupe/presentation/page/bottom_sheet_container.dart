@@ -35,6 +35,10 @@ class BottomSheetContainer extends StatelessWidget {
                 color: Colors.black26,
                 blurRadius: 10,
                 offset: Offset(0, -3),
+              ),BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+                offset: Offset(0, -3),
               ),
             ],
           ),
