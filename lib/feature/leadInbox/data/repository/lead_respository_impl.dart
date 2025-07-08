@@ -30,7 +30,7 @@ class LeadRepositoryImpl implements LeadRepository {
         'userid': req.userid,
         'token': ApiConfig.AUTH_TOKEN,
         'pageNo': '0',
-        'pagePage': '20',
+        'pageCount': '20',
       };
 
       final response = await LeadRemoteDatasource(

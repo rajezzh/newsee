@@ -71,7 +71,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
 
     final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
     String? getString = await asyncPrefs.getString('userdetails');
-    UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!)); 
+    UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!));
     try {
       Map<String, dynamic> leadSubmitRequest = {
         "userid": userdetails.LPuserID,
@@ -126,11 +126,12 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
     try {
       final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
       String? getString = await asyncPrefs.getString('userdetails');
-      UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!)); 
+      UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!));
 
       ProposalCreationRequest proposalCreationRequest = ProposalCreationRequest(
         leadId: event.proposalCreationRequest.leadId ?? state.leadId,
         userid: userdetails.LPuserID,
+        vertical: '7',
         token: event.proposalCreationRequest.token ?? ApiConstants.api_qa_token,
       );
       print('proposalCreationRequest => $proposalCreationRequest');
