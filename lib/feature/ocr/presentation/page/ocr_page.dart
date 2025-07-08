@@ -8,6 +8,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -108,15 +109,11 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
       final RecognizedText recognizedText = await _textRecognizer.processImage(
         inputImage,
       );
-      print('ocr blocks => ${recognizedText.blocks}');
-      for (final txtblock in recognizedText.blocks) {
-        print('textblock => ${txtblock.text}');
-      }
       String extractedText = recognizedText.text;
 
-      if (extractedText.isNotEmpty) {
+      if (extractedText.isNotEmpty && extractedText != null) {
         // Extract KYC ID
-        String? kycId = _extractKycId(extractedText) ?? extractedText;
+        String kycId = _extractKycId(extractedText) ?? extractedText;
         print('Extracted text: $extractedText');
         print('KYC ID: $kycId');
 
@@ -124,9 +121,7 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
         if (kycId.isNotEmpty) {
           await _controller?.stopImageStream();
           widget.onTextDetected(kycId);
-          if (mounted) {
-            Navigator.pop(context);
-          }
+          if (mounted) {}
         }
       } else {
         print('No text detected in frame');
@@ -273,5 +268,10 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
     _controller?.dispose();
     _textRecognizer.close();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 }

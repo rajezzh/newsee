@@ -10,6 +10,8 @@ class Globalconfig {
   static Map<String, dynamic> masterVersionMapper = {};
 
   static List<MasterVersion> diffListOfMaster = [];
+
+  static int loanAmountMaximum = 0;
 }
 
 /* 
