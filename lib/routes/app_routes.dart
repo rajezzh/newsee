@@ -231,16 +231,11 @@ final routes = GoRouter(
             );
             if (shouldPop ?? false) {
               Navigator.of(context).pop(false);
-              // context.go('/'); // Navigate back using GoRouter
             }
           },
-          // child: DocumentPage(),
           child: BlocProvider(
             create:
-                (_) =>
-                // GetIt.instance.get<DocumentBloc>()
-                //   ..add(FetchDocTypesEvent()),
-                DocumentBloc(mediaService: MediaService())
+                (_) => DocumentBloc(mediaService: MediaService())
                   ..add(FetchDocumentsEvent(proposalNumber: proposalNumber)),
             lazy: false,
             child: DocumentPage(proposalnumber: proposalNumber),
@@ -290,7 +285,6 @@ final routes = GoRouter(
       name: AppRouteConstants.IMAGE_VIEW_PAGE['name'],
       builder: (context, state) {
         final data = state.extra as Map<String, dynamic>;
-        // return ImageView(imageBytes: imageBytes);
         return Scaffold(
           body: BlocProvider(
             create: (_) => DocumentBloc(mediaService: MediaService()),
@@ -298,7 +292,9 @@ final routes = GoRouter(
             child: ImageView(
               imageBytes: data['imageBytes'] as Uint8List,
               docIndex: data['docIndex'] as int,
-              isUploaded: data['isUploaded'],
+              isUploaded: (data['isUploaded'] as bool?) ?? false,
+              imgIndex:
+                  data['imgIndex'] != null ? data['imgIndex'] as int : null,
             ),
           ),
         );

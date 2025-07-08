@@ -1,5 +1,3 @@
-// lib/feature/documentupload/presentation/bloc/document_bloc.dart
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
@@ -17,8 +15,6 @@ import 'package:newsee/Utils/media_service.dart';
 import 'package:dio/dio.dart';
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
-
 class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
   final MediaService mediaService;
 
@@ -26,7 +22,6 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     on<FetchDocumentsEvent>(_onFetchDocuments);
     on<AttachImageEvent>(_onAttachImage);
     on<DeleteDocumentImageEvent>(_onDeleteDocumentImage);
-    on<UploadDocumentByIndexEvent>(_onUploadDocumentsByIndex);
     on<UploadDocumentByBytesEvent>(_onUploadDocumentByBytes);
     on<FetchDocumentImagesEvent>(_onFetchDocumentImages);
   }
@@ -35,7 +30,6 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     Emitter<DocumentState> emit,
   ) async {
     print('jhdfd ${state.proposalNumber}');
-    print('jhdfd2 ${event.proposalNumber}');
     emit(
       state.copyWith(
         proposalNumber: event.proposalNumber,
@@ -54,11 +48,35 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
 
       if (responseHandler.isRight()) {
         final response = responseHandler.right;
-        final rawList = response['documentdetails'] as List<dynamic>;
+        final rawList = response['documentdetails'] as List<dynamic>? ?? [];
+        final uploadedImgList =
+            response['uploadedDocuments'] as List<dynamic>? ?? [];
+
+        final allImages =
+            uploadedImgList
+                .map((e) => DocumentImage.fromMap(e as Map<String, dynamic>))
+                .toList();
+
+        // group images by docId (assuming there's a `docId` field in both models)
+        final Map<String, List<DocumentImage>> imagesByDocId = {};
+        for (final image in allImages) {
+          if (image.docId != null) {
+            imagesByDocId.putIfAbsent(image.docId, () => []).add(image);
+          }
+        }
+        // map documents and attach their respective images
         final documents =
             rawList
                 .map((e) => DocumentModel.fromMap(e as Map<String, dynamic>))
-                .map((doc) => doc.copyWith(imgs: []))
+                .map((doc) {
+                  final matchingImages =
+                      allImages.where((img) {
+                        return img.docId.toString().startsWith(
+                          doc.lpdDocId.toString(),
+                        );
+                      }).toList();
+                  return doc.copyWith(imgs: matchingImages);
+                })
                 .toList();
 
         emit(
@@ -94,19 +112,19 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     try {
       final docs = [...state.documentsList];
       final doc = docs[event.docIndex];
-      final count = doc.imgs.length + 1;
+      // final count = doc.imgs.length + 1;
       File? file;
 
       if (event.source == FileSource.camera) {
         final imageBytes = await event.context.pushNamed<Uint8List>("camera");
+        final filename = '${doc.lpdDocDesc}_${doc.imgs.length + 1}.jpg';
         if (imageBytes != null) {
+          await viewImageBeforeUpload(event, imageBytes);
           final imagePath = await mediaService.saveBytesToFile(
             imageBytes,
-            doc,
-            count,
+            filename,
           );
-          file = File(imagePath);
-          await viewImageBeforeUpload(event, imageBytes);
+          file = File(imagePath.path);
         }
       } else if (event.source == FileSource.gallery) {
         final bytes = await mediaService.pickimagefromgallery(
@@ -114,34 +132,17 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
           docIndex: event.docIndex,
         );
         if (bytes != null) {
-          final imagePath = await mediaService.saveBytesToFile(
-            bytes,
-            doc,
-            count,
-          );
-          file = File(imagePath);
-
-          viewImageBeforeUpload(event, bytes);
+          await viewImageBeforeUpload(event, bytes);
+          final filename = '${doc.lpdDocDesc}_${doc.imgs.length + 1}.jpg';
+          final imagePath = await mediaService.saveBytesToFile(bytes, filename);
+          file = File(imagePath.path);
         }
       } else if (event.source == FileSource.pdf) {
         final fileBytes = await mediaService.filePicker();
         if (fileBytes != null) {
-          // Show preview or viewer for PDF
+          // Show preview or viewer for pdf
         }
       }
-
-      // if (file != null) {
-      //   final updatedImgs = [...doc.imgs]..add(
-      //     DocumentImage(
-      //       name: file.path.split('/').last,
-      //       size: await file.length() / (1024 * 1024),
-      //       path: file.path,
-      //     ),
-      //   );
-
-      //   docs[event.docIndex] = doc.copyWith(imgs: updatedImgs);
-      //   emit(state.copyWith(documentsList: docs));
-      // }
     } catch (e) {
       print("Attach image error: $e");
     }
@@ -152,16 +153,17 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     Uint8List imageBytes,
   ) async {
     //preview before upload
+    debugPrint("docbloc isUploaded: ${state.isUploading}");
     final result = await event.context.push(
       '/imageview',
       extra: {
         'imageBytes': imageBytes,
         'docIndex': event.docIndex,
-        'isUploaded': state.isUploading,
+        'isUploaded': state.isUploading ?? false,
       },
     );
 
-    if (result != null && event.context.mounted) {
+    if (result != null && result is Uint8List && event.context.mounted) {
       add(
         UploadDocumentByBytesEvent(
           context: event.context,
@@ -180,28 +182,20 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
       final docs = [...state.documentsList];
       final doc = docs[event.docIndex];
       final imgs = [...doc.imgs];
-
-      if (event.imgIndex == null) {
-        imgs.clear();
-      } else if (event.imgIndex! >= 0 && event.imgIndex! < imgs.length) {
-        imgs.removeAt(event.imgIndex!);
-      }
-
-      // docs[event.docIndex] = doc.copyWith(imgs: imgs);
-      // emit(state.copyWith(documentsList: docs));
-
+      print(imgs);
       final responseHandler = await DeleteDocumentRepoImpl().deleteUploadedDoc(
         request: {
-          "proposalNumber": "143560000000682",
+          "proposalNumber": state.proposalNumber,
           "userid": "AGRI1124",
-          "rowId": doc.lpdRowId,
-          "token":
-              "U2FsdGVkX1/Wa6+JeCIOVLl8LTr8WUocMz8kIGXVbEI9Q32v7zRLrnnvAIeJIVV3",
+          "rowId": imgs[event.imgIndex!].rowId,
+          "token": ApiConfig.AUTH_TOKEN,
         },
       );
 
       if (responseHandler.isRight()) {
-        doc.copyWith(lpdDocAction: 'P');
+        if (event.imgIndex! >= 0 && event.imgIndex! < imgs.length) {
+          imgs.removeAt(event.imgIndex!);
+        }
         docs[event.docIndex] = doc.copyWith(imgs: imgs);
         emit(
           state.copyWith(
@@ -229,47 +223,6 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     }
   }
 
-  Future<void> _onUploadDocumentsByIndex(
-    UploadDocumentByIndexEvent event,
-    Emitter<DocumentState> emit,
-  ) async {
-    final docs = [...state.documentsList];
-    final doc = docs[event.docIndex];
-    final updatedImgs = [...doc.imgs];
-
-    emit(state.copyWith(fetchStatus: SubmitStatus.loading));
-
-    for (int i in event.imgIndexes) {
-      final image = updatedImgs[i];
-
-      if (image.imgStatus == UploadStatus.uploading ||
-          image.imgStatus == UploadStatus.success)
-        continue;
-
-      updatedImgs[i] = image.copyWith(imgStatus: UploadStatus.uploading);
-      emit(state.updateImageStatus(event.docIndex, updatedImgs));
-
-      try {
-        final updatedDoc = await _uploadFile(File(image.path), doc);
-        if (updatedDoc != null) {
-          final updatedDocs = [...state.documentsList];
-          updatedDocs[event.docIndex] = updatedDoc;
-          emit(state.copyWith(documentsList: updatedDocs));
-        }
-
-        updatedImgs[i] = image.copyWith(imgStatus: UploadStatus.success);
-        emit(state.copyWith(uploadMessage: "Upload Success"));
-      } catch (e) {
-        updatedImgs[i] = image.copyWith(imgStatus: UploadStatus.failed);
-        emit(state.copyWith(uploadMessage: "Upload failed"));
-      }
-
-      emit(state.updateImageStatus(event.docIndex, updatedImgs));
-    }
-
-    emit(state.copyWith(fetchStatus: SubmitStatus.init));
-  }
-
   Future<void> _onUploadDocumentByBytes(
     UploadDocumentByBytesEvent event,
     Emitter<DocumentState> emit,
@@ -281,22 +234,33 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
           uploadMessage: 'Uploading Document...',
         ),
       );
-      final doc = state.documentsList[event.docIndex];
-      final count = doc.imgs.length + 1;
+      final docs = [...state.documentsList];
+      final doc = docs[event.docIndex];
+      final filename = '${doc.lpdDocDesc}_${doc.imgs.length + 1}.jpg';
       final imagePath = await mediaService.saveBytesToFile(
         event.imageBytes,
-        doc,
-        count,
+        filename,
       );
-      final file = File(imagePath);
-      final updatedDoc = await _uploadFile(file, doc);
+      final file = File(imagePath.path);
+      final uploadedImg = await _uploadFile(file, doc);
 
-      if (updatedDoc != null) {
-        final updatedDocs = [...state.documentsList];
-        updatedDocs[event.docIndex] = updatedDoc;
+      if (uploadedImg != null) {
+        final currentList = [...state.documentsList];
+
+        final newImage = DocumentImage(
+          fileName: uploadedImg[0]['ldaDocName'],
+          fileLocation: file.path, //add local file path
+          docId: uploadedImg[0]['ldaDocId'].toString(),
+          rowId: uploadedImg[0]['ldaRowId'].toString(),
+        );
+
+        final updatedImgs = [...doc.imgs, newImage];
+
+        currentList[event.docIndex] = doc.copyWith(imgs: updatedImgs);
+
         emit(
           state.copyWith(
-            documentsList: updatedDocs,
+            documentsList: currentList,
             fetchStatus: SubmitStatus.success,
             uploadMessage: "Uploaded Successfully",
           ),
@@ -305,29 +269,22 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
         emit(
           state.copyWith(
             fetchStatus: SubmitStatus.failure,
-            uploadMessage: "Upload failed",
+            uploadMessage: "Upload failed: ",
           ),
         );
       }
     } catch (e) {
-      print("Upload failed by bytes: $e");
       emit(
         state.copyWith(
           fetchStatus: SubmitStatus.failure,
           uploadMessage: "Upload error: $e",
         ),
       );
-      // if (event.context.mounted) {
-      //   ScaffoldMessenger.of(event.context).showSnackBar(
-      //     const SnackBar(content: Text("Upload failed. Please try again.")),
-      //   );
-      // }
     }
   }
 
   Future<dynamic> _uploadFile(File file, DocumentModel doc) async {
     try {
-      print("File size:${file.path},  ${await file.length()} bytes");
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(file.path),
         'userid': 'AGRI1124',
@@ -346,13 +303,8 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
       if (responseHandler.isRight()) {
         final response = responseHandler.right;
         final rawList = response['documentDetails'];
-        // return doc.copyWith(lpdRowId: rawList[0]['ldaRowId']);
         if (rawList is List && rawList.isNotEmpty) {
-          final updatedRowId = rawList[0]['ldaRowId'];
-          return doc.copyWith(
-            lpdRowId: updatedRowId.toString(),
-            lpdDocAction: 'P',
-          );
+          return rawList;
         } else {
           print("Upload succeeded but response has no documentdetails");
         }
@@ -375,13 +327,10 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
 
     try {
       emit(state.copyWith(fetchStatus: SubmitStatus.loading));
-
-      // final images = await repository.fetchDocumentImages(doc); // Call API
-
       final responseHandler = await GetImageRepoImpl().fetchDocumentImage(
         request: {
           "userid": "AGRI1124",
-          "rowId": doc.lpdRowId,
+          "rowId": doc.imgs[event.imgIndex].rowId,
           "token": ApiConfig.AUTH_TOKEN,
           "proposalNumber": state.proposalNumber,
         },
@@ -392,16 +341,23 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
         final imgBase64 = response['file'] as String;
         if (imgBase64.isNotEmpty) {
           final imageBytes = base64Decode(imgBase64);
-          final tempFile = await writeToFile(imageBytes);
+          final filename =
+              '${response['agriDocumentDetails']['ldaDocName']}_${doc.imgs.length + 1}.jpg';
+          final tempFile = await mediaService.saveBytesToFile(
+            imageBytes,
+            filename,
+          );
 
-          final docimg = [
-            DocumentImage(
-              name: tempFile.path.split('/').last,
-              size: await tempFile.length() / (1024 * 1024),
-              path: tempFile.path,
-            ),
-          ];
-          final updatedDoc = doc.copyWith(imgs: docimg);
+          final docimg = DocumentImage(
+            fileName: response['agriDocumentDetails']['ldaDocName'],
+            fileLocation: tempFile.path, // saved filepath in local
+            docId: response['agriDocumentDetails']['ldaDocId'].toString(),
+            rowId: response['agriDocumentDetails']['ldaRowId'].toString(),
+          );
+          final updatedImgs = [...doc.imgs];
+          updatedImgs[event.imgIndex] = docimg;
+
+          final updatedDoc = doc.copyWith(imgs: updatedImgs);
           currentList[event.docIndex] = updatedDoc;
           emit(
             state.copyWith(
@@ -410,17 +366,16 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
               uploadMessage: 'Fetched Successfully',
             ),
           );
+        } else {
+          print('imgBase64');
         }
       } else {
-        final failure = responseHandler.left;
         emit(
           state.copyWith(
             fetchStatus: SubmitStatus.failure,
             uploadMessage: 'Fetched failed',
           ),
         );
-        print("fetched failed: $failure");
-        // throw Exception("fetched failed");
       }
     } catch (e) {
       emit(
@@ -429,14 +384,7 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
           uploadMessage: 'Fetched error! $e',
         ),
       );
+      print(e);
     }
-  }
-
-  Future<File> writeToFile(Uint8List bytes) async {
-    final tempDir = await getTemporaryDirectory();
-    final file = File(
-      '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg',
-    );
-    return await file.writeAsBytes(bytes);
   }
 }
