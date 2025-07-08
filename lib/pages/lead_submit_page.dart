@@ -6,8 +6,10 @@ import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_route_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/shared_preference_handler.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
@@ -44,17 +46,22 @@ class LeadSubmitPage extends StatelessWidget {
     required Dedupe dedupeData,
     required AddressData addressData,
     required CoapplicantData coapplicantData,
-  }) {
+  }) async {
     String? loanAmountFormatted = personlData.loanAmountRequested?.replaceAll(
       ',',
       '',
     );
+    SharedPreferenceHandler<UserDetails> userDetail =
+        SharedPreferenceHandler<UserDetails>.getFromKey('userdetails');
+    UserDetails ud = await userDetail.setObj();
+    print('sourceid => ${ud.LPuserID}');
+    print('sourcename => ${ud.UserName}');
+
     PersonalData updatedPersonalData = personlData.copyWith(
       loanAmountRequested: loanAmountFormatted,
       passportNumber: '431241131',
       sourceid: 'AGRI1124',
       sourcename: 'Meena',
-      subActivity: '1.3',
     );
 
     LeadSubmitPushEvent leadSubmitPushEvent = LeadSubmitPushEvent(

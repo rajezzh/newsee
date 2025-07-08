@@ -1,3 +1,10 @@
+/* 
+@author       : karthick.d  04/07/2025
+@desc         : widget for processing text and extract desired ID number from 
+                kyc by doing OCR technique
+@param        : build method return CameraSurface which process the stream of 
+                images and send a extracted text as callback
+ */
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
@@ -58,7 +65,9 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
       cameras[0],
       ResolutionPreset.veryHigh,
       enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.nv21, // Try NV21 instead of YUV420
+      imageFormatGroup: ImageFormatGroup.nv21, // nv21 format is must , because
+      // google ml kit plugin have strict validation for this value for android
+      // for ios it's must be bgra8888
     );
 
     try {
@@ -208,7 +217,9 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
   // Extract KYC ID from text using a regex
   String? _extractKycId(String text) {
     // Example: 10-12 digit number or alphanumeric KYC ID
-    RegExp kycPattern = RegExp(r'\b(?:\d{10,12}|[A-Z]{3}\d{9})\b');
+    //
+    // RegExp kycPattern = RegExp(r'\b(?:\d{10,12}|[A-Z]{3}\d{9})\b');
+    RegExp kycPattern = RegExp(r'\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b');
     final match = kycPattern.firstMatch(text);
     return match?.group(0);
   }

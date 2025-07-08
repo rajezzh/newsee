@@ -86,6 +86,7 @@ class AppForms {
     'religion': FormControl<String>(validators: [Validators.required]),
     'caste': FormControl<String>(validators: [Validators.required]),
     'residentialStatus': FormControl<String>(validators: [Validators.required]),
+    'subActivity': FormControl<String>(validators: [Validators.required]),
   });
 
   static final FormGroup COAPPLICANT_DETAILS_FORM = FormGroup({

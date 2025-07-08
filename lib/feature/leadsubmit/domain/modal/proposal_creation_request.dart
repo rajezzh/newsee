@@ -5,17 +5,25 @@ class ProposalCreationRequest {
   final String? leadId;
   final String? userid;
   final String? token;
-  ProposalCreationRequest({this.leadId, this.userid, this.token});
+  final String? vertical;
+  ProposalCreationRequest({
+    this.leadId,
+    this.userid,
+    this.token,
+    this.vertical,
+  });
 
   ProposalCreationRequest copyWith({
     String? leadId,
     String? userid,
     String? token,
+    String? vertical,
   }) {
     return ProposalCreationRequest(
       leadId: leadId ?? this.leadId,
       userid: userid ?? this.userid,
       token: token ?? this.token,
+      vertical: vertical ?? this.vertical,
     );
   }
 
@@ -24,14 +32,16 @@ class ProposalCreationRequest {
       'leadId': leadId,
       'userid': userid,
       'token': token,
+      'vertical': vertical,
     };
   }
 
   factory ProposalCreationRequest.fromMap(Map<String, dynamic> map) {
     return ProposalCreationRequest(
-      leadId: map['leadId'] as String,
-      userid: map['userid'] as String,
-      token: map['token'] as String,
+      leadId: map['leadId'] != null ? map['leadId'] as String : null,
+      userid: map['userid'] != null ? map['userid'] as String : null,
+      token: map['token'] != null ? map['token'] as String : null,
+      vertical: map['vertical'] != null ? map['vertical'] as String : null,
     );
   }
 
@@ -43,8 +53,9 @@ class ProposalCreationRequest {
       );
 
   @override
-  String toString() =>
-      'ProposalCreationRequest(leadId: $leadId, userid: $userid, token: $token)';
+  String toString() {
+    return 'ProposalCreationRequest(leadId: $leadId, userid: $userid, token: $token, vertical: $vertical)';
+  }
 
   @override
   bool operator ==(covariant ProposalCreationRequest other) {
@@ -52,9 +63,15 @@ class ProposalCreationRequest {
 
     return other.leadId == leadId &&
         other.userid == userid &&
-        other.token == token;
+        other.token == token &&
+        other.vertical == vertical;
   }
 
   @override
-  int get hashCode => leadId.hashCode ^ userid.hashCode ^ token.hashCode;
+  int get hashCode {
+    return leadId.hashCode ^
+        userid.hashCode ^
+        token.hashCode ^
+        vertical.hashCode;
+  }
 }
