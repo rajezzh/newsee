@@ -54,7 +54,11 @@ void _navigateToQRScanner(BuildContext context) {
       builder:
           (context) => QRScannerPage(
             onQRScanned: (result) {
-              _showResultDialog(ctx, result); // Show result in AlertDialog
+              _showResultDialog(
+                ctx,
+                result,
+                'QR',
+              ); // Show result in AlertDialog
             },
           ),
     ),
@@ -71,8 +75,33 @@ void _navigateToOCRScanner(BuildContext context) {
     MaterialPageRoute(
       builder:
           (context) => OCRScannerPage(
-            onTextDetected: (p0) {
-              print('ocr result => $p0');
+            onTextDetected: (result) {
+              print('OCR Result => $result');
+              Navigator.pop(context);
+
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('OCR Scan Result'),
+                    content: Text(result),
+
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          // ctx.read<PersonalDetailsBloc>().add(
+                          //   ScannerResponseEvent(
+                          //     scannerResponse: {'aadhaarResponse': result},
+                          //   ),
+                          // );
+                        },
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
             },
           ),
     ),
@@ -80,11 +109,10 @@ void _navigateToOCRScanner(BuildContext context) {
 }
 
 // Show AlertDialog with QR scan result
-void _showResultDialog(BuildContext context, String result) {
+void _showResultDialog(BuildContext context, String result, String source) {
   BuildContext ctx = context;
 
   Navigator.pop(context);
-
   final xml2json = Xml2Json();
   xml2json.parse(result);
   final jsonString = xml2json.toBadgerfish();

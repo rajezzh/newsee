@@ -8,6 +8,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -86,11 +87,18 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
   }
 
   Future<void> _processCameraImage(CameraImage image) async {
+    print('total frames processed....$_frameCounter');
     if (_isProcessing || !mounted) return;
 
     // Process every 5th frame to reduce performance overhead
     if (_frameCounter++ % 5 != 0) {
       return;
+    }
+    if (_frameCounter > 99) {
+      await _controller?.stopImageStream();
+      Navigator.pop(context);
+
+      widget.onTextDetected('OCR Process failed , Scan a valid Document');
     }
 
     _isProcessing = true;
@@ -108,34 +116,30 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
       final RecognizedText recognizedText = await _textRecognizer.processImage(
         inputImage,
       );
-      print('ocr blocks => ${recognizedText.blocks}');
-      for (final txtblock in recognizedText.blocks) {
-        print('textblock => ${txtblock.text}');
-      }
       String extractedText = recognizedText.text;
 
-      if (extractedText.isNotEmpty) {
+      if (extractedText.isNotEmpty && extractedText != null) {
         // Extract KYC ID
-        String? kycId = _extractKycId(extractedText) ?? extractedText;
+        String kycId = _extractKycId(extractedText)!;
         print('Extracted text: $extractedText');
         print('KYC ID: $kycId');
 
         // Stop stream and return result if KYC ID is found
         if (kycId.isNotEmpty) {
           await _controller?.stopImageStream();
+          Navigator.pop(context);
+
           widget.onTextDetected(kycId);
-          if (mounted) {
-            Navigator.pop(context);
-          }
+          // if (mounted) {}
         }
       } else {
         print('No text detected in frame');
       }
     } catch (e) {
       print('Error processing image: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Error processing image: $e')));
+      // ScaffoldMessenger.of(
+      //   context,
+      // ).showSnackBar(SnackBar(content: Text('Error processing image: $e')));
     } finally {
       _isProcessing = false;
     }
@@ -216,10 +220,38 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
 
   // Extract KYC ID from text using a regex
   String? _extractKycId(String text) {
-    // Example: 10-12 digit number or alphanumeric KYC ID
-    //
-    // RegExp kycPattern = RegExp(r'\b(?:\d{10,12}|[A-Z]{3}\d{9})\b');
-    RegExp kycPattern = RegExp(r'\b\d{4}[\s-]?\d{4}[\s-]?\d{4}\b');
+    /// Example: 10-12 digit number or alphanumeric KYC ID
+    ///
+    /// RegExp kycPattern = RegExp(r'\b(?:\d{10,12}|[A-Z]{3}\d{9})\b');
+    /// Aadhar card have some words in common
+    /// like Government , Government of India , Male , Female , DOB string at the front side
+    /// give weightage like AccuracyLevel = Very High , High , Moderate , Low , Very Low
+
+    final tokens_aadhaar_country = [
+      'Government',
+      'Government of India',
+      'Male',
+      'Female',
+      'DOB',
+      'India',
+    ];
+
+    // test if the text has matches all the
+    var AccuracyLevel = 0;
+    for (final token in tokens_aadhaar_country) {
+      if (text.toLowerCase().contains(token.toLowerCase())) {
+        AccuracyLevel++;
+      }
+    }
+
+    final accuracy = AccuracyLevel / tokens_aadhaar_country.length * 100;
+    print('AccuracyLevel $accuracy');
+
+    /// calculating accuracy
+    /// AccuracyLevel/tokens_aadhaar_country.length * 100;
+    ///
+
+    RegExp kycPattern = RegExp(r'\b\d{4}[\s]\d{4}[\s]\d{4}\b');
     final match = kycPattern.firstMatch(text);
     return match?.group(0);
   }
@@ -269,9 +301,24 @@ class _OCRScannerPageState extends State<OCRScannerPage> {
 
   @override
   void dispose() {
-    _controller?.stopImageStream();
-    _controller?.dispose();
-    _textRecognizer.close();
-    super.dispose();
+    try {
+      _stopLiveFeed();
+      _textRecognizer.close();
+    } catch (e) {
+      print('camera exception');
+    } finally {
+      super.dispose();
+    }
+  }
+
+  Future _stopLiveFeed() async {
+    await _controller?.stopImageStream();
+    await _controller?.dispose();
+    _controller = null;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 }
