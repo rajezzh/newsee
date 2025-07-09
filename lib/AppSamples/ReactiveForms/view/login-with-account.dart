@@ -118,8 +118,9 @@ class LoginpageWithAC extends StatelessWidget {
                 );
                 context.goNamed('masters');
               } else {
-                context.pop(loginActionSheet);
-                 createMpin(context);
+                context.goNamed('home');
+                // context.pop(loginActionSheet);
+                //  createMpin(context);
                
               }
             }

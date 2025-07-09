@@ -3,7 +3,7 @@ part of './cropyieldpage_bloc.dart';
 enum CropPageStatus {init, loading, save, set, reset, success, failure}
 
 class CropyieldpageState extends Equatable {
-   final CropPageStatus? status;
+   final SaveStatus? status;
     final List<Lov>? lovlist;
     final List<CropDetailsModal>? cropData;
     final String? errorMessage;
@@ -22,7 +22,7 @@ class CropyieldpageState extends Equatable {
   });
 
    factory CropyieldpageState.init() => CropyieldpageState(
-    status: CropPageStatus.init,
+    status: SaveStatus.init,
     lovlist: [],
     cropData: null,
     errorMessage: null,
@@ -30,7 +30,7 @@ class CropyieldpageState extends Equatable {
   );
 
   CropyieldpageState copyWith({
-    CropPageStatus? status,
+    SaveStatus? status,
     List<Lov>? lovlist,
     List<CropDetailsModal>? cropData,
     String? errorMessage,

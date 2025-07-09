@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/feature/masterupdate/presentation/page/master_update.dart';
 import '../widgets/side_navigation.dart';
@@ -38,32 +39,37 @@ class HomePageState extends State<HomePage> {
 
   Future<void> onItemTapped(int index) async {
     print("tabdata ${widget.tabdata}");
-    setState(() => loading = true);
-    await Future.delayed(Duration(seconds: 2));
-    setState(() {
-      selectedIndex = index;
-      loading = false;
-    });
+    if (index == 2) {
+      context.pushNamed('newlead');
+    } else {
+      setState(() => loading = true);
+      await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        selectedIndex = index;
+        loading = false;
+      });
+    }
+    
   }
 
   Widget getPage() {
     switch (selectedIndex) {
-      case 0:
-        return LeadTabBar(searchQuery: searchQuery);
       case 1:
         return Center(
           child: Text("Field Visit Inbox", style: TextStyle(fontSize: 24)),
         );
-      case 2:
+      case 3:
         return Center(
           child: Text("Query Inbox", style: TextStyle(fontSize: 24)),
         );
-      case 3:
-      default:
+      case 4:
         return Center(
           // child: Text("Masters Update", style: TextStyle(fontSize: 24)),
           child: MasterUpdate(),
         );
+      case 0:
+        default:
+        return LeadTabBar(searchQuery: searchQuery);
     }
   }
 
@@ -89,10 +95,10 @@ class HomePageState extends State<HomePage> {
         currentIndex: selectedIndex,
         onTap: onItemTapped,
       ),
-      floatingActionButton: selectedIndex !=3
-      ?FloatingActionBarWidget()
-      :null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: selectedIndex !=3
+      // ?FloatingActionBarWidget()
+      // :null,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

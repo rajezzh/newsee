@@ -51,7 +51,7 @@ class Sidenavigationbar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(tabdata: 2)),
+                MaterialPageRoute(builder: (context) => HomePage(tabdata: 3)),
               );
             },
           ),
@@ -61,7 +61,7 @@ class Sidenavigationbar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(tabdata: 3)),
+                MaterialPageRoute(builder: (context) => HomePage(tabdata: 4)),
               );
             },
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_forms.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/cropdetailsmodal.dart';
@@ -147,7 +148,7 @@ class CropDetailsPage extends StatelessWidget {
     print("CropyieldpageState-showBottomSheet $state");
     final entries = state.cropData ?? [];
     final lovlist = state.lovlist;
-    final submitButtonshow = state.status == CropPageStatus.save ? true : false;
+    final submitButtonshow = state.status == SaveStatus.mastersucess ? true : false;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -407,7 +408,7 @@ class CropDetailsPage extends StatelessWidget {
           lazy: true,
           child: BlocConsumer<CropyieldpageBloc, CropyieldpageState>(
             listener: (context, state) {
-              if (state.status == CropPageStatus.init) {
+              if (state.status == SaveStatus.init) {
                 globalLoadingBloc.add(
                   HideLoading(),
                 );
@@ -415,11 +416,11 @@ class CropDetailsPage extends StatelessWidget {
                   irrigatedController.text = state.landDetails!['lpAgriPcIrrigated'].toString();
                   rainfedController.text = state.landDetails!['lpAgriPcRainfed'].toString();
                 }
-              } else if (state.status == CropPageStatus.save) {
+              } else if (state.status == SaveStatus.mastersucess) {
                 form.reset();
-              } else if (state.status == CropPageStatus.reset) {
+              } else if (state.status == SaveStatus.reset) {
                 form.reset();
-              } else if (state.status == CropPageStatus.success) {
+              } else if (state.status == SaveStatus.success) {
                 form.reset();
                 context.pop();
                 globalLoadingBloc.add(
@@ -436,7 +437,7 @@ class CropDetailsPage extends StatelessWidget {
               // globalLoadingBloc.add(
               //   ShowLoading(message: 'Fetching Crop Details...'),
               // );
-              if (state.status == CropPageStatus.set && state.selectedCropData != null) {
+              if (state.status == SaveStatus.update && state.selectedCropData != null) {
                 print("currently current selected cropdetails index is ${currentIndex.value}");
                 print("state.selectedCropData is => ${state.selectedCropData}");
                 form.patchValue(state.selectedCropData!.toForm());
@@ -639,7 +640,7 @@ class CropDetailsPage extends StatelessWidget {
                                     ),
                                     Center(
                                       child: 
-                                      state.status == CropPageStatus.set ?
+                                      state.status == SaveStatus.update ?
                                       ElevatedButton.icon(
                                         onPressed: () => handleUpdate(context, state),
                                         icon: const Icon(Icons.save, color: Colors.white),

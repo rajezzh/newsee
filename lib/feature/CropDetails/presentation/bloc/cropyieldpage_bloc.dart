@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/core/api/failure.dart';
@@ -72,7 +73,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
         
         emit(
           state.copyWith(
-            status: CropPageStatus.success,
+            status: SaveStatus.success,
             // landData: landData
           )
         );
@@ -80,7 +81,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       print('cif failure response.left ');
       emit(
         state.copyWith(
-          status: CropPageStatus.failure,
+          status: SaveStatus.failure,
           errorMessage: responseHandler.left.message,
         ),
       );
@@ -116,7 +117,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
         emit(
           state.copyWith(
             lovlist: listOfLov,
-            status: CropPageStatus.init,
+            status: SaveStatus.init,
             cropData: cropResponse.right.agriCropDetails,
             landDetails: cropResponse.right.agriLandDetails,
             landData: landData
@@ -127,7 +128,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
         emit(
           state.copyWith(
             lovlist: listOfLov,
-            status: CropPageStatus.init,
+            status: SaveStatus.init,
             landData: landData
           )
         );
@@ -135,7 +136,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
         emit(
           state.copyWith(
             lovlist: listOfLov,
-            status: CropPageStatus.init,
+            status: SaveStatus.init,
           )
         );
       }
@@ -152,7 +153,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
     final newList = [...?state.cropData, event.cropData];
     emit(
       state.copyWith(
-        status: CropPageStatus.save,
+        status: SaveStatus.mastersucess,
         cropData: newList,
         selectedCropData: null,
       ),
@@ -164,7 +165,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
     emit(
       state.copyWith(
         selectedCropData: event.cropData,
-        status: CropPageStatus.set
+        status: SaveStatus.update
       )
     );
   }
@@ -173,7 +174,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
     emit(
       state.copyWith(
         selectedCropData: null,
-        status: CropPageStatus.reset
+        status: SaveStatus.reset
       )
     );
   }
@@ -186,7 +187,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       state.copyWith(
         cropData: fullcropdata,
         selectedCropData: null,
-        status: CropPageStatus.save,
+        status: SaveStatus.mastersucess,
       )
     );
   }
