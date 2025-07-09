@@ -6,6 +6,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:newsee/AppData/globalconfig.dart';
+import 'package:newsee/feature/masterupdate/presentation/page/master_update.dart';
 import '../widgets/side_navigation.dart';
 import '../widgets/bottom_navigation.dart';
 import '../widgets/floating_action.dart';
@@ -60,7 +61,8 @@ class HomePageState extends State<HomePage> {
       case 3:
       default:
         return Center(
-          child: Text("Masters Update", style: TextStyle(fontSize: 24)),
+          // child: Text("Masters Update", style: TextStyle(fontSize: 24)),
+          child: MasterUpdate(),
         );
     }
   }

@@ -22,6 +22,7 @@ class LandHoldingRequest {
   String? landCeilingEnactments;
   String? villageOfficersCertificate;
   String? LandAgriculturellyActive;
+  int? rowId;
   String? token;
 
   LandHoldingRequest({
@@ -44,6 +45,7 @@ class LandHoldingRequest {
     this.landCeilingEnactments,
     this.villageOfficersCertificate,
     this.LandAgriculturellyActive,
+    this.rowId,
     this.token,
   });
 
@@ -69,6 +71,7 @@ class LandHoldingRequest {
       'landCeilingEnactments': landCeilingEnactments,
       'villageOfficersCertificate': villageOfficersCertificate,
       'LandAgriculturellyActive': LandAgriculturellyActive,
+      'rowId': rowId,
       'token': token,
     };
   }
@@ -128,6 +131,7 @@ class LandHoldingRequest {
           map['LandAgriculturellyActive'] != null
               ? map['LandAgriculturellyActive'] as String
               : null,
+      rowId: map['rowId'] != null ? map['rowId'] as int : null,
       token: map['token'] != null ? map['token'] as String : null,
     );
   }
@@ -157,6 +161,7 @@ class LandHoldingRequest {
     String? landCeilingEnactments,
     String? villageOfficersCertificate,
     String? LandAgriculturellyActive,
+    int? rowId,
     String? token,
   }) {
     return LandHoldingRequest(
@@ -183,6 +188,7 @@ class LandHoldingRequest {
           villageOfficersCertificate ?? this.villageOfficersCertificate,
       LandAgriculturellyActive:
           LandAgriculturellyActive ?? this.LandAgriculturellyActive,
+      rowId: rowId ?? this.rowId,
       token: token ?? this.token,
     );
   }
@@ -215,6 +221,7 @@ class LandHoldingRequest {
         other.landCeilingEnactments == landCeilingEnactments &&
         other.villageOfficersCertificate == villageOfficersCertificate &&
         other.LandAgriculturellyActive == LandAgriculturellyActive &&
+        other.rowId == rowId &&
         other.token == token;
   }
 
@@ -239,6 +246,7 @@ class LandHoldingRequest {
         landCeilingEnactments.hashCode ^
         villageOfficersCertificate.hashCode ^
         LandAgriculturellyActive.hashCode ^
+        rowId.hashCode ^
         token.hashCode;
   }
 }

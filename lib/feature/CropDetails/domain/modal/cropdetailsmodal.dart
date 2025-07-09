@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 class CropDetailsModal {
+  final int? lasSeqno;
   final String? lasSeason;
   final String? lasCrop;
   final String? lasAreaofculti;
@@ -13,6 +14,7 @@ class CropDetailsModal {
   final String? lasPrePerAcre;
   final String? lasPreToCollect;
   CropDetailsModal({
+    this.lasSeqno,
     this.lasSeason,
     this.lasCrop,
     this.lasAreaofculti,
@@ -26,6 +28,7 @@ class CropDetailsModal {
   });
 
   CropDetailsModal copyWith({
+    int? lasSeqno,
     String? lasSeason,
     String? lasCrop,
     String? lasAreaofculti,
@@ -38,6 +41,7 @@ class CropDetailsModal {
     String? lasPreToCollect,
   }) {
     return CropDetailsModal(
+      lasSeqno: lasSeqno ?? this.lasSeqno,
       lasSeason: lasSeason ?? this.lasSeason,
       lasCrop: lasCrop ?? this.lasCrop,
       lasAreaofculti: lasAreaofculti ?? this.lasAreaofculti,
@@ -53,6 +57,7 @@ class CropDetailsModal {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'lasSeqno': lasSeqno,
       'lasSeason': lasSeason,
       'lasCrop': lasCrop,
       'lasAreaofculti': lasAreaofculti,
@@ -68,6 +73,7 @@ class CropDetailsModal {
 
   Map<String, dynamic> toForm() {
     return <String, dynamic>{
+      'lasSeqno': lasSeqno.toString(),
       'lasSeason': lasSeason,
       'lasCrop': lasCrop,
       'lasAreaofculti': lasAreaofculti,
@@ -83,6 +89,7 @@ class CropDetailsModal {
 
   factory CropDetailsModal.fromMap(Map<String, dynamic> map) {
     return CropDetailsModal(
+      lasSeqno: map['lasSeqno'] != null ? map['lasSeqno'] as int : null,
       lasSeason: map['lasSeason'] != null ? map['lasSeason'] as String : null,
       lasCrop: map['lasCrop'] != null ? map['lasCrop'] as String : null,
       lasAreaofculti: map['lasAreaofculti'] != null ? map['lasAreaofculti'] as String : null,
@@ -98,6 +105,7 @@ class CropDetailsModal {
 
   factory CropDetailsModal.fromForm(Map<String, dynamic> form) {
     return CropDetailsModal(
+      lasSeqno: form['lasSeqno'] != null ? int.parse(form['lasSeqno']) : null,
       lasSeason: form['lasSeason'] ?? '',
       lasCrop: form['lasCrop'] ?? '',
       lasAreaofculti: form['lasAreaofculti'] ?? '',
@@ -113,6 +121,7 @@ class CropDetailsModal {
 
   factory CropDetailsModal.fromGetApi(Map<String, dynamic> map) {
     return CropDetailsModal(
+      lasSeqno: map['lasSeqno'] != null ? map['lasSeqno'] as int : null,
       lasSeason: map['lasSeason']?.toString() ?? '',
       lasCrop: map['lasCrop']?.toString() ?? '',
       lasAreaofculti: map['lasAreaofculti']?.toString() ?? '',

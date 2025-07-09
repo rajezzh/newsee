@@ -63,12 +63,17 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       CropDetailsRepository cropRepository = CropDetailsRepositoryImpl();
       var responseHandler = await cropRepository.saveCrop(
         cropReq,
-      );
+      );  
       print("get responseHandler value is => $responseHandler");
       if (responseHandler.isRight()) {
+        // List<Map<String, dynamic>> listofAssessment = responseHandler.right.responseData?['AssessmentSOF'];
+        // print("listofAssessment value is => $listofAssessment");
+        // List<LandData> landData = listofAssessment.map((e) => LandData.fromMap(e)).toList();
+        
         emit(
           state.copyWith(
             status: CropPageStatus.success,
+            // landData: landData
           )
         );
       } else {
@@ -181,7 +186,7 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
       state.copyWith(
         cropData: fullcropdata,
         selectedCropData: null,
-        status: CropPageStatus.save
+        status: CropPageStatus.save,
       )
     );
   }

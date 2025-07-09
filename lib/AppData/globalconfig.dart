@@ -11,6 +11,7 @@ class Globalconfig {
 
   static List<MasterVersion> diffListOfMaster = [];
 
+  static bool masterUpdate = false;
   static int loanAmountMaximum = 0;
 }
 

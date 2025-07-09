@@ -114,6 +114,7 @@ final class LandHoldingBloc extends Bloc<LandHoldingEvent, LandHoldingState> {
         landCeilingEnactments: event.landData['affectedByCeiling'] ? '1' : '2',
         villageOfficersCertificate: event.landData['villageOfficerCertified'] ? '1' : '2',
         LandAgriculturellyActive: event.landData['landAgriActive'] ? '1' : '2',
+        rowId: event.landData['lslLandRowid'] != null ? int.parse(event.landData['lslLandRowid']) : null,
         token: ApiConstants.api_qa_token,
       );
 

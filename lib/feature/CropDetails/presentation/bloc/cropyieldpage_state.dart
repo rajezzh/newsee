@@ -26,7 +26,7 @@ class CropyieldpageState extends Equatable {
     lovlist: [],
     cropData: null,
     errorMessage: null,
-    selectedCropData: null
+    selectedCropData: null,
   );
 
   CropyieldpageState copyWith({
