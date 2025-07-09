@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/feature/landholding/presentation/page/land_holding_page.dart';
 
 class ApplicationCard extends StatelessWidget {
   final String leadId;
   final VoidCallback onProceedPressed; // Added callback parameter
   final SaveStatus? status;
+  final String? proposalNumber;
+  final String? applicantName;
 
   const ApplicationCard({
     super.key,
     required this.leadId,
     required this.onProceedPressed,
-    this.status
+    this.status,
+    this.proposalNumber,
+    this.applicantName
   });
 
   @override
@@ -22,6 +28,7 @@ class ApplicationCard extends StatelessWidget {
       {"title": "PreSanction Documents", "icon": Icons.description},
       {"title": "Income Details", "icon": Icons.account_balance_wallet},
     ];
+
 
     return Card(
       elevation: 2,
@@ -84,9 +91,9 @@ class ApplicationCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: status == SaveStatus.loading ? CircularProgressIndicator() : const Text(
-                'Click to Proceed Proposal',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              child: status == SaveStatus.loading ? CircularProgressIndicator() : Text(
+                status == SaveStatus.success ? 'Go to Landholding' : 'Click to Proceed Proposal',
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
           ],
