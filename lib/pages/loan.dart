@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/product.dart';
@@ -122,8 +123,11 @@ class Loan extends StatelessWidget {
           }
 
           if (state.status == SaveStatus.success) {
+            Globalconfig.loanAmountMaximum = int.parse(
+              state.selectedProduct?.prdamtToRange ?? '0',
+            );
             print(
-              'loan details saved success =>prodscheme ${state.selectedProductScheme}  maincat ${state.selectedMainCategory} subCat ${state.selectedSubCategoryList} status ${state.status}',
+              'loan details saved success =>prodscheme ${state.selectedProductScheme}  maincat ${state.selectedMainCategory} subCat ${state.selectedSubCategoryList} status ${state.status} Globalconfig.loanAmountMaximum ${Globalconfig.loanAmountMaximum}',
             );
             showSnack(context, message: 'Loan Details saved Successfully.');
             goToNextTab(context: context);

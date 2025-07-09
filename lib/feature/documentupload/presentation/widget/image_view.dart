@@ -1,24 +1,24 @@
 import 'dart:typed_data';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:newsee/feature/documentupload/presentation/bloc/document_bloc.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_event.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_state.dart';
+import 'package:newsee/feature/documentupload/presentation/widget/show_Image_delete_alert.dart';
 
 class ImageView extends StatefulWidget {
   final Uint8List imageBytes;
   final int docIndex;
   final bool isUploaded;
+  final int? imgIndex;
 
   const ImageView({
     super.key,
     required this.imageBytes,
     required this.docIndex,
     required this.isUploaded,
+    this.imgIndex,
   });
 
   @override
@@ -50,13 +50,6 @@ class _ImageViewState extends State<ImageView> {
   Future<void> _uploadImage() async {
     setState(() => _isUploading = true);
 
-    // context.read<DocumentBloc>().add(
-    //   UploadDocumentByBytesEvent(
-    //     context: context,
-    //     docIndex: widget.docIndex,
-    //     imageBytes: _imageBytes,
-    //   ),
-    // );
     context.pop(_imageBytes);
 
     final updatedState = await context.read<DocumentBloc>().stream.firstWhere(
@@ -67,31 +60,27 @@ class _ImageViewState extends State<ImageView> {
       _isUploading = false;
       _isUploaded = true;
     });
-
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text("Image uploaded successfully.")),
-    // );
   }
 
   Future<void> _deleteImage() async {
-    setState(() => _isUploading = true);
+    final confirmed = await confirmAndDeleteImage(context);
+    if (confirmed == true) {
+      setState(() => _isUploading = true);
 
-    context.read<DocumentBloc>().add(
-      DeleteDocumentImageEvent(docIndex: widget.docIndex),
-    );
+      context.read<DocumentBloc>().add(
+        DeleteDocumentImageEvent(
+          docIndex: widget.docIndex,
+          imgIndex: widget.imgIndex,
+        ),
+      );
 
-    final updatedState = await context.read<DocumentBloc>().stream.firstWhere(
-      (state) => state.fetchStatus != SubmitStatus.loading,
-    );
+      context.pop();
 
-    setState(() {
-      _isUploading = false;
-      _isUploaded = false;
-    });
-
-    // ScaffoldMessenger.of(context).showSnackBar(
-    //   const SnackBar(content: Text("Image deleted successfully.")),
-    // );
+      setState(() {
+        _isUploading = false;
+        _isUploaded = false;
+      });
+    }
   }
 
   @override
@@ -124,7 +113,7 @@ class _ImageViewState extends State<ImageView> {
           if (!_isUploaded && !_isUploading)
             Positioned(
               bottom: 30,
-              left: screenWidth * 0.1,
+              left: screenWidth * 0.0,
               child: ElevatedButton.icon(
                 onPressed: _captureImage,
                 icon: const Icon(Icons.camera_alt),

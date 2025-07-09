@@ -1,4 +1,5 @@
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class AppForms {
@@ -77,6 +78,21 @@ class AppForms {
     ),
     'loanAmountRequested': FormControl<String>(
       validators: [Validators.required],
+      asyncValidators: [
+        Validators.delegateAsync((control) async {
+          String val = control.value as String;
+          int loanAmountEntered = int.parse(
+            val.replaceAll(RegExp(r'[^\d]'), ''),
+          );
+          if (loanAmountEntered > Globalconfig.loanAmountMaximum) {
+            print(
+              'loanAmountRequested::delegateAsync => ${Globalconfig.loanAmountMaximum}',
+            );
+            return {'max': '${Globalconfig.loanAmountMaximum}'};
+          }
+          return null;
+        }),
+      ],
     ),
     'natureOfActivity': FormControl<String>(validators: [Validators.required]),
     'occupationType': FormControl<String>(validators: [Validators.required]),

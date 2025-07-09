@@ -100,7 +100,13 @@ final class PersonalDetailsBloc
     ScannerResponseEvent event,
     Emitter emit,
   ) async {
-    String aadhaarId = event.scannerResponse['aadhaarResponse']['@uid'];
+    String aadhaarId = '';
+    if (event.scannerResponse['aadhaarResponse']['@uid'] != null) {
+      aadhaarId = event.scannerResponse['aadhaarResponse']['@uid'];
+    } else {
+      aadhaarId = event.scannerResponse['aadhaarResponse'];
+    }
+
     emit(
       state.copyWith(
         aadhaarData: AadharvalidateResponse(referenceId: aadhaarId),
