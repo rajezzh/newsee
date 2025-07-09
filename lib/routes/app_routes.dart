@@ -99,7 +99,7 @@ final routes = GoRouter(
       builder:
           (context, state) {
             final tabdata =
-            (state.extra as Map<String, dynamic>?)?['tabdata'] as int;
+            (state.extra as Map<String, dynamic>?)?['tabdata']!;
             return PopScope(
               canPop: false,
               onPopInvokedWithResult: (didPop, result) async {
