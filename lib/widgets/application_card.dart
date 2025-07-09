@@ -29,22 +29,6 @@ class ApplicationCard extends StatelessWidget {
       {"title": "Income Details", "icon": Icons.account_balance_wallet},
     ];
 
-    VoidCallback? buttonAction() {
-      if (status == SaveStatus.loading) return null;
-      if (status == SaveStatus.success) {
-        return () {
-          context.pushNamed(
-                  'landholdings',
-                  extra: {
-                    'proposalNumber': proposalNumber,
-                    'applicantName': applicantName,
-                  },
-                );
-        };
-      }
-      return onProceedPressed;
-    }
-
 
     return Card(
       elevation: 2,
@@ -98,7 +82,7 @@ class ApplicationCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: buttonAction(),
+              onPressed: onProceedPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.teal[600],
                 foregroundColor: Colors.white,

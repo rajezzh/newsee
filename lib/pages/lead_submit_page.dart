@@ -7,6 +7,7 @@ import 'package:newsee/AppData/app_route_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
 import 'package:newsee/Utils/shared_preference_handler.dart';
+import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_bloc.dart';
 import 'package:newsee/feature/auth/domain/model/user_details.dart';
@@ -51,17 +52,13 @@ class LeadSubmitPage extends StatelessWidget {
       ',',
       '',
     );
-    SharedPreferenceHandler<UserDetails> userDetail =
-        SharedPreferenceHandler<UserDetails>.getFromKey('userdetails');
-    UserDetails ud = await userDetail.setObj();
-    print('sourceid => ${ud.LPuserID}');
-    print('sourcename => ${ud.UserName}');
 
+    UserDetails? userDetails = await loadUser();
     PersonalData updatedPersonalData = personlData.copyWith(
       loanAmountRequested: loanAmountFormatted,
       passportNumber: '431241131',
-      sourceid: 'AGRI1124',
-      sourcename: 'Meena',
+      sourceid: userDetails?.LPuserID,
+      sourcename: userDetails?.UserName,
     );
 
     LeadSubmitPushEvent leadSubmitPushEvent = LeadSubmitPushEvent(
@@ -230,15 +227,13 @@ class LeadSubmitPage extends StatelessWidget {
                                   as ProductMaster,
                           coappData: coappData,
                           context: context,
-                          status: state.leadSubmitStatus
+                          status: state.leadSubmitStatus,
                         )
                         : showNoDataCard(context),
               )
               : ApplicationCard(
                 leadId: state.leadId != null ? state.leadId! : '',
                 status: state.proposalSubmitStatus,
-                proposalNumber: state.proposalNo,
-                applicantName: '${state.leadSubmitRequest?.individualNonIndividualDetails?.firstName} ${state.leadSubmitRequest?.individualNonIndividualDetails?.middleName} ${state.leadSubmitRequest?.individualNonIndividualDetails?.lastName}',
                 onProceedPressed: () {
                   createProposal(context, state);
                 },
@@ -247,13 +242,31 @@ class LeadSubmitPage extends StatelessWidget {
       ),
     );
   }
-                  
+
   void createProposal(BuildContext context, LeadSubmitState state) {
-    context.read<LeadSubmitBloc>().add(
-      CreateProposalEvent(
-        proposalCreationRequest: ProposalCreationRequest(leadId: state.leadId),
-      ),
-    );
+    // when lead is submitted success
+    if (state.proposalSubmitStatus == SaveStatus.init && state.leadId != null && state.proposalNo == null) {
+      context.read<LeadSubmitBloc>().add(
+        CreateProposalEvent(
+          proposalCreationRequest: ProposalCreationRequest(
+            leadId: state.leadId,
+          ),
+        ),
+      );
+    } else if (state.proposalNo != null) {
+      final applicantData =
+          state.leadSubmitRequest?.individualNonIndividualDetails;
+      final applicantName =
+          '${applicantData?.firstName} ${applicantData?.lastName}';
+
+      context.pushNamed(
+        'landholdings',
+        extra: {
+          'proposalNumber': state.proposalNo,
+          'applicantName': applicantName,
+        },
+      );
+    }
   }
 
   void openProposalSheet(BuildContext context, LeadSubmitState state) {
@@ -308,7 +321,7 @@ class LeadSubmitPage extends StatelessWidget {
     required ProductMaster productMaster,
     required CoapplicantData? coappData,
     required BuildContext context,
-    required status
+    required status,
   }) {
     return <Widget>[
       Card(
@@ -358,62 +371,65 @@ class LeadSubmitPage extends StatelessWidget {
         ),
       ),
       SizedBox(height: 20),
-      status == SubmitStatus.loading ? 
-                      ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 75, 33, 83),
-                ),
-                child: const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2.5,
-                  ),
-                ),
-              )
-
-              :  
-        Center(
-        child: ElevatedButton.icon(
-          onPressed: () {
-            submitLead(
-              personlData: personalData,
-              addressData: addressData,
-              loanProduct: loanProduct,
-              loanType: loanType,
-              dedupeData: dedupeData,
-              coapplicantData: coappData!,
-              context: context,
-            );
-          },
-          icon: Icon(Icons.send, color: Colors.white),
-          label: RichText(
-            text: TextSpan(
-              style: TextStyle(
+      status == SubmitStatus.loading
+          ? ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 75, 33, 83),
+            ),
+            child: const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+                strokeWidth: 2.5,
               ),
-              children: [
-                TextSpan(text: 'Push to '),
-                TextSpan(text: 'LEND', style: TextStyle(color: Colors.white)),
-                TextSpan(
-                  text: 'perfect',
-                  style: TextStyle(fontStyle: FontStyle.italic),
+            ),
+          )
+          : Center(
+            child: ElevatedButton.icon(
+              onPressed: () {
+                submitLead(
+                  personlData: personalData,
+                  addressData: addressData,
+                  loanProduct: loanProduct,
+                  loanType: loanType,
+                  dedupeData: dedupeData,
+                  coapplicantData: coappData!,
+                  context: context,
+                );
+              },
+              icon: Icon(Icons.send, color: Colors.white),
+              label: RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                  children: [
+                    TextSpan(text: 'Push to '),
+                    TextSpan(
+                      text: 'LEND',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    TextSpan(
+                      text: 'perfect',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+              style: ButtonStyle(
+                minimumSize: MaterialStateProperty.all(
+                  Size(double.infinity, 50),
+                ),
+                backgroundColor: MaterialStateProperty.all(
+                  const Color.fromARGB(255, 75, 33, 83),
+                ),
+              ),
             ),
           ),
-          style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-            backgroundColor: MaterialStateProperty.all(
-              const Color.fromARGB(255, 75, 33, 83),
-            ),
-          ),
-        ),
-      ),
     ];
   }
 

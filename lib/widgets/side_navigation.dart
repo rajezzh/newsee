@@ -6,6 +6,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/pages/home_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,12 +16,6 @@ class Sidenavigationbar extends StatelessWidget {
 
   const Sidenavigationbar({this.onTabSelected, super.key});
 
-  Future<UserDetails?> loadUser() async {
-    final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
-    String? getString = await asyncPrefs.getString('userdetails');
-    UserDetails userdetails = UserDetails.fromJson(jsonDecode(getString!)); 
-    return userdetails;
-  }
   
   @override
   Widget build(BuildContext context) {
