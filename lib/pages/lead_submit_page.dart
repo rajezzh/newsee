@@ -237,6 +237,8 @@ class LeadSubmitPage extends StatelessWidget {
               : ApplicationCard(
                 leadId: state.leadId != null ? state.leadId! : '',
                 status: state.proposalSubmitStatus,
+                proposalNumber: state.proposalNo,
+                applicantName: '${state.leadSubmitRequest?.individualNonIndividualDetails?.firstName} ${state.leadSubmitRequest?.individualNonIndividualDetails?.middleName} ${state.leadSubmitRequest?.individualNonIndividualDetails?.lastName}',
                 onProceedPressed: () {
                   createProposal(context, state);
                 },
@@ -245,7 +247,7 @@ class LeadSubmitPage extends StatelessWidget {
       ),
     );
   }
-
+                  
   void createProposal(BuildContext context, LeadSubmitState state) {
     context.read<LeadSubmitBloc>().add(
       CreateProposalEvent(
