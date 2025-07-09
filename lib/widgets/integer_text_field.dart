@@ -55,6 +55,7 @@ class IntegerTextField extends StatelessWidget {
               (error) => 'Maximum $maxlength numbers only allowed',
           ValidationMessage.minLength:
               (error) => 'Minimum $minlength numbers required',
+          ValidationMessage.max: (error) => 'Loan Amount not allowed',
         },
       ),
     );
