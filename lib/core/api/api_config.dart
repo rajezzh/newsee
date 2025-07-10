@@ -21,6 +21,8 @@ class ApiConfig {
 
   static const String API_RESPONSE_SUCCESS_KEY = 'Success';
 
+  static const String API_RESPONSE_ERRORMESSAGE_KEY='ErrorMessage';
+
   static const String API_RESPONSE_RESPONSE_KEY = 'responseData';
 
   static const String LEAD_INBOX_API_ENDPOINT =
@@ -33,6 +35,9 @@ class ApiConfig {
 
   static const String LAND_HOLDING_GET_API_ENDPOINT =
       'MobileService/getLandHoldingDetails';
+
+  static const String LAND_HOLDING_DELETE_API_ENDPOINT =
+      'MobileService/deleteLandHoldingDetails';
 
   static const String CROP_SUBMIT_API_ENDPOINT =
       'MobileService/saveProposedCrops';

@@ -40,6 +40,7 @@ enum SaveStatus {
   failure,
   update,
   reset,
+  delete,
   mastersucess,
   masterfailure,
   dedupesuccess,
