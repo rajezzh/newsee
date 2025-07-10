@@ -3,7 +3,9 @@ import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/documentupload/data/repository/delete_document_repo_impl.dart';
 import 'package:newsee/feature/documentupload/data/repository/get_document_repo_impl.dart';
 import 'package:newsee/feature/documentupload/data/repository/get_image_repo_impl.dart';
@@ -29,6 +31,8 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     FetchDocumentsEvent event,
     Emitter<DocumentState> emit,
   ) async {
+    UserDetails? userDetails = await loadUser();
+
     print('jhdfd ${state.proposalNumber}');
     emit(
       state.copyWith(
@@ -39,7 +43,7 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     try {
       final responseHandler = await GetDocumentRepoImpl().getDocuments(
         request: {
-          "userid": "AGRI1124",
+          "userid": userDetails!.LPuserID,
           "vertical": "7",
           "token": ApiConfig.AUTH_TOKEN,
           "proposalNumber": event.proposalNumber,
@@ -178,6 +182,8 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     DeleteDocumentImageEvent event,
     Emitter<DocumentState> emit,
   ) async {
+    UserDetails? userDetails = await loadUser();
+
     try {
       final docs = [...state.documentsList];
       final doc = docs[event.docIndex];
@@ -186,7 +192,7 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
       final responseHandler = await DeleteDocumentRepoImpl().deleteUploadedDoc(
         request: {
           "proposalNumber": state.proposalNumber,
-          "userid": "AGRI1124",
+          "userid": userDetails!.LPuserID,
           "rowId": imgs[event.imgIndex!].rowId,
           "token": ApiConfig.AUTH_TOKEN,
         },
@@ -284,10 +290,12 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
   }
 
   Future<dynamic> _uploadFile(File file, DocumentModel doc) async {
+    UserDetails? userDetails = await loadUser();
+
     try {
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(file.path),
-        'userid': 'AGRI1124',
+        'userid': userDetails!.LPuserID,
         'proposalNumber': state.proposalNumber,
         'docid': '${doc.lpdDocId}${doc.lpdPartyId}',
         'partyType': doc.lpdPartyType,
@@ -324,12 +332,13 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
   ) async {
     final currentList = [...state.documentsList];
     final doc = currentList[event.docIndex];
+    UserDetails? userDetails = await loadUser();
 
     try {
       emit(state.copyWith(fetchStatus: SubmitStatus.loading));
       final responseHandler = await GetImageRepoImpl().fetchDocumentImage(
         request: {
-          "userid": "AGRI1124",
+          "userid": userDetails!.LPuserID,
           "rowId": doc.imgs[event.imgIndex].rowId,
           "token": ApiConfig.AUTH_TOKEN,
           "proposalNumber": state.proposalNumber,

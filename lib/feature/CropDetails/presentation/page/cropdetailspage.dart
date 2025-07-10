@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_forms.dart';
+import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/CropDetails/domain/modal/cropdetailsmodal.dart';
 import 'package:newsee/feature/CropDetails/presentation/bloc/cropyieldpage_bloc.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -29,7 +31,11 @@ class CropDetailsPage extends StatelessWidget {
 
   final ValueNotifier<bool> formEdit = ValueNotifier<bool>(false);
 
-  CropDetailsPage({super.key, required this.title, required this.proposalnumber}) {
+  CropDetailsPage({
+    super.key,
+    required this.title,
+    required this.proposalnumber,
+  }) {
     irrigatedController.addListener(_updateTotal);
     rainfedController.addListener(_updateTotal);
   }
@@ -50,35 +56,44 @@ class CropDetailsPage extends StatelessWidget {
     showDialog(
       context: context,
       builder:
-      (context) => AlertDialog(
-        title: Text('Unsaved Changes'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            child: Text('Cancel'),
-          ),
+          (context) => AlertDialog(
+            title: Text('Unsaved Changes'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text('Cancel'),
+              ),
 
-          TextButton(
-            onPressed: () {
-              context.goNamed('home');
-            },
-            child: Text('Yes'),
+              TextButton(
+                onPressed: () {
+                  context.goNamed('home');
+                },
+                child: Text('Yes'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
   void handleSave(BuildContext context, CropyieldpageState state) {
-    if (irrigatedController.text.isNotEmpty && rainfedController.text.isNotEmpty) {
+    if (irrigatedController.text.isNotEmpty &&
+        rainfedController.text.isNotEmpty) {
       if (form.valid) {
-        var scaleOfFinance = removeSpecialCharacters(form.control('lasScaloffin').value);
-        var reqScaleOfFinance = removeSpecialCharacters(form.control('lasReqScaloffin').value);
-        var prePerAcre = removeSpecialCharacters(form.control('lasPrePerAcre').value);
-        var premiumCollecte = removeSpecialCharacters(form.control('lasPreToCollect').value);
-        
+        var scaleOfFinance = removeSpecialCharacters(
+          form.control('lasScaloffin').value,
+        );
+        var reqScaleOfFinance = removeSpecialCharacters(
+          form.control('lasReqScaloffin').value,
+        );
+        var prePerAcre = removeSpecialCharacters(
+          form.control('lasPrePerAcre').value,
+        );
+        var premiumCollecte = removeSpecialCharacters(
+          form.control('lasPreToCollect').value,
+        );
+
         form.control('lasScaloffin').updateValue(scaleOfFinance);
         form.control('lasReqScaloffin').updateValue(reqScaleOfFinance);
         form.control('lasPrePerAcre').updateValue(prePerAcre);
@@ -94,24 +109,21 @@ class CropDetailsPage extends StatelessWidget {
         form.markAllAsTouched();
       }
     } else {
-      showSnack(
-        context,
-        message: 'Please Enter Irrigated and Rainfed fields',
-      );
+      showSnack(context, message: 'Please Enter Irrigated and Rainfed fields');
     }
   }
 
-  void handleSubmit(BuildContext context) {
+  void handleSubmit(BuildContext context) async {
     final globalLoadingBloc = context.read<GlobalLoadingBloc>();
-    globalLoadingBloc.add(
-      ShowLoading(message: "Crop Details Submitting..."),
-    );
+    globalLoadingBloc.add(ShowLoading(message: "Crop Details Submitting..."));
     final irrigated = int.tryParse(irrigatedController.text) ?? 0;
     final rainfed = int.tryParse(rainfedController.text) ?? 0;
+    UserDetails? userDetails = await loadUser();
+
     context.read<CropyieldpageBloc>().add(
       CropDetailsSubmitEvent(
-        proposalNumber: proposalnumber, 
-        userid: 'AGRI1124', 
+        proposalNumber: proposalnumber,
+        userid: userDetails!.LPuserID,
         irrigated: irrigated,
         rainfed: rainfed,
         total: totalNotifier.value,
@@ -125,11 +137,19 @@ class CropDetailsPage extends StatelessWidget {
 
   void handleUpdate(BuildContext context, CropyieldpageState state) {
     if (form.valid) {
-      var scaleOfFinance = removeSpecialCharacters(form.control('lasScaloffin').value);
-      var reqScaleOfFinance = removeSpecialCharacters(form.control('lasReqScaloffin').value);
-      var prePerAcre = removeSpecialCharacters(form.control('lasPrePerAcre').value);
-      var premiumCollecte = removeSpecialCharacters(form.control('lasPreToCollect').value);
-      
+      var scaleOfFinance = removeSpecialCharacters(
+        form.control('lasScaloffin').value,
+      );
+      var reqScaleOfFinance = removeSpecialCharacters(
+        form.control('lasReqScaloffin').value,
+      );
+      var prePerAcre = removeSpecialCharacters(
+        form.control('lasPrePerAcre').value,
+      );
+      var premiumCollecte = removeSpecialCharacters(
+        form.control('lasPreToCollect').value,
+      );
+
       form.control('lasScaloffin').updateValue(scaleOfFinance);
       form.control('lasReqScaloffin').updateValue(reqScaleOfFinance);
       form.control('lasPrePerAcre').updateValue(prePerAcre);
@@ -137,7 +157,10 @@ class CropDetailsPage extends StatelessWidget {
 
       final cropFormData = CropDetailsModal.fromForm(form.value);
       context.read<CropyieldpageBloc>().add(
-        CropDetailsUpdateEvent(cropData: cropFormData, index: currentIndex.value),
+        CropDetailsUpdateEvent(
+          cropData: cropFormData,
+          index: currentIndex.value,
+        ),
       );
     } else {
       form.markAllAsTouched();
@@ -161,83 +184,102 @@ class CropDetailsPage extends StatelessWidget {
               child: Column(
                 children: [
                   Expanded(
-                    child: entries.isEmpty
-                    ? const Center(child: Text('No saved entries.')) :
-                    ListView.separated(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: entries.length,
-                      separatorBuilder: (_, __) => const Divider(),
-                      itemBuilder: (ctx, index) {
-                        final item = entries[index];
-                        print("full item data $item");
-                        final landname = lovlist!.firstWhere((v) =>v.Header == 'TypeOfLand' && v.optvalue == item.lasTypOfLand);
-                        print("landname $landname");
-                        final cropname = lovlist.firstWhere((v) =>v.Header == 'NameOfTheCrop' && v.optvalue == item.lasCrop);
-                        print("cropname $cropname");
-                        return ListTile(
-                          leading: Icon(
-                            Icons.agriculture,
-                            size: 30,
-                            color: Colors.teal,
-                          ),
-                          title: Text('LandType - ${landname.optDesc}'),
-                          subtitle: Text('Name of the Crop - ${cropname.optDesc}'),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                          ),
-                          onTap: () {
-                            currentIndex.value = index;
-                            Navigator.pop(context);
-                            context.read<CropyieldpageBloc>().add(
-                              CropDetailsSetEvent(cropData: item),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  (entries.isNotEmpty && submitButtonshow == true) ? Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          handleSubmit(context);
-                        },
-                        icon: Icon(Icons.send, color: Colors.white),
-                        label: RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                    child:
+                        entries.isEmpty
+                            ? const Center(child: Text('No saved entries.'))
+                            : ListView.separated(
+                              padding: const EdgeInsets.all(16),
+                              itemCount: entries.length,
+                              separatorBuilder: (_, __) => const Divider(),
+                              itemBuilder: (ctx, index) {
+                                final item = entries[index];
+                                print("full item data $item");
+                                final landname = lovlist!.firstWhere(
+                                  (v) =>
+                                      v.Header == 'TypeOfLand' &&
+                                      v.optvalue == item.lasTypOfLand,
+                                );
+                                print("landname $landname");
+                                final cropname = lovlist.firstWhere(
+                                  (v) =>
+                                      v.Header == 'NameOfTheCrop' &&
+                                      v.optvalue == item.lasCrop,
+                                );
+                                print("cropname $cropname");
+                                return ListTile(
+                                  leading: Icon(
+                                    Icons.agriculture,
+                                    size: 30,
+                                    color: Colors.teal,
+                                  ),
+                                  title: Text('LandType - ${landname.optDesc}'),
+                                  subtitle: Text(
+                                    'Name of the Crop - ${cropname.optDesc}',
+                                  ),
+                                  trailing: const Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 16,
+                                  ),
+                                  onTap: () {
+                                    currentIndex.value = index;
+                                    Navigator.pop(context);
+                                    context.read<CropyieldpageBloc>().add(
+                                      CropDetailsSetEvent(cropData: item),
+                                    );
+                                  },
+                                );
+                              },
                             ),
-                            children: [
-                              TextSpan(text: 'Push to '),
-                              TextSpan(text: 'LEND', style: TextStyle(color: Colors.white)),
-                              TextSpan(
-                                text: 'perfect',
-                                style: TextStyle(fontStyle: FontStyle.italic),
+                  ),
+                  (entries.isNotEmpty && submitButtonshow == true)
+                      ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              handleSubmit(context);
+                            },
+                            icon: Icon(Icons.send, color: Colors.white),
+                            label: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                                children: [
+                                  TextSpan(text: 'Push to '),
+                                  TextSpan(
+                                    text: 'LEND',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  TextSpan(
+                                    text: 'perfect',
+                                    style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all(
+                                Size(double.infinity, 50),
+                              ),
+                              backgroundColor: MaterialStateProperty.all(
+                                const Color.fromARGB(255, 75, 33, 83),
+                              ),
+                            ),
                           ),
                         ),
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all(Size(double.infinity, 50)),
-                          backgroundColor: MaterialStateProperty.all(
-                            const Color.fromARGB(255, 75, 33, 83),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ) : SizedBox.shrink(),
+                      )
+                      : SizedBox.shrink(),
                 ],
-              )
-            )        
+              ),
+            ),
           ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -256,10 +298,9 @@ class CropDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // SizedBox(height: 10),
-            
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                
+
                 children: [
                   Text(
                     title,
@@ -269,70 +310,72 @@ class CropDetailsPage extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () => {
-                      backHandler(context)
-                    },
+                    onPressed: () => {backHandler(context)},
                     child: Text(
                       'Back',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16
-                      )
-                    )
-                  )
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-               Center(
-                
+              Center(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 02),
                   child: Container(
                     width: double.infinity,
-                    margin: const EdgeInsets.symmetric(horizontal: 8,),
-                        padding: const EdgeInsets.all(8),
-                  
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.10),
+                    margin: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.all(8),
+
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.10),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                     child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Text(
-                                "Proposal Id: ",
-                                style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold) ,
-                              ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(
+                            "Proposal Id: ",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: Text(
-                                  proposalnumber ?? 'N/A',
-                                
-                                  style: TextStyle(color: Colors.white, fontSize: 14,  fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.ellipsis, 
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                           ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: Text(
+                              proposalnumber ?? 'N/A',
+
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-             Padding(
-                padding: const EdgeInsets.only(top:10,bottom: 20),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 20),
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         "Irrigated: ",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white
-                        )
+                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       SizedBox(
                         width: 50,
@@ -340,10 +383,7 @@ class CropDetailsPage extends StatelessWidget {
                         child: TextField(
                           controller: irrigatedController,
                           keyboardType: TextInputType.number,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                             border: OutlineInputBorder(),
@@ -353,13 +393,10 @@ class CropDetailsPage extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      
+
                       const Text(
                         "Rainfed: ",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white
-                        )
+                        style: TextStyle(fontSize: 14, color: Colors.white),
                       ),
                       SizedBox(
                         width: 50,
@@ -367,10 +404,7 @@ class CropDetailsPage extends StatelessWidget {
                         child: TextField(
                           controller: rainfedController,
                           keyboardType: TextInputType.number,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14
-                          ),
+                          style: TextStyle(color: Colors.white, fontSize: 14),
                           decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(horizontal: 8),
                             border: OutlineInputBorder(),
@@ -382,29 +416,27 @@ class CropDetailsPage extends StatelessWidget {
                       const SizedBox(width: 10),
                       ValueListenableBuilder<int>(
                         valueListenable: totalNotifier,
-                        builder: (context, value, _) => Text(
-                          "Total: $value (Acres)",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                          )
-                        ),
+                        builder:
+                            (context, value, _) => Text(
+                              "Total: $value (Acres)",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
                       ),
                     ],
-                    
-                
                   ),
-                
                 ),
               ),
-              
             ],
           ),
         ),
         body: BlocProvider(
-          create: (_) => CropyieldpageBloc()..add(
-            CropPageInitialEvent(proposalNumber: proposalnumber)
-          ),
+          create:
+              (_) =>
+                  CropyieldpageBloc()
+                    ..add(CropPageInitialEvent(proposalNumber: proposalnumber)),
           lazy: true,
           child: BlocConsumer<CropyieldpageBloc, CropyieldpageState>(
             listener: (context, state) {
@@ -423,13 +455,10 @@ class CropDetailsPage extends StatelessWidget {
               } else if (state.status == SaveStatus.success) {
                 form.reset();
                 context.pop();
-                globalLoadingBloc.add(
-                  HideLoading(),
-                );
+                globalLoadingBloc.add(HideLoading());
                 showSnack(
                   context,
-                  message:
-                      'Crop Details Submitted Successfully',
+                  message: 'Crop Details Submitted Successfully',
                 );
               }
             },
@@ -444,8 +473,12 @@ class CropDetailsPage extends StatelessWidget {
                 if (state.selectedCropData!.notifiedCropFlag!) {
                   form.control('lasPrePerAcre').markAsEnabled();
                   form.control('lasPreToCollect').markAsEnabled();
-                  form.control('lasPrePerAcre').setValidators([Validators.required]);
-                  form.control('lasPreToCollect').setValidators([Validators.required]);
+                  form.control('lasPrePerAcre').setValidators([
+                    Validators.required,
+                  ]);
+                  form.control('lasPreToCollect').setValidators([
+                    Validators.required,
+                  ]);
                 } else {
                   form.control('lasPrePerAcre').markAsDisabled();
                   form.control('lasPreToCollect').markAsDisabled();
@@ -454,7 +487,7 @@ class CropDetailsPage extends StatelessWidget {
                 }
                 form.updateValueAndValidity();
               }
-              
+
               return ReactiveForm(
                 formGroup: form,
                 child: SafeArea(
@@ -497,11 +530,14 @@ class CropDetailsPage extends StatelessWidget {
                                       label: 'Season',
                                       items:
                                           state.lovlist!
-                                              .where((v) => v.Header == 'Season')
+                                              .where(
+                                                (v) => v.Header == 'Season',
+                                              )
                                               .toList(),
                                       onChangeListener: (Lov val) {
-                                        form.controls['lasSeason']
-                                            ?.updateValue(val.optvalue);
+                                        form.controls['lasSeason']?.updateValue(
+                                          val.optvalue,
+                                        );
                                       },
                                       selItem: () {
                                         final value =
@@ -531,15 +567,17 @@ class CropDetailsPage extends StatelessWidget {
                                               )
                                               .toList(),
                                       onChangeListener: (Lov val) {
-                                        form.controls['lasCrop']
-                                            ?.updateValue(val.optvalue);
+                                        form.controls['lasCrop']?.updateValue(
+                                          val.optvalue,
+                                        );
                                       },
                                       selItem: () {
                                         final value =
                                             form.control('lasCrop').value;
                                         return state.lovlist!
                                             .where(
-                                              (v) => v.Header == 'NameOfTheCrop',
+                                              (v) =>
+                                                  v.Header == 'NameOfTheCrop',
                                             )
                                             .firstWhere(
                                               (lov) => lov.optvalue == value,
@@ -592,37 +630,67 @@ class CropDetailsPage extends StatelessWidget {
                                     ),
                                     IntegerTextField(
                                       controlName: 'lasScaloffin',
-                                      label: 'Scale of Finance (including crop insurance)',
+                                      label:
+                                          'Scale of Finance (including crop insurance)',
                                       mantatory: true,
                                       isRupeeFormat: true,
                                     ),
                                     IntegerTextField(
                                       controlName: 'lasReqScaloffin',
-                                      label: 'Requirement as per Scale of Finance',
+                                      label:
+                                          'Requirement as per Scale of Finance',
                                       mantatory: true,
                                       isRupeeFormat: true,
                                     ),
                                     RadioButton(
-                                      label:'Notified Crop',
+                                      label: 'Notified Crop',
                                       controlName: 'notifiedCropFlag',
                                       optionOne: 'Yes',
                                       optionTwo: 'No',
                                       onChangeListener: (bool val) {
                                         print("Radiobutton onchangedata $val");
                                         if (val) {
-                                          form.control('lasPrePerAcre').updateValue('');
-                                          form.control('lasPreToCollect').updateValue('');
-                                          form.control('lasPrePerAcre').markAsEnabled();
-                                          form.control('lasPreToCollect').markAsEnabled();
-                                          form.control('lasPrePerAcre').setValidators([Validators.required]);
-                                          form.control('lasPreToCollect').setValidators([Validators.required]);
+                                          form
+                                              .control('lasPrePerAcre')
+                                              .updateValue('');
+                                          form
+                                              .control('lasPreToCollect')
+                                              .updateValue('');
+                                          form
+                                              .control('lasPrePerAcre')
+                                              .markAsEnabled();
+                                          form
+                                              .control('lasPreToCollect')
+                                              .markAsEnabled();
+                                          form
+                                              .control('lasPrePerAcre')
+                                              .setValidators([
+                                                Validators.required,
+                                              ]);
+                                          form
+                                              .control('lasPreToCollect')
+                                              .setValidators([
+                                                Validators.required,
+                                              ]);
                                         } else {
-                                          form.control('lasPrePerAcre').updateValue('');
-                                          form.control('lasPreToCollect').updateValue('');
-                                          form.control('lasPrePerAcre').markAsDisabled();
-                                          form.control('lasPreToCollect').markAsDisabled();
-                                          form.control('lasPrePerAcre').clearValidators();
-                                          form.control('lasPreToCollect').clearValidators();
+                                          form
+                                              .control('lasPrePerAcre')
+                                              .updateValue('');
+                                          form
+                                              .control('lasPreToCollect')
+                                              .updateValue('');
+                                          form
+                                              .control('lasPrePerAcre')
+                                              .markAsDisabled();
+                                          form
+                                              .control('lasPreToCollect')
+                                              .markAsDisabled();
+                                          form
+                                              .control('lasPrePerAcre')
+                                              .clearValidators();
+                                          form
+                                              .control('lasPreToCollect')
+                                              .clearValidators();
                                         }
                                       },
                                     ),
@@ -697,71 +765,71 @@ class CropDetailsPage extends StatelessWidget {
                           ],
                         ),
                       ),
-                    //   Positioned(
-                    //     bottom: 5,
-                    //     left: 0,
-                    //     right: 0,
-                    //     child: Column(
-                    //       children: [
-                    //         Center(
-                    //           child: 
-                    //           state.status == CropPageStatus.set ?
-                    //           ElevatedButton.icon(
-                    //             onPressed: () => handleUpdate(context, state),
-                    //             icon: const Icon(Icons.save, color: Colors.white),
-                    //             label: const Text(
-                    //               'Update',
-                    //               style: TextStyle(
-                    //                 fontWeight: FontWeight.bold,
-                    //                 color: Colors.white,
-                    //               ),
-                    //             ),
-                    //             style: ElevatedButton.styleFrom(
-                    //               backgroundColor: const Color.fromARGB(
-                    //                 212,
-                    //                 5,
-                    //                 8,
-                    //                 205,
-                    //               ),
-                    //               padding: const EdgeInsets.symmetric(
-                    //                 horizontal: 32,
-                    //                 vertical: 14,
-                    //               ),
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //               ),
-                    //             ),
-                    //           ) :
-                    //           ElevatedButton.icon(
-                    //             onPressed: () => handleSave(context, state),
-                    //             icon: const Icon(Icons.save, color: Colors.white),
-                    //             label: const Text(
-                    //               'Save',
-                    //               style: TextStyle(
-                    //                 fontWeight: FontWeight.bold,
-                    //                 color: Colors.white,
-                    //               ),
-                    //             ),
-                    //             style: ElevatedButton.styleFrom(
-                    //               backgroundColor: const Color.fromARGB(
-                    //                 212,
-                    //                 5,
-                    //                 8,
-                    //                 205,
-                    //               ),
-                    //               padding: const EdgeInsets.symmetric(
-                    //                 horizontal: 32,
-                    //                 vertical: 14,
-                    //               ),
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(8),
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ),
+                      //   Positioned(
+                      //     bottom: 5,
+                      //     left: 0,
+                      //     right: 0,
+                      //     child: Column(
+                      //       children: [
+                      //         Center(
+                      //           child:
+                      //           state.status == CropPageStatus.set ?
+                      //           ElevatedButton.icon(
+                      //             onPressed: () => handleUpdate(context, state),
+                      //             icon: const Icon(Icons.save, color: Colors.white),
+                      //             label: const Text(
+                      //               'Update',
+                      //               style: TextStyle(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: Colors.white,
+                      //               ),
+                      //             ),
+                      //             style: ElevatedButton.styleFrom(
+                      //               backgroundColor: const Color.fromARGB(
+                      //                 212,
+                      //                 5,
+                      //                 8,
+                      //                 205,
+                      //               ),
+                      //               padding: const EdgeInsets.symmetric(
+                      //                 horizontal: 32,
+                      //                 vertical: 14,
+                      //               ),
+                      //               shape: RoundedRectangleBorder(
+                      //                 borderRadius: BorderRadius.circular(8),
+                      //               ),
+                      //             ),
+                      //           ) :
+                      //           ElevatedButton.icon(
+                      //             onPressed: () => handleSave(context, state),
+                      //             icon: const Icon(Icons.save, color: Colors.white),
+                      //             label: const Text(
+                      //               'Save',
+                      //               style: TextStyle(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: Colors.white,
+                      //               ),
+                      //             ),
+                      //             style: ElevatedButton.styleFrom(
+                      //               backgroundColor: const Color.fromARGB(
+                      //                 212,
+                      //                 5,
+                      //                 8,
+                      //                 205,
+                      //               ),
+                      //               padding: const EdgeInsets.symmetric(
+                      //                 horizontal: 32,
+                      //                 vertical: 14,
+                      //               ),
+                      //               shape: RoundedRectangleBorder(
+                      //                 borderRadius: BorderRadius.circular(8),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         )
+                      //       ],
+                      //     ),
+                      //   ),
                       // FAB with badge on top
                       Positioned(
                         bottom: 10,

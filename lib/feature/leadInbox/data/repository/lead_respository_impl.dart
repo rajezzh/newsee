@@ -23,19 +23,12 @@ import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart'
 class LeadRepositoryImpl implements LeadRepository {
   @override
   Future<AsyncResponseHandler<Failure, List<GroupLeadInbox>>> searchLead(
-    LeadRequest req,
+    LeadInboxRequest req,
   ) async {
     try {
-      final payload = {
-        'userid': req.userid,
-        'pageNo': '0',
-        'token': ApiConfig.AUTH_TOKEN,
-        'pageCount': '20',
-      };
-
       final response = await LeadRemoteDatasource(
         dio: ApiClient().getDio(),
-      ).searchLead(payload);
+      ).searchLead(req.toMap());
 
       final responseData = response.data;
       final isSuccess =
