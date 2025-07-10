@@ -24,17 +24,11 @@ class CompletedLeads extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) =>
-              LeadBloc()..add(
-                SearchLeadEvent(request: LeadRequest(userid: "AGRI1124")),
-              ),
+      create: (context) => LeadBloc()..add(SearchLeadEvent()),
       child: BlocBuilder<LeadBloc, LeadState>(
         builder: (context, state) {
           Future<void> onRefresh() async {
-            context.read<LeadBloc>().add(
-              SearchLeadEvent(request: LeadRequest(userid: "AGRI1124")),
-            );
+            context.read<LeadBloc>().add(SearchLeadEvent());
           }
 
           if (state.status == LeadStatus.loading) {

@@ -6,10 +6,7 @@ abstract class ProposalInboxEvent {
 // bloc event type that will be called when Login button clicked
 
 class SearchProposalInboxEvent extends ProposalInboxEvent {
-  final ProposalInboxRequest request;
+  final LeadInboxRequest request;
 
   const SearchProposalInboxEvent({required this.request});
-
-  @override
-  List<Object?> get props => [request];
 }

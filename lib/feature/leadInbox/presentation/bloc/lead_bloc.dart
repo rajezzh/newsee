@@ -7,10 +7,12 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
+import 'package:newsee/Utils/shared_preference_utils.dart';
+import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/leadInbox/data/repository/lead_respository_impl.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
-import 'package:newsee/feature/leadInbox/domain/modal/lead_responce_model.dart';
 import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart';
 
 part 'lead_event.dart';
@@ -23,7 +25,6 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     : leadRepository = repository ?? LeadRepositoryImpl(),
       super(LeadState()) {
     on<SearchLeadEvent>(onSearchLead);
-    on<PageChangedEvent>(onPageChanged);
   }
 
   Future<void> onSearchLead(
@@ -31,8 +32,15 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     Emitter<LeadState> emit,
   ) async {
     emit(state.copyWith(status: LeadStatus.loading));
+    UserDetails? userDetails = await loadUser();
+    LeadInboxRequest request = LeadInboxRequest(
+      userid: userDetails!.LPuserID,
+      pageNo: event.pageNo,
+      pageCount: event.pageCount,
+      token: ApiConstants.api_qa_token,
+    );
 
-    final response = await leadRepository.searchLead(event.request);
+    final response = await leadRepository.searchLead(request);
     // check if response i success and contains valid data , success status is emitted
 
     if (response.isRight()) {
@@ -52,30 +60,4 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
       );
     }
   }
-
- Future<void> onPageChanged(
-  PageChangedEvent event , 
-  Emitter<LeadState> emit,
-
- )async{
-
-  final newPage = event.newPage;
-
-  emit(state.copyWith(currentPage: newPage));
-
-  add(SearchLeadEvent(
-      request: event.previousRequest.copyWith(page: newPage),
-    ));
-
-  
-
-
-  }
-
-
-
-
-
-
 }
-

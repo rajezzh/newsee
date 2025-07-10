@@ -7,6 +7,8 @@ class ApiConfig {
   static const String DEVICE_ID =
       'U2FsdGVkX180H+UTzJxvLfDRxLNCZeZK0gzxeLDg9Azi7YqYqp0KqhJkMb7DiIns';
 
+  static const String VERTICAL = '7';
+
   static const String MASTERS_API_ENDPOINT = 'MasterDetails/getMasterDetails';
   static const String AADHAAR_API_ENDPOINT = 'MobileService/getAadhaarDetails';
 
@@ -40,6 +42,8 @@ class ApiConfig {
 
   static const String PROPOSAL_INBOX_API_ENDPOINT =
       '/MobileService/getProposalInboxDetails';
+
+  static const String GET_MASTERS_VERSION_API_ENDPOINT = 'MobileService/getMastersVersions';
   static const String GET_DOCUMENTS = 'MobileService/getDocumentDetails';
   static const String UPLOAD_DOCUMENT = 'MobileService/getDocumentUpload';
   static const String FETCH_UPLOAD_DOCUMENT = 'MobileService/getUploadDocument';

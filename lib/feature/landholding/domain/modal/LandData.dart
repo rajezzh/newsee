@@ -122,6 +122,7 @@ class LandData extends Equatable {
 
   Map<String, dynamic> mapForm() {
     return {
+      'lslLandRowid': lslLandRowid.toString(),
       'applicantName': lslLandApplicantName,
       'locationOfFarm': lslLandFarmLoc,
       'state': lslLandState,

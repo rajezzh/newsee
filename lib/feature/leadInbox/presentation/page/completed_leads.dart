@@ -22,14 +22,11 @@ class CompletedLeads extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => LeadBloc()
-        ..add(SearchLeadEvent(request: LeadRequest(userid: "AGRI1124", page: 1))),
+      create: (context) => LeadBloc()..add(SearchLeadEvent()),
       child: BlocBuilder<LeadBloc, LeadState>(
         builder: (context, state) {
-          final request = LeadRequest(userid: "AGRI1124");
-
           Future<void> onRefresh() async {
-            context.read<LeadBloc>().add(SearchLeadEvent(request: request));
+            context.read<LeadBloc>().add(SearchLeadEvent());
           }
 
           if (state.status == LeadStatus.loading) {
@@ -62,29 +59,29 @@ class CompletedLeads extends StatelessWidget {
                 children: [
                   const SizedBox(height: 200),
                   Center(
-                    child: Text(
-                      state.errorMessage ?? 'Something went wrong',
-                    ),
+                    child: Text(state.errorMessage ?? 'Something went wrong'),
                   ),
                 ],
               ),
             );
           }
 
-          final allLeads = state.leadResponseModel
-              ?.expand((model) => model.finalList)
-              .toList();
+          final allLeads =
+              state.leadResponseModel
+                  ?.expand((model) => model.finalList)
+                  .toList();
 
-          final filteredLeads = allLeads?.where((lead) {
-            final name = (lead['lleadfrstname'] ?? '').toLowerCase();
-            final id = (lead['lleadid'] ?? '').toLowerCase();
-            final phone = (lead['lleadmobno'] ?? '').toLowerCase();
-            final loan = (lead['lldLoanamtRequested'] ?? '').toString();
-            return name.contains(searchQuery.toLowerCase()) ||
-                id.contains(searchQuery.toLowerCase()) ||
-                phone.contains(searchQuery.toLowerCase()) ||
-                loan.contains(searchQuery.toLowerCase());
-          }).toList();
+          final filteredLeads =
+              allLeads?.where((lead) {
+                final name = (lead['lleadfrstname'] ?? '').toLowerCase();
+                final id = (lead['lleadid'] ?? '').toLowerCase();
+                final phone = (lead['lleadmobno'] ?? '').toLowerCase();
+                final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+                return name.contains(searchQuery.toLowerCase()) ||
+                    id.contains(searchQuery.toLowerCase()) ||
+                    phone.contains(searchQuery.toLowerCase()) ||
+                    loan.contains(searchQuery.toLowerCase());
+              }).toList();
 
           if (filteredLeads == null || filteredLeads.isEmpty) {
             return RefreshIndicator(
@@ -104,9 +101,12 @@ class CompletedLeads extends StatelessWidget {
           final currentPage = state.currentPage - 1;
 
           final startIndex = currentPage * itemsPerPage;
-          final endIndex =
-              ((currentPage + filteredLeads.length) * itemsPerPage).clamp(0, filteredLeads.length);
-          final paginatedLeads = filteredLeads.sublist(startIndex, endIndex > filteredLeads.length ? filteredLeads.length : endIndex);
+          final endIndex = ((currentPage + filteredLeads.length) * itemsPerPage)
+              .clamp(0, filteredLeads.length);
+          final paginatedLeads = filteredLeads.sublist(
+            startIndex,
+            endIndex > filteredLeads.length ? filteredLeads.length : endIndex,
+          );
 
           return RefreshIndicator(
             onRefresh: onRefresh,
@@ -122,9 +122,10 @@ class CompletedLeads extends StatelessWidget {
                         subtitle: lead['lleadid'] ?? 'N/A',
                         icon: Icons.person,
                         color: Colors.teal,
-                        type: lead['lleadexistingcustomer'] == "N"
-                            ? 'New Customer'
-                            : 'Existing Customer',
+                        type:
+                            lead['lleadexistingcustomer'] == "N"
+                                ? 'New Customer'
+                                : 'Existing Customer',
                         product: lead['lfProdId'] ?? 'N/A',
                         phone: lead['lleadmobno'] ?? 'N/A',
                         createdon: lead['lpdCreatedOn'] ?? 'N/A',
@@ -143,11 +144,12 @@ class CompletedLeads extends StatelessWidget {
                     initialPage: currentPage,
                     onPageChange: (int index) {
                       context.read<LeadBloc>().add(
-                            PageChangedEvent(index + 1, request),
-                          );
+                        SearchLeadEvent(pageNo: index),
+                      );
                     },
                     child: const SizedBox(
-                      height: 48,
+                      width: 250,
+                      height: 35,
                       child: Row(
                         children: [
                           PrevButton(),

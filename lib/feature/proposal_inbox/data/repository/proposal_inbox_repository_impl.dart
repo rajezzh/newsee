@@ -6,27 +6,19 @@ import 'package:newsee/core/api/auth_failure.dart';
 import 'package:newsee/core/api/failure.dart';
 import 'package:newsee/core/api/http_connection_failure.dart';
 import 'package:newsee/core/api/http_exception_parser.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/proposal_inbox/data/datasource/proposal_inbox_remote_datasource.dart';
-import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
-import 'package:newsee/feature/proposal_inbox/domain/modal/proposal_inbox_request.dart';
 import 'package:newsee/feature/proposal_inbox/domain/modal/proposal_inbox_responce_model.dart';
 import 'package:newsee/feature/proposal_inbox/domain/repository/proposal_inbox_repository.dart';
 
 class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
   @override
   Future<AsyncResponseHandler<Failure, List<ProposalInboxResponseModel>>>
-  searchProposalInbox(ProposalInboxRequest req) async {
+  searchProposalInbox(LeadInboxRequest req) async {
     try {
-      final payload = {
-        'userid': req.userid,
-        'pageNo': '0',
-        'pageCount':'10',
-        'token': ApiConfig.AUTH_TOKEN,
-      };
-
       final response = await ProposalInboxRemoteDatasource(
         dio: ApiClient().getDio(),
-      ).searchProposalInbox(payload);
+      ).searchProposalInbox(req.toMap());
 
       final responseData = response.data;
       final isSuccess =

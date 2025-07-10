@@ -36,7 +36,7 @@ class LandHoldingPage extends StatelessWidget {
   void handleSubmit(BuildContext context, LandHoldingState state) {
     if (form.valid) {
       final globalLoadingBloc = context.read<GlobalLoadingBloc>();
-      globalLoadingBloc.add(ShowLoading(message: "Crop Details Submitting..."));
+      globalLoadingBloc.add(ShowLoading(message: "Land Holding Details Submitting..."));
       context.read<LandHoldingBloc>().add(
         LandDetailsSaveEvent(
           landData: form.value,

@@ -1,4 +1,5 @@
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/AppData/globalconfig.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class AppForms {
@@ -77,6 +78,21 @@ class AppForms {
     ),
     'loanAmountRequested': FormControl<String>(
       validators: [Validators.required],
+      asyncValidators: [
+        Validators.delegateAsync((control) async {
+          String val = control.value as String;
+          int loanAmountEntered = int.parse(
+            val.replaceAll(RegExp(r'[^\d]'), ''),
+          );
+          if (loanAmountEntered > Globalconfig.loanAmountMaximum) {
+            print(
+              'loanAmountRequested::delegateAsync => ${Globalconfig.loanAmountMaximum}',
+            );
+            return {'max': '${Globalconfig.loanAmountMaximum}'};
+          }
+          return null;
+        }),
+      ],
     ),
     'natureOfActivity': FormControl<String>(validators: [Validators.required]),
     'occupationType': FormControl<String>(validators: [Validators.required]),
@@ -86,6 +102,7 @@ class AppForms {
     'religion': FormControl<String>(validators: [Validators.required]),
     'caste': FormControl<String>(validators: [Validators.required]),
     'residentialStatus': FormControl<String>(validators: [Validators.required]),
+    'subActivity': FormControl<String>(validators: [Validators.required]),
   });
 
   static final FormGroup COAPPLICANT_DETAILS_FORM = FormGroup({
@@ -137,6 +154,7 @@ class AppForms {
   // Land Holding Form
   static FormGroup buildLandHoldingDetailsForm() {
     return FormGroup({
+      'lslLandRowid': FormControl<String>(validators: []),
       'applicantName': FormControl<String>(validators: [Validators.required]),
       'locationOfFarm': FormControl<String>(validators: [Validators.required]),
       'state': FormControl<String>(validators: [Validators.required]),
@@ -176,6 +194,7 @@ class AppForms {
 
   static FormGroup buildCropDetailsForm() {
     return FormGroup({
+      'lasSeqno':FormControl<String>(validators: []),
       'lasSeason': FormControl<String>(validators: [Validators.required]),
       'lasCrop': FormControl<String>(validators: [Validators.required]),
       'lasAreaofculti': FormControl<String>(validators: [Validators.required]),

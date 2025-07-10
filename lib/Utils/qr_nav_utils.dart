@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/feature/ocr/presentation/page/ocr_page.dart';
-import 'package:newsee/feature/ocr/presentation/page/text_detector_view.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/feature/qrscanner/presentation/page/qr_scanner_page.dart';
 import 'package:xml2json/xml2json.dart';
@@ -34,7 +32,6 @@ void showScannerOptions(BuildContext context) {
               title: Text('OCR'),
               onTap: () {
                 Navigator.pop(context); // Close bottom sheet
-                _navigateToOCRScanner(context);
               },
             ),
           ],
@@ -54,7 +51,11 @@ void _navigateToQRScanner(BuildContext context) {
       builder:
           (context) => QRScannerPage(
             onQRScanned: (result) {
-              _showResultDialog(ctx, result); // Show result in AlertDialog
+              _showResultDialog(
+                ctx,
+                result,
+                'QR',
+              ); // Show result in AlertDialog
             },
           ),
     ),
@@ -63,28 +64,11 @@ void _navigateToQRScanner(BuildContext context) {
 
 // route to OCR page
 
-void _navigateToOCRScanner(BuildContext context) {
-  BuildContext ctx = context;
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder:
-          (context) => OCRScannerPage(
-            onTextDetected: (p0) {
-              print('ocr result => $p0');
-            },
-          ),
-    ),
-  );
-}
-
 // Show AlertDialog with QR scan result
-void _showResultDialog(BuildContext context, String result) {
+void _showResultDialog(BuildContext context, String result, String source) {
   BuildContext ctx = context;
 
   Navigator.pop(context);
-
   final xml2json = Xml2Json();
   xml2json.parse(result);
   final jsonString = xml2json.toBadgerfish();
