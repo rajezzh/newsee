@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/proposal_inbox/domain/modal/proposal_inbox_request.dart';
 import 'package:newsee/feature/proposal_inbox/presentation/bloc/proposal_inbox_bloc.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
@@ -18,7 +19,7 @@ class PendingLeads extends StatelessWidget {
           (context) =>
               ProposalInboxBloc()..add(
                 SearchProposalInboxEvent(
-                  request: ProposalInboxRequest(userid: "AGRI1124"),
+                  request: LeadInboxRequest(userid: '', token: ''),
                 ),
               ),
 
@@ -27,7 +28,7 @@ class PendingLeads extends StatelessWidget {
           Future<void> onRefresh() async {
             context.read<ProposalInboxBloc>().add(
               SearchProposalInboxEvent(
-                request: ProposalInboxRequest(userid: "AGRI1124"),
+                request: LeadInboxRequest(userid: '', token: ''),
               ),
             );
           }

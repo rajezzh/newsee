@@ -13,6 +13,6 @@ import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 
 abstract class LeadRepository {
   Future<AsyncResponseHandler<Failure, List<GroupLeadInbox>>> searchLead(
-    LeadRequest req,
+    LeadInboxRequest req,
   );
 }
