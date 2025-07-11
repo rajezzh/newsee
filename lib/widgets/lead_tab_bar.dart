@@ -12,8 +12,9 @@ import '../feature/leadInbox/presentation/page/completed_leads.dart';
 
 class LeadTabBar extends StatelessWidget {
   final String searchQuery;
+  final TabController? tabController;
 
-  const LeadTabBar({super.key, required this.searchQuery});
+  const LeadTabBar({super.key, required this.searchQuery, this.tabController});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,9 @@ class LeadTabBar extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: TabBarView(children: [ CompletedLeads(searchQuery: searchQuery),PendingLeads(searchQuery: searchQuery),]),
+            child: TabBarView(
+              controller: tabController,
+              children: [ CompletedLeads(searchQuery: searchQuery),PendingLeads(searchQuery: searchQuery),]),
           ),
         ],
       ),
