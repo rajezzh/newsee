@@ -18,6 +18,9 @@ class AppConstants {
 
   static const String Format_yyyy_MM_dd = 'yyyy-MM-dd';
   static const String Format_dd_MM_yyyy = 'dd-MM-yyyy';
+  static const int PAGINATION_ITEM_PER_PAGE = 5;
+  static const String GLOBAL_API_ERROR_MESSAGE = 'Something went wrong';
+  static const String GLOBAL_NO_DATA_FOUND = 'No Data found';
 }
 
 class BioMetricResult {
