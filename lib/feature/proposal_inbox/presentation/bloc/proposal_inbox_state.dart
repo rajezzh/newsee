@@ -8,16 +8,13 @@ class ProposalInboxState extends Equatable {
   final ProposalInboxStatus status;
   final List<ProposalInboxResponseModel>? proposalResponseModel;
   final String? errorMessage;
-  final int currentPage ;
-
+  final int currentPage;
 
   const ProposalInboxState({
     this.status = ProposalInboxStatus.init,
     this.proposalResponseModel,
     this.errorMessage,
-    this.currentPage = 1  ,
-
-    
+    this.currentPage = 1,
   });
 
   factory ProposalInboxState.init() => const ProposalInboxState();
@@ -26,16 +23,14 @@ class ProposalInboxState extends Equatable {
     ProposalInboxStatus? status,
     List<ProposalInboxResponseModel>? proposalResponseModel,
     String? errorMessage,
-        int? currentPage,
-
+    int? currentPage,
   }) {
     return ProposalInboxState(
       status: status ?? this.status,
       proposalResponseModel:
           proposalResponseModel ?? this.proposalResponseModel,
       errorMessage: errorMessage ?? this.errorMessage,
-            currentPage:currentPage ?? this.currentPage
-
+      currentPage: currentPage ?? this.currentPage,
     );
   }
 
