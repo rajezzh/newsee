@@ -6,20 +6,20 @@ enum MpinStatus { init, loading, success, failure }
 class MpinState extends Equatable {
   final List<String> mpin;
   final List<String> confirmMpin;
-  final SaveStatus status;
+  final MpinStatus status;
   final String errorMessage;
 
   const MpinState({
     this.mpin = const ['', '', '', ''],
     this.confirmMpin = const ['', '', '', ''],
-    this.status = SaveStatus.init,
+    this.status = MpinStatus.init ,
     this.errorMessage = '',
   });
 
   MpinState copyWith({
     List<String>? mpin,
     List<String>? confirmMpin,
-    SaveStatus? status,
+    MpinStatus? status,
     String? errorMessage,
   }) {
     return MpinState(

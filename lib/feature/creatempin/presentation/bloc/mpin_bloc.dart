@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:newsee/AppData/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'mpin_event.dart';
 import 'mpin_state.dart';
@@ -22,15 +21,33 @@ class MpinBloc extends Bloc<MpinEvent, MpinState> {
       final pin = state.mpin.join();
       final confirm = state.confirmMpin.join();
 
-      if (pin != confirm) {
-        emit(state.copyWith(status: SaveStatus.failure, errorMessage: 'PINs do not match'));
+      if (pin.length != 4 || confirm.length != 4) {
+        emit(state.copyWith(
+          status: MpinStatus.failure,
+          errorMessage: 'Please enter all 4 digits',
+        ));
         return;
       }
 
-      emit(state.copyWith(status: SaveStatus.loading));
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_mpin', pin);
-      emit(state.copyWith(status: SaveStatus.success));
+      if (pin != confirm) {
+        emit(state.copyWith(
+          status: MpinStatus.failure,
+          errorMessage: 'PINs do not match',
+        ));
+        return;
+      }
+
+
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_mpin', pin);
+        emit(state.copyWith(status: MpinStatus.success));
+      } catch (e) {
+        emit(state.copyWith(
+          status: MpinStatus.failure,
+          errorMessage: 'Failed to save MPIN. Please try again.',
+        ));
+      }
     });
   }
 }

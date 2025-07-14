@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 /*
 @author : Gayathri B    09/05/2025
@@ -13,110 +15,99 @@ import 'package:go_router/go_router.dart';
   - BuildContext context : The context in which the modal bottom sheet is displayed.
 */
 
-mpin(BuildContext context) {
-  // show the custom modal bottom sheet
+
+
+void mpin(BuildContext context) {
   showModalBottomSheet<void>(
     isScrollControlled: true,
-
     context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
     builder: (BuildContext context) {
       final size = MediaQuery.of(context).size;
-      final screenWidth = size.width;
-      final screenHeight = size.height;
-      return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          height: screenHeight * 0.7,
-          // height: screenHeight * 5.0,
-          decoration: BoxDecoration(),
-          padding: EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Align(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
+      String enteredMpin = '';
 
-                  child: Title(
-                    color: Colors.black,
-                    child: Text(
-                      'Enter the MPIN',
-                      style: TextStyle(fontSize: 20),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
+      return GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Container(
+          height: size.height * 0.6,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Center(
+                child: Text(
+                  'Enter Your MPIN',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
               ),
-              Row(
-                // Four TextFields for entering a numeric MPIN
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: List.generate(5, (i) {
-                  return Container(
-                    width: screenWidth * 0.15,
-                    height: screenHeight * 0.08,
-                    margin: EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.black),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    // fingerprint icon for biometric authentication
-                    child:
-                        i == 0
-                            ? Center(
-                              child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.fingerprint,
-                                  size: 35,
-                                  color: Color.fromARGB(255, 3, 9, 110),
-                                ),
-                              ),
-                            )
-                            : Center(
-                              child: TextField(
-                                keyboardType: TextInputType.number,
-                                maxLength: 1,
-                                textAlign: TextAlign.center,
-                                decoration: InputDecoration(
-                                  counterText: '',
-                                  border: InputBorder.none,
-                                ),
-
-                                onChanged: (v) {
-                                  if (v.isNotEmpty && i + 1 < 5) {
-                                    FocusScope.of(context).nextFocus();
-                                  }
-                                },
-                              ),
-                            ),
-                  );
-                }),
+              const SizedBox(height: 40),
+              Center(
+                child: IconButton(
+                  onPressed: () {
+                    // Implement biometric logic if needed
+                  },
+                  icon: const Icon(Icons.fingerprint, size: 40, color: Color(0xFF03096E)),
+                ),
               ),
+              const SizedBox(height: 20),
+              PinCodeTextField(
+                appContext: context,
+                length: 4,
+                obscureText: false,
+                keyboardType: TextInputType.number,
+                animationType: AnimationType.fade,
+                onChanged: (value) {
+                  enteredMpin = value;
+                },
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.box,
+                  borderRadius: BorderRadius.circular(10),
+                  fieldHeight: size.height * 0.07,
+                  fieldWidth: size.width * 0.15,
+                  activeColor: Colors.black,
+                  selectedColor: Colors.black,
+                  inactiveColor: Colors.black,
+                  activeFillColor: Colors.black,
+                  selectedFillColor: Colors.black,
+                  inactiveFillColor: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 40),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 2, 59, 105),
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size(230, 40),
+                  ),
+                  onPressed: () async {
+                    if (enteredMpin.length < 4) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Please enter all 4 digits")),
+                      );
+                      return;
+                    }
 
-              SizedBox(height: 50),
-                 ElevatedButton(
-                            style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll<Color>(
-                                Color.fromARGB(255, 2, 59, 105),
-                              ),
-                              foregroundColor: WidgetStatePropertyAll(
-                                Colors.white,
-                              ),
-                              minimumSize: WidgetStatePropertyAll(
-                                Size(230, 40),
-                              ),
-                            ),
-                            onPressed:(){
-                              context.goNamed('home');
-                            },
-                                
-                                    
-                            child:
-                               
-                                  Text("Login"),
-                                  
-                          ),
+                    final prefs = await SharedPreferences.getInstance();
+                    final storedMpin = prefs.getString('user_mpin');
+
+                    if (storedMpin == enteredMpin) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("MPIN matched. Logging in...")),
+                      );
+                      Navigator.of(context).pop();
+                      context.goNamed('home');
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Incorrect MPIN. Try again.")),
+                      );
+                    }
+                  },
+                  child: const Text("Login"),
+                ),
+              ),
             ],
           ),
         ),
@@ -124,3 +115,4 @@ mpin(BuildContext context) {
     },
   );
 }
+

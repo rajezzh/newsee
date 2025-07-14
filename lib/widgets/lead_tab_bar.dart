@@ -31,7 +31,8 @@ class LeadTabBar extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: TabBarView(children: [ CompletedLeads(searchQuery: searchQuery),PendingLeads(searchQuery: searchQuery),]),
+            child: TabBarView(children: [
+               CompletedLeads(searchQuery: searchQuery),PendingLeads(searchQuery: searchQuery),]),
           ),
         ],
       ),
