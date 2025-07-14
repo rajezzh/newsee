@@ -36,7 +36,9 @@ class CoApplicantFormBottomSheet extends StatefulWidget {
 class _CoApplicantFormBottomSheetState
     extends State<CoApplicantFormBottomSheet> {
   final FormGroup coAppAndGurantorForm = AppForms.COAPPLICANT_DETAILS_FORM;
+  final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
   late final String title;
+
   @override
   void initState() {
     super.initState();
@@ -134,54 +136,96 @@ class _CoApplicantFormBottomSheetState
                         ],
                       ),
                       const Divider(),
-                      SearchableDropdown(
-                        controlName: 'customertype',
-                        label: 'Select CustomerType',
-                        items:
-                            state.lovList!
-                                .where((v) => v.Header == 'CustType')
-                                .toList(),
-                        selItem: () {
-                          final value =
-                              coAppAndGurantorForm
-                                  .control('customertype')
-                                  .value;
-                          if (value == null || value.toString().isEmpty) {
-                            return null;
-                          }
-                          return state.lovList!
-                              .where((v) => v.Header == 'CustType')
-                              .firstWhere(
-                                (lov) => lov.optvalue == value,
-                                orElse:
-                                    () => Lov(
-                                      Header: 'customertype',
-                                      optvalue: '',
-                                      optDesc: '',
-                                      optCode: '',
-                                    ),
-                              );
-                        },
-                        onChangeListener: (Lov val) {
-                          coAppAndGurantorForm.controls['customertype']
-                              ?.updateValue(val.optvalue);
-                          setState(() {
-                            coAppAndGurantorForm.reset(
-                              value: {
-                                'customertype':
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: SearchableDropdown(
+                              controlName: 'customertype',
+                              label: 'Select CustomerType',
+                              items:
+                                  state.lovList!
+                                      .where((v) => v.Header == 'CustType')
+                                      .toList(),
+                              selItem: () {
+                                final value =
                                     coAppAndGurantorForm
                                         .control('customertype')
-                                        .value,
+                                        .value;
+                                if (value == null || value.toString().isEmpty) {
+                                  return null;
+                                }
+                                return state.lovList!
+                                    .where((v) => v.Header == 'CustType')
+                                    .firstWhere(
+                                      (lov) => lov.optvalue == value,
+                                      orElse:
+                                          () => Lov(
+                                            Header: 'customertype',
+                                            optvalue: '',
+                                            optDesc: '',
+                                            optCode: '',
+                                          ),
+                                    );
                               },
-                              removeFocus: true,
-                            );
-                          });
-                          showHideCifField(
-                            context,
-                            coAppAndGurantorForm,
-                            widget.tabController,
-                          );
-                        },
+                              onChangeListener: (Lov val) {
+                                coAppAndGurantorForm.controls['customertype']
+                                    ?.updateValue(val.optvalue);
+                                setState(() {
+                                  coAppAndGurantorForm.reset(
+                                    value: {
+                                      'customertype':
+                                          coAppAndGurantorForm
+                                              .control('customertype')
+                                              .value,
+                                    },
+                                    removeFocus: true,
+                                  );
+                                });
+                                showHideCifField(
+                                  context,
+                                  coAppAndGurantorForm,
+                                  // widget.tabController,
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          if (coAppAndGurantorForm
+                                  .control('customertype')
+                                  .value ==
+                              '001')
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color.fromARGB(
+                                    255,
+                                    3,
+                                    9,
+                                    110,
+                                  ),
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                    vertical: 10,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                onPressed:
+                                    state.isCifValid
+                                        ? null
+                                        : () => validateDedupe(
+                                          context,
+                                          widget.tabController,
+                                        ),
+
+                                child: const Text("Dedupe"),
+                              ),
+                            ),
+                        ],
                       ),
                       SearchableDropdown(
                         controlName: 'constitution',
@@ -257,6 +301,7 @@ class _CoApplicantFormBottomSheetState
                                           cifSearch(
                                             context,
                                             coAppAndGurantorForm,
+                                            widget.applicantType,
                                           );
                                         },
                                 child:
@@ -544,14 +589,17 @@ class _CoApplicantFormBottomSheetState
                           ),
                           onPressed: () {
                             print(
-                              "coapplicant Details value ${coAppAndGurantorForm.value}, ${state.isCifValid}",
+                              "coapplicant Details value ${coAppAndGurantorForm.value}, ${coAppAndGurantorForm.valid}, ${state.isCifValid}",
                             );
-                            if ((coAppAndGurantorForm.value['customerType'] ==
+                            if ((coAppAndGurantorForm
+                                            .control('customertype')
+                                            .value ==
                                         '001' ||
                                     coAppAndGurantorForm
-                                            .value['customerType'] ==
+                                            .control('customertype')
+                                            .value ==
                                         '002') &&
-                                !state.isCifValid) {
+                                state.isCifValid == false) {
                               showErrorDialog(
                                 context,
                                 'Please validate Dedupe/CIF before submitting.',
@@ -581,6 +629,16 @@ class _CoApplicantFormBottomSheetState
                                 );
                                 Navigator.of(context).pop({});
                               } else {
+                                coAppAndGurantorForm.controls.forEach((
+                                  key,
+                                  control,
+                                ) {
+                                  if (control.invalid) {
+                                    print(
+                                      'Field "$key" is invalid: ${control.errors}',
+                                    );
+                                  }
+                                });
                                 coAppAndGurantorForm.markAllAsTouched();
                                 showErrorDialog(
                                   context,

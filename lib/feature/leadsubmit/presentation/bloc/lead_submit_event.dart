@@ -24,6 +24,7 @@ class LeadSubmitPushEvent extends LeadSubmitEvent {
   final PersonalData? personalData;
   final AddressData? addressData;
   final List<CoapplicantData>? coAppAndGurantorData;
+  final String isAddCoappGurantor;
   LeadSubmitPushEvent({
     required this.loanType,
     required this.loanProduct,
@@ -31,6 +32,7 @@ class LeadSubmitPushEvent extends LeadSubmitEvent {
     required this.personalData,
     required this.addressData,
     required this.coAppAndGurantorData,
+    required this.isAddCoappGurantor,
   });
 }
 

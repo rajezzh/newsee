@@ -131,8 +131,8 @@ class AppForms {
     ),
     'aadharRefNo': FormControl<String>(
       validators: [
-        Validators.pattern(AppConstants.AADHAAR_PATTERN),
-        Validators.minLength(10),
+        // Validators.pattern(AppConstants.AADHAAR_PATTERN),
+        // Validators.minLength(10),
       ],
     ),
     'address1': FormControl<String>(validators: [Validators.required]),

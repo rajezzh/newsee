@@ -8,13 +8,14 @@ import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/page/dedupe_search.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-final dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
+final FormGroup dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
 
-void cifSearch(BuildContext context, FormGroup form) {
+void cifSearch(BuildContext context, FormGroup form, String? applicantType) {
+  final String type = applicantType == 'C' ? 'coapplicant' : 'gurantor';
   if (form.control('cifNumber').valid) {
     final req = CIFRequest(
       cifId: form.control('cifNumber').value,
-      type: 'borrower',
+      type: type,
       token: ApiConstants.api_qa_token,
     );
     context.read<CoappDetailsBloc>().add(
@@ -25,31 +26,33 @@ void cifSearch(BuildContext context, FormGroup form) {
   }
 }
 
-Future<void> showHideCifField(
-  BuildContext context,
-  FormGroup form,
-  tabController,
-) async {
+Future<void> showHideCifField(BuildContext context, FormGroup form) async {
   final customerType = form.control('customertype').value;
   print('customertype: $customerType');
   if (customerType != '002') {
+    print('customertype: $customerType');
     form.control('cifNumber').clearValidators();
     form.control('cifNumber').updateValue(null);
-    form.control('cifNumber').markAsPristine();
+    // form.control('cifNumber').markAsPristine();
     form.control('cifNumber').updateValueAndValidity();
-    if (customerType == '001') {
-      await _openModalSheet(context, dedupeForm, tabController!);
-    }
+    // if (customerType == '001') {
+    //   await _openModalSheet(context, dedupeForm, tabController!);
+    // }
   } else if (customerType == '002') {
+    print('customertype rdff: $customerType');
     context.read<CoappDetailsBloc>().add(CifEditManuallyEvent());
     form.control('cifNumber').setValidators([Validators.required]);
     form.control('cifNumber').updateValueAndValidity();
   }
 }
 
+validateDedupe(BuildContext context, TabController? tabController) {
+  _openModalSheet(context, tabController!);
+}
+
 Future<void> _openModalSheet(
   BuildContext context,
-  FormGroup dedupeForm,
+  // FormGroup dedupeForm,
   TabController tabController,
 ) async {
   try {
@@ -97,6 +100,8 @@ Future<void> _openModalSheet(
                             tabController.animateTo(tabController.index + 1);
                           }
                         }
+                      } else {
+                        showErrorDialog(context, state.errorMsg);
                       }
                     },
                   ),
@@ -110,7 +115,6 @@ Future<void> _openModalSheet(
 
     print('dedupResule: $result');
   } catch (e) {
-    print('dedupeopen: $e');
     showErrorDialog(context, e);
   }
 }

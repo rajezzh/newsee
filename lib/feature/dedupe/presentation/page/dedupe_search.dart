@@ -135,6 +135,8 @@ class DedupeSearch extends StatelessWidget {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.errorMsg!))),
+
+                if (onSuccess != null) {onSuccess!(state)},
               },
           },
       builder: (context, state) {

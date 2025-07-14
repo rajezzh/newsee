@@ -6,6 +6,8 @@
 
  */
 
+import 'dart:typed_data';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -205,6 +207,7 @@ fetching dedupe for co applicant reusing dedupe page cif search logic here
   // populate dedupe response to coapplicant form
   CoapplicantData mapCoappAndGurantorDataFromDedupe(dynamic response) {
     print('dedupe response: $response');
+
     return CoapplicantData(
       firstName: response.name ?? '',
       email: response.email ?? '',
@@ -219,10 +222,10 @@ fetching dedupe for co applicant reusing dedupe page cif search logic here
       pincode: response.pincode ?? '',
       aadharRefNo: response.maskAadhaarNumber ?? '',
       dob: getCorrectDateFormat(response.dateOfBirth),
-      // state: getStateCode(response.state, state.stateCityMaster),
-      // cityDistrict: getStateCode(response.district, state.cityMaster),
-      state: '',
-      cityDistrict: '',
+      state: getStateCode(response.state, state.stateCityMaster),
+      cityDistrict: getStateCode(response.district, state.districtMaster),
+      // state: '',
+      // cityDistrict: '',
     );
   }
 

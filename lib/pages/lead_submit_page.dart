@@ -48,6 +48,7 @@ class LeadSubmitPage extends StatelessWidget {
     required Dedupe dedupeData,
     required AddressData addressData,
     required List<CoapplicantData> coAppAndGurantorData,
+    required isAddCoappGurantor,
   }) async {
     String? loanAmountFormatted = personlData.loanAmountRequested?.replaceAll(
       ',',
@@ -69,6 +70,7 @@ class LeadSubmitPage extends StatelessWidget {
       personalData: updatedPersonalData,
       addressData: addressData,
       coAppAndGurantorData: coAppAndGurantorData,
+      isAddCoappGurantor: isAddCoappGurantor,
     );
     context.read<LeadSubmitBloc>().add(leadSubmitPushEvent);
   }
@@ -207,6 +209,7 @@ class LeadSubmitPage extends StatelessWidget {
           PersonalData? personalData = personalState?.personalData;
           AddressData? addressData = addressState?.addressData;
           List<CoapplicantData>? coguappData = coguappState?.coAppList;
+          String? isWhetherAddCoappGurantor = coguappState?.isApplicantsAdded;
 
           print('addressData-------------->$addressData');
           return state.leadId == null
@@ -227,6 +230,7 @@ class LeadSubmitPage extends StatelessWidget {
                               loanproductBloc?.state.selectedProduct
                                   as ProductMaster,
                           coguappData: coguappData,
+                          isAddCoappGurantor: isWhetherAddCoappGurantor,
                           context: context,
                           status: state.leadSubmitStatus,
                         )
@@ -323,6 +327,7 @@ class LeadSubmitPage extends StatelessWidget {
     required Dedupe dedupeData,
     required ProductMaster productMaster,
     required List<CoapplicantData>? coguappData,
+    required String? isAddCoappGurantor,
     required BuildContext context,
     required status,
   }) {
@@ -399,6 +404,7 @@ class LeadSubmitPage extends StatelessWidget {
                   loanType: loanType,
                   dedupeData: dedupeData,
                   coAppAndGurantorData: coguappData!,
+                  isAddCoappGurantor: isAddCoappGurantor,
                   context: context,
                 );
               },

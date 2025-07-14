@@ -128,8 +128,16 @@ class _CoApplicantPageState extends State<CoApplicantPage> {
                       elevation: 3,
                       child: ListTile(
                         leading: const Icon(Icons.person),
-                        title: Text(
-                          "${data.firstName} ${data.lastName} (${type == 'C' ? 'Co-Applicant' : 'Gurantor'})",
+                        title: Row(
+                          children: [
+                            Expanded(
+                              child: Text("${data.firstName} ${data.lastName}"),
+                            ),
+                            Text(
+                              "(${type == 'C' ? 'Co-Applicant' : 'Guarantor'})",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
                         ),
                         subtitle: Text(
                           "Mobile Number: ${data.primaryMobileNumber}",
