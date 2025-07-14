@@ -23,16 +23,16 @@ class LeadTileCardShimmer extends StatelessWidget {
 
   const LeadTileCardShimmer({
     Key? key,
-    required this.title,
-    required this.subtitle,
+    this.title = 'Loading...',
+    this.subtitle = 'Loading...',
     required this.icon,
     this.color = Colors.teal,
-    required this.type,
-    required this.product,
-    required this.phone,
-    required this.createdon,
-    required this.location,
-    required this.loanamount,
+    this.type = 'Loading...',
+    this.product = 'Loading...',
+    this.phone = 'Loading...',
+    this.createdon = 'Loading...',
+    this.location = 'Loading...',
+    this.loanamount = 'Loading...',
   }) : super(key: key);
 
   @override

@@ -26,6 +26,19 @@ class LeadRepositoryImpl implements LeadRepository {
     LeadInboxRequest req,
   ) async {
     try {
+      /* 
+        pageno - leadslist 
+        map<int,List<GroupLeadInbox>>> cachedLeadInbox = {
+          1 : [
+            ...GroupLeadInbox
+          ],
+          2:[
+                        ...GroupLeadInbox
+
+          ]
+        }
+        check the cache 
+       */
       final response = await LeadRemoteDatasource(
         dio: ApiClient().getDio(),
       ).searchLead(req.toMap());
