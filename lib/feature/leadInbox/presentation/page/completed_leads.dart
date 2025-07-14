@@ -56,7 +56,7 @@ class CompletedLeads extends StatelessWidget {
 
           // logic for search functionaluty , when user type search query
           // in searchbar
-          List<Map<String, dynamic>>? filteredLeads = onSearchListItems(
+          List<Map<String, dynamic>>? filteredLeads = onSearchLeadInbox(
             items: allLeads,
             searchQuery: searchQuery,
           );
@@ -80,12 +80,12 @@ class CompletedLeads extends StatelessWidget {
     BuildContext context,
   ) {
     final currentPage = state.currentPage - 1;
-    final startIndex = currentPage * AppConstants.PAGINATION_ITEM_PER_PAGE;
-    final endIndex = ((currentPage + 1) * AppConstants.PAGINATION_ITEM_PER_PAGE)
-        .clamp(0, filteredLeads.length);
-    // this is the selected index
+    // final startIndex = currentPage * AppConstants.PAGINATION_ITEM_PER_PAGE;
+    // final endIndex = ((currentPage + 1) * AppConstants.PAGINATION_ITEM_PER_PAGE)
+    //     .clamp(0, filteredLeads.length);
+    // // this is the selected index
 
-    final paginatedLeads = filteredLeads.sublist(startIndex, endIndex);
+    // final paginatedLeads = filteredLeads.sublist(startIndex, endIndex);
 
     //
     return RefreshIndicator(
@@ -94,9 +94,9 @@ class CompletedLeads extends StatelessWidget {
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: paginatedLeads.length,
+              itemCount: filteredLeads.length,
               itemBuilder: (context, index) {
-                final lead = paginatedLeads[index];
+                final lead = filteredLeads[index];
                 return LeadTileCard(
                   title: lead['lleadfrstname'] ?? 'N/A',
                   subtitle: lead['lleadid'] ?? 'N/A',

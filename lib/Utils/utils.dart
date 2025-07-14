@@ -218,7 +218,25 @@ String? removeSpecialCharacters(String formval) {
   }
 }
 
-List<Map<String, dynamic>>? onSearchListItems({
+List<Map<String, dynamic>>? onSearchLeadInbox({
+  required List<Map<String, dynamic>>? items,
+  required String searchQuery,
+}) {
+  final filteredLeads =
+      items?.where((lead) {
+        final name = (lead['lleadfrstname'] ?? '').toLowerCase();
+        final id = (lead['lleadid'] ?? '').toLowerCase();
+        final phone = (lead['lleadmobno'] ?? '').toLowerCase();
+        final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+        return name.contains(searchQuery.toLowerCase()) ||
+            id.contains(searchQuery.toLowerCase()) ||
+            phone.contains(searchQuery.toLowerCase()) ||
+            loan.contains(searchQuery.toLowerCase());
+      }).toList();
+  return filteredLeads;
+}
+
+List<Map<String, dynamic>>? onSearchApplicationInbox({
   required List<Map<String, dynamic>>? items,
   required String searchQuery,
 }) {
