@@ -10,3 +10,8 @@ class SearchLeadEvent extends LeadEvent {
   final int pageCount;
   const SearchLeadEvent({this.pageNo = 0, this.pageCount = 20});
 }
+
+class CreateProposalLeadEvent extends LeadEvent {
+  final String leadId;
+  const CreateProposalLeadEvent({required this.leadId});
+}

@@ -6,6 +6,7 @@ import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_route_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/proposal_utils.dart';
 import 'package:newsee/Utils/shared_preference_handler.dart';
 import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/Utils/utils.dart';
@@ -241,32 +242,6 @@ class LeadSubmitPage extends StatelessWidget {
         },
       ),
     );
-  }
-
-  void createProposal(BuildContext context, LeadSubmitState state) {
-    // when lead is submitted success
-    if (state.proposalSubmitStatus == SaveStatus.init && state.leadId != null && state.proposalNo == null) {
-      context.read<LeadSubmitBloc>().add(
-        CreateProposalEvent(
-          proposalCreationRequest: ProposalCreationRequest(
-            leadId: state.leadId,
-          ),
-        ),
-      );
-    } else if (state.proposalNo != null) {
-      final applicantData =
-          state.leadSubmitRequest?.individualNonIndividualDetails;
-      final applicantName =
-          '${applicantData?.firstName} ${applicantData?.lastName}';
-
-      context.pushNamed(
-        'landholdings',
-        extra: {
-          'proposalNumber': state.proposalNo,
-          'applicantName': applicantName,
-        },
-      );
-    }
   }
 
   void openProposalSheet(BuildContext context, LeadSubmitState state) {

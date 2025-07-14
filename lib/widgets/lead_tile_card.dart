@@ -20,6 +20,8 @@ class LeadTileCard extends StatelessWidget {
   final String location;
   final String loanamount;
   final VoidCallback? onTap;
+  final bool showarrow;
+  final Widget? button;
 
   const LeadTileCard({
     Key? key,
@@ -34,6 +36,8 @@ class LeadTileCard extends StatelessWidget {
     required this.location,
     required this.loanamount,
     this.onTap,
+    this.showarrow = true,
+    this.button,
   }) : super(key: key);
 
   @override
@@ -70,11 +74,13 @@ class LeadTileCard extends StatelessWidget {
                       ],
                     ),
                   ),
+                  if(showarrow)
                   const Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
                     color: Colors.black,
                   ),
+                   if (button != null) button!,
                 ],
               ),
               const SizedBox(height: 12),

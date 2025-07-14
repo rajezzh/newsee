@@ -8,8 +8,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:newsee/AppData/app_api_constants.dart';
 import 'package:newsee/AppData/app_constants.dart';
+import 'package:newsee/Utils/proposal_utils.dart';
 import 'package:newsee/Utils/utils.dart';
+import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/feature/leadsubmit/domain/modal/proposal_creation_request.dart';
+import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
+import 'package:newsee/widgets/success_bottom_sheet.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:newsee/feature/leadInbox/presentation/bloc/lead_bloc.dart';
 import 'package:newsee/widgets/lead_tile_card-shimmer.dart';
@@ -24,7 +31,31 @@ class CompletedLeads extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LeadBloc()..add(SearchLeadEvent()),
-      child: BlocBuilder<LeadBloc, LeadState>(
+      child: BlocConsumer<LeadBloc, LeadState>(
+        listener: (context, state) => {
+          if (state.proposalSubmitStatus == SaveStatus.success && state.proposalNo != null) {
+            showSuccessBottomSheet(
+              context: context,
+              headerTxt: ApiConstants.api_response_success,
+              lead: "Proposal No : ${state.proposalNo}",
+              message: "Proposal successfully Created",
+              onPressedLeftButton: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              },
+              onPressedRightButton: () {
+                context.pop();
+                final tabController = DefaultTabController.of(context);
+                if (tabController.index < tabController.length - 1) {
+                  tabController.animateTo(tabController.index + 1);
+                }
+              },
+              leftButtonLabel: 'Cancel',
+              rightButtonLabel: 'Go To Application',
+            )
+          }
+        },
         builder: (context, state) {
           Future<void> onRefresh() async {
             context.read<LeadBloc>().add(SearchLeadEvent());
