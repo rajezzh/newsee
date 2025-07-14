@@ -11,7 +11,6 @@ import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
-import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/k_willpopscope.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -101,7 +100,7 @@ class CropDetailsPage extends StatelessWidget {
 
         print("handleSave =>  ${form.value}");
 
-        final cropFormData = CropDetailsModal.fromForm(form.value);
+        final cropFormData = CropDetailsModal.fromForm(form.rawValue);
         context.read<CropyieldpageBloc>().add(
           CropFormSaveEvent(cropData: cropFormData),
         );
@@ -155,7 +154,7 @@ class CropDetailsPage extends StatelessWidget {
       form.control('lasPrePerAcre').updateValue(prePerAcre);
       form.control('lasPreToCollect').updateValue(premiumCollecte);
 
-      final cropFormData = CropDetailsModal.fromForm(form.value);
+      final cropFormData = CropDetailsModal.fromForm(form.rawValue);
       context.read<CropyieldpageBloc>().add(
         CropDetailsUpdateEvent(
           cropData: cropFormData,
@@ -450,10 +449,13 @@ class CropDetailsPage extends StatelessWidget {
                 }
               } else if (state.status == SaveStatus.mastersucess) {
                 form.reset();
+                form.control('lasSeqno').updateValue(null);
               } else if (state.status == SaveStatus.reset) {
                 form.reset();
+                form.control('lasSeqno').updateValue(null);
               } else if (state.status == SaveStatus.success) {
                 form.reset();
+                form.control('lasSeqno').updateValue(null);
                 context.pop();
                 globalLoadingBloc.add(HideLoading());
                 showSnack(
@@ -472,17 +474,21 @@ class CropDetailsPage extends StatelessWidget {
                 form.patchValue(state.selectedCropData!.toForm());
                 if (state.selectedCropData!.notifiedCropFlag!) {
                   form.control('lasPrePerAcre').markAsEnabled();
-                  form.control('lasPreToCollect').markAsEnabled();
                   form.control('lasPrePerAcre').setValidators([
                     Validators.required,
                   ]);
+
+                  form.control('lasPreToCollect').markAsEnabled();
                   form.control('lasPreToCollect').setValidators([
                     Validators.required,
                   ]);
                 } else {
+                  form.control('lasPrePerAcre').updateValue(null);
                   form.control('lasPrePerAcre').markAsDisabled();
-                  form.control('lasPreToCollect').markAsDisabled();
                   form.control('lasPrePerAcre').clearValidators();
+
+                  form.control('lasPreToCollect').updateValue(null);
+                  form.control('lasPreToCollect').markAsDisabled();
                   form.control('lasPreToCollect').clearValidators();
                 }
                 form.updateValueAndValidity();
