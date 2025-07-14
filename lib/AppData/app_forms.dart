@@ -108,7 +108,7 @@ class AppForms {
   static final FormGroup COAPPLICANT_DETAILS_FORM = FormGroup({
     'customertype': FormControl<String>(validators: [Validators.required]),
     'constitution': FormControl<String>(validators: [Validators.required]),
-    'cifNumber': FormControl<String>(validators: [Validators.required]),
+    'cifNumber': FormControl<String>(validators: []),
     'title': FormControl<String>(validators: [Validators.required]),
     'firstName': FormControl<String>(validators: [Validators.required]),
     'middleName': FormControl<String>(validators: [Validators.required]),
@@ -119,7 +119,7 @@ class AppForms {
       validators: [Validators.required, Validators.minLength(10)],
     ),
     'secondaryMobileNumber': FormControl<String>(
-      validators: [Validators.required, Validators.minLength(10)],
+      validators: [Validators.minLength(10)],
     ),
     'email': FormControl<String>(validators: [Validators.email]),
     'aadhaar': FormControl<String>(validators: []),
@@ -137,7 +137,7 @@ class AppForms {
     ),
     'address1': FormControl<String>(validators: [Validators.required]),
     'address2': FormControl<String>(validators: [Validators.required]),
-    'address3': FormControl<String>(validators: [Validators.required]),
+    'address3': FormControl<String>(validators: []),
     'state': FormControl<String>(validators: [Validators.required]),
     'cityDistrict': FormControl<String>(validators: [Validators.required]),
     'pincode': FormControl<String>(validators: [Validators.required]),
@@ -194,7 +194,7 @@ class AppForms {
 
   static FormGroup buildCropDetailsForm() {
     return FormGroup({
-      'lasSeqno':FormControl<String>(validators: []),
+      'lasSeqno': FormControl<String>(validators: []),
       'lasSeason': FormControl<String>(validators: [Validators.required]),
       'lasCrop': FormControl<String>(validators: [Validators.required]),
       'lasAreaofculti': FormControl<String>(validators: [Validators.required]),
@@ -206,4 +206,54 @@ class AppForms {
       'lasPreToCollect': FormControl<String>(validators: [Validators.required]),
     });
   }
+
+  // static FormGroup coAppGurantorDetailsForm() {
+  //   return FormGroup({
+  //     'customertype': FormControl<String>(validators: [Validators.required]),
+  //     'constitution': FormControl<String>(validators: [Validators.required]),
+  //     'cifNumber': FormControl<String>(validators: [Validators.required]),
+  //     'title': FormControl<String>(validators: [Validators.required]),
+  //     'firstName': FormControl<String>(validators: [Validators.required]),
+  //     'middleName': FormControl<String>(validators: [Validators.required]),
+  //     'lastName': FormControl<String>(validators: [Validators.required]),
+  //     'relationshipFirm': FormControl<String>(
+  //       validators: [Validators.required],
+  //     ),
+  //     'dob': FormControl<String>(validators: [Validators.required]),
+  //     'primaryMobileNumber': FormControl<String>(
+  //       validators: [Validators.required, Validators.minLength(10)],
+  //     ),
+  //     'secondaryMobileNumber': FormControl<String>(
+  //       validators: [Validators.required, Validators.minLength(10)],
+  //     ),
+  //     'email': FormControl<String>(validators: [Validators.email]),
+  //     'aadhaar': FormControl<String>(),
+  //     'panNumber': FormControl<String>(
+  //       validators: [
+  //         Validators.pattern(AppConstants.PAN_PATTERN),
+  //         Validators.minLength(10),
+  //       ],
+  //     ),
+  //     'aadharRefNo': FormControl<String>(
+  //       validators: [
+  //         Validators.pattern(AppConstants.AADHAAR_PATTERN),
+  //         Validators.minLength(10),
+  //       ],
+  //     ),
+  //     'address1': FormControl<String>(validators: [Validators.required]),
+  //     'address2': FormControl<String>(validators: [Validators.required]),
+  //     'address3': FormControl<String>(validators: [Validators.required]),
+  //     'state': FormControl<String>(validators: [Validators.required]),
+  //     'cityDistrict': FormControl<String>(validators: [Validators.required]),
+  //     'pincode': FormControl<String>(validators: [Validators.required]),
+  //     'loanLiabilityCount': FormControl<String>(
+  //       validators: [Validators.required],
+  //     ),
+  //     'loanLiabilityAmount': FormControl<String>(
+  //       validators: [Validators.required],
+  //     ),
+  //     'depositCount': FormControl<String>(validators: [Validators.required]),
+  //     'depositAmount': FormControl<String>(validators: [Validators.required]),
+  //   });
+  // }
 }

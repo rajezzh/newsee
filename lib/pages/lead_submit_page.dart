@@ -47,7 +47,7 @@ class LeadSubmitPage extends StatelessWidget {
     required LoanProduct loanProduct,
     required Dedupe dedupeData,
     required AddressData addressData,
-    required CoapplicantData coapplicantData,
+    required List<CoapplicantData> coAppAndGurantorData,
   }) async {
     String? loanAmountFormatted = personlData.loanAmountRequested?.replaceAll(
       ',',
@@ -68,7 +68,7 @@ class LeadSubmitPage extends StatelessWidget {
       dedupe: dedupeData,
       personalData: updatedPersonalData,
       addressData: addressData,
-      coapplicantData: coapplicantData,
+      coAppAndGurantorData: coAppAndGurantorData,
     );
     context.read<LeadSubmitBloc>().add(leadSubmitPushEvent);
   }
@@ -181,14 +181,14 @@ class LeadSubmitPage extends StatelessWidget {
           final loanproductBloc = context.watch<LoanproductBloc?>();
           final addressBloc = context.watch<AddressDetailsBloc?>();
           final dedupeBloc = context.watch<DedupeBloc?>();
-          final coappBloc = context.watch<CoappDetailsBloc?>();
+          final coguappBloc = context.watch<CoappDetailsBloc?>();
 
           final personalState = personalDetailsBloc?.state;
 
           final loanproductState = loanproductBloc?.state;
           final addressState = addressBloc?.state;
           final dedupeState = dedupeBloc?.state;
-          final coappState = coappBloc?.state;
+          final coguappState = coguappBloc?.state;
 
           LoanType loanType = LoanType(
             typeOfLoan: loanproductState?.selectedProductScheme?.optionValue,
@@ -206,7 +206,7 @@ class LeadSubmitPage extends StatelessWidget {
           );
           PersonalData? personalData = personalState?.personalData;
           AddressData? addressData = addressState?.addressData;
-          CoapplicantData? coappData = coappState?.selectedCoApp;
+          List<CoapplicantData>? coguappData = coguappState?.coAppList;
 
           print('addressData-------------->$addressData');
           return state.leadId == null
@@ -226,7 +226,7 @@ class LeadSubmitPage extends StatelessWidget {
                           productMaster:
                               loanproductBloc?.state.selectedProduct
                                   as ProductMaster,
-                          coappData: coappData,
+                          coguappData: coguappData,
                           context: context,
                           status: state.leadSubmitStatus,
                         )
@@ -242,6 +242,34 @@ class LeadSubmitPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void createProposal(BuildContext context, LeadSubmitState state) {
+    // when lead is submitted success
+    if (state.proposalSubmitStatus == SaveStatus.init &&
+        state.leadId != null &&
+        state.proposalNo == null) {
+      context.read<LeadSubmitBloc>().add(
+        CreateProposalEvent(
+          proposalCreationRequest: ProposalCreationRequest(
+            leadId: state.leadId,
+          ),
+        ),
+      );
+    } else if (state.proposalNo != null) {
+      final applicantData =
+          state.leadSubmitRequest?.individualNonIndividualDetails;
+      final applicantName =
+          '${applicantData?.firstName} ${applicantData?.lastName}';
+
+      context.pushNamed(
+        'landholdings',
+        extra: {
+          'proposalNumber': state.proposalNo,
+          'applicantName': applicantName,
+        },
+      );
+    }
   }
 
   void openProposalSheet(BuildContext context, LeadSubmitState state) {
@@ -294,7 +322,7 @@ class LeadSubmitPage extends StatelessWidget {
     required LoanType loanType,
     required Dedupe dedupeData,
     required ProductMaster productMaster,
-    required CoapplicantData? coappData,
+    required List<CoapplicantData>? coguappData,
     required BuildContext context,
     required status,
   }) {
@@ -370,7 +398,7 @@ class LeadSubmitPage extends StatelessWidget {
                   loanProduct: loanProduct,
                   loanType: loanType,
                   dedupeData: dedupeData,
-                  coapplicantData: coappData!,
+                  coAppAndGurantorData: coguappData!,
                   context: context,
                 );
               },

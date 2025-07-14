@@ -7,12 +7,14 @@
  */
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/DBConstants/table_key_geographymaster.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/db/db_config.dart';
+import 'package:newsee/feature/aadharvalidation/domain/modal/aadharvalidate_response.dart';
 import 'package:newsee/feature/addressdetails/data/repository/citylist_repo_impl.dart';
 import 'package:newsee/feature/addressdetails/domain/model/citydistrictrequest.dart';
 import 'package:newsee/feature/addressdetails/domain/repository/cityrepository.dart';
@@ -20,6 +22,7 @@ import 'package:newsee/feature/cif/data/repository/cif_respository_impl.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_response.dart';
 import 'package:newsee/feature/cif/domain/repository/cif_repository.dart';
+import 'package:newsee/feature/coapplicant/applicants_utility_service.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
@@ -36,7 +39,35 @@ final class CoappDetailsBloc
     on<CoAppDetailsInitEvent>(initCoAppDetailsPage);
     on<CoAppDetailsSaveEvent>(saveCoAppDetailsPage);
     on<OnStateCityChangeEvent>(getCityListBasedOnState);
-    on<SearchCifEvent>(onSearchCif);
+    on<CoAppGurantorSearchCifEvent>(onSearchCif);
+    on<IsCoAppOrGurantorAdd>(addCoappOrGurantor);
+    on<DeleteCoApplicantEvent>(_deleteApplicant);
+    on<CoAppDetailsDedupeEvent>(_onDedupeResponse);
+    on<CifEditManuallyEvent>((event, emit) {
+      emit(state.copyWith(isCifValid: false));
+    });
+  }
+
+  _deleteApplicant(DeleteCoApplicantEvent event, Emitter emit) {
+    try {
+      final updatedList =
+          state.coAppList
+              .where(
+                (e) =>
+                    !(e.primaryMobileNumber ==
+                            event.coapplicantData.primaryMobileNumber &&
+                        e.applicantType == event.coapplicantData.applicantType),
+              )
+              .toList();
+
+      emit(state.copyWith(coAppList: updatedList, status: SaveStatus.success));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  addCoappOrGurantor(IsCoAppOrGurantorAdd event, Emitter emit) {
+    emit(state.copyWith(isApplicantsAdded: event.addapplicants));
   }
 
   Future<void> initCoAppDetailsPage(
@@ -65,14 +96,26 @@ final class CoappDetailsBloc
     CoAppDetailsSaveEvent event,
     Emitter emit,
   ) async {
-    print('PersonalData => ${event.coapplicantData}');
+    try {
+      final updatedList = List<CoapplicantData>.from(state.coAppList);
 
-    emit(
-      state.copyWith(
-        selectedCoApp: event.coapplicantData,
-        status: SaveStatus.success,
-      ),
-    );
+      if (event.index != null && event.index! < updatedList.length) {
+        updatedList[event.index!] = event.coapplicantData;
+      } else {
+        updatedList.add(event.coapplicantData);
+      }
+
+      emit(
+        state.copyWith(
+          coAppList: updatedList,
+          status: SaveStatus.success,
+          isApplicantsAdded: "Y",
+          isCifValid: false,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(status: SaveStatus.failure, isCifValid: false));
+    }
   }
 
   Future<void> getCityListBasedOnState(
@@ -114,7 +157,7 @@ fetching dedupe for co applicant reusing dedupe page cif search logic here
 
  */
 
-  Future onSearchCif(SearchCifEvent event, Emitter emit) async {
+  Future onSearchCif(CoAppGurantorSearchCifEvent event, Emitter emit) async {
     emit(state.copyWith(status: SaveStatus.loading));
     CifRepository dedupeRepository = CifRepositoryImpl();
     final response = await dedupeRepository.searchCif(event.request);
@@ -128,11 +171,83 @@ fetching dedupe for co applicant reusing dedupe page cif search logic here
         state.copyWith(
           status: SaveStatus.dedupesuccess,
           selectedCoApp: coapplicantDataFromCif,
+          isCifValid: true,
         ),
       );
     } else {
       print('cif failure response.left ');
-      emit(state.copyWith(status: SaveStatus.dedupefailure));
+      emit(state.copyWith(status: SaveStatus.dedupefailure, isCifValid: false));
+    }
+  }
+
+  Future<void> _onDedupeResponse(
+    CoAppDetailsDedupeEvent event,
+    Emitter emit,
+  ) async {
+    try {
+      final coapplicantDataFromDedupe = mapCoappAndGurantorDataFromDedupe(
+        event.coapplicantData,
+      );
+
+      emit(
+        state.copyWith(
+          status: SaveStatus.dedupesuccess,
+          selectedCoApp: coapplicantDataFromDedupe,
+          isCifValid: true,
+        ),
+      );
+    } catch (e) {
+      print(e);
+      emit(state.copyWith(status: SaveStatus.dedupefailure, isCifValid: false));
+    }
+  }
+
+  // populate dedupe response to coapplicant form
+  CoapplicantData mapCoappAndGurantorDataFromDedupe(dynamic response) {
+    print('dedupe response: $response');
+    return CoapplicantData(
+      firstName: response.name ?? '',
+      email: response.email ?? '',
+      primaryMobileNumber: response.mobile ?? '',
+      address1:
+          (response.careOf?.isNotEmpty ??
+                  false || response.street?.isNotEmpty ??
+                  false)
+              ? '${response.careOf ?? ''} ${response.street ?? ''}'.trim()
+              : '',
+      address2: response.landmark ?? '',
+      pincode: response.pincode ?? '',
+      aadharRefNo: response.maskAadhaarNumber ?? '',
+      dob: getCorrectDateFormat(response.dateOfBirth),
+      // state: getStateCode(response.state, state.stateCityMaster),
+      // cityDistrict: getStateCode(response.district, state.cityMaster),
+      state: '',
+      cityDistrict: '',
+    );
+  }
+
+  // Search for the matching GeographyMaster based on stateName
+  String getStateCode(String stateName, List<GeographyMaster>? list) {
+    if (list == null || list.isEmpty) {
+      return '';
+    }
+
+    GeographyMaster? geographyMaster = list.firstWhere(
+      (val) => val.value.toLowerCase() == stateName.toLowerCase(),
+      orElse:
+          () => GeographyMaster(
+            stateParentId: '',
+            cityParentId: '',
+            code: '',
+            value: '',
+          ),
+    );
+
+    if (geographyMaster.code.isEmpty) {
+      return '';
+    } else {
+      print('getStateCode $geographyMaster');
+      return geographyMaster.code;
     }
   }
 }

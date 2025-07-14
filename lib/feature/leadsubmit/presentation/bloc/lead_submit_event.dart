@@ -23,14 +23,14 @@ class LeadSubmitPushEvent extends LeadSubmitEvent {
   final Dedupe dedupe;
   final PersonalData? personalData;
   final AddressData? addressData;
-  final CoapplicantData? coapplicantData;
+  final List<CoapplicantData>? coAppAndGurantorData;
   LeadSubmitPushEvent({
     required this.loanType,
     required this.loanProduct,
     required this.dedupe,
     required this.personalData,
     required this.addressData,
-    required this.coapplicantData,
+    required this.coAppAndGurantorData,
   });
 }
 

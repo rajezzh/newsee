@@ -24,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 part './lead_submit_event.dart';
 part './lead_submit_state.dart';
+
 /* 
 @author   : karthick.d  13/06/2025
 @desc     : submiting lead business logic
@@ -67,8 +68,23 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
   Future<void> onLeadPush(LeadSubmitPushEvent event, Emitter emit) async {
     emit(state.copyWith(leadSubmitStatus: SubmitStatus.loading));
 
-    final coappdataMap = event.coapplicantData?.toMap();
-    coappdataMap?.addAll({"residentialStatus": "4"});
+    // final coappdataMap = event.coAppAndGurantorData?.toMap();
+    final coApplicants =
+        event.coAppAndGurantorData
+            ?.where((e) => e.applicantType == 'C')
+            .map((e) => e.toMap())
+            .toList() ??
+        [];
+
+    final guarantors =
+        event.coAppAndGurantorData
+            ?.where((e) => e.applicantType == 'G')
+            .map((e) => e.toMap())
+            .toList() ??
+        [];
+
+    coApplicants[0].addAll({"residentialStatus": "4"});
+    guarantors[0].addAll({"residentialStatus": "4"});
 
     final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
     String? getString = await asyncPrefs.getString('userdetails');
@@ -80,16 +96,18 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
         "orgScode": userdetails.Orgscode,
         "orgName": userdetails.OrgName,
         "orgLevel": userdetails.OrgLevel,
-        "coapplicantRequired": event.coapplicantData != null ? 'Y' : 'N',
-        "guarantorRequired": 'N',
+        // "coapplicantRequired": event.coapplicantData != null ? 'Y' : 'N',
+        // "guarantorRequired": 'N',
+        "coapplicantRequired": coApplicants.isNotEmpty ? 'Y' : 'N',
+        "guarantorRequired": guarantors.isNotEmpty ? 'Y' : 'N',
         "token": ApiConstants.api_qa_token,
         "leadDetails": event.loanType.toMap(),
         "chooseProduct": event.loanProduct.toMap(),
         "dedupeSearch": event.dedupe.toMap(),
         "individualNonIndividualDetails": event.personalData?.toMap(),
         "addressDetails": [event.addressData?.toMap()],
-        "coApplicantDetils": event.coapplicantData != null ? coappdataMap : {},
-        "guarantorDetils": {},
+        "coApplicantDetils": coApplicants.isNotEmpty ? coApplicants[0] : {},
+        "guarantorDetils": guarantors.isNotEmpty ? guarantors[0] : {},
       };
 
       AsyncResponseHandler<Failure, Map<String, dynamic>> responseHandler =
@@ -97,7 +115,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
       if (responseHandler.isRight()) {
         final response = responseHandler.right;
         String leadId = response['saveLeadDetails']['lleadid'] as String;
-  print('Lead Submit Success..');
+        print('Lead Submit Success..');
         emit(
           state.copyWith(
             leadSubmitStatus: SubmitStatus.success,
@@ -106,16 +124,16 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
           ),
         );
       } else {
-                print('Lead Submit Failure...');
+        print('Lead Submit Failure...');
 
         emit(state.copyWith(leadSubmitStatus: SubmitStatus.failure));
       }
     } on DioException catch (e) {
-            print('leadsubmit exception => $e');
+      print('leadsubmit exception => $e');
 
       emit(state.copyWith(leadSubmitStatus: SubmitStatus.failure));
     } catch (error) {
-            print('leadsubmit catch error => $error');
+      print('leadsubmit catch error => $error');
 
       emit(state.copyWith(leadSubmitStatus: SubmitStatus.failure));
     }
