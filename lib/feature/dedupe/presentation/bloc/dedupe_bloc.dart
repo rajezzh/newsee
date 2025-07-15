@@ -60,6 +60,7 @@ class DedupeBloc extends Bloc<DedupeEvent, DedupeState> {
         state.copyWith(
           status: DedupeFetchStatus.success,
           aadharvalidateResponse: responseHandler.right,
+          isAadhaarValidated: true,
         ),
       );
     } else {
@@ -67,6 +68,7 @@ class DedupeBloc extends Bloc<DedupeEvent, DedupeState> {
         state.copyWith(
           status: DedupeFetchStatus.failure,
           errorMsg: responseHandler.left.message,
+          isAadhaarValidated: false,
         ),
       );
     }
@@ -81,7 +83,7 @@ class DedupeBloc extends Bloc<DedupeEvent, DedupeState> {
         state.copyWith(
           status: DedupeFetchStatus.success,
           cifResponse: response.right,
-        )
+        ),
       );
     } else {
       print('cif failure response.left ');
@@ -100,8 +102,8 @@ class DedupeBloc extends Bloc<DedupeEvent, DedupeState> {
       state.copyWith(
         status: DedupeFetchStatus.change,
         constitution: event.request['constitution'],
-        isNewCustomer: event.request['isNewCustomer']
-      )
+        isNewCustomer: event.request['isNewCustomer'],
+      ),
     );
   }
 }

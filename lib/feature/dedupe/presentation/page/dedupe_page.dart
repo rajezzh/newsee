@@ -16,6 +16,7 @@ class DedupeView extends StatelessWidget {
   void callOpenSheet(context, state) {
     print("customerTypeForm.value ${customerTypeForm.value}");
     if (state.isNewCustomer) {
+      dedupeForm.reset();
       _openModalSheet(context, true, dedupeForm);
     } else {
       _openModalSheet(context, false, cifForm);
