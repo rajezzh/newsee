@@ -95,28 +95,20 @@ mpin(BuildContext context) {
               ),
 
               SizedBox(height: 50),
-                 ElevatedButton(
-                            style: const ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll<Color>(
-                                Color.fromARGB(255, 2, 59, 105),
-                              ),
-                              foregroundColor: WidgetStatePropertyAll(
-                                Colors.white,
-                              ),
-                              minimumSize: WidgetStatePropertyAll(
-                                Size(230, 40),
-                              ),
-                            ),
-                            onPressed:(){
-                              context.goNamed('home');
-                            },
-                                
-                                    
-                            child:
-                               
-                                  Text("Login"),
-                                  
-                          ),
+              ElevatedButton(
+                style: const ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll<Color>(
+                    Color.fromARGB(255, 2, 59, 105),
+                  ),
+                  foregroundColor: WidgetStatePropertyAll(Colors.white),
+                  minimumSize: WidgetStatePropertyAll(Size(230, 40)),
+                ),
+                onPressed: () {
+                  context.goNamed('home');
+                },
+
+                child: Text("Login"),
+              ),
             ],
           ),
         ),
