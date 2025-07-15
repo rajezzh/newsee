@@ -75,13 +75,13 @@ class LeadTileCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if(showarrow)
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: Colors.black,
-                  ),
-                   if (button != null) button!,
+                  if (showarrow)
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                      color: Colors.black,
+                    ),
+                  if (button != null) button!,
                 ],
               ),
               const SizedBox(height: 12),
@@ -101,14 +101,19 @@ class LeadTileCard extends StatelessWidget {
                         final phoneNumber = "919940362579";
                         final Uri uri = Uri.parse('tel:$phoneNumber');
                         if (await canLaunchUrl(uri)) {
-                         await launchUrl(uri);
 
+                          await launchUrl(uri);
                         } else {
-                          throw (AppConstants.GLOBAL_COULD_NOT_LAUNCH,uri.toString());
-
+                          throw (
+                            AppConstants.GLOBAL_COULD_NOT_LAUNCH,
+                            uri.toString(),
+                          );
                         }
                       },
-                      child: iconWithLabel(Icons.chrome_reader_mode_outlined, phone),
+                      child: iconWithLabel(
+                        Icons.chrome_reader_mode_outlined,
+                        phone,
+                      ),
                     ),
                   ),
                   Expanded(
