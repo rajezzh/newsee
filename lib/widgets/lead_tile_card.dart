@@ -5,6 +5,7 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:newsee/AppData/app_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Utils/utils.dart';
 
@@ -93,12 +94,13 @@ class LeadTileCard extends StatelessWidget {
                         FocusScope.of(context).unfocus();
                         final phoneNumber = "919940362579";
                         final Uri uri = Uri.parse('tel:$phoneNumber');
-                        if (!await canLaunchUrl(uri)) {
-                          throw 'Could not launch $uri';
+                        if (await canLaunchUrl(uri)) {
+                         await launchUrl(uri);
+
                         } else {
-                          await launchUrl(uri);
+                          throw (AppConstants.GLOBAL_COULD_NOT_LAUNCH,uri.toString());
+
                         }
-                        Navigator.pop(context);
                       },
                       child: iconWithLabel(Icons.chrome_reader_mode_outlined, phone),
                     ),
