@@ -91,8 +91,8 @@ final routes = GoRouter(
             },
             child: Scaffold(
               body: BlocProvider(
-                create: (_) => MpinBloc(),
-                child:LoginpageView(),
+                create: (_) => AuthBloc(authRepository: AuthRepository),
+                child: LoginpageView(),
               ),
             ),
           ),

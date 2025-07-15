@@ -90,7 +90,6 @@ class LoginpageWithAC extends StatelessWidget {
       listener: (context, state) async {
         switch (state.authStatus) {
           case AuthStatus.success:
-          
             print('LoginStatus.success... ${state.authResponseModel}');
             AsyncResponseHandler<bool, List<MasterVersion>>
             masterVersionCheckResponseHandler = await compareVersions(
@@ -123,8 +122,7 @@ class LoginpageWithAC extends StatelessWidget {
                 context.goNamed('masters');
               } else {
                 context.pop(loginActionSheet);
-                   createMpin(context);
-               
+                createMpin(context);
               }
             }
           case AuthStatus.loading:
@@ -132,16 +130,8 @@ class LoginpageWithAC extends StatelessWidget {
 
           case AuthStatus.init:
             print('LoginStatus.init...');
-           
-          case AuthStatus.failure:
-           final pref = await SharedPreferences.getInstance();
-            bool isMpinSet = pref.getString('user_mpin') != null;
-            if (isMpinSet) {
-              mpin(context);
-            } else {
-              createMpin(context);
-            }
 
+          case AuthStatus.failure:
             context.goNamed('home');
             print('LoginStatus.error...');
             ScaffoldMessenger.of(context).showSnackBar(
