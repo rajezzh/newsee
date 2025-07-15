@@ -11,8 +11,9 @@ import 'pending_leads.dart';
 
 class LeadTabBar extends StatelessWidget {
   final String searchQuery;
+  final TabController? tabController;
 
-  const LeadTabBar({super.key, required this.searchQuery});
+  const LeadTabBar({super.key, required this.searchQuery, this.tabController});
 
   @override
   Widget build(BuildContext context) {

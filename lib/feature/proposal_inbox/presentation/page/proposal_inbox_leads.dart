@@ -23,8 +23,8 @@ import 'package:newsee/widgets/lead_tile_card.dart';
 
 class ProposalInbox extends StatelessWidget {
   final String searchQuery;
-
-  const ProposalInbox({super.key, required this.searchQuery});
+  var currentPage = 1;
+  ProposalInbox({super.key, required this.searchQuery});
 
   @override
   Widget build(BuildContext context) {

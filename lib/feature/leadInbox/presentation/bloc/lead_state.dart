@@ -17,13 +17,17 @@ class LeadState extends Equatable {
   final String? errorMessage;
   final int currentPage;
   final int? totApplication;
+  final String? proposalNo;
+  final SaveStatus? proposalSubmitStatus;
 
   const LeadState({
     this.status = LeadStatus.initial,
     this.leadResponseModel,
     this.errorMessage,
     this.currentPage = 1,
-    this.totApplication
+    this.totApplication,
+    this.proposalNo,
+    this.proposalSubmitStatus,
   });
 
   factory LeadState.init() => const LeadState();
@@ -33,7 +37,10 @@ class LeadState extends Equatable {
     List<GroupLeadInbox>? leadResponseModel,
     String? errorMessage,
     int? currentPage,
-    int? totApplication
+    int? totApplication,
+    String? proposalNo,
+    SaveStatus? proposalSubmitStatus,
+
   }) {
     return LeadState(
       status: status ?? this.status,
@@ -41,15 +48,18 @@ class LeadState extends Equatable {
       errorMessage: errorMessage ?? this.errorMessage,
       currentPage: currentPage ?? this.currentPage,
       totApplication: totApplication ?? totApplication,
+      proposalNo:proposalNo ?? this.proposalNo,
+      proposalSubmitStatus:proposalSubmitStatus ?? this.proposalSubmitStatus,
     );
   }
 
-  @override
   List<Object?> get props => [
-    status,
-    leadResponseModel,
+    status, 
+    leadResponseModel, 
     errorMessage,
     currentPage,
-    totApplication
+    totApplication,
+    proposalNo,
+    proposalSubmitStatus
   ];
 }
