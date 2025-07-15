@@ -61,15 +61,12 @@ class _CoApplicantFormBottomSheetState
               'coapplicantdetail::BlocConsumer:listen => ${state.lovList} ${state.coAppList} ${state.status?.name}',
             );
             if (state.status == SaveStatus.success) {
-              showSnack(
-                context,
-                message: '${title} Details Saved Successfully',
-              );
+              showSnack(context, message: '$title Details Saved Successfully');
               goToNextTab(context: context);
             } else if (state.status == SaveStatus.failure) {
               globalLoadingBloc.add(HideLoading());
 
-              showSnack(context, message: 'Failed to Save ${title} Details');
+              showSnack(context, message: 'Failed to Save $title Details');
             }
             if (state.status == SaveStatus.mastersucess ||
                 state.status == SaveStatus.masterfailure) {
@@ -106,7 +103,8 @@ class _CoApplicantFormBottomSheetState
                 }
               }
             } else if (state.status == SaveStatus.dedupefailure) {
-              showSnack(context, message: 'Cif pulling failed...');
+              // showSnack(context, message: 'Cif pulling failed...');
+              showErrorDialog(context, 'Cif pulling failed...');
             }
           },
           builder: (context, state) {

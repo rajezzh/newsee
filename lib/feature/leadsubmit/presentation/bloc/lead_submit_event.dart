@@ -23,8 +23,9 @@ class LeadSubmitPushEvent extends LeadSubmitEvent {
   final Dedupe dedupe;
   final PersonalData? personalData;
   final AddressData? addressData;
-  final List<CoapplicantData>? coAppAndGurantorData;
-  final String isAddCoappGurantor;
+  final List<CoapplicantData>?
+  coAppAndGurantorData; // added coapplicant or gurantor applicants List
+  final String isAddCoappGurantor; // added applicants option like Y or N
   LeadSubmitPushEvent({
     required this.loanType,
     required this.loanProduct,

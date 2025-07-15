@@ -46,7 +46,7 @@ final class CoappDetailsBloc
     on<DeleteCoApplicantEvent>(_deleteApplicant);
     on<CoAppDetailsDedupeEvent>(_onDedupeResponse);
     on<CifEditManuallyEvent>((event, emit) {
-      emit(state.copyWith(isCifValid: false));
+      emit(state.copyWith(isCifValid: event.cifButton));
     });
   }
 

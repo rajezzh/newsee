@@ -68,4 +68,7 @@ class DeleteCoApplicantEvent extends CoappDetailsEvent {
   List<Object?> get props => [coapplicantData];
 }
 
-class CifEditManuallyEvent extends CoappDetailsEvent {}
+class CifEditManuallyEvent extends CoappDetailsEvent {
+  final bool cifButton;
+  CifEditManuallyEvent(this.cifButton);
+}

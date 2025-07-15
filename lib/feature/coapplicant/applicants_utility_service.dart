@@ -11,7 +11,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 final FormGroup dedupeForm = AppForms.DEDUPE_DETAILS_FORM;
 
 void cifSearch(BuildContext context, FormGroup form, String? applicantType) {
-  final String type = applicantType == 'C' ? 'coapplicant' : 'gurantor';
+  final String type = applicantType == 'C' ? 'coapplicant' : 'guarantor';
   if (form.control('cifNumber').valid) {
     final req = CIFRequest(
       cifId: form.control('cifNumber').value,
@@ -33,14 +33,10 @@ Future<void> showHideCifField(BuildContext context, FormGroup form) async {
     print('customertype: $customerType');
     form.control('cifNumber').clearValidators();
     form.control('cifNumber').updateValue(null);
-    // form.control('cifNumber').markAsPristine();
     form.control('cifNumber').updateValueAndValidity();
-    // if (customerType == '001') {
-    //   await _openModalSheet(context, dedupeForm, tabController!);
-    // }
   } else if (customerType == '002') {
     print('customertype rdff: $customerType');
-    context.read<CoappDetailsBloc>().add(CifEditManuallyEvent());
+    context.read<CoappDetailsBloc>().add(CifEditManuallyEvent(false));
     form.control('cifNumber').setValidators([Validators.required]);
     form.control('cifNumber').updateValueAndValidity();
   }

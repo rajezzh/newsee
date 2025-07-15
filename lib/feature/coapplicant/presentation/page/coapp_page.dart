@@ -6,6 +6,7 @@ import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
 import 'package:newsee/feature/coapplicant/presentation/widgets/co_applicant_form_sheet.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
+import 'package:newsee/widgets/confirmation_delete_alert.dart';
 
 class CoApplicantPage extends StatefulWidget {
   final String title;
@@ -143,19 +144,30 @@ class _CoApplicantPageState extends State<CoApplicantPage> {
                           "Mobile Number: ${data.primaryMobileNumber}",
                         ),
                         onTap: () {
-                          if (data.cifNumber == null && data.cifNumber == '') {
+                          if (data.customertype == '002' &&
+                              (data.cifNumber == null &&
+                                  data.cifNumber == '')) {
                             context.read<CoappDetailsBloc>().add(
-                              CifEditManuallyEvent(),
+                              CifEditManuallyEvent(false),
+                            );
+                          } else {
+                            context.read<CoappDetailsBloc>().add(
+                              CifEditManuallyEvent(true),
                             );
                           }
                           openCoApplicantFormSheet(type!, data, index);
                         },
                         trailing: IconButton(
                           icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            context.read<CoappDetailsBloc>().add(
-                              DeleteCoApplicantEvent(data),
+                          onPressed: () async {
+                            final confirmed = await confirmAndDeleteImage(
+                              context,
                             );
+                            if (confirmed == true) {
+                              context.read<CoappDetailsBloc>().add(
+                                DeleteCoApplicantEvent(data),
+                              );
+                            }
                           },
                         ),
                       ),

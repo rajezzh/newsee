@@ -69,6 +69,7 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
     emit(state.copyWith(leadSubmitStatus: SubmitStatus.loading));
 
     // final coappdataMap = event.coAppAndGurantorData?.toMap();
+    // coapplicant or gurantor applicants List are seperating
     final coApplicants =
         event.coAppAndGurantorData
             ?.where((e) => e.applicantType == 'C')
