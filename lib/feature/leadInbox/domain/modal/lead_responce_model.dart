@@ -1,5 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 
 /*
   @author      : gayathri.b 11/06/2025
@@ -14,75 +15,45 @@ import 'package:flutter/foundation.dart';
 */
 
 class LeadResponseModel {
-  final List<Map<String, dynamic>> leadlists;
-  final List<Map<String, dynamic>> typeofloan;
-  final List<Map<String, dynamic>> sourcingChannelLov;
+  final List<GroupLeadInbox> listOfApplication;
+  final int totalApplication;
 
   LeadResponseModel({
-    required this.leadlists,
-    required this.typeofloan,
-    required this.sourcingChannelLov,
+    required this.listOfApplication,
+    required this.totalApplication,
   });
 
   LeadResponseModel copyWith({
-    List<Map<String, dynamic>>? leadlists,
-    List<Map<String, dynamic>>? typeofloan,
-    List<Map<String, dynamic>>? sourcingChannelLov,
+    List<GroupLeadInbox>? listOfApplication,
+    int? totalApplication,
   }) {
     return LeadResponseModel(
-      leadlists: leadlists ?? this.leadlists,
-      typeofloan: typeofloan ?? this.typeofloan,
-      sourcingChannelLov: sourcingChannelLov ?? this.sourcingChannelLov,
+      listOfApplication: listOfApplication ?? this.listOfApplication,
+      totalApplication: totalApplication ?? this.totalApplication,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'leadlists': leadlists,
-      'typeofloan': typeofloan,
-      'sourcingChannelLov': sourcingChannelLov,
+    return <String, dynamic>{
+      'listOfApplication': listOfApplication.map((x) => x.toMap()).toList(),
+      'totalApplication': totalApplication,
     };
   }
 
   factory LeadResponseModel.fromMap(Map<String, dynamic> map) {
     return LeadResponseModel(
-      leadlists: List<Map<String, dynamic>>.from(
-        (map['leadlists'] as List? ?? []).map(
-          (e) => Map<String, dynamic>.from(e),
-        ),
-      ),
-      typeofloan: List<Map<String, dynamic>>.from(
-        (map['typeofloan'] as List? ?? []).map(
-          (e) => Map<String, dynamic>.from(e),
-        ),
-      ),
-      sourcingChannelLov: List<Map<String, dynamic>>.from(
-        (map['sourcingChannelLov'] as List? ?? []).map(
-          (e) => Map<String, dynamic>.from(e),
-        ),
-      ),
+      listOfApplication: List<GroupLeadInbox>.from((map['listOfApplication'] as List<int>).map<GroupLeadInbox>((x) => GroupLeadInbox.fromMap(x as Map<String,dynamic>),),),
+      totalApplication: map['totalApplication'] as int,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory LeadResponseModel.fromJson(String source) =>
-      LeadResponseModel.fromMap(json.decode(source));
+  factory LeadResponseModel.fromJson(String source) => LeadResponseModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'LeadResponseModel(leadlists: $leadlists, typeofloan: $typeofloan, sourcingChannelLov: $sourcingChannelLov)';
+  String toString() => 'LeadResponseModel(listOfApplication: $listOfApplication, totalApplication: $totalApplication)';
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is LeadResponseModel &&
-        listEquals(other.leadlists, leadlists) &&
-        listEquals(other.typeofloan, typeofloan) &&
-        listEquals(other.sourcingChannelLov, sourcingChannelLov);
-  }
-
-  @override
-  int get hashCode =>
-      leadlists.hashCode ^ typeofloan.hashCode ^ sourcingChannelLov.hashCode;
+  int get hashCode => listOfApplication.hashCode ^ totalApplication.hashCode;
 }
