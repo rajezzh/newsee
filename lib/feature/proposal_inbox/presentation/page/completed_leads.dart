@@ -73,11 +73,12 @@ class CompletedLeads extends StatelessWidget {
 
           final allLeads =
               state.leadResponseModel
-                  ?.expand((model) => model.finalList)
-                  .toList();
+                  ?.map((e) => e.toMap())
+                  .toList() ??
+              [];
 
           final filteredLeads =
-              allLeads?.where((lead) {
+              allLeads.where((lead) {
                 final name = (lead['lleadfrstname'] ?? '').toLowerCase();
                 final id = (lead['lleadid'] ?? '').toLowerCase();
                 final phone = (lead['lleadmobno'] ?? '').toLowerCase();

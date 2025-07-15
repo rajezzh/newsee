@@ -16,12 +16,14 @@ class LeadState extends Equatable {
   final List<GroupLeadInbox>? leadResponseModel;
   final String? errorMessage;
   final int currentPage;
+  final int? totApplication;
 
   const LeadState({
     this.status = LeadStatus.initial,
     this.leadResponseModel,
     this.errorMessage,
     this.currentPage = 1,
+    this.totApplication
   });
 
   factory LeadState.init() => const LeadState();
@@ -31,12 +33,14 @@ class LeadState extends Equatable {
     List<GroupLeadInbox>? leadResponseModel,
     String? errorMessage,
     int? currentPage,
+    int? totApplication
   }) {
     return LeadState(
       status: status ?? this.status,
       leadResponseModel: leadResponseModel ?? this.leadResponseModel,
       errorMessage: errorMessage ?? this.errorMessage,
       currentPage: currentPage ?? this.currentPage,
+      totApplication: totApplication ?? totApplication,
     );
   }
 
@@ -46,5 +50,6 @@ class LeadState extends Equatable {
     leadResponseModel,
     errorMessage,
     currentPage,
+    totApplication
   ];
 }

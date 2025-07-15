@@ -31,6 +31,8 @@ class ProposalInboxBloc extends Bloc<ProposalInboxEvent, ProposalInboxState> {
     LeadInboxRequest request = LeadInboxRequest(
       userid: userDetails!.LPuserID,
       token: ApiConstants.api_qa_token,
+      pageNo: event.request.pageNo,
+      pageCount: event.request.pageCount,
     );
 
     final response = await proposalInboxRepository.searchProposalInbox(request);
@@ -40,8 +42,9 @@ class ProposalInboxBloc extends Bloc<ProposalInboxEvent, ProposalInboxState> {
       emit(
         state.copyWith(
           status: ProposalInboxStatus.success,
-          proposalResponseModel: response.right,
+          proposalResponseModel: response.right.proposalDetails,
           currentPage: event.request.pageNo,
+          totalProposalApplication: response.right.totalProposals,
         ),
       );
     } else {

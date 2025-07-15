@@ -8,12 +8,13 @@ import 'package:newsee/core/api/http_connection_failure.dart';
 import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/proposal_inbox/data/datasource/proposal_inbox_remote_datasource.dart';
+import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
 import 'package:newsee/feature/proposal_inbox/domain/modal/proposal_inbox_responce_model.dart';
 import 'package:newsee/feature/proposal_inbox/domain/repository/proposal_inbox_repository.dart';
 
 class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
   @override
-  Future<AsyncResponseHandler<Failure, List<ProposalInboxResponseModel>>>
+  Future<AsyncResponseHandler<Failure, ProposalInboxResponseModel>>
   searchProposalInbox(LeadInboxRequest req) async {
     try {
       final response = await ProposalInboxRemoteDatasource(
@@ -25,23 +26,33 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
           responseData[ApiConfig.API_RESPONSE_SUCCESS_KEY] == true;
 
       if (isSuccess) {
-        final data = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY];
-
+        final data = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY]['proposalDetails'];
+        final totalProposals = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY]['totalRecordCount'] as int;
         if (data is List) {
-          final proposalInboxResponse =
+          final listOfProposalApplication =
               data
                   .map(
-                    (e) => ProposalInboxResponseModel.fromMap(
+                    (e) => GroupProposalInbox.fromMap(
                       e as Map<String, dynamic>,
                     ),
                   )
                   .toList();
+          
+          final proposalInboxResponse = ProposalInboxResponseModel(
+            proposalDetails: listOfProposalApplication,
+            totalProposals: totalProposals,
+          );
+          
           return AsyncResponseHandler.right(proposalInboxResponse);
         } else if (data is Map<String, dynamic>) {
-          final proposalInboxResponse = ProposalInboxResponseModel.fromMap(
+          final listOfProposalApplication = GroupProposalInbox.fromMap(
             data,
           );
-          return AsyncResponseHandler.right([proposalInboxResponse]);
+          final proposalInboxResponse = ProposalInboxResponseModel(
+            proposalDetails: [listOfProposalApplication],
+            totalProposals: totalProposals,
+          );
+          return AsyncResponseHandler.right(proposalInboxResponse);
         } else {
           return AsyncResponseHandler.left(
             HttpConnectionFailure(

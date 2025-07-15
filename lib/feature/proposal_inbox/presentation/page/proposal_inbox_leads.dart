@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
+import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
 import 'package:newsee/feature/proposal_inbox/presentation/bloc/proposal_inbox_bloc.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/options_sheet.dart';
@@ -45,7 +46,7 @@ class ProposalInbox extends StatelessWidget {
                 );
           }
 
-          if (state.status == LeadStatus.loading) {
+          if (state.status == ProposalInboxStatus.loading) {
             return RefreshIndicator(
               onRefresh: onRefresh,
               child: ListView.builder(
@@ -60,18 +61,27 @@ class ProposalInbox extends StatelessWidget {
             );
           }
 
-          if (state.status == LeadStatus.failure) {
+          if (state.status == ProposalInboxStatus.failure) {
             return renderWhenNoItems(onRefresh, state);
           }
 
-          final allLeads =
-              state.proposalResponseModel
-                  ?.expand((model) => model.proposalDetails)
-                  .toList();
+          // final allLeads =
+          //     state.proposalResponseModel
+          //         ?.expand((model) => model.proposalDetails)
+          //         .toList();
+
+          // // logic for search functionaluty , when user type search query
+          // // in searchbar
+          // List<Map<String, dynamic>>? filteredLeads = onSearchApplicationInbox(
+          //   items: allLeads,
+          //   searchQuery: searchQuery,
+          // );
+
+          final List<GroupProposalInbox>? allLeads = state.proposalResponseModel;
 
           // logic for search functionaluty , when user type search query
           // in searchbar
-          List<Map<String, dynamic>>? filteredLeads = onSearchApplicationInbox(
+          List<GroupProposalInbox>? filteredLeads = onSearchApplicationInbox(
             items: allLeads,
             searchQuery: searchQuery,
           );
@@ -90,19 +100,16 @@ class ProposalInbox extends StatelessWidget {
 
   RefreshIndicator renderItems(
     ProposalInboxState state,
-    List<Map<String, dynamic>> filteredLeads,
+    List<GroupProposalInbox> filteredLeads,
     Future<void> Function() onRefresh,
     BuildContext context,
   ) {
-    final currentPage = state.currentPage - 1;
-    // final startIndex = currentPage * AppConstants.PAGINATION_ITEM_PER_PAGE;
-    // final endIndex = ((currentPage + 1) * AppConstants.PAGINATION_ITEM_PER_PAGE)
-    //     .clamp(0, filteredLeads.length);
-    // // this is the selected index
+    final currentPage = state.currentPage;
+    print("currentPage: $currentPage");
+    final int pageCount = 20;
+    final int totalNumberOfApplication = state.totalProposalApplication!.toInt();
+    final int numberOfpages = (totalNumberOfApplication / pageCount).ceil();
 
-    // final paginatedLeads = filteredLeads.sublist(startIndex, endIndex);
-
-    //
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: Column(
@@ -111,7 +118,7 @@ class ProposalInbox extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredLeads.length,
               itemBuilder: (context, index) {
-                final proposal = filteredLeads[index];
+                final proposal = filteredLeads[index].finalList;
                 return LeadTileCard(
                   title:
                       proposal['applicantName']?.toString().isNotEmpty == true
@@ -134,12 +141,21 @@ class ProposalInbox extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(5),
             child: NumberPaginator(
-              numberPages: filteredLeads.length,
+              numberPages: numberOfpages,
               initialPage: currentPage,
               onPageChange: (int index) {
-                // check if the
-                context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
+                context.read<ProposalInboxBloc>().add(
+                  SearchProposalInboxEvent(
+                    request: LeadInboxRequest(
+                      userid: '', 
+                      token: '',
+                      pageNo: index,
+                      pageCount: 20
+                    ),
+                  ),
+                );
               },
+
               child: const SizedBox(
                 width: 250,
                 height: 35,

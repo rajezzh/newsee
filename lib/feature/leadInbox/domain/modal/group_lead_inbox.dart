@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
+
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 /**
  * @author  : karthick.d    
@@ -9,22 +13,28 @@ import 'package:flutter/foundation.dart';
 // to be converted  as Data class with fields
 
 class GroupLeadInbox {
-  final List<Map<String, dynamic>> finalList;
-  GroupLeadInbox({required this.finalList});
+  final Map<String, dynamic>? finalList;
+  GroupLeadInbox({
+    this.finalList,
+  });
 
-  GroupLeadInbox copyWith({List<Map<String, dynamic>>? finalList}) {
-    return GroupLeadInbox(finalList: finalList ?? this.finalList);
+  GroupLeadInbox copyWith({
+    Map<String, dynamic>? finalList,
+  }) {
+    return GroupLeadInbox(
+      finalList: finalList ?? this.finalList,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'finalList': finalList};
+    return <String, dynamic>{
+      'finalList': finalList,
+    };
   }
 
-  factory GroupLeadInbox.fromMap(Map<String, dynamic> map) {
+  factory GroupLeadInbox.fromMap(Map<String, dynamic>? map) {
     return GroupLeadInbox(
-      finalList: List<Map<String, dynamic>>.from(
-        (map['finalList'] as List<dynamic>).map<Map<String, dynamic>>((x) => x),
-      ),
+      finalList: Map<String, dynamic>.from(map! as Map),
     );
   }
 
@@ -39,8 +49,10 @@ class GroupLeadInbox {
   @override
   bool operator ==(covariant GroupLeadInbox other) {
     if (identical(this, other)) return true;
-
-    return listEquals(other.finalList, finalList);
+    final mapEquals = const DeepCollectionEquality().equals;
+  
+    return 
+      mapEquals(other.finalList, finalList);
   }
 
   @override

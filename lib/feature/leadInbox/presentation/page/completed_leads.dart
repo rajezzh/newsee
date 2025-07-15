@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Utils/utils.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:newsee/feature/leadInbox/presentation/bloc/lead_bloc.dart';
 import 'package:newsee/widgets/lead_tile_card-shimmer.dart';
@@ -49,14 +50,12 @@ class CompletedLeads extends StatelessWidget {
             return renderWhenNoItems(onRefresh, state);
           }
 
-          final allLeads =
-              state.leadResponseModel
-                  ?.expand((model) => model.finalList)
-                  .toList();
+
+          final List<GroupLeadInbox>? allLeads = state.leadResponseModel;
 
           // logic for search functionaluty , when user type search query
           // in searchbar
-          List<Map<String, dynamic>>? filteredLeads = onSearchLeadInbox(
+          List<GroupLeadInbox>? filteredLeads = onSearchLeadInbox(
             items: allLeads,
             searchQuery: searchQuery,
           );
@@ -75,11 +74,15 @@ class CompletedLeads extends StatelessWidget {
 
   RefreshIndicator renderItems(
     LeadState state,
-    List<Map<String, dynamic>> filteredLeads,
+    List<GroupLeadInbox> filteredLeads,
     Future<void> Function() onRefresh,
     BuildContext context,
   ) {
     final currentPage = state.currentPage - 1;
+    print("currentPage: $currentPage");
+    final int pageCount = 20;
+    final int totalNumberOfApplication = state.totApplication!.toInt();
+    final int numberOfpages = (totalNumberOfApplication / pageCount).ceil();
     // final startIndex = currentPage * AppConstants.PAGINATION_ITEM_PER_PAGE;
     // final endIndex = ((currentPage + 1) * AppConstants.PAGINATION_ITEM_PER_PAGE)
     //     .clamp(0, filteredLeads.length);
@@ -96,7 +99,7 @@ class CompletedLeads extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredLeads.length,
               itemBuilder: (context, index) {
-                final lead = filteredLeads[index];
+                final lead = filteredLeads[index].finalList as Map<String, dynamic>;
                 return LeadTileCard(
                   title: lead['lleadfrstname'] ?? 'N/A',
                   subtitle: lead['lleadid'] ?? 'N/A',
@@ -119,11 +122,11 @@ class CompletedLeads extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(5),
             child: NumberPaginator(
-              numberPages: filteredLeads.length,
+              numberPages: numberOfpages,
               initialPage: currentPage,
               onPageChange: (int index) {
                 // check if the
-                context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
+              context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
               },
               child: const SizedBox(
                 width: 250,
