@@ -84,8 +84,12 @@ final class LeadSubmitBloc extends Bloc<LeadSubmitEvent, LeadSubmitState> {
             .toList() ??
         [];
 
-    coApplicants[0].addAll({"residentialStatus": "4"});
-    guarantors[0].addAll({"residentialStatus": "4"});
+    coApplicants.isNotEmpty
+        ? coApplicants[0].addAll({"residentialStatus": "4"})
+        : coApplicants;
+    guarantors.isNotEmpty
+        ? guarantors[0].addAll({"residentialStatus": "4"})
+        : guarantors;
 
     final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
     String? getString = await asyncPrefs.getString('userdetails');

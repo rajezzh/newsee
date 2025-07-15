@@ -15,7 +15,7 @@ void cifSearch(BuildContext context, FormGroup form, String? applicantType) {
   if (form.control('cifNumber').valid) {
     final req = CIFRequest(
       cifId: form.control('cifNumber').value,
-      type: type,
+      type: 'borrower',
       token: ApiConstants.api_qa_token,
     );
     context.read<CoappDetailsBloc>().add(
