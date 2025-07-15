@@ -10,12 +10,14 @@ part of 'coapp_details_bloc.dart';
 
 class CoappDetailsState extends Equatable {
   final SaveStatus? status;
-  final List<CoapplicantData>? coAppList;
+  final List<CoapplicantData> coAppList;
   final CoapplicantData? selectedCoApp;
   final List<Lov>? lovList;
   final List<GeographyMaster>? stateCityMaster;
   final List<GeographyMaster>? districtMaster;
   final List<GeographyMaster>? cityMaster;
+  final String? isApplicantsAdded;
+  final bool isCifValid;
 
   CoappDetailsState({
     required this.lovList,
@@ -25,6 +27,8 @@ class CoappDetailsState extends Equatable {
     required this.stateCityMaster,
     required this.cityMaster,
     required this.districtMaster,
+    this.isApplicantsAdded,
+    this.isCifValid = false,
   });
 
   factory CoappDetailsState.initial() => CoappDetailsState(
@@ -34,6 +38,8 @@ class CoappDetailsState extends Equatable {
     stateCityMaster: [],
     cityMaster: [],
     districtMaster: [],
+    isApplicantsAdded: null,
+    isCifValid: false,
   );
 
   CoappDetailsState copyWith({
@@ -44,6 +50,8 @@ class CoappDetailsState extends Equatable {
     List<GeographyMaster>? stateCityMaster,
     List<GeographyMaster>? cityMaster,
     List<GeographyMaster>? districtMaster,
+    String? isApplicantsAdded,
+    bool? isCifValid,
   }) {
     return CoappDetailsState(
       lovList: lovList ?? this.lovList,
@@ -53,6 +61,8 @@ class CoappDetailsState extends Equatable {
       stateCityMaster: stateCityMaster ?? this.stateCityMaster,
       cityMaster: cityMaster ?? this.cityMaster,
       districtMaster: districtMaster ?? this.districtMaster,
+      isApplicantsAdded: isApplicantsAdded ?? this.isApplicantsAdded,
+      isCifValid: isCifValid ?? this.isCifValid,
     );
   }
 
@@ -65,5 +75,7 @@ class CoappDetailsState extends Equatable {
     stateCityMaster,
     cityMaster,
     districtMaster,
+    isApplicantsAdded,
+    isCifValid,
   ];
 }

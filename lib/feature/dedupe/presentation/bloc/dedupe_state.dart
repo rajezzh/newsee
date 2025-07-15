@@ -19,6 +19,8 @@ class DedupeState extends Equatable {
   final bool? isNewCustomer;
   final String? constitution;
   final bool? dismissModal;
+  final bool isAadhaarValidated;
+
   DedupeState({
     this.status,
     this.errorMsg,
@@ -28,6 +30,7 @@ class DedupeState extends Equatable {
     this.isNewCustomer,
     this.constitution,
     this.dismissModal,
+    this.isAadhaarValidated = false,
   });
 
   DedupeState copyWith({
@@ -39,6 +42,7 @@ class DedupeState extends Equatable {
     bool? isNewCustomer,
     String? constitution,
     bool? dismissModal,
+    bool? isAadhaarValidated,
   }) {
     return DedupeState(
       status: status ?? this.status,
@@ -50,6 +54,7 @@ class DedupeState extends Equatable {
       isNewCustomer: isNewCustomer ?? this.isNewCustomer,
       constitution: constitution ?? this.constitution,
       dismissModal: dismissModal ?? this.dismissModal,
+      isAadhaarValidated: isAadhaarValidated ?? this.isAadhaarValidated,
     );
   }
 
@@ -66,5 +71,6 @@ class DedupeState extends Equatable {
     isNewCustomer,
     constitution,
     dismissModal,
+    isAadhaarValidated,
   ];
 }
