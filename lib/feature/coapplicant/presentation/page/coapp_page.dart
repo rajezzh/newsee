@@ -12,6 +12,7 @@ import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart
 import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
+import 'package:newsee/widgets/alert.dart';
 import 'package:newsee/widgets/badge_fab.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
@@ -86,17 +87,51 @@ class CoApplicantPage extends StatelessWidget {
             'coapplicantdetail::BlocConsumer:listen => ${state.lovList} ${state.coAppList} ${state.status?.name}',
           );
           if (state.status == SaveStatus.success) {
-            showSnack(context, message: 'Personal Details Saved Successfully');
-            goToNextTab(context: context);
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => Alert(
+                    message: "Personal Details Saved Successfully",
+                    iconColor: Colors.green,
+                    icon: Icons.check_circle,
+                    buttonText: 'OK',
+                    onButtonPressed: () {
+                      Navigator.pop(context);
+                      goToNextTab(context: context);
+                    },
+                  ),
+            );
           } else if (state.status == SaveStatus.failure) {
             globalLoadingBloc.add(HideLoading());
-
-            showSnack(context, message: 'Failed to Save Personal Details');
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => Alert(
+                    message: "Failed to save Personal Details",
+                    iconColor: Colors.red,
+                    icon: Icons.cancel_rounded,
+                    buttonText: 'OK',
+                    onButtonPressed: () => Navigator.pop(context),
+                  ),
+            );
           }
           if (state.status == SaveStatus.mastersucess ||
               state.status == SaveStatus.masterfailure) {
             if (state.status == SaveStatus.masterfailure) {
-              showSnack(context, message: 'Failed to Fetch Masters...');
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder:
+                    (_) => Alert(
+                      message: "Failed to fetch Masters...",
+                      iconColor: Colors.red,
+                      icon: Icons.cancel_rounded,
+                      buttonText: 'OK',
+                      onButtonPressed: () => Navigator.pop(context),
+                    ),
+              );
             }
 
             print('city list => ${state.cityMaster}');
@@ -124,7 +159,18 @@ class CoApplicantPage extends StatelessWidget {
               }
             }
           } else if (state.status == SaveStatus.dedupefailure) {
-            showSnack(context, message: 'Cif pulling failed...');
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder:
+                    (_) => Alert(
+                      message: "CIF pulling failed...",
+                      iconColor: Colors.red,
+                      icon: Icons.cancel_rounded,
+                      buttonText: 'OK',
+                      onButtonPressed: () => Navigator.pop(context),
+                    ),
+              );
           }
         },
         builder: (context, state) {
@@ -517,10 +563,18 @@ class CoApplicantPage extends StatelessWidget {
                             );
                           } else {
                             form.markAllAsTouched();
-                            showSnack(
-                              context,
-                              message:
-                                  'Please Check Error Message and Enter Valid Data',
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder:
+                                  (_) => Alert(
+                                    message: "Please check error message and Enter valid data",
+                                    iconColor: Colors.red,
+                                    icon: Icons.cancel_rounded,
+                                    buttonText: 'OK',
+                                    onButtonPressed:
+                                        () => Navigator.pop(context),
+                                  ),
                             );
                           }
                         },

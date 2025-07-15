@@ -11,6 +11,7 @@ import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dar
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/statecitymaster.dart';
+import 'package:newsee/widgets/alert.dart';
 import 'package:newsee/widgets/custom_loading.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
@@ -36,18 +37,26 @@ class Address extends StatelessWidget {
     ),
   });
 
-  void showSnack(BuildContext context, {required String message}) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
   void goToNextTab(BuildContext context) {
-    showSnack(context, message: 'Address Details Saved Successfully');
-    final tabController = DefaultTabController.of(context);
-    if (tabController.index < tabController.length - 1) {
-      tabController.animateTo(tabController.index + 1);
-    }
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (_) => Alert(
+            message: 'Address Details Saved Successfully',
+            icon: Icons.check_circle,
+            iconColor: Colors.green,
+            buttonText: 'OK',
+            onButtonPressed: () {
+              Navigator.of(context).pop();
+
+              final tabController = DefaultTabController.of(context);
+              if (tabController.index < tabController.length - 1) {
+                tabController.animateTo(tabController.index + 1);
+              }
+            },
+          ),
+    );
   }
 
   mapAadharResponse(AadharvalidateResponse? aadharResponse) {

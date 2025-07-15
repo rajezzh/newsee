@@ -6,6 +6,7 @@ import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 import 'package:newsee/feature/cif/presentation/bloc/cif_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
+import 'package:newsee/widgets/alert.dart';
 import 'package:newsee/widgets/build_in_row.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/response_widget.dart';
@@ -15,21 +16,31 @@ import 'package:intl/intl.dart';
 class CIFSearch extends StatelessWidget {
   final FormGroup cifForm;
   final TabController tabController;
-  CIFSearch({
-    super.key,
-    required this.cifForm,
-    required this.tabController,
-  });
+  CIFSearch({super.key, required this.cifForm, required this.tabController});
 
   //Dispose Popover
   disposeResponse(context) {
     print("Welcome here for you");
     cifForm.reset();
-    Navigator.of(context).pop();
-    Navigator.of(context).pop();
-    if (tabController.index < tabController.length - 1) {
-      tabController.animateTo(tabController.index + 1);
-    }
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (_) => Alert(
+            message: "Dedupe Details Saved Successfully",
+            iconColor: Colors.green,
+            icon: Icons.check_circle,
+            buttonText: 'OK',
+            onButtonPressed: () {
+              Navigator.pop(context);
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              if (tabController.index < tabController.length - 1) {
+                tabController.animateTo(tabController.index + 1);
+              }
+            },
+          ),
+    );
   }
 
   @override
@@ -137,6 +148,7 @@ class CIFSearch extends StatelessWidget {
                         controlName: 'cifid',
                         label: 'CIF ID',
                         mantatory: true,
+                        maxlength: 12,
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
@@ -157,9 +169,7 @@ class CIFSearch extends StatelessWidget {
                                   cifId: cifForm.control('cifid').value,
                                 ).copyWith();
                             context.read<DedupeBloc>().add(
-                              SearchCifEvent(
-                                request: req,
-                              ),
+                              SearchCifEvent(request: req),
                             );
                           } else {
                             print(
