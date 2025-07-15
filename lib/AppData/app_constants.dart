@@ -21,6 +21,7 @@ class AppConstants {
   static const int PAGINATION_ITEM_PER_PAGE = 5;
   static const String GLOBAL_API_ERROR_MESSAGE = 'Something went wrong';
   static const String GLOBAL_NO_DATA_FOUND = 'No Data found';
+  static const String GLOBAL_COULD_NOT_LAUNCH = 'Could not launch';
 }
 
 class BioMetricResult {
