@@ -22,8 +22,8 @@ import 'package:newsee/widgets/lead_tile_card.dart';
 
 class ProposalInbox extends StatelessWidget {
   final String searchQuery;
-
-  const ProposalInbox({super.key, required this.searchQuery});
+  var currentPage = 1;
+  ProposalInbox({super.key, required this.searchQuery});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,9 @@ class ProposalInbox extends StatelessWidget {
     Future<void> Function() onRefresh,
     BuildContext context,
   ) {
-    final currentPage = state.currentPage - 1;
+    if (state.currentPage > 1) {
+      currentPage = state.currentPage - 1;
+    }
     // final startIndex = currentPage * AppConstants.PAGINATION_ITEM_PER_PAGE;
     // final endIndex = ((currentPage + 1) * AppConstants.PAGINATION_ITEM_PER_PAGE)
     //     .clamp(0, filteredLeads.length);
