@@ -4,14 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/AppSamples/ReactiveForms/config/appconfig.dart';
-import 'package:newsee/AppSamples/ReactiveForms/view/create_mpin.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/login_mpin.dart';
+import 'package:newsee/feature/creatempin/presentation/page/create_mpin.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/loginwithblocprovider.dart';
 import 'package:newsee/Model/login_request.dart';
 import 'package:newsee/Utils/masterversioncheck.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
+import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /*
 
@@ -87,6 +90,7 @@ class LoginpageWithAC extends StatelessWidget {
       listener: (context, state) async {
         switch (state.authStatus) {
           case AuthStatus.success:
+          
             print('LoginStatus.success... ${state.authResponseModel}');
             AsyncResponseHandler<bool, List<MasterVersion>>
             masterVersionCheckResponseHandler = await compareVersions(
@@ -119,7 +123,7 @@ class LoginpageWithAC extends StatelessWidget {
                 context.goNamed('masters');
               } else {
                 context.pop(loginActionSheet);
-                 createMpin(context);
+                   createMpin(context);
                
               }
             }
@@ -128,8 +132,16 @@ class LoginpageWithAC extends StatelessWidget {
 
           case AuthStatus.init:
             print('LoginStatus.init...');
-
+           
           case AuthStatus.failure:
+           final pref = await SharedPreferences.getInstance();
+            bool isMpinSet = pref.getString('user_mpin') != null;
+            if (isMpinSet) {
+              mpin(context);
+            } else {
+              createMpin(context);
+            }
+
             context.goNamed('home');
             print('LoginStatus.error...');
             ScaffoldMessenger.of(context).showSnackBar(
