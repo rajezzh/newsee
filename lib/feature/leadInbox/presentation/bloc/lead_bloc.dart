@@ -35,6 +35,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     SearchLeadEvent event,
     Emitter<LeadState> emit,
   ) async {
+    emit(state.copyWith(proposalSubmitStatus: SaveStatus.init));
     emit(state.copyWith(status: LeadStatus.loading));
     UserDetails? userDetails = await loadUser();
     LeadInboxRequest request = LeadInboxRequest(
