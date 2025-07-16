@@ -6,7 +6,9 @@ import 'package:newsee/feature/addressdetails/presentation/bloc/address_details_
 import 'package:newsee/feature/cif/domain/model/user/cif_response.dart';
 import 'package:newsee/feature/coapplicant/domain/modal/coapplicant_data.dart';
 import 'package:newsee/feature/coapplicant/presentation/bloc/coapp_details_bloc.dart';
+import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
+import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
 
 String formatAmount(String amount) {
   try {
@@ -218,16 +220,16 @@ String? removeSpecialCharacters(String formval) {
   }
 }
 
-List<Map<String, dynamic>>? onSearchLeadInbox({
-  required List<Map<String, dynamic>>? items,
+List<GroupLeadInbox>? onSearchLeadInbox({
+  required List<GroupLeadInbox>? items,
   required String searchQuery,
 }) {
   final filteredLeads =
       items?.where((lead) {
-        final name = (lead['lleadfrstname'] ?? '').toLowerCase();
-        final id = (lead['lleadid'] ?? '').toLowerCase();
-        final phone = (lead['lleadmobno'] ?? '').toLowerCase();
-        final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+        final name = (lead.finalList!['lleadfrstname'] ?? '').toLowerCase();
+        final id = (lead.finalList!['lleadid'] ?? '').toLowerCase();
+        final phone = (lead.finalList!['lleadmobno'] ?? '').toLowerCase();
+        final loan = (lead.finalList!['lldLoanamtRequested'] ?? '').toString();
         return name.contains(searchQuery.toLowerCase()) ||
             id.contains(searchQuery.toLowerCase()) ||
             phone.contains(searchQuery.toLowerCase()) ||
@@ -236,16 +238,16 @@ List<Map<String, dynamic>>? onSearchLeadInbox({
   return filteredLeads;
 }
 
-List<Map<String, dynamic>>? onSearchApplicationInbox({
-  required List<Map<String, dynamic>>? items,
+List<GroupProposalInbox>? onSearchApplicationInbox({
+  required List<GroupProposalInbox>? items,
   required String searchQuery,
 }) {
   final filteredLeads =
       items?.where((lead) {
-        final name = (lead['lleadfrstname'] ?? '').toLowerCase();
-        final id = (lead['lleadid'] ?? '').toLowerCase();
-        final phone = (lead['lleadmobno'] ?? '').toLowerCase();
-        final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+        final name = (lead.finalList['lleadfrstname'] ?? '').toLowerCase();
+        final id = (lead.finalList['lleadid'] ?? '').toLowerCase();
+        final phone = (lead.finalList['lleadmobno'] ?? '').toLowerCase();
+        final loan = (lead.finalList['lldLoanamtRequested'] ?? '').toString();
         return name.contains(searchQuery.toLowerCase()) ||
             id.contains(searchQuery.toLowerCase()) ||
             phone.contains(searchQuery.toLowerCase()) ||

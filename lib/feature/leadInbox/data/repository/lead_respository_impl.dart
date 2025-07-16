@@ -22,7 +22,7 @@ import 'package:newsee/feature/leadInbox/domain/repository/lead_repository.dart'
 
 class LeadRepositoryImpl implements LeadRepository {
   @override
-  Future<AsyncResponseHandler<Failure, List<GroupLeadInbox>>> searchLead(
+  Future<AsyncResponseHandler<Failure, LeadResponseModel>> searchLead(
     LeadInboxRequest req,
   ) async {
     try {
@@ -48,17 +48,26 @@ class LeadRepositoryImpl implements LeadRepository {
           responseData[ApiConfig.API_RESPONSE_SUCCESS_KEY] == true;
 
       if (isSuccess) {
-        final data = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY];
+        final data = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY]['finalList'];
+        final totCount = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY]['totalRecordCount'];
 
         if (data is List) {
           final leadResponse =
               data
                   .map((e) => GroupLeadInbox.fromMap(e as Map<String, dynamic>))
                   .toList();
-          return AsyncResponseHandler.right(leadResponse);
+              final leadResponseModel = LeadResponseModel(
+                listOfApplication: leadResponse,
+                totalApplication: totCount
+              );
+          return AsyncResponseHandler.right(leadResponseModel);
         } else if (data is Map<String, dynamic>) {
           final leadResponse = GroupLeadInbox.fromMap(data);
-          return AsyncResponseHandler.right([leadResponse]);
+          final leadResponseModel = LeadResponseModel(
+                listOfApplication: [leadResponse],
+                totalApplication: 1
+              );
+          return AsyncResponseHandler.right(leadResponseModel);
         } else {
           return AsyncResponseHandler.left(
             HttpConnectionFailure(

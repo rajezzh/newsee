@@ -89,9 +89,8 @@ class HomePageState extends State<HomePage> {
         currentIndex: selectedIndex,
         onTap: onItemTapped,
       ),
-      floatingActionButton: selectedIndex !=3
-      ?FloatingActionBarWidget()
-      :null,
+      floatingActionButton:
+          selectedIndex != 3 ? FloatingActionBarWidget() : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

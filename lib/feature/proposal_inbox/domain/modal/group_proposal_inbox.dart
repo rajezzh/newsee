@@ -1,25 +1,31 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 
 class GroupProposalInbox {
-  final List<Map<String, dynamic>> finalList;
-  GroupProposalInbox({required this.finalList});
+  final Map<String, dynamic> finalList;
+  GroupProposalInbox({
+    required this.finalList,
+  });
 
-  GroupProposalInbox copyWith({List<Map<String, dynamic>>? finalList}) {
-    return GroupProposalInbox(finalList: finalList ?? this.finalList);
+  GroupProposalInbox copyWith({
+    Map<String, dynamic>? finalList,
+  }) {
+    return GroupProposalInbox(
+      finalList: finalList ?? this.finalList,
+    );
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'finalList': finalList};
+    return <String, dynamic>{
+      'finalList': finalList,
+    };
   }
 
-  factory GroupProposalInbox.fromMap(Map<String, dynamic> map) {
+  factory GroupProposalInbox.fromMap(Map<String, dynamic>? map) {
     return GroupProposalInbox(
-      finalList: List<Map<String, dynamic>>.from(
-        (map['finalList'] as List<dynamic>).map<Map<String, dynamic>>((x) => x),
-      ),
+      finalList: Map<String, dynamic>.from(map! as Map),
     );
   }
 
@@ -34,8 +40,10 @@ class GroupProposalInbox {
   @override
   bool operator ==(covariant GroupProposalInbox other) {
     if (identical(this, other)) return true;
-
-    return listEquals(other.finalList, finalList);
+    final mapEquals = const DeepCollectionEquality().equals;
+  
+    return 
+      mapEquals(other.finalList, finalList);
   }
 
   @override

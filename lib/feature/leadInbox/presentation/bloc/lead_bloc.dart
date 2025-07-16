@@ -51,8 +51,9 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
       emit(
         state.copyWith(
           status: LeadStatus.success,
-          leadResponseModel: response.right,
+          leadResponseModel: response.right.listOfApplication,
           currentPage: event.pageNo + 1,
+          totApplication: response.right.totalApplication
         ),
       );
     } else {
