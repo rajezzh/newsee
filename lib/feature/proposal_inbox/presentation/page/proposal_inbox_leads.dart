@@ -14,6 +14,7 @@ import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
 import 'package:newsee/feature/proposal_inbox/presentation/bloc/proposal_inbox_bloc.dart';
+import 'package:newsee/pages/cic_check_page.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/options_sheet.dart';
 import 'package:number_paginator/number_paginator.dart';
@@ -40,10 +41,10 @@ class ProposalInbox extends StatelessWidget {
         builder: (context, state) {
           Future<void> onRefresh() async {
             context.read<ProposalInboxBloc>().add(
-                  SearchProposalInboxEvent(
-                    request: LeadInboxRequest(userid: '', token: ''),
-                  ),
-                );
+              SearchProposalInboxEvent(
+                request: LeadInboxRequest(userid: '', token: ''),
+              ),
+            );
           }
 
           if (state.status == ProposalInboxStatus.loading) {
@@ -77,7 +78,8 @@ class ProposalInbox extends StatelessWidget {
           //   searchQuery: searchQuery,
           // );
 
-          final List<GroupProposalInbox>? allLeads = state.proposalResponseModel;
+          final List<GroupProposalInbox>? allLeads =
+              state.proposalResponseModel;
 
           // logic for search functionaluty , when user type search query
           // in searchbar
@@ -107,7 +109,8 @@ class ProposalInbox extends StatelessWidget {
     final currentPage = state.currentPage;
     print("currentPage: $currentPage");
     final int pageCount = 20;
-    final int totalNumberOfApplication = state.totalProposalApplication!.toInt();
+    final int totalNumberOfApplication =
+        state.totalProposalApplication!.toInt();
     final int numberOfpages = (totalNumberOfApplication / pageCount).ceil();
 
     return RefreshIndicator(
@@ -147,10 +150,10 @@ class ProposalInbox extends StatelessWidget {
                 context.read<ProposalInboxBloc>().add(
                   SearchProposalInboxEvent(
                     request: LeadInboxRequest(
-                      userid: '', 
+                      userid: '',
                       token: '',
                       pageNo: index,
-                      pageCount: 20
+                      pageCount: 20,
                     ),
                   ),
                 );
@@ -201,7 +204,19 @@ class ProposalInbox extends StatelessWidget {
           children: [
             const SizedBox(height: 12),
             OptionsSheet(
-              icon: Icons.visibility,
+              icon: Icons.document_scanner,
+              title: "CIC Check",
+              subtitle: "View your CIC here",
+              status: 'Completed',
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CicCheckPage()),
+                );
+              },
+            ),
+            OptionsSheet(
+              icon: Icons.landscape,
               title: "Land Details",
               subtitle: "View your Land Details here",
               status: 'Completed',
@@ -216,7 +231,7 @@ class ProposalInbox extends StatelessWidget {
               },
             ),
             OptionsSheet(
-              icon: Icons.visibility,
+              icon: Icons.grass,
               title: "Crop Details",
               subtitle: "View your Crop Details here",
               status: 'Pending',
