@@ -8,7 +8,7 @@ import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
-import 'package:newsee/widgets/alert.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/productcard.dart';
@@ -134,7 +134,7 @@ class Loan extends StatelessWidget {
               context: context,
               barrierDismissible: false,
               builder:
-                  (_) => Alert(
+                  (_) => SysmoAlert(
                     message: "Loan Details Saved Successfully",
                     iconColor: Colors.green,
                     icon: Icons.check_circle,
@@ -150,7 +150,7 @@ class Loan extends StatelessWidget {
               context: context,
               barrierDismissible: false,
               builder:
-                  (_) => Alert(
+                  (_) => SysmoAlert(
                     message: "Failed to save Loan Details",
                     iconColor: Colors.red,
                     icon: Icons.cancel_rounded,

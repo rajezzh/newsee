@@ -11,7 +11,7 @@ import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dar
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/masters/domain/modal/statecitymaster.dart';
-import 'package:newsee/widgets/alert.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/custom_loading.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
@@ -42,7 +42,7 @@ class Address extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder:
-          (_) => Alert(
+          (_) => SysmoAlert(
             message: 'Address Details Saved Successfully',
             icon: Icons.check_circle,
             iconColor: Colors.green,

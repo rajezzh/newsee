@@ -17,7 +17,7 @@ import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/feature/leadsubmit/domain/modal/proposal_creation_request.dart';
 import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
-import 'package:newsee/widgets/alert.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/loader.dart';
 import 'package:newsee/widgets/success_bottom_sheet.dart';
 import 'package:number_paginator/number_paginator.dart';
@@ -70,7 +70,7 @@ class CompletedLeads extends StatelessWidget {
               context: context,
               barrierDismissible: false,
               builder:
-                  (_) => Alert(
+                  (_) => SysmoAlert(
                     message: "Proposal Creation Failed",
                     iconColor: Colors.red,
                     icon: Icons.cancel_rounded,
@@ -104,7 +104,6 @@ class CompletedLeads extends StatelessWidget {
           if (state.status == LeadStatus.failure) {
             return renderWhenNoItems(onRefresh, state);
           }
-
 
           final List<GroupLeadInbox>? allLeads = state.leadResponseModel;
 
@@ -154,7 +153,8 @@ class CompletedLeads extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredLeads.length,
               itemBuilder: (context, index) {
-                final lead = filteredLeads[index].finalList as Map<String, dynamic>;
+                final lead =
+                    filteredLeads[index].finalList as Map<String, dynamic>;
                 return LeadTileCard(
                   title: lead['lleadfrstname'] ?? 'N/A',
                   subtitle: lead['lleadid'] ?? 'N/A',
@@ -193,7 +193,7 @@ class CompletedLeads extends StatelessWidget {
               initialPage: currentPage,
               onPageChange: (int index) {
                 // check if the
-              context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
+                context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
               },
               child: const SizedBox(
                 width: 250,

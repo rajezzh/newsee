@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
                 - The button executes the provided onButtonPressed callback.
 */
 
-class Alert extends StatelessWidget {
+class SysmoAlert extends StatelessWidget {
   final String message;
   final Color textColor;
   final Color backgroundColor;
@@ -18,11 +18,11 @@ class Alert extends StatelessWidget {
   final String buttonText;
   final VoidCallback onButtonPressed;
 
-  const Alert({
+  const SysmoAlert({
     super.key,
     required this.message,
     this.textColor = Colors.black,
-    this.backgroundColor = Colors.white,  
+    this.backgroundColor = Colors.white,
     required this.iconColor,
     required this.icon,
     required this.buttonText,
@@ -57,10 +57,7 @@ class Alert extends StatelessWidget {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: 25,
-                  ),
+                  style: TextStyle(color: textColor, fontSize: 25),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(

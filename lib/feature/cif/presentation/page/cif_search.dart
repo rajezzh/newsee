@@ -6,7 +6,7 @@ import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/cif/domain/model/user/cif_request.dart';
 import 'package:newsee/feature/cif/presentation/bloc/cif_bloc.dart';
 import 'package:newsee/feature/dedupe/presentation/bloc/dedupe_bloc.dart';
-import 'package:newsee/widgets/alert.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/build_in_row.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/response_widget.dart';
@@ -26,7 +26,7 @@ class CIFSearch extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder:
-          (_) => Alert(
+          (_) => SysmoAlert(
             message: "Dedupe Details Saved Successfully",
             iconColor: Colors.green,
             icon: Icons.check_circle,

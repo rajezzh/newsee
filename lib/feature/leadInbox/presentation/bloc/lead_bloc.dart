@@ -35,7 +35,6 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     SearchLeadEvent event,
     Emitter<LeadState> emit,
   ) async {
-    emit(state.copyWith(proposalSubmitStatus: SaveStatus.init));
     emit(state.copyWith(status: LeadStatus.loading));
     UserDetails? userDetails = await loadUser();
     LeadInboxRequest request = LeadInboxRequest(
@@ -54,7 +53,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
           status: LeadStatus.success,
           leadResponseModel: response.right.listOfApplication,
           currentPage: event.pageNo + 1,
-          totApplication: response.right.totalApplication
+          totApplication: response.right.totalApplication,
         ),
       );
     } else {
@@ -75,7 +74,7 @@ class LeadBloc extends Bloc<LeadEvent, LeadState> {
     try {
       emit(state.copyWith(proposalSubmitStatus: SaveStatus.loading));
       UserDetails? userdetails = await loadUser();
-   
+
       ProposalCreationRequest proposalCreationRequest = ProposalCreationRequest(
         leadId: event.leadId,
         userid: userdetails?.LPuserID,
