@@ -44,6 +44,9 @@ class LoginpageView extends StatelessWidget {
       } else {
         pdfFilePath = '$dirPath/samplepdf.pdf';
       }
+
+      /// dio.download method will download pdf file  from remote url
+      /// and save the downloaded file to the pdffilepath
       await ApiClient().getDio().download(
         remoteFilePath,
         pdfFilePath,
@@ -51,6 +54,7 @@ class LoginpageView extends StatelessWidget {
           headers: {HttpHeaders.acceptEncodingHeader: '*'}, // Disable gzip
         ),
         onReceiveProgress: (received, total) {
+          // this callback  used to show download progress in UI
           if (total <= 0) return;
           print('percentage: ${(received / total * 100).toStringAsFixed(0)}%');
         },
