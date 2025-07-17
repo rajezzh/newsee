@@ -93,12 +93,13 @@ class LeadTileCard extends StatelessWidget {
                         FocusScope.of(context).unfocus();
                         final phoneNumber = "919940362579";
                         final Uri uri = Uri.parse('tel:$phoneNumber');
-                        if (!await canLaunchUrl(uri)) {
-                          throw 'Could not launch $uri';
+                        if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri);
+
                         } else {
-                          await launchUrl(uri);
+                         throw 'Could not launch $uri';
+
                         }
-                        Navigator.pop(context);
                       },
                       child: iconWithLabel(Icons.chrome_reader_mode_outlined, phone),
                     ),

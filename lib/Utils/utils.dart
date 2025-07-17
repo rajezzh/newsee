@@ -180,26 +180,6 @@ void closeBottomSheetIfExists(BuildContext context) {
   }
 }
 
-/* 
-    try {
-      form.control('firstName').updateValue(val.lleadfrstname!);
-      form.control('middleName').updateValue(val.lleadmidname!);
-      form.control('lastName').updateValue(val.lleadlastname!);
-      form.control('dob').updateValue(getDateFormat(val.lleaddob!));
-      form.control('primaryMobileNumber').updateValue(val.-!);
-      form.control('email').updateValue(val.lleademailid!);
-      form.control('panNumber').updateValue(val.lleadpanno!);
-      form.control('aadharRefNo').updateValue(val.lleadadharno!);
-      if (val.lleadadharno != null) {
-        refAadhaar = true;
-      }
-    } catch (error) {
-      print("autoPopulateData-catch-error $error");
-    }
-
-
- */
-
 CoapplicantData mapCoapplicantDataFromCif(CifResponse response) {
   CoapplicantData data = CoapplicantData(
     firstName: response.lleadfrstname,
@@ -236,4 +216,40 @@ String? removeSpecialCharacters(String formval) {
   } catch (error) {
     print('removeSpecialCharacters-utilspage => $error');
   }
+}
+
+List<Map<String, dynamic>>? onSearchLeadInbox({
+  required List<Map<String, dynamic>>? items,
+  required String searchQuery,
+}) {
+  final filteredLeads =
+      items?.where((lead) {
+        final name = (lead['lleadfrstname'] ?? '').toLowerCase();
+        final id = (lead['lleadid'] ?? '').toLowerCase();
+        final phone = (lead['lleadmobno'] ?? '').toLowerCase();
+        final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+        return name.contains(searchQuery.toLowerCase()) ||
+            id.contains(searchQuery.toLowerCase()) ||
+            phone.contains(searchQuery.toLowerCase()) ||
+            loan.contains(searchQuery.toLowerCase());
+      }).toList();
+  return filteredLeads;
+}
+
+List<Map<String, dynamic>>? onSearchApplicationInbox({
+  required List<Map<String, dynamic>>? items,
+  required String searchQuery,
+}) {
+  final filteredLeads =
+      items?.where((lead) {
+        final name = (lead['lleadfrstname'] ?? '').toLowerCase();
+        final id = (lead['lleadid'] ?? '').toLowerCase();
+        final phone = (lead['lleadmobno'] ?? '').toLowerCase();
+        final loan = (lead['lldLoanamtRequested'] ?? '').toString();
+        return name.contains(searchQuery.toLowerCase()) ||
+            id.contains(searchQuery.toLowerCase()) ||
+            phone.contains(searchQuery.toLowerCase()) ||
+            loan.contains(searchQuery.toLowerCase());
+      }).toList();
+  return filteredLeads;
 }

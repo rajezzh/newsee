@@ -1,7 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+/**
+ * @author  : karthick.d    
+ */
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+
+// to be converted  as Data class with fields
 
 class GroupLeadInbox {
   final List<Map<String, dynamic>> finalList;

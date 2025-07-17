@@ -194,7 +194,7 @@ class AppForms {
 
   static FormGroup buildCropDetailsForm() {
     return FormGroup({
-      'lasSeqno':FormControl<String>(value: null, validators: []),
+      'lasSeqno':FormControl<String>(validators: []),
       'lasSeason': FormControl<String>(validators: [Validators.required]),
       'lasCrop': FormControl<String>(validators: [Validators.required]),
       'lasAreaofculti': FormControl<String>(validators: [Validators.required]),
