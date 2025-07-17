@@ -134,7 +134,7 @@ class MastersPage extends StatelessWidget {
                     //   context,
                     //   MaterialPageRoute(builder: (context) => HomePage(tabdata: 4)),
                     // );
-                    context.push('/home', extra: {'tabdata': 4});
+                    context.push('/home', extra: {'tabdata': 3});
                   } else {
                     goTo('home');
                   }

@@ -83,20 +83,22 @@ class CropyieldpageBloc extends Bloc<CropyieldpageEvent, CropyieldpageState> {
           state.copyWith(
             status: SaveStatus.success,
             cropData: cropGetResponse.right.agriCropDetails,
+            showSubmit: false
           )
         );
       } else if(responseHandler.isRight()) {
          emit(
           state.copyWith(
             status: SaveStatus.success,
+            showSubmit: false
           )
         );
       } else {
-      print('cif failure response.left ');
       emit(
         state.copyWith(
           status: SaveStatus.failure,
           errorMessage: responseHandler.left.message,
+          showSubmit: true
         ),
       );
     }

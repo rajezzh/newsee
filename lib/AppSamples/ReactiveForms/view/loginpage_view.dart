@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
-import 'forgetpassword.dart';
+import '../../../feature/forgetmpin/presentation/page/forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
 import 'login_mpin.dart';
+
 
 /*
 author : Gayathri B 
@@ -241,12 +242,13 @@ class LoginpageView extends StatelessWidget {
                         onPressed: () {
                           forgetActionSheet(
                             context,
-                            "Reset mPIN for \n Customer ID *****8977",
-                            "Let's first Verify it's you ,before you reset the mPIN. \n it'll be super quick and easy.",
-                            (Icons.lock),
+                            "Reset mPIN",
+                            "Do you want to reset your mPIN?",
+                            Icons.lock_reset,
+                            "Reset",
                             "Cancel",
-                            "Continue",
                           );
+                        
                         },
                         child: Text(
                           "Forgot mPIN?",

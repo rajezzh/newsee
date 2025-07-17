@@ -6,6 +6,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/loginpage_view.dart';
 import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/pages/home_page.dart';
@@ -31,7 +32,7 @@ class Sidenavigationbar extends StatelessWidget {
                 final user = snapshot.data;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       'User : ${user?.UserName} | ${user?.LPuserID}',
@@ -75,7 +76,7 @@ class Sidenavigationbar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(tabdata: 3)),
+                MaterialPageRoute(builder: (context) => HomePage(tabdata: 2)),
               );
             },
           ),
@@ -85,7 +86,17 @@ class Sidenavigationbar extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage(tabdata: 4)),
+                MaterialPageRoute(builder: (context) => HomePage(tabdata: 3)),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout_rounded, color: Colors.teal),
+            title: Text("Logout"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginpageView()),
               );
             },
           ),

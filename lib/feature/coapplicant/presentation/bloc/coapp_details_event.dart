@@ -16,7 +16,7 @@ class CoAppDetailsInitEvent extends CoappDetailsEvent {}
 // this event will fetch coapp details from cif or dedupe
 // set CoapplicantData from dedupe response and update coapplicant data state
 class CoAppDetailsDedupeEvent extends CoappDetailsEvent {
-  final CoapplicantData coapplicantData;
+  final AadharvalidateResponse coapplicantData;
   CoAppDetailsDedupeEvent({required this.coapplicantData});
 }
 
@@ -24,7 +24,13 @@ class CoAppDetailsDedupeEvent extends CoappDetailsEvent {
 
 class CoAppDetailsSaveEvent extends CoappDetailsEvent {
   final CoapplicantData coapplicantData;
-  CoAppDetailsSaveEvent({required this.coapplicantData});
+  // final bool isEdit;
+  final int? index;
+  CoAppDetailsSaveEvent({
+    required this.coapplicantData,
+    // this.isEdit = false,
+    this.index,
+  });
 }
 
 class OnStateCityChangeEvent extends CoappDetailsEvent {
@@ -33,7 +39,36 @@ class OnStateCityChangeEvent extends CoappDetailsEvent {
   OnStateCityChangeEvent({required this.stateCode, this.cityCode});
 }
 
-class SearchCifEvent extends CoappDetailsEvent {
+class CoAppGurantorSearchCifEvent extends CoappDetailsEvent {
   final CIFRequest request;
-  SearchCifEvent({required this.request});
+  CoAppGurantorSearchCifEvent({required this.request});
+}
+
+class IsCoAppOrGurantorAdd extends CoappDetailsEvent {
+  final String? addapplicants;
+  IsCoAppOrGurantorAdd({required this.addapplicants});
+}
+
+// class AddApplicantEvent extends CoappDetailsEvent {
+//   final CoapplicantData applicant;
+//   AddApplicantEvent({required this.applicant});
+// }
+
+// class RemoveApplicantEvent extends CoappDetailsEvent {
+//   final CoapplicantData applicant;
+//   RemoveApplicantEvent({required this.applicant});
+// }
+
+class DeleteCoApplicantEvent extends CoappDetailsEvent {
+  final CoapplicantData coapplicantData;
+
+  DeleteCoApplicantEvent(this.coapplicantData);
+
+  @override
+  List<Object?> get props => [coapplicantData];
+}
+
+class CifEditManuallyEvent extends CoappDetailsEvent {
+  final bool cifButton;
+  CifEditManuallyEvent(this.cifButton);
 }

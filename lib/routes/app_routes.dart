@@ -23,10 +23,13 @@ import 'package:newsee/feature/auth/data/datasource/auth_remote_datasource.dart'
 import 'package:newsee/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:newsee/feature/auth/domain/repository/auth_repository.dart';
 import 'package:newsee/feature/auth/presentation/bloc/auth_bloc.dart';
+import 'package:newsee/feature/creatempin/presentation/bloc/mpin_bloc.dart';
+import 'package:newsee/feature/creatempin/presentation/page/create_mpin.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_bloc.dart';
 import 'package:newsee/feature/documentupload/presentation/bloc/document_state.dart';
 import 'package:newsee/feature/documentupload/presentation/pages/document_page.dart';
 import 'package:newsee/feature/documentupload/presentation/widget/image_view.dart';
+import 'package:newsee/feature/forgetmpin/presentation/page/forgetpassword.dart';
 import 'package:newsee/feature/landholding/presentation/page/land_holding_page.dart';
 import 'package:newsee/feature/masters/data/repository/master_repo_impl.dart';
 import 'package:newsee/feature/masters/domain/modal/master_version.dart';
@@ -41,6 +44,7 @@ import 'package:newsee/pages/profile_page.dart';
 import 'package:newsee/widgets/progress_bar.dart';
 
 import '../feature/documentupload/presentation/bloc/document_event.dart';
+import 'package:newsee/AppSamples/ReactiveForms/view/login_mpin.dart';
 
 final AuthRemoteDatasource _authRemoteDatasource = AuthRemoteDatasource(
   dio: ApiClient().getDio(),

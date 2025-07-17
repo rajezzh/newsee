@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+enum ApplicantType { coapplicant, guarantor }
+
 class CoapplicantData {
+  final String? applicantType;
   final String? customertype;
   final String? cifNumber;
   final String? constitution;
@@ -28,6 +31,7 @@ class CoapplicantData {
   final String? depositCount;
   final String? depositAmount;
   CoapplicantData({
+    this.applicantType,
     this.customertype,
     this.cifNumber,
     this.constitution,
@@ -56,6 +60,7 @@ class CoapplicantData {
   });
 
   CoapplicantData copyWith({
+    String? applicantType,
     String? customertype,
     String? cifNumber,
     String? constitution,
@@ -83,6 +88,7 @@ class CoapplicantData {
     String? depositAmount,
   }) {
     return CoapplicantData(
+      applicantType: applicantType ?? this.applicantType,
       customertype: customertype ?? this.customertype,
       cifNumber: cifNumber ?? this.cifNumber,
       constitution: constitution ?? this.constitution,
@@ -114,6 +120,7 @@ class CoapplicantData {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'applicantType': applicantType,
       'customertype': customertype,
       'cifNumber': cifNumber,
       'constitution': constitution,
@@ -144,6 +151,8 @@ class CoapplicantData {
 
   factory CoapplicantData.fromMap(Map<String, dynamic> map) {
     return CoapplicantData(
+      applicantType:
+          map['applicantType'] != null ? map['applicantType'] as String : null,
       customertype:
           map['customertype'] != null ? map['customertype'] as String : null,
       cifNumber: map['cifNumber'] != null ? map['cifNumber'] as String : null,
@@ -211,7 +220,8 @@ class CoapplicantData {
   bool operator ==(covariant CoapplicantData other) {
     if (identical(this, other)) return true;
 
-    return other.customertype == customertype &&
+    return other.applicantType == applicantType &&
+        other.customertype == customertype &&
         other.cifNumber == cifNumber &&
         other.constitution == constitution &&
         other.title == title &&
@@ -240,7 +250,8 @@ class CoapplicantData {
 
   @override
   int get hashCode {
-    return customertype.hashCode ^
+    return applicantType.hashCode ^
+        customertype.hashCode ^
         cifNumber.hashCode ^
         constitution.hashCode ^
         title.hashCode ^

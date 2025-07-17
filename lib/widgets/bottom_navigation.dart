@@ -33,10 +33,6 @@ class BottomNavBar extends StatelessWidget {
           icon: Icon(Icons.mail_outlined),
           label: "Field Visit Inbox",
         ),
-         BottomNavigationBarItem(
-          icon: Icon(Icons.add),
-          label: "Home",
-        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.message_outlined),
           label: "Query Inbox",
@@ -44,7 +40,6 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Icon(Icons.update_outlined),
           label: "Masters Update",
-          
         ),
       ],
     );

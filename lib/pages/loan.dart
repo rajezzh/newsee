@@ -8,6 +8,7 @@ import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/productcard.dart';
@@ -129,10 +130,34 @@ class Loan extends StatelessWidget {
             print(
               'loan details saved success =>prodscheme ${state.selectedProductScheme}  maincat ${state.selectedMainCategory} subCat ${state.selectedSubCategoryList} status ${state.status} Globalconfig.loanAmountMaximum ${Globalconfig.loanAmountMaximum}',
             );
-            showSnack(context, message: 'Loan Details saved Successfully.');
-            goToNextTab(context: context);
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => SysmoAlert(
+                    message: "Loan Details Saved Successfully",
+                    iconColor: Colors.green,
+                    icon: Icons.check_circle,
+                    buttonText: 'OK',
+                    onButtonPressed: () {
+                      Navigator.pop(context);
+                      goToNextTab(context: context);
+                    },
+                  ),
+            );
           } else if (state.status == SaveStatus.failure) {
-            showSnack(context, message: 'Failed to Save Loan Details.');
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => SysmoAlert(
+                    message: "Failed to save Loan Details",
+                    iconColor: Colors.red,
+                    icon: Icons.cancel_rounded,
+                    buttonText: 'OK',
+                    onButtonPressed: () => Navigator.pop(context),
+                  ),
+            );
           }
         },
         // child: BlocBuilder<LoanproductBloc, LoanproductState>(

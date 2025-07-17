@@ -42,8 +42,9 @@ class ProposalInboxBloc extends Bloc<ProposalInboxEvent, ProposalInboxState> {
       emit(
         state.copyWith(
           status: ProposalInboxStatus.success,
-          proposalResponseModel: response.right,
+          proposalResponseModel: response.right.proposalDetails,
           currentPage: event.request.pageNo,
+          totalProposalApplication: response.right.totalProposals,
         ),
       );
     } else {

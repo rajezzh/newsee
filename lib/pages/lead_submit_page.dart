@@ -6,6 +6,7 @@ import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_route_constants.dart';
 import 'package:newsee/Model/address_data.dart';
 import 'package:newsee/Model/personal_data.dart';
+import 'package:newsee/Utils/proposal_utils.dart';
 import 'package:newsee/Utils/shared_preference_handler.dart';
 import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/Utils/utils.dart';
@@ -46,7 +47,8 @@ class LeadSubmitPage extends StatelessWidget {
     required LoanProduct loanProduct,
     required Dedupe dedupeData,
     required AddressData addressData,
-    required CoapplicantData coapplicantData,
+    required List<CoapplicantData> coAppAndGurantorData,
+    required isAddCoappGurantor,
   }) async {
     String? loanAmountFormatted = personlData.loanAmountRequested?.replaceAll(
       ',',
@@ -67,7 +69,8 @@ class LeadSubmitPage extends StatelessWidget {
       dedupe: dedupeData,
       personalData: updatedPersonalData,
       addressData: addressData,
-      coapplicantData: coapplicantData,
+      coAppAndGurantorData: coAppAndGurantorData,
+      isAddCoappGurantor: isAddCoappGurantor,
     );
     context.read<LeadSubmitBloc>().add(leadSubmitPushEvent);
   }
@@ -180,14 +183,14 @@ class LeadSubmitPage extends StatelessWidget {
           final loanproductBloc = context.watch<LoanproductBloc?>();
           final addressBloc = context.watch<AddressDetailsBloc?>();
           final dedupeBloc = context.watch<DedupeBloc?>();
-          final coappBloc = context.watch<CoappDetailsBloc?>();
+          final coguappBloc = context.watch<CoappDetailsBloc?>();
 
           final personalState = personalDetailsBloc?.state;
 
           final loanproductState = loanproductBloc?.state;
           final addressState = addressBloc?.state;
           final dedupeState = dedupeBloc?.state;
-          final coappState = coappBloc?.state;
+          final coguappState = coguappBloc?.state;
 
           LoanType loanType = LoanType(
             typeOfLoan: loanproductState?.selectedProductScheme?.optionValue,
@@ -205,7 +208,8 @@ class LeadSubmitPage extends StatelessWidget {
           );
           PersonalData? personalData = personalState?.personalData;
           AddressData? addressData = addressState?.addressData;
-          CoapplicantData? coappData = coappState?.selectedCoApp;
+          List<CoapplicantData>? coguappData = coguappState?.coAppList;
+          String? isWhetherAddCoappGurantor = coguappState?.isApplicantsAdded;
 
           print('addressData-------------->$addressData');
           return state.leadId == null
@@ -225,7 +229,8 @@ class LeadSubmitPage extends StatelessWidget {
                           productMaster:
                               loanproductBloc?.state.selectedProduct
                                   as ProductMaster,
-                          coappData: coappData,
+                          coguappData: coguappData,
+                          isAddCoappGurantor: isWhetherAddCoappGurantor,
                           context: context,
                           status: state.leadSubmitStatus,
                         )
@@ -245,7 +250,9 @@ class LeadSubmitPage extends StatelessWidget {
 
   void createProposal(BuildContext context, LeadSubmitState state) {
     // when lead is submitted success
-    if (state.proposalSubmitStatus == SaveStatus.init && state.leadId != null && state.proposalNo == null) {
+    if (state.proposalSubmitStatus == SaveStatus.init &&
+        state.leadId != null &&
+        state.proposalNo == null) {
       context.read<LeadSubmitBloc>().add(
         CreateProposalEvent(
           proposalCreationRequest: ProposalCreationRequest(
@@ -319,7 +326,8 @@ class LeadSubmitPage extends StatelessWidget {
     required LoanType loanType,
     required Dedupe dedupeData,
     required ProductMaster productMaster,
-    required CoapplicantData? coappData,
+    required List<CoapplicantData>? coguappData,
+    required String? isAddCoappGurantor,
     required BuildContext context,
     required status,
   }) {
@@ -395,7 +403,8 @@ class LeadSubmitPage extends StatelessWidget {
                   loanProduct: loanProduct,
                   loanType: loanType,
                   dedupeData: dedupeData,
-                  coapplicantData: coappData!,
+                  coAppAndGurantorData: coguappData!,
+                  isAddCoappGurantor: isAddCoappGurantor,
                   context: context,
                 );
               },
