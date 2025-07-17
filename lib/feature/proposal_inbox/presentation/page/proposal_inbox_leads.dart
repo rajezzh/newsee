@@ -14,7 +14,7 @@ import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
 import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
 import 'package:newsee/feature/proposal_inbox/presentation/bloc/proposal_inbox_bloc.dart';
-import 'package:newsee/pages/cic_check_page.dart';
+import 'package:newsee/feature/cic_check/cic_check_page.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/options_sheet.dart';
 import 'package:number_paginator/number_paginator.dart';
