@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
