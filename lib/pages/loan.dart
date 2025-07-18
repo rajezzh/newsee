@@ -132,13 +132,9 @@ class Loan extends StatelessWidget {
             );
             showDialog(
               context: context,
-              barrierDismissible: false,
               builder:
-                  (_) => SysmoAlert(
+                  (_) => SysmoAlert.success(
                     message: "Loan Details Saved Successfully",
-                    iconColor: Colors.green,
-                    icon: Icons.check_circle,
-                    buttonText: 'OK',
                     onButtonPressed: () {
                       Navigator.pop(context);
                       goToNextTab(context: context);
@@ -148,14 +144,12 @@ class Loan extends StatelessWidget {
           } else if (state.status == SaveStatus.failure) {
             showDialog(
               context: context,
-              barrierDismissible: false,
               builder:
-                  (_) => SysmoAlert(
-                    message: "Failed to save Loan Details",
-                    iconColor: Colors.red,
-                    icon: Icons.cancel_rounded,
-                    buttonText: 'OK',
-                    onButtonPressed: () => Navigator.pop(context),
+                  (_) => SysmoAlert.failure(
+                    message: "Failed to save loan details",
+                    onButtonPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
             );
           }
