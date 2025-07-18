@@ -6,6 +6,9 @@ status - open
 
 issue raised by - ganesh
 
+fixed by - ganesh
+
+fixed data - 18/07/2025
 
 ## Homepage UI issue
 
