@@ -5,7 +5,6 @@
 */
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/globalconfig.dart';
 import 'package:newsee/feature/masterupdate/presentation/page/master_update.dart';
 import '../widgets/side_navigation.dart';

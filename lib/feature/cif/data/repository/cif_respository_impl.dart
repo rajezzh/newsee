@@ -21,7 +21,7 @@ class CifRepositoryImpl implements CifRepository {
       final payload = req.toJson();
       
       var response = await CifRemoteDatasource(
-        dio: await ApiClient().getDio(),
+        dio: ApiClient().getDio(),
       ).searchCif(payload);
 
       if (response.data[ApiConfig.API_RESPONSE_SUCCESS_KEY]) {

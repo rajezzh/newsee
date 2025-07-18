@@ -1,12 +1,19 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:newsee/core/api/api_client.dart';
+import 'package:newsee/feature/pdf_viewer/presentation/pages/pdf_viewer_page.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../feature/forgetmpin/presentation/page/forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
 import 'login_mpin.dart';
-
 
 /*
 author : Gayathri B 
@@ -22,7 +29,45 @@ description : A stateless widget that serves as the main login screen for the ap
 
 class LoginpageView extends StatelessWidget {
   Future fingerPrintScanner(context) async {
-    print('clicked finger print');
+    /** 
+     * testing pdfviewer functionality , pdfview widget will be routed when 
+     * click button
+     * https://www.pdf995.com/samples/pdf.pdf - remote pdf link
+     */
+    try {
+      String remoteFilePath = 'https://www.pdf995.com/samples/pdf.pdf';
+      String dirPath = (await getTemporaryDirectory()).path;
+      String pdfFilePath = '';
+      if (dirPath.lastIndexOf('/') == dirPath.length - 1) {
+        // dirPath ends with /
+        pdfFilePath = '${dirPath}samplepdf.pdf';
+      } else {
+        pdfFilePath = '$dirPath/samplepdf.pdf';
+      }
+
+      /// dio.download method will download pdf file  from remote url
+      /// and save the downloaded file to the pdffilepath
+      await ApiClient().getDio().download(
+        remoteFilePath,
+        pdfFilePath,
+        options: Options(
+          headers: {HttpHeaders.acceptEncodingHeader: '*'}, // Disable gzip
+        ),
+        onReceiveProgress: (received, total) {
+          // this callback  used to show download progress in UI
+          if (total <= 0) return;
+          print('percentage: ${(received / total * 100).toStringAsFixed(0)}%');
+        },
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PdfViewerPage(path: pdfFilePath),
+        ),
+      );
+    } catch (e) {
+      print('exception on downloading pdf... $e');
+    }
 
     // var biometricResponse = await BioMetricLogin().biometricAuthentication();
     // print("biometricResponse ${biometricResponse.status}");
@@ -248,7 +293,6 @@ class LoginpageView extends StatelessWidget {
                             "Reset",
                             "Cancel",
                           );
-                        
                         },
                         child: Text(
                           "Forgot mPIN?",
