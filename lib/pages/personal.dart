@@ -106,11 +106,8 @@ class Personal extends StatelessWidget {
               context: context,
               barrierDismissible: false,
               builder:
-                  (_) => SysmoAlert(
+                  (_) => SysmoAlert.success(
                     message: "Personal Details Saved Successfully",
-                    iconColor: Colors.green,
-                    icon: Icons.check_circle,
-                    buttonText: 'OK',
                     onButtonPressed: () {
                       Navigator.pop(context);
                       goToNextTab(context: context);
@@ -122,11 +119,8 @@ class Personal extends StatelessWidget {
               context: context,
               barrierDismissible: false,
               builder:
-                  (_) => SysmoAlert(
+                  (_) => SysmoAlert.failure(
                     message: "Failed to save Loan Details",
-                    iconColor: Colors.red,
-                    icon: Icons.cancel_rounded,
-                    buttonText: 'OK',
                     onButtonPressed: () => Navigator.pop(context),
                   ),
             );
@@ -649,12 +643,9 @@ class Personal extends StatelessWidget {
                               context: context,
                               barrierDismissible: false,
                               builder:
-                                  (_) => SysmoAlert(
+                                  (_) => SysmoAlert.warning(
                                     message:
                                         "Please check error message and Enter valid data",
-                                    iconColor: Colors.red,
-                                    icon: Icons.cancel_rounded,
-                                    buttonText: 'OK',
                                     onButtonPressed:
                                         () => Navigator.pop(context),
                                   ),
