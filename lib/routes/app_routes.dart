@@ -37,6 +37,7 @@ import 'package:newsee/feature/masters/domain/repository/master_repo.dart';
 import 'package:newsee/feature/masters/presentation/bloc/masters_bloc.dart';
 import 'package:newsee/feature/masters/presentation/page/masters_page.dart';
 import 'package:newsee/feature/savelead/presentation/bloc/savelead_sourcing_bloc.dart';
+import 'package:newsee/feature/cic_check/cic_check_page.dart';
 import 'package:newsee/pages/home_page.dart';
 import 'package:newsee/pages/newlead_page.dart';
 import 'package:newsee/pages/not_found_error.page.dart';
@@ -155,6 +156,11 @@ final routes = GoRouter(
       path: AppRouteConstants.PROFILE_PAGE['path']!,
       name: AppRouteConstants.PROFILE_PAGE['name'],
       builder: (context, state) => ProfilePage(),
+    ),
+    GoRoute(
+      path: AppRouteConstants.CIC_CHECK_PAGE['path']!,
+      name: AppRouteConstants.CIC_CHECK_PAGE['name'],
+      builder: (context, state) => CicCheckPage(),
     ),
     GoRoute(
       path: AppRouteConstants.CAMERA_PAGE['path']!,

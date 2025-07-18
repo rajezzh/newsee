@@ -22,6 +22,24 @@ class AppConstants {
   static const String GLOBAL_API_ERROR_MESSAGE = 'Something went wrong';
   static const String GLOBAL_NO_DATA_FOUND = 'No Data found';
   static const String GLOBAL_COULD_NOT_LAUNCH = 'Could not launch';
+  static const String FAILED_TO_LOAD_PDF_MESSAGE = 'Failed to load PDF';
+  static const String OK = 'OK';
+  static const bool SHOW_LOG = true;
+
+  static const String downloadingCibil = 'Downloading CIBIL Report...';
+  static const String downloadingCrif = 'Downloading CRIF Report...';
+  static const String creatingCibil = 'Creating CIBIL Report...';
+  static const String creatingCrif = 'Creating CRIF Report...';
+  static const String appLabelApplicant = 'Applicant';
+  static const String appLabelCoApplicant = 'Co-Applicant';
+  static const String remoteUrlCibilReport =
+      'http://www.policywala.com/downloads/Sample-CIBIL-CIR-Report.pdf';
+  static const String remoteUrlCrifReport =
+      'https://www.crifhighmark.com/media/2989/company-credit-reportp-sample.pdf';
+  static const String applicantCibilReportFileName = 'ApplicantCIBIL.pdf';
+  static const String applicantCrifReportFileName = 'ApplicantCRIF.pdf';
+  static const String coappCibilReportFileName = 'ApplicantCIBIL.pdf';
+  static const String coappCrifReportFileName = 'ApplicantCRIF.pdf';
 }
 
 class BioMetricResult {
