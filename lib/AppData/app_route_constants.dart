@@ -35,6 +35,10 @@ class AppRouteConstants {
     'name': 'cropdetails',
     'path': '/cropdetails',
   };
+  static const RouteProps CIC_CHECK_PAGE = {
+    'name': 'ciccheck',
+    'path': '/ciccheck',
+  };
   static const RouteProps IMAGE_VIEW_PAGE = {
     'name': '  imageview',
     'path': '/imageview',

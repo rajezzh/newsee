@@ -129,7 +129,7 @@ class NewLeadPage extends StatelessWidget {
                                         SizedBox(width: 12),
                                         Expanded(
                                           child: Text(
-                                            "Please complete the previous step before continuing.",
+                                            "Please complete the previous step before processing.",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
