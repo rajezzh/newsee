@@ -11,6 +11,7 @@ import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/feature/personaldetails/presentation/bloc/personal_details_bloc.dart';
 import 'package:newsee/widgets/SearchableMultiSelectDropdown.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
@@ -101,10 +102,34 @@ class Personal extends StatelessWidget {
             'personaldetail::BlocConsumer:listen => ${state.lovList} ${state.personalData} ${state.status?.name}',
           );
           if (state.status == SaveStatus.success) {
-            showSnack(context, message: 'Personal Details Saved Successfully');
-            goToNextTab(context: context);
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => SysmoAlert(
+                    message: "Personal Details Saved Successfully",
+                    iconColor: Colors.green,
+                    icon: Icons.check_circle,
+                    buttonText: 'OK',
+                    onButtonPressed: () {
+                      Navigator.pop(context);
+                      goToNextTab(context: context);
+                    },
+                  ),
+            );
           } else if (state.status == SaveStatus.failure) {
-            showSnack(context, message: 'Failed to Save Personal Details');
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => SysmoAlert(
+                    message: "Failed to save Loan Details",
+                    iconColor: Colors.red,
+                    icon: Icons.cancel_rounded,
+                    buttonText: 'OK',
+                    onButtonPressed: () => Navigator.pop(context),
+                  ),
+            );
           }
         },
         builder: (context, state) {
@@ -620,10 +645,19 @@ class Personal extends StatelessWidget {
                             );
                           } else {
                             form.markAllAsTouched();
-                            showSnack(
-                              context,
-                              message:
-                                  'Please Check Error Message and Enter Valid Data',
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder:
+                                  (_) => SysmoAlert(
+                                    message:
+                                        "Please check error message and Enter valid data",
+                                    iconColor: Colors.red,
+                                    icon: Icons.cancel_rounded,
+                                    buttonText: 'OK',
+                                    onButtonPressed:
+                                        () => Navigator.pop(context),
+                                  ),
                             );
                             // ScaffoldMessenger.of(context).showSnackBar(
                             //   SnackBar(

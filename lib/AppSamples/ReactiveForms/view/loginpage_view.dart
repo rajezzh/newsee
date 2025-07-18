@@ -1,12 +1,19 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/login-with-account.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:newsee/core/api/api_client.dart';
+import 'package:newsee/feature/pdf_viewer/presentation/pages/pdf_viewer_page.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../feature/forgetmpin/presentation/page/forgetpassword.dart';
 import 'maintain.dart';
 import 'reachus.dart';
 import 'more.dart';
 import 'login_mpin.dart';
-
 
 /*
 author : Gayathri B 
@@ -22,7 +29,45 @@ description : A stateless widget that serves as the main login screen for the ap
 
 class LoginpageView extends StatelessWidget {
   Future fingerPrintScanner(context) async {
-    print('clicked finger print');
+    /** 
+     * testing pdfviewer functionality , pdfview widget will be routed when 
+     * click button
+     * https://www.pdf995.com/samples/pdf.pdf - remote pdf link
+     */
+    try {
+      String remoteFilePath = 'https://www.pdf995.com/samples/pdf.pdf';
+      String dirPath = (await getTemporaryDirectory()).path;
+      String pdfFilePath = '';
+      if (dirPath.lastIndexOf('/') == dirPath.length - 1) {
+        // dirPath ends with /
+        pdfFilePath = '${dirPath}samplepdf.pdf';
+      } else {
+        pdfFilePath = '$dirPath/samplepdf.pdf';
+      }
+
+      /// dio.download method will download pdf file  from remote url
+      /// and save the downloaded file to the pdffilepath
+      await ApiClient().getDio().download(
+        remoteFilePath,
+        pdfFilePath,
+        options: Options(
+          headers: {HttpHeaders.acceptEncodingHeader: '*'}, // Disable gzip
+        ),
+        onReceiveProgress: (received, total) {
+          // this callback  used to show download progress in UI
+          if (total <= 0) return;
+          print('percentage: ${(received / total * 100).toStringAsFixed(0)}%');
+        },
+      );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PdfViewerPage(path: pdfFilePath),
+        ),
+      );
+    } catch (e) {
+      print('exception on downloading pdf... $e');
+    }
 
     // var biometricResponse = await BioMetricLogin().biometricAuthentication();
     // print("biometricResponse ${biometricResponse.status}");
@@ -105,88 +150,9 @@ class LoginpageView extends StatelessWidget {
                           ),
                           SizedBox(height: screenHeight * 0.06),
 
-                          // Padding(
-                          //   padding: EdgeInsets.only(
-                          //     bottom: screenHeight * 0.02,
-                          //   ),
-
-                          //   child: Row(
-                          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          //     children: [
-                          //       Column(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           IconButton(
-                          //             onPressed: () {},
-                          //             icon: SvgPicture.asset(
-                          //               'assets/Retail_loan.svg',
-                          //               // width: screenWidth * 0.02,
-                          //               // height: screenHeight,
-                          //               width: screenWidth * 0.05,
-                          //               height: screenHeight * 0.05,
-                          //             ),
-                          //             iconSize: screenWidth * 0.08,
-                          //             color: Colors.amber,
-                          //           ),
-                          //           Padding(
-                          //             padding: const EdgeInsets.only(top: 0),
-                          //             child: Text(
-                          //               'Retail Loan',
-                          //               style: TextStyle(
-                          //                 color: Colors.black,
-                          //                 fontSize: screenWidth * 0.04,
-                          //               ),
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       Column(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           IconButton(
-                          //             onPressed: () {},
-                          //             icon: SvgPicture.asset(
-                          //               'assets/Agri_Loan.svg',
-                          //               width: screenWidth * 0.05,
-                          //               height: screenHeight * 0.05,
-                          //             ),
-                          //             iconSize: screenWidth * 0.08,
-                          //             color: Colors.blue,
-                          //           ),
-                          //           Text(
-                          //             'Agri Loan',
-                          //             style: TextStyle(
-                          //               color: Colors.black,
-                          //               fontSize: screenWidth * 0.04,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       Column(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           IconButton(
-                          //             onPressed: () {},
-                          //             icon: SvgPicture.asset(
-                          //               'assets/MSME.svg',
-                          //               width: screenWidth * 0.05,
-                          //               height: screenHeight * 0.05,
-                          //             ),
-                          //             iconSize: screenWidth * 0.07,
-                          //             color: Colors.pink,
-                          //           ),
-                          //           Text(
-                          //             'MSME Loan',
-                          //             style: TextStyle(
-                          //               color: Colors.black,
-                          //               fontSize: screenWidth * 0.04,
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
+                          // this function returns a widget that is a row with icon button
+                          // served as quick links to access other apk files for other loans
+                          quickLink(screenHeight, screenWidth),
                         ],
                       ),
                     ),
@@ -248,7 +214,6 @@ class LoginpageView extends StatelessWidget {
                             "Reset",
                             "Cancel",
                           );
-                        
                         },
                         child: Text(
                           "Forgot mPIN?",
@@ -352,4 +317,87 @@ class LoginpageView extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget quickLink(double screenHeight, double screenWidth) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/Retail_loan.svg',
+                // width: screenWidth * 0.02,
+                // height: screenHeight,
+                width: screenWidth * 0.05,
+                height: screenHeight * 0.05,
+              ),
+              iconSize: screenWidth * 0.08,
+              color: Colors.amber,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 0),
+              child: Text(
+                'Retail Loan',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: screenWidth * 0.04,
+                ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/Agri_Loan.svg',
+                width: screenWidth * 0.05,
+                height: screenHeight * 0.05,
+              ),
+              iconSize: screenWidth * 0.08,
+              color: Colors.blue,
+            ),
+            Text(
+              'Agri Loan',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: screenWidth * 0.04,
+              ),
+            ),
+          ],
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: SvgPicture.asset(
+                'assets/MSME.svg',
+                width: screenWidth * 0.05,
+                height: screenHeight * 0.05,
+              ),
+              iconSize: screenWidth * 0.07,
+              color: Colors.pink,
+            ),
+            Text(
+              'MSME Loan',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: screenWidth * 0.04,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }

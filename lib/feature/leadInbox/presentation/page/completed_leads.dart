@@ -17,6 +17,8 @@ import 'package:newsee/feature/leadInbox/domain/modal/group_lead_inbox.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:newsee/feature/leadsubmit/domain/modal/proposal_creation_request.dart';
 import 'package:newsee/feature/leadsubmit/presentation/bloc/lead_submit_bloc.dart';
+import 'package:newsee/widgets/sysmo_alert.dart';
+import 'package:newsee/widgets/loader.dart';
 import 'package:newsee/widgets/success_bottom_sheet.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:newsee/feature/leadInbox/presentation/bloc/lead_bloc.dart';
@@ -33,17 +35,23 @@ class CompletedLeads extends StatelessWidget {
     return BlocProvider(
       create: (context) => LeadBloc()..add(SearchLeadEvent()),
       child: BlocConsumer<LeadBloc, LeadState>(
-        listener: (context, state) => {
-          if (state.proposalSubmitStatus == SaveStatus.success && state.proposalNo != null) {
+        listener: (context, state) {
+          if (state.proposalSubmitStatus == SaveStatus.loading) {
+            presentLoading(context, 'Creating Proposal...');
+          } else if (state.proposalSubmitStatus == SaveStatus.success ||
+              state.proposalSubmitStatus == SaveStatus.failure) {
+            dismissLoading(context);
+          }
+
+          if (state.proposalSubmitStatus == SaveStatus.success &&
+              state.proposalNo != null) {
             showSuccessBottomSheet(
               context: context,
               headerTxt: ApiConstants.api_response_success,
               lead: "Proposal No : ${state.proposalNo}",
               message: "Proposal successfully Created",
               onPressedLeftButton: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
+                if (Navigator.canPop(context)) Navigator.pop(context);
               },
               onPressedRightButton: () {
                 context.pop();
@@ -54,9 +62,25 @@ class CompletedLeads extends StatelessWidget {
               },
               leftButtonLabel: 'Cancel',
               rightButtonLabel: 'Go To Application',
-            )
+            );
+          }
+
+          if (state.proposalSubmitStatus == SaveStatus.failure) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (_) => SysmoAlert(
+                    message: "Proposal Creation Failed",
+                    iconColor: Colors.red,
+                    icon: Icons.cancel_rounded,
+                    buttonText: 'OK',
+                    onButtonPressed: () => Navigator.pop(context),
+                  ),
+            );
           }
         },
+
         builder: (context, state) {
           Future<void> onRefresh() async {
             context.read<LeadBloc>().add(SearchLeadEvent());
@@ -80,7 +104,6 @@ class CompletedLeads extends StatelessWidget {
           if (state.status == LeadStatus.failure) {
             return renderWhenNoItems(onRefresh, state);
           }
-
 
           final List<GroupLeadInbox>? allLeads = state.leadResponseModel;
 
@@ -130,7 +153,8 @@ class CompletedLeads extends StatelessWidget {
             child: ListView.builder(
               itemCount: filteredLeads.length,
               itemBuilder: (context, index) {
-                final lead = filteredLeads[index].finalList as Map<String, dynamic>;
+                final lead =
+                    filteredLeads[index].finalList as Map<String, dynamic>;
                 return LeadTileCard(
                   title: lead['lleadfrstname'] ?? 'N/A',
                   subtitle: lead['lleadid'] ?? 'N/A',
@@ -146,6 +170,18 @@ class CompletedLeads extends StatelessWidget {
                   location: lead['lleadprefbrnch'] ?? 'N/A',
                   loanamount: lead['lldLoanamtRequested']?.toString() ?? '',
                   onTap: () {},
+                  showarrow: false,
+                  button: TextButton(
+                    onPressed: () {
+                      context.read<LeadBloc>().add(
+                        CreateProposalLeadEvent(leadId: lead['lleadid'] ?? ''),
+                      );
+                    },
+                    child: const Text(
+                      'Create Proposal',
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                  ),
                 );
               },
             ),
@@ -157,7 +193,7 @@ class CompletedLeads extends StatelessWidget {
               initialPage: currentPage,
               onPageChange: (int index) {
                 // check if the
-              context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
+                context.read<LeadBloc>().add(SearchLeadEvent(pageNo: index));
               },
               child: const SizedBox(
                 width: 250,

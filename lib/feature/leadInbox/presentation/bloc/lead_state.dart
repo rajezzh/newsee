@@ -40,26 +40,25 @@ class LeadState extends Equatable {
     int? totApplication,
     String? proposalNo,
     SaveStatus? proposalSubmitStatus,
-
   }) {
     return LeadState(
       status: status ?? this.status,
       leadResponseModel: leadResponseModel ?? this.leadResponseModel,
       errorMessage: errorMessage ?? this.errorMessage,
       currentPage: currentPage ?? this.currentPage,
-      totApplication: totApplication ?? totApplication,
-      proposalNo:proposalNo ?? this.proposalNo,
-      proposalSubmitStatus:proposalSubmitStatus ?? this.proposalSubmitStatus,
+      totApplication: totApplication ?? this.totApplication,
+      proposalNo: proposalNo ?? this.proposalNo,
+      proposalSubmitStatus: proposalSubmitStatus ?? this.proposalSubmitStatus,
     );
   }
 
   List<Object?> get props => [
-    status, 
-    leadResponseModel, 
+    status,
+    leadResponseModel,
     errorMessage,
     currentPage,
     totApplication,
     proposalNo,
-    proposalSubmitStatus
+    proposalSubmitStatus,
   ];
 }
