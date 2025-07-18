@@ -35,7 +35,6 @@ class NewLeadPage extends StatelessWidget {
                   ),
         ),
         BlocProvider(create: (context) => DedupeBloc()),
-
         BlocProvider(
           create:
               (context) =>
@@ -54,7 +53,6 @@ class NewLeadPage extends StatelessWidget {
           create: (context) => CoappDetailsBloc()..add(CoAppDetailsInitEvent()),
           lazy: false,
         ),
-
         BlocProvider(create: (context) => LeadSubmitBloc()),
       ],
       child: DefaultTabController(
@@ -64,30 +62,102 @@ class NewLeadPage extends StatelessWidget {
               Globalconfig.isInitialRoute
                   ? null
                   : AppBar(
-                    title: Text(
+                    title: const Text(
                       'Lead Details',
                       style: TextStyle(color: Colors.white),
                     ),
                     flexibleSpace: Container(
-                      decoration: BoxDecoration(color: Colors.teal),
+                      decoration: const BoxDecoration(color: Colors.teal),
                     ),
                     bottom: PreferredSize(
-                      preferredSize: Size.fromHeight(60.0),
+                      preferredSize: const Size.fromHeight(60.0),
                       child: Builder(
                         builder: (context) {
+                          final loanState =
+                              context.watch<LoanproductBloc>().state;
+                          final dedupeState = context.watch<DedupeBloc>().state;
+
                           final personalState =
                               context.watch<PersonalDetailsBloc>().state;
                           final addressState =
                               context.watch<AddressDetailsBloc>().state;
-                          final dedupeState = context.watch<DedupeBloc>().state;
-                          final loanState =
-                              context.watch<LoanproductBloc>().state;
+
                           final coappState =
                               context.watch<CoappDetailsBloc>().state;
 
+                          final TabController tabController =
+                              DefaultTabController.of(context);
+
                           return TabBar(
+                            controller: tabController,
                             indicatorColor: Colors.white,
                             indicatorWeight: 3,
+                            onTap: (index) {
+                              final statusList = [
+                                loanState.status,
+                                dedupeState.status,
+                                personalState.status,
+                                addressState.status,
+                                // coappState.status,
+                              ];
+
+                              bool canNavigate = true;
+                              for (int i = 0; i < index; i++) {
+                                
+                                if (statusList[i] != SaveStatus.success &&
+                                    statusList[i] !=
+                                        DedupeFetchStatus.success) {
+                                  canNavigate = false;
+                                  break;
+                                }
+                              }
+                              if (!canNavigate) {
+                                Future.microtask(
+                                  () =>
+                                      tabController.index =
+                                          tabController.previousIndex,
+                                );
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.warning_amber_rounded,
+                                          color: Colors.white,
+                                        ),
+                                        SizedBox(width: 12),
+                                        Expanded(
+                                          child: Text(
+                                            "Please complete the previous step before continuing.",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: Colors.teal,
+
+                                    behavior: SnackBarBehavior.floating,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 16,
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 16,
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
                             tabs: <Widget>[
                               Tab(
                                 icon: FittedBox(
@@ -95,12 +165,16 @@ class NewLeadPage extends StatelessWidget {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.badge,
-                                        color: Colors.white,
+                                        color:
+                                            loanState.status ==
+                                                    SaveStatus.success
+                                                ? Colors.white
+                                                : Colors.white70,
                                       ),
-                                      if (loanState.status?.name ==
-                                          SaveStatus.success.name)
+                                      if (loanState.status ==
+                                          SaveStatus.success)
                                         const Padding(
                                           padding: EdgeInsets.symmetric(
                                             horizontal: 4.0,
@@ -118,13 +192,16 @@ class NewLeadPage extends StatelessWidget {
                               Tab(
                                 icon: FittedBox(
                                   fit: BoxFit.scaleDown,
-
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.file_copy,
-                                        color: Colors.white,
+                                        color:
+                                            dedupeState.status?.name ==
+                                                    SaveStatus.success.name
+                                                ? Colors.white
+                                                : Colors.white70,
                                       ),
                                       if (dedupeState.status?.name ==
                                           SaveStatus.success.name)
@@ -142,15 +219,20 @@ class NewLeadPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
+
                               Tab(
                                 icon: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.face,
-                                        color: Colors.white,
+                                        color:
+                                            personalState.status?.name ==
+                                                    SaveStatus.success.name
+                                                ? Colors.white
+                                                : Colors.white70,
                                       ),
                                       if (personalState.status?.name ==
                                           SaveStatus.success.name)
@@ -174,9 +256,13 @@ class NewLeadPage extends StatelessWidget {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.location_city,
-                                        color: Colors.white,
+                                        color:
+                                            addressState.status ==
+                                                    SaveStatus.success
+                                                ? Colors.white
+                                                : Colors.white70,
                                       ),
                                       if (addressState.status ==
                                           SaveStatus.success)
@@ -193,16 +279,20 @@ class NewLeadPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                              ), // address tab
+                              ),
                               Tab(
                                 icon: FittedBox(
                                   fit: BoxFit.scaleDown,
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         Icons.add_reaction,
-                                        color: Colors.white,
+                                        color:
+                                            coappState.status ==
+                                                    SaveStatus.success
+                                                ? Colors.white
+                                                : Colors.white70,
                                       ),
                                       if (coappState.status ==
                                           SaveStatus.success)
@@ -219,9 +309,12 @@ class NewLeadPage extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                              ), // co applicant tab
+                              ),
                               const Tab(
-                                icon: Icon(Icons.done_all, color: Colors.white),
+                                icon: Icon(
+                                  Icons.done_all,
+                                  color: Colors.white70,
+                                ),
                               ),
                             ],
                           );
