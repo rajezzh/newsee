@@ -8,10 +8,10 @@ import 'package:newsee/feature/loanproductdetails/presentation/bloc/loanproduct_
 import 'package:newsee/feature/masters/domain/modal/product.dart';
 import 'package:newsee/feature/masters/domain/modal/product_master.dart';
 import 'package:newsee/feature/masters/domain/modal/productschema.dart';
+import 'package:newsee/widgets/k_willpopscope.dart';
 import 'package:newsee/widgets/sysmo_alert.dart';
 import 'package:newsee/widgets/bottom_sheet.dart';
 import 'package:newsee/widgets/drop_down.dart';
-import 'package:newsee/widgets/k_willpopscope.dart';
 import 'package:newsee/widgets/productcard.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -70,7 +70,7 @@ class Loan extends StatelessWidget {
     final _context = context;
     return Kwillpopscope(
       routeContext: context,
-      form: form,
+      form:form,
       widget: Scaffold(
         appBar: AppBar(
           title: Text("Loan Details"),
@@ -80,7 +80,7 @@ class Loan extends StatelessWidget {
           listener: (context, state) {
             BuildContext ctxt = context;
             print('LoanProductBlocListener:: log =>  ${state.showBottomSheet}');
-
+      
             if (state.showBottomSheet == true) {
               openBottomSheet(
                 context,
@@ -118,7 +118,7 @@ class Loan extends StatelessWidget {
                 // ),
               );
             }
-
+      
             if (state.selectedProduct != null &&
                 state.showBottomSheet == false &&
                 state.status != SaveStatus.success) {
@@ -126,7 +126,7 @@ class Loan extends StatelessWidget {
               LoanproductState.init();
               Navigator.of(_context).pop();
             }
-
+      
             if (state.status == SaveStatus.success) {
               Globalconfig.loanAmountMaximum = int.parse(
                 state.selectedProduct?.prdamtToRange ?? '0',
@@ -136,13 +136,9 @@ class Loan extends StatelessWidget {
               );
               showDialog(
                 context: context,
-                barrierDismissible: false,
                 builder:
-                    (_) => SysmoAlert(
+                    (_) => SysmoAlert.success(
                       message: "Loan Details Saved Successfully",
-                      iconColor: Colors.green,
-                      icon: Icons.check_circle,
-                      buttonText: 'OK',
                       onButtonPressed: () {
                         Navigator.pop(context);
                         goToNextTab(context: context);
@@ -152,22 +148,20 @@ class Loan extends StatelessWidget {
             } else if (state.status == SaveStatus.failure) {
               showDialog(
                 context: context,
-                barrierDismissible: false,
                 builder:
-                    (_) => SysmoAlert(
-                      message: "Failed to save Loan Details",
-                      iconColor: Colors.red,
-                      icon: Icons.cancel_rounded,
-                      buttonText: 'OK',
-                      onButtonPressed: () => Navigator.pop(context),
+                    (_) => SysmoAlert.failure(
+                      message: "Failed to save loan details",
+                      onButtonPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
               );
             }
           },
-        // child: BlocBuilder<LoanproductBloc, LoanproductState>(
-        builder: (context, state) {
-          return ReactiveForm(
-            formGroup: form,
+          // child: BlocBuilder<LoanproductBloc, LoanproductState>(
+          builder: (context, state) {
+            return ReactiveForm(
+              formGroup: form,
               child: SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
@@ -180,7 +174,7 @@ class Loan extends StatelessWidget {
                           form.controls['typeofloan']?.updateValue(
                             val.optionValue,
                           );
-
+      
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
@@ -199,7 +193,7 @@ class Loan extends StatelessWidget {
                                   optionValue: '',
                                 ),
                           );
-
+      
                           // if (state.selectedProductScheme != null) {
                           //   form.controls['typeofloan']?.updateValue(
                           //     state.selectedProductScheme?.optionValue,
@@ -218,7 +212,7 @@ class Loan extends StatelessWidget {
                           form.controls['maincategory']?.updateValue(
                             val.lsfFacId,
                           );
-
+      
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
@@ -239,7 +233,7 @@ class Loan extends StatelessWidget {
                                   lsfBizVertical: '',
                                 ),
                           );
-
+      
                           // if (state.selectedMainCategory != null) {
                           //   form.controls['maincategory']?.updateValue(
                           //     state.selectedMainCategory?.lsfFacId,
@@ -255,10 +249,8 @@ class Loan extends StatelessWidget {
                         label: 'Sub Category',
                         items: state.subCategoryList,
                         onChangeListener: (Product val) {
-                          form.controls['subcategory']?.updateValue(
-                            val.lsfFacId,
-                          );
-
+                          form.controls['subcategory']?.updateValue(val.lsfFacId);
+      
                           context.read<LoanproductBloc>().add(
                             LoanProductDropdownChange(field: val),
                           );
@@ -279,7 +271,7 @@ class Loan extends StatelessWidget {
                                   lsfBizVertical: '',
                                 ),
                           );
-
+      
                           // if (state.selectedSubCategoryList != null) {
                           //   form.controls['subcategory']?.updateValue(
                           //     state.selectedSubCategoryList?.lsfFacId,
@@ -290,7 +282,7 @@ class Loan extends StatelessWidget {
                           // }
                         },
                       ),
-
+      
                       Column(
                         children:
                             state.selectedProduct != null
@@ -326,7 +318,7 @@ class Loan extends StatelessWidget {
                             final blocState =
                                 context.read<LoanproductBloc>().state;
                             final selectedProduct = blocState.selectedProduct;
-
+      
                             if (form.valid) {
                               if (selectedProduct == null) {
                                 showDialog(
@@ -335,12 +327,9 @@ class Loan extends StatelessWidget {
                                       (ctx) => AlertDialog(
                                         title: Row(
                                           children: [
-                                            Icon(
-                                              Icons.info,
-                                              color: Colors.teal,
-                                            ),
+                                            Icon(Icons.info, color: Colors.teal),
                                             SizedBox(width: 8),
-
+      
                                             Text(
                                               'Alert',
                                               style: TextStyle(

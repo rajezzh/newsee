@@ -43,14 +43,10 @@ class Address extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder:
-          (_) => SysmoAlert(
+          (_) => SysmoAlert.success(
             message: 'Address Details Saved Successfully',
-            icon: Icons.check_circle,
-            iconColor: Colors.green,
-            buttonText: 'OK',
             onButtonPressed: () {
               Navigator.of(context).pop();
-
               final tabController = DefaultTabController.of(context);
               if (tabController.index < tabController.length - 1) {
                 tabController.animateTo(tabController.index + 1);
