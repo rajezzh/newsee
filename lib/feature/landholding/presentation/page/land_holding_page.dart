@@ -13,7 +13,7 @@ import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dar
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/widgets/alpha_text_field.dart';
-import 'package:newsee/widgets/google_maps.dart';
+import 'package:newsee/widgets/google_maps_card.dart';
 import 'package:newsee/widgets/k_willpopscope.dart';
 import 'package:newsee/widgets/options_sheet.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
@@ -347,8 +347,7 @@ class LandHoldingPage extends StatelessWidget {
                                           ),
                                         ),
                                         const SizedBox(width: 8),
-                                        IconButton(
-                                          icon: Icon(Icons.map),
+                                        OutlinedButton.icon(
                                           onPressed: () async {
                                             globalLoadingBloc.add(
                                               ShowLoading(
@@ -374,17 +373,20 @@ class LandHoldingPage extends StatelessWidget {
                                                       ),
                                                     ),
                                               );
-                                              double distance1 =
+                                              double calculateDistance =
                                                   Geolocator.distanceBetween(
                                                     12.9483,
                                                     80.2546,
                                                     curposition.latitude,
                                                     curposition.longitude,
                                                   );
-                                              print(distance1);
-                                              String value = (distance1 / 1000)
-                                                  .toStringAsFixed(2);
-                                              print('distance1----->$value');
+                                              print(calculateDistance);
+                                              String value =
+                                                  (calculateDistance / 1000)
+                                                      .toStringAsFixed(2);
+                                              print(
+                                                'calculateDistance----->$value',
+                                              );
                                               form
                                                   .control('distanceFromBranch')
                                                   .updateValue(value);
@@ -400,7 +402,19 @@ class LandHoldingPage extends StatelessWidget {
                                               );
                                             }
                                           },
-                                          color: Color.fromARGB(212, 5, 8, 205),
+                                          icon: Icon(
+                                            Icons.map,
+                                          ), // Your icon here
+                                          label: Text(
+                                            "location",
+                                          ), // Your text here
+                                          style: OutlinedButton.styleFrom(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 12,
+                                            ),
+                                            textStyle: TextStyle(fontSize: 16),
+                                          ),
                                         ),
                                       ],
                                     ),
