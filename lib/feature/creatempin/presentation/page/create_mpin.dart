@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppSamples/ReactiveForms/view/login_mpin.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 createMpin(BuildContext context) {
-  final List<TextEditingController> newMpinControllers = List.generate(
-    4,
-    (_) => TextEditingController(),
-  );
-  final List<TextEditingController> confirmMpinControllers = List.generate(
-    4,
-    (_) => TextEditingController(),
-  );
-
   // show the custom modal bottom sheet
   showModalBottomSheet<void>(
     isScrollControlled: true,
-
+    backgroundColor: Colors.white,
     context: context,
     builder: (BuildContext context) {
       final size = MediaQuery.of(context).size;
+      String pin = '';
+      String confirmPin = '';
       final screenWidth = size.width;
       final screenHeight = size.height;
       return GestureDetector(
@@ -48,98 +42,98 @@ createMpin(BuildContext context) {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    'Set  MPIN',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                  ),
+                  PinCodeTextField(
+                    enablePinAutofill: false,
+                    autoFocus: true,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    appContext: context,
+                    length: 4,
+                    obscureText: true,
+                    blinkDuration: Duration(seconds: 1),
+                    blinkWhenObscuring: true,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.underline,
+                      borderRadius: BorderRadius.circular(5),
+                      fieldHeight: 50,
+                      fieldWidth: 40,
+                      activeFillColor: Colors.white,
+                      activeColor: Colors.black,
+                      inactiveColor: Colors.black,
+                      inactiveFillColor: Colors.white,
+                      selectedFillColor: Colors.grey.shade200,
+                      activeBorderWidth: 1,
+                      inactiveBorderWidth: 1,
+                    ),
+                    animationDuration: Duration(milliseconds: 300),
+                    backgroundColor: Colors.white12,
+                    enableActiveFill: true,
+                    onCompleted: (v) {
+                      pin = v;
+                      print("Set MPIN Completed => $pin");
+                    },
+                    onChanged: (value) {
+                      print(value);
+                    },
+                    beforeTextPaste: (text) {
+                      print("Allowing to paste $text");
+                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                      return true;
+                    },
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Text(
-                      'Set new 4 digit MPIN',
+                      'Confirm  MPIN',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
-                  Row(
-                    // Four TextFields for entering a numeric MPIN
+                  PinCodeTextField(
+                    enablePinAutofill: false,
+                    autoFocus: true,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: List.generate(4, (i) {
-                      return Container(
-                        width: screenWidth * 0.15,
-                        height: screenHeight * 0.06,
-                        margin: EdgeInsets.symmetric(horizontal: 2),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1.0, color: Colors.black),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-
-                        // fingerprint icon for biometric authentication
-                        child: Center(
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: InputBorder.none,
-                            ),
-
-                            onChanged: (v) {
-                              if (v.isNotEmpty && i + 1 < 5) {
-                                print('onChanged Value V:  $v');
-
-                                FocusScope.of(context).nextFocus();
-                              }
-                            },
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                  SizedBox(height: screenHeight * 0.05),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      'Confirm new 4 digit MPIN',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
+                    appContext: context,
+                    length: 4,
+                    obscureText: true,
+                    blinkDuration: Duration(seconds: 1),
+                    blinkWhenObscuring: true,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.underline,
+                      borderRadius: BorderRadius.circular(5),
+                      fieldHeight: 50,
+                      fieldWidth: 40,
+                      activeFillColor: Colors.white,
+                      activeColor: Colors.black,
+                      inactiveColor: Colors.black,
+                      inactiveFillColor: Colors.white,
+                      selectedFillColor: Colors.grey.shade200,
+                      activeBorderWidth: 1,
+                      inactiveBorderWidth: 1,
                     ),
-                  ),
-
-                  Row(
-                    // Four TextFields for entering a numeric MPIN
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                    children: List.generate(4, (i) {
-                      return Container(
-                        width: screenWidth * 0.15,
-                        height: screenHeight * 0.06,
-                        margin: EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1.0, color: Colors.black),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-
-                        // fingerprint icon for biometric authentication
-                        child: Center(
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            maxLength: 1,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: InputBorder.none,
-                            ),
-
-                            onChanged: (v) {
-                              if (v.isNotEmpty && i + 1 < 5) {
-                                FocusScope.of(context).nextFocus();
-                              }
-                            },
-                          ),
-                        ),
-                      );
-                    }),
+                    animationDuration: Duration(milliseconds: 300),
+                    backgroundColor: Colors.white12,
+                    enableActiveFill: true,
+                    onCompleted: (v) {
+                      print("Completed");
+                    },
+                    onChanged: (value) {
+                      print(value);
+                    },
+                    beforeTextPaste: (text) {
+                      print("Allowing to paste $text");
+                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                      return true;
+                    },
                   ),
                 ],
               ),
