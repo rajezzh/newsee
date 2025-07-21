@@ -12,6 +12,8 @@ import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/leadInbox/domain/modal/lead_request.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_bloc.dart';
+import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dart';
 import 'package:newsee/feature/proposal_inbox/domain/modal/group_proposal_inbox.dart';
 import 'package:newsee/feature/proposal_inbox/presentation/bloc/proposal_inbox_bloc.dart';
 import 'package:newsee/feature/cic_check/cic_check_page.dart';
@@ -39,6 +41,7 @@ class ProposalInbox extends StatelessWidget {
               ),
       child: BlocBuilder<ProposalInboxBloc, ProposalInboxState>(
         builder: (context, state) {
+          final globalLoadingBloc = context.read<GlobalLoadingBloc>();
           Future<void> onRefresh() async {
             context.read<ProposalInboxBloc>().add(
               SearchProposalInboxEvent(
@@ -64,6 +67,20 @@ class ProposalInbox extends StatelessWidget {
 
           if (state.status == ProposalInboxStatus.failure) {
             return renderWhenNoItems(onRefresh, state);
+          }
+
+          if (state.applicationStatus == SaveStatus.loading) {
+            globalLoadingBloc.add(ShowLoading(message: 'Fetching Status...'));
+          } else if (state.applicationStatus == SaveStatus.success) {
+            globalLoadingBloc.add(HideLoading());
+            _showBottomSheet(context, state.currentApplication!);
+          } else if(state.applicationStatus == SaveStatus.failure) {
+            globalLoadingBloc.add(HideLoading());
+            // ScaffoldMessenger.of(
+            //   context,
+            // ).showSnackBar(SnackBar(content: Text(state.errorMessage.toString())));
+          } else {
+            globalLoadingBloc.add(HideLoading());
           }
 
           // final allLeads =
@@ -136,7 +153,11 @@ class ProposalInbox extends StatelessWidget {
                   createdon: proposal['createdOn'] ?? 'N/A',
                   location: proposal['branchName'] ?? 'N/A',
                   loanamount: proposal['loanAmount']?.toString() ?? '',
-                  onTap: () => _showBottomSheet(context, proposal),
+                  onTap: () {
+                    context.read<ProposalInboxBloc>().add(
+                      ApplicationStatusCheckEvent(currentApplication: proposal)
+                    );
+                  },
                 );
               },
             ),

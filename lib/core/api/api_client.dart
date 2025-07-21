@@ -35,7 +35,7 @@ class ApiClient {
 // Custom Interceptor for Internet Connectivity Check
 class ConnectivityInterceptor extends Interceptor {
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     
     // Check internet connectivity
     final bool isConnected = await InternetConnectionChecker.instance.hasConnection;
