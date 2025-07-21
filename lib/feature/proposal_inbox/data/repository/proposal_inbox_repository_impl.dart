@@ -79,21 +79,23 @@ class ProposalInboxRepositoryImpl implements ProposalInboxRepository {
     }
   }
 
+  @override
   Future<AsyncResponseHandler<Failure, ApplicationStatusResponse>> getApplicationStatus(req) async {
     try {
       String endpoint = ApiConfig.GET_LAND_CROP_STATUS;
       final response = await ProposalInboxRemoteDatasource(
         dio: ApiClient().getDio(),
-      ).searchProposalInbox(req.toMap(), endpoint);
+      ).searchProposalInbox(req, endpoint);
 
       final responseData = response.data;
       final isSuccess =
           responseData[ApiConfig.API_RESPONSE_SUCCESS_KEY] == true;
+      final Map<String, dynamic> isResponse = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY];
       
-      if (isSuccess) {
-        final response = responseData[ApiConfig.API_RESPONSE_RESPONSE_KEY];
-        ApplicationStatusResponse applicationStatus = ApplicationStatusResponse.fromJson(
-          response,
+      if (isSuccess || isResponse.isNotEmpty) {
+        
+        ApplicationStatusResponse applicationStatus = ApplicationStatusResponse.fromMap(
+          isResponse,
         );
         return AsyncResponseHandler.right(applicationStatus);
       } else {

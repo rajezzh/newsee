@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:newsee/core/api/api_config.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ApiClient {
   Dio getDio() {
@@ -38,10 +39,8 @@ class ConnectivityInterceptor extends Interceptor {
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     
     // Check internet connectivity
-    final bool isConnected = await InternetConnectionChecker.instance.hasConnection;
-    if (isConnected) {
-      handler.next(options);
-    } else {
+    final List<ConnectivityResult> connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       handler.reject(
         DioException(
           requestOptions: options,
@@ -50,6 +49,8 @@ class ConnectivityInterceptor extends Interceptor {
         ),
       );
       return;
+    } else {
+      handler.next(options);
     }
   }
 
