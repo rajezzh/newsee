@@ -57,7 +57,7 @@ class SysmoAlert extends StatelessWidget {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: textColor, fontSize: 25),
+                  style: TextStyle(color: textColor, fontSize: 22),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(

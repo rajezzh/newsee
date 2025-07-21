@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:newsee/AppData/app_constants.dart';
 import 'package:newsee/AppData/app_forms.dart';
+import 'package:newsee/Utils/media_service.dart';
 import 'package:newsee/Utils/utils.dart';
 import 'package:newsee/feature/landholding/domain/modal/LandData.dart';
 import 'package:newsee/feature/landholding/presentation/bloc/land_holding_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:newsee/feature/loader/presentation/bloc/global_loading_event.dar
 import 'package:newsee/feature/masters/domain/modal/geography_master.dart';
 import 'package:newsee/feature/masters/domain/modal/lov.dart';
 import 'package:newsee/widgets/alpha_text_field.dart';
+import 'package:newsee/widgets/google_maps.dart';
 import 'package:newsee/widgets/k_willpopscope.dart';
 import 'package:newsee/widgets/options_sheet.dart';
 import 'package:newsee/widgets/searchable_drop_down.dart';
@@ -18,6 +21,7 @@ import 'package:newsee/widgets/custom_text_field.dart';
 import 'package:newsee/widgets/drop_down.dart';
 import 'package:newsee/widgets/radio.dart';
 import 'package:newsee/widgets/integer_text_field.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LandHoldingPage extends StatelessWidget {
   final String proposalNumber;
@@ -36,7 +40,9 @@ class LandHoldingPage extends StatelessWidget {
   void handleSubmit(BuildContext context, LandHoldingState state) {
     if (form.valid) {
       final globalLoadingBloc = context.read<GlobalLoadingBloc>();
-      globalLoadingBloc.add(ShowLoading(message: "Land Holding Details Submitting..."));
+      globalLoadingBloc.add(
+        ShowLoading(message: "Land Holding Details Submitting..."),
+      );
       context.read<LandHoldingBloc>().add(
         LandDetailsSaveEvent(
           landData: form.value,
@@ -172,38 +178,48 @@ class LandHoldingPage extends StatelessWidget {
               SizedBox(height: 10),
 
               Center(
-                
                 child: Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                      padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 12,
+                  ),
+                  padding: const EdgeInsets.all(8),
 
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.10),
                     borderRadius: BorderRadius.circular(6),
                   ),
-                   child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Proposal Id: ",
-                              style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold) ,
-                            ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "Proposal Id: ",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                proposalNumber ?? 'N/A',
-                                style: TextStyle(color: Colors.white, fontSize: 14,  fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis, 
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                                 ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            proposalNumber ?? 'N/A',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -303,17 +319,82 @@ class LandHoldingPage extends StatelessWidget {
                                       label: 'Taluk',
                                       mantatory: true,
                                     ),
-                                    CustomTextField(
-                                      controlName: 'locationOfFarm',
-                                      label: 'Location of Farm',
-                                      mantatory: true,
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: CustomTextField(
+                                            controlName: 'locationOfFarm',
+                                            label: 'Location of Farm',
+                                            mantatory: true,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        IconButton(
+                                          icon: Icon(Icons.map),
+                                          onPressed: () async {
+                                            globalLoadingBloc.add(
+                                              ShowLoading(
+                                                message: 'Fetching location',
+                                              ),
+                                            );
+                                            final curposition =
+                                                await MediaService()
+                                                    .getLocation(context);
+                                            globalLoadingBloc.add(
+                                              HideLoading(),
+                                            );
+                                            if (curposition.latitude != 0.0 &&
+                                                curposition.longitude != 0.0) {
+                                              // showDialog(
+                                              //   context: context,
+                                              //   barrierDismissible: false,
+                                              //   builder:
+                                              //       (_) => GoogleMapsCard(
+                                              //         location: LatLng(
+                                              //           curposition.latitude,
+                                              //           curposition.longitude,
+                                              //         ),
+                                              //       ),
+                                              // );
+                                              double distance1 =
+                                                  Geolocator.distanceBetween(
+                                                    12.9483,
+                                                    80.2546,
+                                                    curposition.latitude,
+                                                    curposition.longitude,
+                                                  );
+                                              print(distance1);
+                                              String value = (distance1 / 1000)
+                                                  .toStringAsFixed(2);
+                                              print('distance1----->$value');
+                                              form
+                                                  .control('distanceFromBranch')
+                                                  .updateValue(value);
+                                            } else {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'Failed to get location. Please try again.',
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                          color: Color.fromARGB(212, 5, 8, 205),
+                                        ),
+                                      ],
                                     ),
+
                                     IntegerTextField(
                                       controlName: 'distanceFromBranch',
                                       label: 'Distance from Branch (in Kms)',
                                       mantatory: true,
-                                      minlength: 1,
-                                      maxlength: 3,
+                                      // minlength: 1,
+                                      // maxlength: 3,
                                     ),
 
                                     IntegerTextField(
