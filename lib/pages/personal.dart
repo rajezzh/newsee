@@ -94,7 +94,7 @@ class Personal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Kwillpopscope(
       routeContext: context,
-      form:form,
+      form: form,
       widget: Scaffold(
         appBar: AppBar(
           title: Text("Personal Details"),
@@ -184,8 +184,9 @@ class Personal extends StatelessWidget {
                           }
                         },
                         onChangeListener:
-                            (Lov val) =>
-                                form.controls['title']?.updateValue(val.optvalue),
+                            (Lov val) => form.controls['title']?.updateValue(
+                              val.optvalue,
+                            ),
                       ),
                       CustomTextField(
                         controlName: 'firstName',
@@ -312,7 +313,8 @@ class Personal extends StatelessWidget {
                                 onPressed: () {
                                   final AadharvalidateRequest
                                   aadharvalidateRequest = AadharvalidateRequest(
-                                    aadhaarNumber: form.control('aadhaar').value,
+                                    aadhaarNumber:
+                                        form.control('aadhaar').value,
                                   );
                                   context.read<PersonalDetailsBloc>().add(
                                     AadhaarValidateEvent(
@@ -364,7 +366,7 @@ class Personal extends StatelessWidget {
                               );
                         },
                       ),
-      
+
                       SearchableDropdown<Lov>(
                         controlName: 'natureOfActivity',
                         label: 'Nature of Activity',
@@ -497,7 +499,9 @@ class Personal extends StatelessWidget {
                                 .where((v) => v.Header == 'FarmerType')
                                 .toList(),
                         onChangeListener: (Lov val) {
-                          form.controls['farmerType']?.updateValue(val.optvalue);
+                          form.controls['farmerType']?.updateValue(
+                            val.optvalue,
+                          );
                         },
                         selItem: () {
                           final value = form.control('farmerType').value;
@@ -557,23 +561,24 @@ class Personal extends StatelessWidget {
                         onChangeListener: (Lov val) {
                           form.controls['caste']?.updateValue(val.optvalue);
                         },
-                      selItem: () {
-                        final value = form.control('caste').value;
-                        if (value == null || value.toString().isEmpty) {
-                          return null;
-                        }
-                        return state.lovList!
-                          .where((v) => v.Header == 'Caste')
-                          .firstWhere(
-                            (lov) => lov.optvalue == value,
-                            orElse:
-                                () => Lov(
-                                  Header: 'Caste',
-                                  optvalue: '',
-                                  optDesc: '',
-                                  optCode: '',
-                                ),
-                          );
+
+                        selItem: () {
+                          final value = form.control('caste').value;
+                          if (value == null || value.toString().isEmpty) {
+                            return null;
+                          }
+                          return state.lovList!
+                              .where((v) => v.Header == 'Caste')
+                              .firstWhere(
+                                (lov) => lov.optvalue == value,
+                                orElse:
+                                    () => Lov(
+                                      Header: 'Caste',
+                                      optvalue: '',
+                                      optDesc: '',
+                                      optCode: '',
+                                    ),
+                              );
                         },
                       ),
                       SearchableDropdown<Lov>(
@@ -613,7 +618,8 @@ class Personal extends StatelessWidget {
                                 .where((v) => v.Header == 'SubActivity')
                                 .toList(),
                         selItems: () {
-                          final currentValues = form.control('subActivity').value;
+                          final currentValues =
+                              form.control('subActivity').value;
                           if (currentValues == null || currentValues.isEmpty) {
                             return <Lov>[];
                           }
@@ -652,7 +658,7 @@ class Personal extends StatelessWidget {
                           ),
                           onPressed: () {
                             print("personal Details value ${form.value}");
-      
+
                             if (form.valid) {
                               PersonalData personalData = PersonalData.fromMap(
                                 form.value,
@@ -665,7 +671,7 @@ class Personal extends StatelessWidget {
                                       to: AppConstants.Format_yyyy_MM_dd,
                                     ),
                                   );
-      
+
                               context.read<PersonalDetailsBloc>().add(
                                 PersonalDetailsSaveEvent(
                                   personalData: personalDataFormatted,
