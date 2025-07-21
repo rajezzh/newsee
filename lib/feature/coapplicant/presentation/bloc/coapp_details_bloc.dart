@@ -214,13 +214,7 @@ fetching dedupe for co applicant reusing dedupe page cif search logic here
         ),
       );
     } else {
-      emit(
-        state.copyWith(
-          status: SaveStatus.dedupefailure,
-          isCifValid: false,
-          // e: responseHandler.left.message,
-        ),
-      );
+      emit(state.copyWith(status: SaveStatus.dedupefailure, isCifValid: false));
     }
   }
 
@@ -234,13 +228,6 @@ fetching dedupe for co applicant reusing dedupe page cif search logic here
     } else {
       aadhaarId = event.scannerResponse['aadhaarResponse'];
     }
-
-    // emit(
-    //   state.copyWith(
-    //     aadhaarData: AadharvalidateResponse(referenceId: aadhaarId),
-    //   ),
-    // );
-
     final coapplicantDataFromDedupe = mapCoappAndGurantorDataFromDedupe(
       AadharvalidateResponse(referenceId: aadhaarId),
     );

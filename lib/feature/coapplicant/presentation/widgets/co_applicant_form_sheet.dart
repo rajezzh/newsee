@@ -93,30 +93,53 @@ class _CoApplicantFormBottomSheetState
               if (state.status == SaveStatus.dedupesuccess) {
                 final controls = coAppAndGurantorForm.controls.entries;
                 final cifresponse = state.selectedCoApp?.toMap();
+                print(cifresponse);
                 if (cifresponse?['aadharRefNo'] != null) {
                   refAadhaar = true;
                 }
                 for (final ctrl in controls) {
-                  if (cifresponse?[ctrl.key] != null) {
-                    if (ctrl.key == 'dob') {
+                  final key = ctrl.key;
+                  final value = cifresponse?[key];
+
+                  if (value != null) {
+                    if (key == 'dob') {
                       final formattedDate = getDateFormatedByProvided(
-                        cifresponse?[ctrl.key],
+                        value,
                         from: AppConstants.Format_dd_MM_yyyy,
                         to: AppConstants.Format_yyyy_MM_dd,
                       );
-                      print('formattedDate in coapppage => $formattedDate');
-                      coAppAndGurantorForm.controls[ctrl.key]?.updateValue(
-                        formattedDate,
-                      );
+                      coAppAndGurantorForm
+                          .control(key)
+                          .updateValue(formattedDate);
+                    } else if (key == 'state' || key == 'cityDistrict') {
+                      coAppAndGurantorForm.control(key).updateValue("");
+                    } else {
+                      coAppAndGurantorForm.control(key).updateValue(value);
                     }
-                    if (ctrl.key == 'state' || ctrl.key == 'cityDistrict') {
-                      coAppAndGurantorForm.controls[ctrl.key]?.updateValue("");
-                    }
-                    coAppAndGurantorForm.controls[ctrl.key]?.updateValue(
-                      cifresponse?[ctrl.key],
-                    );
                   }
                 }
+
+                // for (final ctrl in controls) {
+                //   if (cifresponse?[ctrl.key] != null) {
+                //     if (ctrl.key == 'dob') {
+                //       final formattedDate = getDateFormatedByProvided(
+                //         cifresponse?[ctrl.key],
+                //         from: AppConstants.Format_dd_MM_yyyy,
+                //         to: AppConstants.Format_yyyy_MM_dd,
+                //       );
+                //       print('formattedDate in coapppage => $formattedDate');
+                //       coAppAndGurantorForm.controls[ctrl.key]?.updateValue(
+                //         formattedDate,
+                //       );
+                //     }
+                //     if (ctrl.key == 'state' || ctrl.key == 'cityDistrict') {
+                //       coAppAndGurantorForm.controls[ctrl.key]?.updateValue("");
+                //     }
+                //     coAppAndGurantorForm.controls[ctrl.key]?.updateValue(
+                //       cifresponse?[ctrl.key],
+                //     );
+                //   }
+                // }
               } else if (state.status == SaveStatus.dedupefailure) {
                 // showSnack(context, message: 'Cif pulling failed...');
                 showErrorDialog(
@@ -199,6 +222,7 @@ class _CoApplicantFormBottomSheetState
                                       removeFocus: true,
                                     );
                                   });
+                                  refAadhaar = false;
                                   showHideCifField(
                                     context,
                                     coAppAndGurantorForm,
@@ -470,83 +494,87 @@ class _CoApplicantFormBottomSheetState
                           mantatory: true,
                           autoCapitalize: true,
                         ),
-                        Column(
+
+                        Row(
                           children: [
-                            if (refAadhaar == true)
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: IntegerTextField(
-                                      controlName: 'aadharRefNo',
-                                      label: 'Aadhaar Ref No',
-                                      mantatory: false,
-                                      maxlength: 12,
-                                      minlength: 12,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  ElevatedButton.icon(
-                                    icon: Icon(Icons.qr_code_scanner),
-                                    label: Text('Scan'),
-                                    onPressed:
-                                        () => showScannerOptions(context),
-                                  ),
-                                ],
-                              )
-                            else
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: IntegerTextField(
-                                      controlName: 'aadhaar',
-                                      label: 'Aadhaar Number',
-                                      mantatory: true,
-                                      maxlength: 12,
-                                      minlength: 12,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                        255,
-                                        3,
-                                        9,
-                                        110,
-                                      ),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 10,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      final aadharvalidateRequest =
-                                          AadharvalidateRequest(
-                                            aadhaarNumber:
-                                                coAppAndGurantorForm
-                                                    .control('aadhaar')
-                                                    .value,
-                                          );
-                                      context.read<CoappDetailsBloc>().add(
-                                        AadhaarValidateEvent(
-                                          request: aadharvalidateRequest,
-                                        ),
-                                      );
-                                    },
-                                    child:
-                                        state.status == SaveStatus.loading
-                                            ? CircularProgressIndicator()
-                                            : const Text("Validate"),
-                                  ),
-                                ],
+                            Expanded(
+                              child: IntegerTextField(
+                                controlName: 'aadharRefNo',
+                                label: 'Aadhaar No',
+                                mantatory: true,
+                                maxlength: 12,
+                                minlength: 12,
                               ),
+                            ),
+                            const SizedBox(width: 8),
+                            ElevatedButton.icon(
+                              icon: Icon(Icons.qr_code_scanner),
+                              label: Text('Scan'),
+                              onPressed: () => showScannerOptions(context),
+                            ),
                           ],
                         ),
+
+                        // if ((coAppAndGurantorForm
+                        //                 .control('customertype')
+                        //                 .value !=
+                        //             '002' &&
+                        //         coAppAndGurantorForm
+                        //                 .control('customertype')
+                        //                 .value !=
+                        //             '001') ||
+                        //     refAadhaar == false)
+                        //   Row(
+                        //     crossAxisAlignment: CrossAxisAlignment.center,
+                        //     children: [
+                        //       Expanded(
+                        //         child: IntegerTextField(
+                        //           controlName: 'aadhaar',
+                        //           label: 'Aadhaar Number',
+                        //           mantatory: true,
+                        //           maxlength: 12,
+                        //           minlength: 12,
+                        //         ),
+                        //       ),
+                        //       const SizedBox(width: 8),
+                        //       ElevatedButton(
+                        //         style: ElevatedButton.styleFrom(
+                        //           backgroundColor: const Color.fromARGB(
+                        //             255,
+                        //             3,
+                        //             9,
+                        //             110,
+                        //           ),
+                        //           foregroundColor: Colors.white,
+                        //           padding: const EdgeInsets.symmetric(
+                        //             horizontal: 16,
+                        //             vertical: 10,
+                        //           ),
+                        //           shape: RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.circular(8),
+                        //           ),
+                        //         ),
+                        //         onPressed: () {
+                        //           final aadharvalidateRequest =
+                        //               AadharvalidateRequest(
+                        //                 aadhaarNumber:
+                        //                     coAppAndGurantorForm
+                        //                         .control('aadhaar')
+                        //                         .value,
+                        //               );
+                        //           context.read<CoappDetailsBloc>().add(
+                        //             AadhaarValidateEvent(
+                        //               request: aadharvalidateRequest,
+                        //             ),
+                        //           );
+                        //         },
+                        //         child:
+                        //             state.status == SaveStatus.loading
+                        //                 ? CircularProgressIndicator()
+                        //                 : const Text("Validate"),
+                        //       ),
+                        //     ],
+                        //   ),
                         CustomTextField(
                           controlName: 'address1',
                           label: 'Address 1',
