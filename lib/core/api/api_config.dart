@@ -55,5 +55,8 @@ class ApiConfig {
   static const String UPLOAD_DOCUMENT = 'MobileService/getDocumentUpload';
   static const String FETCH_UPLOAD_DOCUMENT = 'MobileService/getUploadDocument';
   static const String DELETE_UPLOAD_DOCUMENT = 'MobileService/deleteUploadFile';
-  static const String mpinEndpoint = 'MobileService/registerMPIN';
+  static const String mpinRegisterEndpoint = 'MobileService/registerMPIN';
+  static const String mpinValidateEndPoint = 'MobileService/validateMPINLogin';
+  static const String module = 'AGRI';
+  static const String encKey = 'sysarc@1234INFO@';
 }
