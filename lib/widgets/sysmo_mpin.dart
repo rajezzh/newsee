@@ -145,6 +145,8 @@ class _SysmoMpinState extends State<SysmoMpin> {
                         (_) => SysmoAlert.success(
                           message: AppConstants.mpinLoginSuccess,
                           onButtonPressed: () async {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
                             // context.pop();
                             // master version check
                             widget.masterVersionCheckResponseHandler ??=

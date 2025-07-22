@@ -88,36 +88,39 @@ class Sidenavigationbar extends StatelessWidget {
               );
             },
           ),
-ListTile(
-  leading: Icon(Icons.logout_rounded, color: Colors.teal),
-  title: Text("Logout"),
-  onTap: () async {
-    final shouldLogout = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirm Logout'),
-        content: Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    );
+          ListTile(
+            leading: Icon(Icons.logout_rounded, color: Colors.teal),
+            title: Text("Logout"),
+            onTap: () async {
+              final shouldLogout = await showDialog<bool>(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: Text('Confirm Logout'),
+                      content: Text('Are you sure you want to logout?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(false),
+                          child: Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                            Navigator.of(context).pop(true);
+                            Navigator.of(context).pop(true);
+                          },
+                          child: Text('Yes'),
+                        ),
+                      ],
+                    ),
+              );
 
-    if (shouldLogout ?? false) {
-      Navigator.of(context).pop();
-      context.read<AuthBloc>().add(LogoutRequested());
-      context.go('/login');
-    }
-  },
-),
-
+              if (shouldLogout ?? false) {
+                //Navigator.of(context).pop();
+                //context.read<AuthBloc>().add(LogoutRequested());
+              }
+            },
+          ),
         ],
       ),
     );
