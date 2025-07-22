@@ -77,6 +77,8 @@ class ProposalInboxBloc extends Bloc<ProposalInboxEvent, ProposalInboxState> {
             currentApplication: event.currentApplication
           ),
         );
+        Future.delayed(Duration(seconds: 1));
+        emit(state.copyWith(applicationStatus: SaveStatus.update));
       } else {
         print('Proposal failure response.left');
         emit(
@@ -86,6 +88,8 @@ class ProposalInboxBloc extends Bloc<ProposalInboxEvent, ProposalInboxState> {
             currentApplication: event.currentApplication
           ),
         );
+        Future.delayed(Duration(seconds: 1));
+        emit(state.copyWith(applicationStatus: SaveStatus.update));
       }
     } catch(error) {
       print("onCheckStatus-error $error");
