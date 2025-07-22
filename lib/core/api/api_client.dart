@@ -14,7 +14,7 @@ class ApiClient {
       'userid': '4321',
     };
 
-    dio.interceptors.add(  
+    dio.interceptors.add(
       PrettyDioLogger(
         responseHeader: true,
         responseBody: true,
@@ -26,7 +26,7 @@ class ApiClient {
     );
 
     // Add this interceptor for internet connection check
-    dio.interceptors.add(ConnectivityInterceptor());
+    // dio.interceptors.add(ConnectivityInterceptor());
 
     return dio;
   }
@@ -35,10 +35,13 @@ class ApiClient {
 // Custom Interceptor for Internet Connectivity Check
 class ConnectivityInterceptor extends Interceptor {
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     // Check internet connectivity
-    final bool isConnected = await InternetConnectionChecker.instance.hasConnection;
+    final bool isConnected =
+        await InternetConnectionChecker.instance.hasConnection;
     if (isConnected) {
       handler.next(options);
     } else {
@@ -46,7 +49,7 @@ class ConnectivityInterceptor extends Interceptor {
         DioException(
           requestOptions: options,
           error: 'NoInternetException',
-          message: 'Please check your internet connection'
+          message: 'Please check your internet connection',
         ),
       );
       return;
