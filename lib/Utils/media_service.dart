@@ -95,18 +95,6 @@ class MediaService {
         print("croppedFileData: $cropperdata");
         final Uint8List croppedFileData = cropperdata!;
         return croppedFileData;
-        // if (croppedFileData != null) {
-        //   final result = await GoRouter.of(context).push<Uint8List>(
-        //     '/imageview',
-        //     extra: {
-        //       'imageBytes': croppedFileData,
-        //       if (docIndex != null) 'docIndex': docIndex,
-        //     },
-        //   );
-        //   if (result != null && context.mounted) {
-        //     return result == 'close' ? null : result;
-        //   }
-        // }
       }
       ScaffoldMessenger.of(
         context,
@@ -127,26 +115,15 @@ class MediaService {
   @return data     :   return FilePickerResult object data
   */
   Future<FilePickerResult?> filePicker() async {
-    // FilePickerResult? pdfBytes = await FilePicker.platform.pickFiles(
-    //   type: FileType.custom,
-    //   allowedExtensions: ['pdf'],
-    // );
-    // if (pdfBytes != null) {
-    //   return pdfBytes;
-    // }
-    // return null;
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-      if (result != null && result.files.isNotEmpty) {
-        return result;
-      }
-    } catch (e) {
-      debugPrint("File picker error: $e");
+    FilePickerResult? pdfBytes = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+    if (pdfBytes != null) {
+      return pdfBytes;
+    } else {
+      return null;
     }
-    return null;
   }
 
   /* 
@@ -155,23 +132,49 @@ class MediaService {
   @props          :   BuildContext, XFile path
   @return data    :   return Unit8List byte data
   */
+
+  /* @modifiedBy    :  Lathamani   10/07/2025
+     @desc          :  added resposiveness using MediaQuery API and if condition on screenWidth
+  */
+
   Future<Uint8List?> cropper(context, filepath) async {
     try {
       Uint8List? croppedImage;
-      double screenwidth = MediaQuery.of(context).size.width;
-      double screenheight = MediaQuery.of(context).size.height;
 
-      final intwidth = (screenwidth * 0.5).round();
-      final intheight = (screenheight * 0.5).round();
-      print("cropper function called is here");
+      double screenWidth = MediaQuery.of(context).size.width;
+      double screenHeight = MediaQuery.of(context).size.height;
+      print('screenHeight: $screenHeight');
+
+      // base padding from system
+      final topPadding = MediaQuery.of(context).padding.top;
+      const appBarHeight = kToolbarHeight;
+
+      // add extra padding if screen is large
+      double extraTopPadding = 0;
+      if (screenHeight > 700) {
+        extraTopPadding = 80; // 28
+      }
+
+      double usableHeight =
+          screenHeight - topPadding - appBarHeight - extraTopPadding;
+      double cropperW = screenWidth * (screenWidth < 600 ? 0.9 : 0.5);
+      double cropperH = usableHeight * 0.5;
+
+      final intWidth = cropperW.round();
+      final intHeight = cropperH.round();
       final cropdata = await ImageCropper().cropImage(
         sourcePath: filepath,
         uiSettings: [
           AndroidUiSettings(
             toolbarTitle: 'Cropper',
+            // toolbarColor: Colors.deepOrange,
+            // statusBarColor: Colors.yellow,
+            // toolbarWidgetColor: const Color.fromRGBO(255, 255, 255, 1),
+            // initAspectRatio: CropAspectRatioPreset.square,
             toolbarColor: Colors.deepOrange,
-            toolbarWidgetColor: const Color.fromRGBO(255, 255, 255, 1),
-            initAspectRatio: CropAspectRatioPreset.square,
+            toolbarWidgetColor: Colors.white,
+            statusBarColor: Colors.deepOrange,
+            activeControlsWidgetColor: Colors.deepOrange,
             lockAspectRatio: false,
             aspectRatioPresets: [
               CropAspectRatioPreset.original,
@@ -183,7 +186,7 @@ class MediaService {
           WebUiSettings(
             context: context,
             presentStyle: WebPresentStyle.dialog,
-            size: CropperSize(width: intwidth, height: intheight),
+            size: CropperSize(width: intWidth, height: intHeight),
           ),
         ],
       );

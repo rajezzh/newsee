@@ -642,6 +642,7 @@ class Personal extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: 20),
+                    
                       Center(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
