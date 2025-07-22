@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:newsee/AppData/app_api_constants.dart';
@@ -11,6 +12,7 @@ import 'package:newsee/Utils/shared_preference_utils.dart';
 import 'package:newsee/core/api/AsyncResponseHandler.dart';
 import 'package:newsee/core/api/api_client.dart';
 import 'package:newsee/core/api/api_config.dart';
+import 'package:newsee/core/api/http_exception_parser.dart';
 import 'package:newsee/feature/auth/domain/model/user_details.dart';
 import 'package:newsee/pages/home_page.dart';
 import 'package:newsee/widgets/sysmo_alert.dart';
@@ -39,7 +41,6 @@ class _SysmoMpinState extends State<SysmoMpin> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final screenWidth = size.width;
     final screenHeight = size.height;
 
     return SizedBox(
@@ -189,6 +190,16 @@ class _SysmoMpinState extends State<SysmoMpin> {
               } catch (e) {
                 print(
                   'Exception occured : mpin login failed : stacktrace : $e',
+                );
+                showDialog(
+                  context: context,
+                  builder:
+                      (_) => SysmoAlert.failure(
+                        message:
+                            DioHttpExceptionParser(
+                              exception: e as DioException,
+                            ).parse().message,
+                      ),
                 );
               }
             },
