@@ -28,6 +28,7 @@ class SysmoMpin extends StatefulWidget {
 
 class _SysmoMpinState extends State<SysmoMpin> {
   String pin = '';
+  bool isloading = false;
   @override
   void initState() {
     super.initState();
@@ -117,6 +118,10 @@ class _SysmoMpinState extends State<SysmoMpin> {
 
                   return;
                 }
+                setState(() {
+                  isloading = true;
+                });
+                await Future.delayed(Duration(seconds: 2));
                 final encPinValue = encryptMPIN(pin, ApiConfig.encKey);
                 print('enc pin => ${encPinValue.encryptedText}');
                 UserDetails? userDetails = await loadUser();
@@ -182,6 +187,9 @@ class _SysmoMpinState extends State<SysmoMpin> {
                               response.data[ApiConstants
                                   .api_response_errorMessage],
                           onButtonPressed: () {
+                            setState(() {
+                              isloading = false;
+                            });
                             Navigator.pop(context);
                           },
                         ),
@@ -199,12 +207,24 @@ class _SysmoMpinState extends State<SysmoMpin> {
                             DioHttpExceptionParser(
                               exception: e as DioException,
                             ).parse().message,
+                        onButtonPressed: () {
+                          setState(() {
+                            isloading = false;
+                          });
+                          Navigator.pop(context);
+                        },
                       ),
                 );
               }
             },
 
-            child: Text("Login"),
+            child:
+                isloading == false
+                    ? Text("Login")
+                    : CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
           ),
           SizedBox(height: 20),
           Center(
