@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,46 +81,43 @@ final routes = GoRouter(
     GoRoute(
       path: AppRouteConstants.HOME_PAGE['path']!,
       name: AppRouteConstants.HOME_PAGE['name'],
-      builder:
-          (context, state) {
-            final tabdata =
-            (state.extra as Map<String, dynamic>?)?['tabdata']!;
-            return PopScope(
-              canPop: false,
-              onPopInvokedWithResult: (didPop, result) async {
-                final shouldPop = await showDialog<bool>(
-                  context: context,
-                  builder:
-                      (context) => AlertDialog(
-                        title: Text('Confirm'),
-                        content: Text('Are you sure you want to logout?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: Text('Yes'),
-                          ),
-                        ],
+      builder: (context, state) {
+        final tabdata = (state.extra as Map<String, dynamic>?)?['tabdata']!;
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) async {
+            final shouldPop = await showDialog<bool>(
+              context: context,
+              builder:
+                  (dialogcontext) => AlertDialog(
+                    title: Text('Confirm'),
+                    content: Text('Are you sure you want to logout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogcontext).pop(false),
+                        child: Text('Cancel'),
                       ),
-                );
-                if (shouldPop ?? false) {
-                  context.push('/login');
-                  // closes the app
-                  // context.go('/'); // Navigate back using GoRouter
-                }
-              },
-              child: Scaffold(
-                body: BlocProvider(
-                  create: (_) => AuthBloc(authRepository: AuthRepository),
-                  child: tabdata == null ? HomePage() : HomePage(tabdata: tabdata),
-                ),
-              ),
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogcontext).pop(true),
+                        child: Text('Yes'),
+                      ),
+                    ],
+                  ),
             );
-          }
-          
+            if (shouldPop ?? false) {
+              context.push('/login');
+              // closes the app
+              // context.go('/'); // Navigate back using GoRouter
+            }
+          },
+          child: Scaffold(
+            body: BlocProvider(
+              create: (_) => AuthBloc(authRepository: AuthRepository),
+              child: tabdata == null ? HomePage() : HomePage(tabdata: tabdata),
+            ),
+          ),
+        );
+      },
     ),
     GoRoute(
       path: AppRouteConstants.NEWLEAD_PAGE['path']!,

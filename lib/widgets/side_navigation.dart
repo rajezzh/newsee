@@ -13,11 +13,11 @@ import 'package:newsee/pages/home_page.dart';
 
 class Sidenavigationbar extends StatelessWidget {
   final Function(int)? onTabSelected;
-
-  const Sidenavigationbar({this.onTabSelected, super.key});
+  final BuildContext? pageContext;
+  const Sidenavigationbar({this.onTabSelected, this.pageContext, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext sidemenucontext) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -53,7 +53,7 @@ class Sidenavigationbar extends StatelessWidget {
             onTap: () {
               onTabSelected?.call(0);
               Navigator.push(
-                context,
+                sidemenucontext,
                 MaterialPageRoute(builder: (context) => HomePage()),
               );
             },
@@ -63,7 +63,7 @@ class Sidenavigationbar extends StatelessWidget {
             title: Text("Field Visit Inbox"),
             onTap: () {
               Navigator.push(
-                context,
+                sidemenucontext,
                 MaterialPageRoute(builder: (context) => HomePage(tabdata: 1)),
               );
             },
@@ -73,7 +73,7 @@ class Sidenavigationbar extends StatelessWidget {
             title: Text("Query Inbox"),
             onTap: () {
               Navigator.push(
-                context,
+                sidemenucontext,
                 MaterialPageRoute(builder: (context) => HomePage(tabdata: 2)),
               );
             },
@@ -83,7 +83,7 @@ class Sidenavigationbar extends StatelessWidget {
             title: Text("Masters Update"),
             onTap: () {
               Navigator.push(
-                context,
+                sidemenucontext,
                 MaterialPageRoute(builder: (context) => HomePage(tabdata: 3)),
               );
             },
@@ -93,21 +93,20 @@ class Sidenavigationbar extends StatelessWidget {
             title: Text("Logout"),
             onTap: () async {
               final shouldLogout = await showDialog<bool>(
-                context: context,
+                context: sidemenucontext,
                 builder:
-                    (context) => AlertDialog(
+                    (dialogcontext) => AlertDialog(
                       title: Text('Confirm Logout'),
                       content: Text('Are you sure you want to logout?'),
                       actions: [
                         TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
+                          onPressed:
+                              () => Navigator.of(dialogcontext).pop(false),
                           child: Text('Cancel'),
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.of(context).pop(true);
-                            Navigator.of(context).pop(true);
-                            Navigator.of(context).pop(true);
+                            Navigator.of(dialogcontext).pop(true);
                           },
                           child: Text('Yes'),
                         ),
@@ -116,8 +115,8 @@ class Sidenavigationbar extends StatelessWidget {
               );
 
               if (shouldLogout ?? false) {
-                //Navigator.of(context).pop();
-                //context.read<AuthBloc>().add(LogoutRequested());
+                Navigator.of(sidemenucontext).pop();
+                pageContext?.go('/login');
               }
             },
           ),
