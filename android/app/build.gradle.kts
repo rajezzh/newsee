@@ -15,20 +15,20 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
+    kotlinOptions { jvmTarget = JavaVersion.VERSION_11.toString() }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        // TODO: Specify your own unique Application ID
+        // (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.newsee"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        //minSdk = flutter.minSdkVersion
+        // minSdk = flutter.minSdkVersion
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["MAPS_API_KEY"] = project.properties["MAPS_API_KEY"]?.toString() ?: ""
     }
 
     buildTypes {
@@ -36,10 +36,8 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
-            }
+        }
     }
 }
 
-flutter {
-    source = "../.."
-}
+flutter { source = "../.." }
